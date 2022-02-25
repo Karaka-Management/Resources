@@ -844,6 +844,9 @@ const PDFViewerApplication = {
       await this.close();
     }
 
+    file = file.replaceAll('+', ' ');
+    file = file.replaceAll('#', '%23');
+
     const workerParameters = _app_options.AppOptions.getAll(_app_options.OptionKind.WORKER);
 
     for (const key in workerParameters) {
@@ -2896,7 +2899,7 @@ function getOutputScale(ctx) {
 }
 
 function scrollIntoView(element, spot, skipOverflowHiddenElements = false) {
-  let parent = element.offsetParent;
+  let parent = element.offsetParent === null ? document.body : element.offsetParent;
 
   if (!parent) {
     console.error("offsetParent is not set -- cannot scroll");
