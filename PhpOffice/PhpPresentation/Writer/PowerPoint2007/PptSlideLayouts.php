@@ -1,21 +1,39 @@
 <?php
+/**
+ * This file is part of PHPPresentation - A pure PHP library for reading and writing
+ * presentations documents.
+ *
+ * PHPPresentation is free software distributed under the terms of the GNU Lesser
+ * General Public License version 3 as published by the Free Software Foundation.
+ *
+ * For the full copyright and license information, please read the LICENSE
+ * file that was distributed with this source code. For the full list of
+ * contributors, visit https://github.com/PHPOffice/PHPPresentation/contributors.
+ *
+ * @see        https://github.com/PHPOffice/PHPPresentation
+ *
+ * @copyright   2009-2015 PHPPresentation contributors
+ * @license     http://www.gnu.org/licenses/lgpl.txt LGPL version 3
+ */
+
+declare(strict_types=1);
 
 namespace PhpOffice\PhpPresentation\Writer\PowerPoint2007;
 
+use PhpOffice\Common\Adapter\Zip\ZipInterface;
 use PhpOffice\Common\Drawing as CommonDrawing;
 use PhpOffice\Common\XMLWriter;
 use PhpOffice\PhpPresentation\Slide;
+use PhpOffice\PhpPresentation\Slide\Background\Image;
 use PhpOffice\PhpPresentation\Slide\SlideLayout;
 use PhpOffice\PhpPresentation\Style\ColorMap;
-use PhpOffice\PhpPresentation\Slide\Background\Image;
 
 class PptSlideLayouts extends AbstractSlide
 {
     /**
-     * @return \PhpOffice\Common\Adapter\Zip\ZipInterface
-     * @throws \Exception
+     * @return ZipInterface
      */
-    public function render()
+    public function render(): ZipInterface
     {
         foreach ($this->oPresentation->getAllMasterSlides() as $oSlideMaster) {
             foreach ($oSlideMaster->getAllSlideLayouts() as $oSlideLayout) {
@@ -34,13 +52,11 @@ class PptSlideLayouts extends AbstractSlide
     }
 
     /**
-     * Write slide layout relationships to XML format
+     * Write slide layout relationships to XML format.
      *
-     * @param  \PhpOffice\PhpPresentation\Slide\SlideLayout $oSlideLayout
-     * @return string    XML Output
-     * @throws \Exception
+     * @return string XML Output
      */
-    public function writeSlideLayoutRelationships(SlideLayout $oSlideLayout)
+    protected function writeSlideLayoutRelationships(SlideLayout $oSlideLayout): string
     {
         // Create XML writer
         $objWriter = new XMLWriter(XMLWriter::STORAGE_MEMORY);
@@ -66,7 +82,7 @@ class PptSlideLayouts extends AbstractSlide
             $this->writeRelationship($objWriter, $relId, 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/image', '../media/' . $oBackground->getIndexedFilename($oSlideLayout->getRelsIndex()));
             $oBackground->relationId = 'rId' . $relId;
 
-            $relId++;
+            ++$relId;
         }
 
         $objWriter->endElement();
@@ -76,13 +92,11 @@ class PptSlideLayouts extends AbstractSlide
     }
 
     /**
-     * Write slide to XML format
+     * Write slide to XML format.
      *
-     * @param  \PhpOffice\PhpPresentation\Slide\SlideLayout $pSlideLayout
      * @return string XML Output
-     * @throws \Exception
      */
-    public function writeSlideLayout(SlideLayout $pSlideLayout)
+    protected function writeSlideLayout(SlideLayout $pSlideLayout): string
     {
         // Create XML writer
         $objWriter = new XMLWriter(XMLWriter::STORAGE_MEMORY);
@@ -96,7 +110,7 @@ class PptSlideLayouts extends AbstractSlide
         $objWriter->writeAttribute('preserve', 1);
         // p:sldLayout\p:cSld
         $objWriter->startElement('p:cSld');
-        $objWriter->writeAttributeIf($pSlideLayout->getLayoutName() != '', 'name', $pSlideLayout->getLayoutName());
+        $objWriter->writeAttributeIf('' != $pSlideLayout->getLayoutName(), 'name', $pSlideLayout->getLayoutName());
         // Background
         $this->writeSlideBackground($pSlideLayout, $objWriter);
         // p:sldLayout\p:cSld\p:spTree
