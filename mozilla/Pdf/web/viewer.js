@@ -906,6 +906,8 @@ const PDFViewerApplication = {
     loadingTask.onUnsupportedFeature = this.fallback.bind(this);
     return loadingTask.promise.then(pdfDocument => {
       this.load(pdfDocument);
+      document.getElementById('contentSpinner').style.display = 'none';
+      document.getElementById('outerContainer').style.display = 'block';
     }, exception => {
       if (loadingTask !== this.pdfLoadingTask) {
         return undefined;
@@ -1278,7 +1280,7 @@ const PDFViewerApplication = {
     this.documentInfo = info;
     this.metadata = metadata;
     this.contentDispositionFilename = contentDispositionFilename;
-    console.log(`PDF ${pdfDocument.fingerprint} [${info.PDFFormatVersion} ` + `${(info.Producer || "-").trim()} / ${(info.Creator || "-").trim()}] ` + `(PDF.js: ${_pdfjsLib.version || "-"}` + `${this.pdfViewer.enableWebGL ? " [WebGL]" : ""})`);
+
     let pdfTitle;
     const infoTitle = info && info.Title;
 
