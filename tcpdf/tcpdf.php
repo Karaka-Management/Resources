@@ -7090,6 +7090,14 @@ class TCPDF {
 					return $this->Image($tempfile_plain, $x, $y, $w, $h, $type, $link, $align, $resize, $dpi, $palign, false, $imgmask);
 				}
 			}
+
+			if (\is_file($tempfile_plain)) {
+				\unlink($tempfile_plain);
+			}
+
+			if (\is_file($tempfile_alpha)) {
+				\unlink($tempfile_alpha);
+			}
 		}
 		if ($newimage) {
 			//First use of image, get info
@@ -7396,6 +7404,14 @@ class TCPDF {
 		$imgmask = $this->Image($tempfile_alpha, $x, $y, $w, $h, 'PNG', '', '', $resize, $dpi, '', true, false);
 		// embed image, masked with previously embedded mask
 		$this->Image($tempfile_plain, $x, $y, $w, $h, $type, $link, $align, $resize, $dpi, $palign, false, $imgmask);
+
+		if (\is_file($tempfile_plain)) {
+			\unlink($tempfile_plain);
+		}
+
+		if (\is_file($tempfile_alpha)) {
+			\unlink($tempfile_alpha);
+		}
 	}
 
 	/**
@@ -8429,7 +8445,7 @@ class TCPDF {
 								$annots .= ' /Name /Note';
 							}
 							$hasStateModel = isset($pl['opt']['statemodel']);
-							$hasState = isset($pl['opt']['state']); 
+							$hasState = isset($pl['opt']['state']);
 							$statemodels = ['Marked', 'Review'];
 							if (!$hasStateModel && !$hasState) {
 								break;
