@@ -847,6 +847,8 @@ const PDFViewerApplication = {
     file = file.replaceAll('+', ' ');
     file = file.replaceAll('#', '%23');
 
+    console.log(file);
+
     const workerParameters = _app_options.AppOptions.getAll(_app_options.OptionKind.WORKER);
 
     for (const key in workerParameters) {
