@@ -7958,11 +7958,11 @@ class TCPDF {
 					$ratio = \preg_replace('/[^0-9\.]/', '', $ratio);
 					$ratio = \floatval($ratio);
 					if ($type == 'u') {
-						$chrdiff = floor(($diff + 12) * $ratio);
+						$chrdiff = \floor(($diff + 12) * $ratio);
 						$shift = \str_repeat(' ', $chrdiff);
 						$shift = TCPDF_FONTS::UTF8ToUTF16BE($shift, false, $this->isunicode, $this->CurrentFont);
 					} else {
-						$chrdiff = floor(($diff + 11) * $ratio);
+						$chrdiff = \floor(($diff + 11) * $ratio);
 						$shift = \str_repeat(' ', $chrdiff);
 					}
 					$page = \str_replace($aa, $shift, $page);
@@ -14546,8 +14546,8 @@ class TCPDF {
 				if ($patch_array[$i]['points'][$j] > $bpcd) {
 					$patch_array[$i]['points'][$j] = $bpcd;
 				}
-				$this->gradients[$n]['stream'] .= \chr((int) floor($patch_array[$i]['points'][$j] / 256));
-				$this->gradients[$n]['stream'] .= \chr((int) floor(\intval($patch_array[$i]['points'][$j]) % 256));
+				$this->gradients[$n]['stream'] .= \chr((int) \floor($patch_array[$i]['points'][$j] / 256));
+				$this->gradients[$n]['stream'] .= \chr((int) \floor(\intval($patch_array[$i]['points'][$j]) % 256));
 			}
 			$count_cols = \count($patch_array[$i]['colors']);
 			for ($j=0; $j < $count_cols; ++$j) {
@@ -21585,7 +21585,7 @@ Putting 1 is equivalent to putting 0 and calling Ln() just after. Default value:
 			$fw = ($tw - $this->GetStringWidth($pagenum.$filler));
 			$wfiller = $this->GetStringWidth($filler);
 			if ($wfiller > 0) {
-				$numfills = floor($fw / $wfiller);
+				$numfills = \floor($fw / $wfiller);
 			} else {
 				$numfills = 0;
 			}
