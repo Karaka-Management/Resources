@@ -4,25 +4,6 @@ declare(strict_types=1);
 
 namespace Laminas\Escaper;
 
-use function bin2hex;
-use function ctype_digit;
-use function hexdec;
-use function htmlspecialchars;
-use function in_array;
-use function mb_convert_encoding;
-use function ord;
-use function preg_match;
-use function preg_replace_callback;
-use function rawurlencode;
-use function sprintf;
-use function strlen;
-use function strtolower;
-use function strtoupper;
-use function substr;
-
-use const ENT_QUOTES;
-use const ENT_SUBSTITUTE;
-
 /**
  * Context specific methods for use in secure output escaping
  */
@@ -55,7 +36,7 @@ class Escaper
 
     /**
      * Holds the value of the special flags passed as second parameter to
-     * htmlspecialchars().
+     * \htmlspecialchars().
      *
      * @var int
      */
@@ -143,10 +124,10 @@ class Escaper
             }
 
             $encoding = strtolower($encoding);
-            if (! in_array($encoding, $this->supportedEncodings)) {
+            if (! \in_array($encoding, $this->supportedEncodings)) {
                 throw new Exception\InvalidArgumentException(
                     'Value of \'' . $encoding . '\' passed to ' . static::class
-                    . ' constructor parameter is invalid. Provide an encoding supported by htmlspecialchars()'
+                    . ' constructor parameter is invalid. Provide an encoding supported by \htmlspecialchars()'
                 );
             }
 
@@ -174,18 +155,18 @@ class Escaper
 
     /**
      * Escape a string for the HTML Body context where there are very few characters
-     * of special meaning. Internally this will use htmlspecialchars().
+     * of special meaning. Internally this will use \htmlspecialchars().
      *
      * @return string
      */
     public function escapeHtml(string $string)
     {
-        return htmlspecialchars($string, $this->htmlSpecialCharsFlags, $this->encoding);
+        return \htmlspecialchars($string, $this->htmlSpecialCharsFlags, $this->encoding);
     }
 
     /**
      * Escape a string for the HTML Attribute context. We use an extended set of characters
-     * to escape that are not covered by htmlspecialchars() to cover cases where an attribute
+     * to escape that are not covered by \htmlspecialchars() to cover cases where an attribute
      * might be unquoted or quoted illegally (e.g. backticks are valid quotes for IE).
      *
      * @return string
@@ -193,11 +174,11 @@ class Escaper
     public function escapeHtmlAttr(string $string)
     {
         $string = $this->toUtf8($string);
-        if ($string === '' || ctype_digit($string)) {
+        if ($string === '' || \ctype_digit($string)) {
             return $string;
         }
 
-        $result = preg_replace_callback('/[^a-z0-9,\.\-_]/iSu', $this->htmlAttrMatcher, $string);
+        $result = \preg_replace_callback('/[^a-z0-9,\.\-_]/iSu', $this->htmlAttrMatcher, $string);
         return $this->fromUtf8($result);
     }
 
@@ -215,11 +196,11 @@ class Escaper
     public function escapeJs(string $string)
     {
         $string = $this->toUtf8($string);
-        if ($string === '' || ctype_digit($string)) {
+        if ($string === '' || \ctype_digit($string)) {
             return $string;
         }
 
-        $result = preg_replace_callback('/[^a-z0-9,\._]/iSu', $this->jsMatcher, $string);
+        $result = \preg_replace_callback('/[^a-z0-9,\._]/iSu', $this->jsMatcher, $string);
         return $this->fromUtf8($result);
     }
 
@@ -232,7 +213,7 @@ class Escaper
      */
     public function escapeUrl(string $string)
     {
-        return rawurlencode($string);
+        return \rawurlencode($string);
     }
 
     /**
@@ -244,16 +225,16 @@ class Escaper
     public function escapeCss(string $string)
     {
         $string = $this->toUtf8($string);
-        if ($string === '' || ctype_digit($string)) {
+        if ($string === '' || \ctype_digit($string)) {
             return $string;
         }
 
-        $result = preg_replace_callback('/[^a-z0-9]/iSu', $this->cssMatcher, $string);
+        $result = \preg_replace_callback('/[^a-z0-9]/iSu', $this->cssMatcher, $string);
         return $this->fromUtf8($result);
     }
 
     /**
-     * Callback function for preg_replace_callback that applies HTML Attribute
+     * Callback function for \preg_replace_callback that applies HTML Attribute
      * escaping to all matches.
      *
      * @param array<array-key, string> $matches
@@ -262,7 +243,7 @@ class Escaper
     protected function htmlAttrMatcher($matches)
     {
         $chr = $matches[0];
-        $ord = ord($chr);
+        $ord = \ord($chr);
 
         /**
          * The following replaces characters undefined in HTML with the
@@ -279,12 +260,12 @@ class Escaper
          * Check if the current character to escape has a name entity we should
          * replace it with while grabbing the integer value of the character.
          */
-        if (strlen($chr) > 1) {
+        if (\strlen($chr) > 1) {
             $chr = $this->convertEncoding($chr, 'UTF-32BE', 'UTF-8');
         }
 
-        $hex = bin2hex($chr);
-        $ord = hexdec($hex);
+        $hex = \bin2hex($chr);
+        $ord = \hexdec($hex);
         if (isset(static::$htmlNamedEntityMap[$ord])) {
             return '&' . static::$htmlNamedEntityMap[$ord] . ';';
         }
@@ -294,13 +275,13 @@ class Escaper
          * for any other characters where a named entity does not exist.
          */
         if ($ord > 255) {
-            return sprintf('&#x%04X;', $ord);
+            return \sprintf('&#x%04X;', $ord);
         }
-        return sprintf('&#x%02X;', $ord);
+        return \sprintf('&#x%02X;', $ord);
     }
 
     /**
-     * Callback function for preg_replace_callback that applies Javascript
+     * Callback function for \preg_replace_callback that applies Javascript
      * escaping to all matches.
      *
      * @param array<array-key, string> $matches
@@ -309,21 +290,21 @@ class Escaper
     protected function jsMatcher($matches)
     {
         $chr = $matches[0];
-        if (strlen($chr) === 1) {
-            return sprintf('\\x%02X', ord($chr));
+        if (\strlen($chr) === 1) {
+            return \sprintf('\\x%02X', \ord($chr));
         }
         $chr = $this->convertEncoding($chr, 'UTF-16BE', 'UTF-8');
-        $hex = strtoupper(bin2hex($chr));
-        if (strlen($hex) <= 4) {
-            return sprintf('\\u%04s', $hex);
+        $hex = \strtoupper(\bin2hex($chr));
+        if (\strlen($hex) <= 4) {
+            return \sprintf('\\u%04s', $hex);
         }
-        $highSurrogate = substr($hex, 0, 4);
-        $lowSurrogate  = substr($hex, 4, 4);
-        return sprintf('\\u%04s\\u%04s', $highSurrogate, $lowSurrogate);
+        $highSurrogate = \substr($hex, 0, 4);
+        $lowSurrogate  = \substr($hex, 4, 4);
+        return \sprintf('\\u%04s\\u%04s', $highSurrogate, $lowSurrogate);
     }
 
     /**
-     * Callback function for preg_replace_callback that applies CSS
+     * Callback function for \preg_replace_callback that applies CSS
      * escaping to all matches.
      *
      * @param array<array-key, string> $matches
@@ -332,13 +313,13 @@ class Escaper
     protected function cssMatcher($matches)
     {
         $chr = $matches[0];
-        if (strlen($chr) === 1) {
-            $ord = ord($chr);
+        if (\strlen($chr) === 1) {
+            $ord = \ord($chr);
         } else {
             $chr = $this->convertEncoding($chr, 'UTF-32BE', 'UTF-8');
-            $ord = hexdec(bin2hex($chr));
+            $ord = \hexdec(\bin2hex($chr));
         }
-        return sprintf('\\%X ', $ord);
+        return \sprintf('\\%X ', $ord);
     }
 
     /**
@@ -358,7 +339,7 @@ class Escaper
 
         if (! $this->isUtf8($result)) {
             throw new Exception\RuntimeException(
-                sprintf('String to be escaped was not valid UTF-8 or could not be converted: %s', $result)
+                \sprintf('String to be escaped was not valid UTF-8 or could not be converted: %s', $result)
             );
         }
 
@@ -388,11 +369,11 @@ class Escaper
      */
     protected function isUtf8($string)
     {
-        return $string === '' || preg_match('/^./su', $string);
+        return $string === '' || \preg_match('/^./su', $string);
     }
 
     /**
-     * Encoding conversion helper which wraps mb_convert_encoding
+     * Encoding conversion helper which wraps \mb_convert_encoding
      *
      * @param string $string
      * @param string $to
@@ -401,7 +382,7 @@ class Escaper
      */
     protected function convertEncoding($string, $to, $from)
     {
-        $result = mb_convert_encoding($string, $to, $from);
+        $result = \mb_convert_encoding($string, $to, $from);
 
         if ($result === false) {
             return ''; // return non-fatal blank string on encoding errors from users
