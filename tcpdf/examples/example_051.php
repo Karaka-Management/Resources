@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 //============================================================+
 // File name   : example_051.php
 // Begin       : 2009-04-16
@@ -27,11 +27,10 @@
 // Include the main TCPDF library (search for installation path).
 require_once('tcpdf_include.php');
 
-
 // Extend the TCPDF class to create custom Header and Footer
 class MYPDF extends TCPDF {
 	//Page header
-	public function Header() {
+	public function Header() : void {
 		// get the current page break margin
 		$bMargin = $this->getBreakMargin();
 		// get current auto-page-break mode
@@ -59,7 +58,7 @@ $pdf->setSubject('TCPDF Tutorial');
 $pdf->setKeywords('TCPDF, PDF, example, test, guide');
 
 // set header and footer fonts
-$pdf->setHeaderFont(Array(PDF_FONT_NAME_MAIN, '', PDF_FONT_SIZE_MAIN));
+$pdf->setHeaderFont([PDF_FONT_NAME_MAIN, '', PDF_FONT_SIZE_MAIN]);
 
 // set default monospaced font
 $pdf->setDefaultMonospacedFont(PDF_FONT_MONOSPACED);
@@ -73,14 +72,14 @@ $pdf->setFooterMargin(0);
 $pdf->setPrintFooter(false);
 
 // set auto page breaks
-$pdf->setAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
+$pdf->setAutoPageBreak(true, PDF_MARGIN_BOTTOM);
 
 // set image scale factor
 $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
 
 // set some language-dependent strings (optional)
-if (@file_exists(dirname(__FILE__).'/lang/eng.php')) {
-	require_once(dirname(__FILE__).'/lang/eng.php');
+if (@\file_exists(\dirname(__FILE__).'/lang/eng.php')) {
+	require_once(\dirname(__FILE__).'/lang/eng.php');
 	$pdf->setLanguageArray($l);
 }
 
@@ -97,7 +96,6 @@ $html = '<span style="background-color:yellow;color:blue;">&nbsp;PAGE 1&nbsp;</s
 <p stroke="0.2" fill="true" strokecolor="yellow" color="blue" style="font-family:helvetica;font-weight:bold;font-size:26pt;">You can set a full page background.</p>';
 $pdf->writeHTML($html, true, false, true, false, '');
 
-
 // add a page
 $pdf->AddPage();
 
@@ -112,7 +110,6 @@ $pdf->setPrintHeader(false);
 
 // add a page
 $pdf->AddPage();
-
 
 // -- set new background ---
 
@@ -129,7 +126,6 @@ $pdf->Image($img_file, 0, 0, 210, 297, '', '', '', false, 300, '', false, false,
 $pdf->setAutoPageBreak($auto_page_break, $bMargin);
 // set the starting point for the page content
 $pdf->setPageMark();
-
 
 // Print a text
 $html = '<span style="color:white;text-align:center;font-weight:bold;font-size:80pt;">PAGE 3</span>';

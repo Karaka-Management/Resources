@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 //============================================================+
 // File name   : example_010.php
 // Begin       : 2008-03-04
@@ -27,21 +27,19 @@
 // Include the main TCPDF library (search for installation path).
 require_once('tcpdf_include.php');
 
-
 /**
  * Extend TCPDF to work with multiple columns
  */
 class MC_TCPDF extends TCPDF {
-
 	/**
 	 * Print chapter
-	 * @param int $num chapter number
+	 * @param int    $num   chapter number
 	 * @param string $title chapter title
-	 * @param string $file name of the file containing the chapter body
-	 * @param boolean $mode if true the chapter body is in HTML, otherwise in simple text.
+	 * @param string $file  name of the file containing the chapter body
+	 * @param bool   $mode  if true the chapter body is in HTML, otherwise in simple text
 	 * @public
 	 */
-	public function PrintChapter($num, $title, $file, $mode=false) {
+	public function PrintChapter($num, $title, $file, $mode=false) : void {
 		// add a new page
 		$this->AddPage();
 		// disable existing columns
@@ -56,11 +54,11 @@ class MC_TCPDF extends TCPDF {
 
 	/**
 	 * Set chapter title
-	 * @param int $num chapter number
+	 * @param int    $num   chapter number
 	 * @param string $title chapter title
 	 * @public
 	 */
-	public function ChapterTitle($num, $title) {
+	public function ChapterTitle($num, $title) : void {
 		$this->setFont('helvetica', '', 14);
 		$this->setFillColor(200, 220, 255);
 		$this->Cell(180, 6, 'Chapter '.$num.' : '.$title, 0, 1, '', 1);
@@ -70,13 +68,13 @@ class MC_TCPDF extends TCPDF {
 	/**
 	 * Print chapter body
 	 * @param string $file name of the file containing the chapter body
-	 * @param boolean $mode if true the chapter body is in HTML, otherwise in simple text.
+	 * @param bool   $mode if true the chapter body is in HTML, otherwise in simple text
 	 * @public
 	 */
-	public function ChapterBody($file, $mode=false) {
+	public function ChapterBody($file, $mode=false) : void {
 		$this->selectColumn();
 		// get esternal file content
-		$content = file_get_contents($file, false);
+		$content = \file_get_contents($file, false);
 		// set font
 		$this->setFont('times', '', 9);
 		$this->setTextColor(50, 50, 50);
@@ -109,8 +107,8 @@ $pdf->setKeywords('TCPDF, PDF, example, test, guide');
 $pdf->setHeaderData(PDF_HEADER_LOGO, PDF_HEADER_LOGO_WIDTH, PDF_HEADER_TITLE.' 010', PDF_HEADER_STRING);
 
 // set header and footer fonts
-$pdf->setHeaderFont(Array(PDF_FONT_NAME_MAIN, '', PDF_FONT_SIZE_MAIN));
-$pdf->setFooterFont(Array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
+$pdf->setHeaderFont([PDF_FONT_NAME_MAIN, '', PDF_FONT_SIZE_MAIN]);
+$pdf->setFooterFont([PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA]);
 
 // set default monospaced font
 $pdf->setDefaultMonospacedFont(PDF_FONT_MONOSPACED);
@@ -121,14 +119,14 @@ $pdf->setHeaderMargin(PDF_MARGIN_HEADER);
 $pdf->setFooterMargin(PDF_MARGIN_FOOTER);
 
 // set auto page breaks
-$pdf->setAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
+$pdf->setAutoPageBreak(true, PDF_MARGIN_BOTTOM);
 
 // set image scale factor
 $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
 
 // set some language-dependent strings (optional)
-if (@file_exists(dirname(__FILE__).'/lang/eng.php')) {
-	require_once(dirname(__FILE__).'/lang/eng.php');
+if (@\file_exists(\dirname(__FILE__).'/lang/eng.php')) {
+	require_once(\dirname(__FILE__).'/lang/eng.php');
 	$pdf->setLanguageArray($l);
 }
 

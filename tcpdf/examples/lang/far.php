@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 //============================================================+
 // File name   : far.php
 // Begin       : 2010-10-26
@@ -28,12 +28,12 @@
 // Farsi
 
 global $l;
-$l = Array();
+$l = [];
 
 // PAGE META DESCRIPTORS --------------------------------------
 
-$l['a_meta_charset'] = 'UTF-8';
-$l['a_meta_dir'] = 'rtl';
+$l['a_meta_charset']  = 'UTF-8';
+$l['a_meta_dir']      = 'rtl';
 $l['a_meta_language'] = 'fa';
 
 // TRANSLATIONS --------------------------------------

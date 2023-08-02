@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 //============================================================+
 // File name   : tcpdf_config.php
 // Begin       : 2004-06-11
@@ -39,7 +39,6 @@
 // IMPORTANT:
 // If you define the constant K_TCPDF_EXTERNAL_CONFIG, all the following settings will be ignored.
 // If you use the tcpdf_autoconfig.php, then you can overwrite some values here.
-
 
 /**
  * Installation path (/var/www/tcpdf/).
@@ -199,7 +198,7 @@ const K_TITLE_MAGNIFICATION = 1.3;
 /**
  * Reduction factor for small font.
  */
-const K_SMALL_RATIO = 2/3;
+const K_SMALL_RATIO = 2 / 3;
 
 /**
  * Set to true to enable the special procedure used to avoid the overlappind of symbols on Thai language.

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 //============================================================+
 // File name   : tcpdf_filters.php
 // Version     : 1.0.001
@@ -49,18 +49,17 @@
  * @author Nicola Asuni - info@tecnick.com
  */
 class TCPDF_FILTERS {
-
 	/**
 	 * Define a list of available filter decoders.
 	 * @private static
 	 */
-	private static $available_filters = array('ASCIIHexDecode', 'ASCII85Decode', 'LZWDecode', 'FlateDecode', 'RunLengthDecode');
+	private static $available_filters = ['ASCIIHexDecode', 'ASCII85Decode', 'LZWDecode', 'FlateDecode', 'RunLengthDecode'];
 
 // -----------------------------------------------------------------------------
 
 	/**
 	 * Get a list of available decoding filters.
-	 * @return array Array of available filter decoders.
+	 * @return array array of available filter decoders
 	 * @since 1.0.000 (2011-05-23)
 	 * @public static
 	 */
@@ -70,9 +69,9 @@ class TCPDF_FILTERS {
 
 	/**
 	 * Decode data using the specified filter type.
-	 * @param string $filter Filter name.
-	 * @param string $data Data to decode.
-	 * @return string Decoded data string.
+	 * @param  string $filter filter name
+	 * @param  string $data   data to decode
+	 * @return string decoded data string
 	 * @since 1.0.000 (2011-05-23)
 	 * @public static
 	 */
@@ -130,8 +129,8 @@ class TCPDF_FILTERS {
 	/**
 	 * Standard
 	 * Default decoding filter (leaves data unchanged).
-	 * @param string $data Data to decode.
-	 * @return string Decoded data string.
+	 * @param  string $data data to decode
+	 * @return string decoded data string
 	 * @since 1.0.000 (2011-05-23)
 	 * @public static
 	 */
@@ -142,8 +141,8 @@ class TCPDF_FILTERS {
 	/**
 	 * ASCIIHexDecode
 	 * Decodes data encoded in an ASCII hexadecimal representation, reproducing the original binary data.
-	 * @param string $data Data to decode.
-	 * @return string Decoded data string.
+	 * @param  string $data data to decode
+	 * @return string decoded data string
 	 * @since 1.0.000 (2011-05-23)
 	 * @public static
 	 */
@@ -151,39 +150,39 @@ class TCPDF_FILTERS {
 		// initialize string to return
 		$decoded = '';
 		// all white-space characters shall be ignored
-		$data = preg_replace('/[\s]/', '', $data);
+		$data = \preg_replace('/[\s]/', '', $data);
 		// check for EOD character: GREATER-THAN SIGN (3Eh)
-		$eod = strpos($data, '>');
+		$eod = \strpos($data, '>');
 		if ($eod !== false) {
 			// remove EOD and extra data (if any)
-			$data = substr($data, 0, $eod);
-			$eod = true;
+			$data = \substr($data, 0, $eod);
+			$eod  = true;
 		}
 		// get data length
-		$data_length = strlen($data);
+		$data_length = \strlen($data);
 		if (($data_length % 2) != 0) {
 			// odd number of hexadecimal digits
 			if ($eod) {
 				// EOD shall behave as if a 0 (zero) followed the last digit
-				$data = substr($data, 0, -1).'0'.substr($data, -1);
+				$data = \substr($data, 0, -1).'0'.\substr($data, -1);
 			} else {
 				self::Error('decodeFilterASCIIHexDecode: invalid code');
 			}
 		}
 		// check for invalid characters
-		if (preg_match('/[^a-fA-F\d]/', $data) > 0) {
+		if (\preg_match('/[^a-fA-F\d]/', $data) > 0) {
 			self::Error('decodeFilterASCIIHexDecode: invalid code');
 		}
 		// get one byte of binary data for each pair of ASCII hexadecimal digits
-		$decoded = pack('H*', $data);
+		$decoded = \pack('H*', $data);
 		return $decoded;
 	}
 
 	/**
 	 * ASCII85Decode
 	 * Decodes data encoded in an ASCII base-85 representation, reproducing the original binary data.
-	 * @param string $data Data to decode.
-	 * @return string Decoded data string.
+	 * @param  string $data data to decode
+	 * @return string decoded data string
 	 * @since 1.0.000 (2011-05-23)
 	 * @public static
 	 */
@@ -191,35 +190,35 @@ class TCPDF_FILTERS {
 		// initialize string to return
 		$decoded = '';
 		// all white-space characters shall be ignored
-		$data = preg_replace('/[\s]/', '', $data);
+		$data = \preg_replace('/[\s]/', '', $data);
 		// remove start sequence 2-character sequence <~ (3Ch)(7Eh)
-		if (strpos($data, '<~') !== false) {
+		if (\strpos($data, '<~') !== false) {
 			// remove EOD and extra data (if any)
-			$data = substr($data, 2);
+			$data = \substr($data, 2);
 		}
 		// check for EOD: 2-character sequence ~> (7Eh)(3Eh)
-		$eod = strpos($data, '~>');
+		$eod = \strpos($data, '~>');
 		if ($eod !== false) {
 			// remove EOD and extra data (if any)
-			$data = substr($data, 0, $eod);
+			$data = \substr($data, 0, $eod);
 		}
 		// data length
-		$data_length = strlen($data);
+		$data_length = \strlen($data);
 		// check for invalid characters
-		if (preg_match('/[^\x21-\x75,\x74]/', $data) > 0) {
+		if (\preg_match('/[^\x21-\x75,\x74]/', $data) > 0) {
 			self::Error('decodeFilterASCII85Decode: invalid code');
 		}
 		// z sequence
-		$zseq = chr(0).chr(0).chr(0).chr(0);
+		$zseq = \chr(0).\chr(0).\chr(0).\chr(0);
 		// position inside a group of 4 bytes (0-3)
 		$group_pos = 0;
-		$tuple = 0;
-		$pow85 = array((85*85*85*85), (85*85*85), (85*85), 85, 1);
-		$last_pos = ($data_length - 1);
+		$tuple     = 0;
+		$pow85     = [(85 * 85 * 85 * 85), (85 * 85 * 85), (85 * 85), 85, 1];
+		$last_pos  = ($data_length - 1);
 		// for each byte
 		for ($i = 0; $i < $data_length; ++$i) {
 			// get char value
-			$char = ord($data[$i]);
+			$char = \ord($data[$i]);
 			if ($char == 122) { // 'z'
 				if ($group_pos == 0) {
 					$decoded .= $zseq;
@@ -230,8 +229,8 @@ class TCPDF_FILTERS {
 				// the value represented by a group of 5 characters should never be greater than 2^32 - 1
 				$tuple += (($char - 33) * $pow85[$group_pos]);
 				if ($group_pos == 4) {
-					$decoded .= chr($tuple >> 24).chr($tuple >> 16).chr($tuple >> 8).chr($tuple);
-					$tuple = 0;
+					$decoded .= \chr($tuple >> 24).\chr($tuple >> 16).\chr($tuple >> 8).\chr($tuple);
+					$tuple     = 0;
 					$group_pos = 0;
 				} else {
 					++$group_pos;
@@ -244,15 +243,15 @@ class TCPDF_FILTERS {
 		// last tuple (if any)
 		switch ($group_pos) {
 			case 4: {
-				$decoded .= chr($tuple >> 24).chr($tuple >> 16).chr($tuple >> 8);
+				$decoded .= \chr($tuple >> 24).\chr($tuple >> 16).\chr($tuple >> 8);
 				break;
 			}
 			case 3: {
-				$decoded .= chr($tuple >> 24).chr($tuple >> 16);
+				$decoded .= \chr($tuple >> 24).\chr($tuple >> 16);
 				break;
 			}
 			case 2: {
-				$decoded .= chr($tuple >> 24);
+				$decoded .= \chr($tuple >> 24);
 				break;
 			}
 			case 1: {
@@ -266,8 +265,8 @@ class TCPDF_FILTERS {
 	/**
 	 * LZWDecode
 	 * Decompresses data encoded using the LZW (Lempel-Ziv-Welch) adaptive compression method, reproducing the original text or binary data.
-	 * @param string $data Data to decode.
-	 * @return string Decoded data string.
+	 * @param  string $data data to decode
+	 * @return string decoded data string
 	 * @since 1.0.000 (2011-05-23)
 	 * @public static
 	 */
@@ -275,41 +274,41 @@ class TCPDF_FILTERS {
 		// initialize string to return
 		$decoded = '';
 		// data length
-		$data_length = strlen($data);
+		$data_length = \strlen($data);
 		// convert string to binary string
 		$bitstring = '';
 		for ($i = 0; $i < $data_length; ++$i) {
-			$bitstring .= sprintf('%08b', ord($data[$i]));
+			$bitstring .= \sprintf('%08b', \ord($data[$i]));
 		}
 		// get the number of bits
-		$data_length = strlen($bitstring);
+		$data_length = \strlen($bitstring);
 		// initialize code length in bits
 		$bitlen = 9;
 		// initialize dictionary index
 		$dix = 258;
 		// initialize the dictionary (with the first 256 entries).
-		$dictionary = array();
+		$dictionary = [];
 		for ($i = 0; $i < 256; ++$i) {
-			$dictionary[$i] = chr($i);
+			$dictionary[$i] = \chr($i);
 		}
 		// previous val
 		$prev_index = 0;
 		// while we encounter EOD marker (257), read code_length bits
-		while (($data_length > 0) AND (($index = bindec(substr($bitstring, 0, $bitlen))) != 257)) {
+		while (($data_length > 0) && (($index = \bindec(\substr($bitstring, 0, $bitlen))) != 257)) {
 			// remove read bits from string
-			$bitstring = substr($bitstring, $bitlen);
+			$bitstring = \substr($bitstring, $bitlen);
 			// update number of bits
 			$data_length -= $bitlen;
 			if ($index == 256) { // clear-table marker
 				// reset code length in bits
 				$bitlen = 9;
 				// reset dictionary index
-				$dix = 258;
+				$dix        = 258;
 				$prev_index = 256;
 				// reset the dictionary (with the first 256 entries).
-				$dictionary = array();
+				$dictionary = [];
 				for ($i = 0; $i < 256; ++$i) {
-					$dictionary[$i] = chr($i);
+					$dictionary[$i] = \chr($i);
 				}
 			} elseif ($prev_index == 256) {
 				// first entry
@@ -347,14 +346,14 @@ class TCPDF_FILTERS {
 	/**
 	 * FlateDecode
 	 * Decompresses data encoded using the zlib/deflate compression method, reproducing the original text or binary data.
-	 * @param string $data Data to decode.
-	 * @return string Decoded data string.
+	 * @param  string $data data to decode
+	 * @return string decoded data string
 	 * @since 1.0.000 (2011-05-23)
 	 * @public static
 	 */
 	public static function decodeFilterFlateDecode($data) {
 		// initialize string to return
-		$decoded = @gzuncompress($data);
+		$decoded = @\gzuncompress($data);
 		if ($decoded === false) {
 			self::Error('decodeFilterFlateDecode: invalid code');
 		}
@@ -364,7 +363,7 @@ class TCPDF_FILTERS {
 	/**
 	 * RunLengthDecode
 	 * Decompresses data encoded using a byte-oriented run-length encoding algorithm.
-	 * @param string $data Data to decode.
+	 * @param string $data data to decode
 	 * @since 1.0.000 (2011-05-23)
 	 * @public static
 	 */
@@ -372,24 +371,24 @@ class TCPDF_FILTERS {
 		// initialize string to return
 		$decoded = '';
 		// data length
-		$data_length = strlen($data);
-		$i = 0;
+		$data_length = \strlen($data);
+		$i           = 0;
 		while($i < $data_length) {
 			// get current byte value
-			$byte = ord($data[$i]);
+			$byte = \ord($data[$i]);
 			if ($byte == 128) {
 				// a length value of 128 denote EOD
 				break;
 			} elseif ($byte < 128) {
 				// if the length byte is in the range 0 to 127
 				// the following length + 1 (1 to 128) bytes shall be copied literally during decompression
-				$decoded .= substr($data, ($i + 1), ($byte + 1));
+				$decoded .= \substr($data, ($i + 1), ($byte + 1));
 				// move to next block
 				$i += ($byte + 2);
 			} else {
 				// if length is in the range 129 to 255,
 				// the following single byte shall be copied 257 - length (2 to 128) times during decompression
-				$decoded .= str_repeat($data[($i + 1)], (257 - $byte));
+				$decoded .= \str_repeat($data[($i + 1)], (257 - $byte));
 				// move to next block
 				$i += 2;
 			}
@@ -400,8 +399,8 @@ class TCPDF_FILTERS {
 	/**
 	 * CCITTFaxDecode (NOT IMPLEMETED - RETURN AN EXCEPTION)
 	 * Decompresses data encoded using the CCITT facsimile standard, reproducing the original data (typically monochrome image data at 1 bit per pixel).
-	 * @param string $data Data to decode.
-	 * @return string Decoded data string.
+	 * @param  string $data data to decode
+	 * @return string decoded data string
 	 * @since 1.0.000 (2011-05-23)
 	 * @public static
 	 */
@@ -413,8 +412,8 @@ class TCPDF_FILTERS {
 	/**
 	 * JBIG2Decode (NOT IMPLEMETED - RETURN AN EXCEPTION)
 	 * Decompresses data encoded using the JBIG2 standard, reproducing the original monochrome (1 bit per pixel) image data (or an approximation of that data).
-	 * @param string $data Data to decode.
-	 * @return string Decoded data string.
+	 * @param  string $data data to decode
+	 * @return string decoded data string
 	 * @since 1.0.000 (2011-05-23)
 	 * @public static
 	 */
@@ -426,8 +425,8 @@ class TCPDF_FILTERS {
 	/**
 	 * DCTDecode (NOT IMPLEMETED - RETURN AN EXCEPTION)
 	 * Decompresses data encoded using a DCT (discrete cosine transform) technique based on the JPEG standard, reproducing image sample data that approximates the original data.
-	 * @param string $data Data to decode.
-	 * @return string Decoded data string.
+	 * @param  string $data data to decode
+	 * @return string decoded data string
 	 * @since 1.0.000 (2011-05-23)
 	 * @public static
 	 */
@@ -439,8 +438,8 @@ class TCPDF_FILTERS {
 	/**
 	 * JPXDecode (NOT IMPLEMETED - RETURN AN EXCEPTION)
 	 * Decompresses data encoded using the wavelet-based JPEG2000 standard, reproducing the original image data.
-	 * @param string $data Data to decode.
-	 * @return string Decoded data string.
+	 * @param  string $data data to decode
+	 * @return string decoded data string
 	 * @since 1.0.000 (2011-05-23)
 	 * @public static
 	 */
@@ -452,8 +451,8 @@ class TCPDF_FILTERS {
 	/**
 	 * Crypt (NOT IMPLEMETED - RETURN AN EXCEPTION)
 	 * Decrypts data encrypted by a security handler, reproducing the data as it was before encryption.
-	 * @param string $data Data to decode.
-	 * @return string Decoded data string.
+	 * @param  string $data data to decode
+	 * @return string decoded data string
 	 * @since 1.0.000 (2011-05-23)
 	 * @public static
 	 */
@@ -470,10 +469,9 @@ class TCPDF_FILTERS {
 	 * @since 1.0.000 (2011-05-23)
 	 * @public static
 	 */
-	public static function Error($msg) {
+	public static function Error($msg) : void {
 		throw new Exception('TCPDF_PARSER ERROR: '.$msg);
 	}
-
 } // END OF TCPDF_FILTERS CLASS
 
 //============================================================+

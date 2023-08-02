@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 //============================================================+
 // File name   : jpn.php
 // Begin       : 2011-01-24
@@ -28,12 +28,12 @@
 // Japanese
 
 global $l;
-$l = Array();
+$l = [];
 
 // PAGE META DESCRIPTORS --------------------------------------
 
-$l['a_meta_charset'] = 'UTF-8';
-$l['a_meta_dir'] = 'ltr';
+$l['a_meta_charset']  = 'UTF-8';
+$l['a_meta_dir']      = 'ltr';
 $l['a_meta_language'] = 'ja';
 
 // TRANSLATIONS --------------------------------------

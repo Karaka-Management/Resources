@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 //============================================================+
 // File name   : example_004.php
 // Begin       : 2008-03-04
@@ -41,8 +41,8 @@ $pdf->setKeywords('TCPDF, PDF, example, test, guide');
 $pdf->setHeaderData(PDF_HEADER_LOGO, PDF_HEADER_LOGO_WIDTH, PDF_HEADER_TITLE.' 004', PDF_HEADER_STRING);
 
 // set header and footer fonts
-$pdf->setHeaderFont(Array(PDF_FONT_NAME_MAIN, '', PDF_FONT_SIZE_MAIN));
-$pdf->setFooterFont(Array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
+$pdf->setHeaderFont([PDF_FONT_NAME_MAIN, '', PDF_FONT_SIZE_MAIN]);
+$pdf->setFooterFont([PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA]);
 
 // set default monospaced font
 $pdf->setDefaultMonospacedFont(PDF_FONT_MONOSPACED);
@@ -53,14 +53,14 @@ $pdf->setHeaderMargin(PDF_MARGIN_HEADER);
 $pdf->setFooterMargin(PDF_MARGIN_FOOTER);
 
 // set auto page breaks
-$pdf->setAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
+$pdf->setAutoPageBreak(true, PDF_MARGIN_BOTTOM);
 
 // set image scale factor
 $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
 
 // set some language-dependent strings (optional)
-if (@file_exists(dirname(__FILE__).'/lang/eng.php')) {
-	require_once(dirname(__FILE__).'/lang/eng.php');
+if (@\file_exists(\dirname(__FILE__).'/lang/eng.php')) {
+	require_once(\dirname(__FILE__).'/lang/eng.php');
 	$pdf->setLanguageArray($l);
 }
 
@@ -94,18 +94,17 @@ $pdf->AddPage();
 
 for ($stretching = 90; $stretching <= 110; $stretching += 10) {
 	for ($spacing = -0.254; $spacing <= 0.254; $spacing += 0.254) {
-
 		// set general stretching (scaling) value
 		$pdf->setFontStretching($stretching);
 
 		// set general spacing value
 		$pdf->setFontSpacing($spacing);
 
-		$pdf->Cell(0, 0, 'Stretching '.$stretching.'%, Spacing '.sprintf('%+.3F', $spacing).'mm, no stretch', 1, 1, 'C', 0, '', 0);
-		$pdf->Cell(0, 0, 'Stretching '.$stretching.'%, Spacing '.sprintf('%+.3F', $spacing).'mm, scaling', 1, 1, 'C', 0, '', 1);
-		$pdf->Cell(0, 0, 'Stretching '.$stretching.'%, Spacing '.sprintf('%+.3F', $spacing).'mm, force scaling', 1, 1, 'C', 0, '', 2);
-		$pdf->Cell(0, 0, 'Stretching '.$stretching.'%, Spacing '.sprintf('%+.3F', $spacing).'mm, spacing', 1, 1, 'C', 0, '', 3);
-		$pdf->Cell(0, 0, 'Stretching '.$stretching.'%, Spacing '.sprintf('%+.3F', $spacing).'mm, force spacing', 1, 1, 'C', 0, '', 4);
+		$pdf->Cell(0, 0, 'Stretching '.$stretching.'%, Spacing '.\sprintf('%+.3F', $spacing).'mm, no stretch', 1, 1, 'C', 0, '', 0);
+		$pdf->Cell(0, 0, 'Stretching '.$stretching.'%, Spacing '.\sprintf('%+.3F', $spacing).'mm, scaling', 1, 1, 'C', 0, '', 1);
+		$pdf->Cell(0, 0, 'Stretching '.$stretching.'%, Spacing '.\sprintf('%+.3F', $spacing).'mm, force scaling', 1, 1, 'C', 0, '', 2);
+		$pdf->Cell(0, 0, 'Stretching '.$stretching.'%, Spacing '.\sprintf('%+.3F', $spacing).'mm, spacing', 1, 1, 'C', 0, '', 3);
+		$pdf->Cell(0, 0, 'Stretching '.$stretching.'%, Spacing '.\sprintf('%+.3F', $spacing).'mm, force spacing', 1, 1, 'C', 0, '', 4);
 
 		$pdf->Ln(2);
 	}

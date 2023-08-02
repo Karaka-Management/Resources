@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 //============================================================+
 // File name   : hat.php
 // Begin       : 2004-03-03
@@ -28,12 +28,12 @@
 // Haitian Creole
 
 global $l;
-$l = Array();
+$l = [];
 
 // PAGE META DESCRIPTORS --------------------------------------
 
-$l['a_meta_charset'] = 'UTF-8';
-$l['a_meta_dir'] = 'ltr';
+$l['a_meta_charset']  = 'UTF-8';
+$l['a_meta_dir']      = 'ltr';
 $l['a_meta_language'] = 'ht';
 
 // TRANSLATIONS --------------------------------------

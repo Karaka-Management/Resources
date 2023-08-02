@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 //============================================================+
 // File name   : example_2d_svg.php
 // Version     : 1.0.000
@@ -40,7 +40,7 @@
  */
 
 // include 2D barcode class (search for installation path)
-require_once(dirname(__FILE__).'/tcpdf_barcodes_2d_include.php');
+require_once(\dirname(__FILE__).'/tcpdf_barcodes_2d_include.php');
 
 // set the barcode content and type
 $barcodeobj = new TCPDF2DBarcode('http://www.tcpdf.org', 'DATAMATRIX');

@@ -41,14 +41,14 @@
  * @version 1.0.000
  */
 
-if (php_sapi_name() != 'cli') {
+if (PHP_SAPI != 'cli') {
   echo 'You need to run this command from console.';
   exit(1);
 }
 
-$tcpdf_include_dirs = array(realpath(dirname(__FILE__).'/../tcpdf.php'), '/usr/share/php/tcpdf/tcpdf.php', '/usr/share/tcpdf/tcpdf.php', '/usr/share/php-tcpdf/tcpdf.php', '/var/www/tcpdf/tcpdf.php', '/var/www/html/tcpdf/tcpdf.php', '/usr/local/apache2/htdocs/tcpdf/tcpdf.php');
+$tcpdf_include_dirs = [\realpath(\dirname(__FILE__).'/../tcpdf.php'), '/usr/share/php/tcpdf/tcpdf.php', '/usr/share/tcpdf/tcpdf.php', '/usr/share/php-tcpdf/tcpdf.php', '/var/www/tcpdf/tcpdf.php', '/var/www/html/tcpdf/tcpdf.php', '/usr/local/apache2/htdocs/tcpdf/tcpdf.php'];
 foreach ($tcpdf_include_dirs as $tcpdf_include_path) {
-	if (@file_exists($tcpdf_include_path)) {
+	if (@\file_exists($tcpdf_include_path)) {
 		require_once($tcpdf_include_path);
 		break;
 	}
@@ -57,7 +57,7 @@ foreach ($tcpdf_include_dirs as $tcpdf_include_path) {
 /**
  * Display help guide for this command.
  */
-function showHelp() {
+function showHelp() : void {
 	$help = <<<EOD
 tcpdf_addfont - command line tool to convert fonts for the TCPDF library.
 
@@ -126,15 +126,15 @@ EOD;
 }
 
 // remove the name of the executing script
-array_shift($argv);
+\array_shift($argv);
 
 // no options chosen
-if (!is_array($argv)) {
-  showHelp();
+if (!\is_array($argv)) {
+  \showHelp();
 }
 
 // initialize the array of options
-$options = array('type'=>'', 'enc'=>'', 'flags'=>32, 'outpath'=>K_PATH_FONTS, 'platid'=>3, 'encid'=>1, 'addcbbox'=>false, 'link'=>false);
+$options = ['type'=>'', 'enc'=>'', 'flags'=>32, 'outpath'=>K_PATH_FONTS, 'platid'=>3, 'encid'=>1, 'addcbbox'=>false, 'link'=>false];
 
 // short input options
 $sopt = '';
@@ -150,7 +150,7 @@ $sopt .= 'i:';
 $sopt .= 'h';
 
 // long input options
-$lopt = array();
+$lopt   = [];
 $lopt[] = 'type:';
 $lopt[] = 'enc:';
 $lopt[] = 'flags:';
@@ -163,14 +163,14 @@ $lopt[] = 'fonts:';
 $lopt[] = 'help';
 
 // parse input options
-$inopt = getopt($sopt, $lopt);
+$inopt = \getopt($sopt, $lopt);
 
 // import options (with some sanitization)
 foreach ($inopt as $opt => $val) {
 	switch ($opt) {
 		case 't':
 		case 'type': {
-			if (in_array($val, array('TrueTypeUnicode', 'TrueType', 'Type1', 'CID0JP', 'CID0KR', 'CID0CS', 'CID0CT'))) {
+			if (\in_array($val, ['TrueTypeUnicode', 'TrueType', 'Type1', 'CID0JP', 'CID0KR', 'CID0CS', 'CID0CT'])) {
 				$options['type'] = $val;
 			}
 			break;
@@ -182,25 +182,25 @@ foreach ($inopt as $opt => $val) {
 		}
 		case 'f':
 		case 'flags': {
-			$options['flags'] = intval($val);
+			$options['flags'] = (int) $val;
 			break;
 		}
 		case 'o':
 		case 'outpath': {
-			$options['outpath'] = realpath($val);
-			if (substr($options['outpath'], -1) != '/') {
+			$options['outpath'] = \realpath($val);
+			if (\substr($options['outpath'], -1) != '/') {
 				$options['outpath'] .= '/';
 			}
 			break;
 		}
 		case 'p':
 		case 'platid': {
-			$options['platid'] = min(max(1, intval($val)), 3);
+			$options['platid'] = \min(\max(1, (int) $val), 3);
 			break;
 		}
 		case 'n':
 		case 'encid': {
-			$options['encid'] = min(max(0, intval($val)), 10);
+			$options['encid'] = \min(\max(0, (int) $val), 10);
 			break;
 		}
 		case 'b':
@@ -215,13 +215,13 @@ foreach ($inopt as $opt => $val) {
 		}
 		case 'i':
 		case 'fonts': {
-			$options['fonts'] = explode(',', $val);
+			$options['fonts'] = \explode(',', $val);
 			break;
 		}
 		case 'h':
 		case 'help':
 		default: {
-			showHelp();
+			\showHelp();
 			break;
 		}
 	} // end of switch
@@ -233,7 +233,7 @@ if (empty($options['fonts'])) {
 }
 
 // check the output path
-if (!is_dir($options['outpath']) OR !is_writable($options['outpath'])) {
+if (!\is_dir($options['outpath']) || !\is_writable($options['outpath'])) {
 	echo "ERROR: Can't write to ".$options['outpath']."\n\n";
 	exit(3);
 }
@@ -246,7 +246,7 @@ echo '*** Output dir set to '.$options['outpath']."\n";
 $errors = false;
 
 foreach ($options['fonts'] as $font) {
-	$fontfile = realpath($font);
+	$fontfile = \realpath($font);
 	$fontname = TCPDF_FONTS::addTTFfont($fontfile, $options['type'], $options['enc'], $options['flags'], $options['outpath'], $options['platid'], $options['encid'], $options['addcbbox'], $options['link']);
 	if ($fontname === false) {
 		$errors = true;

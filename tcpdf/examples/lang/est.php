@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 //============================================================+
 // File name   : est.php
 // Begin       : 2010-10-26
@@ -28,12 +28,12 @@
 // Estonian
 
 global $l;
-$l = Array();
+$l = [];
 
 // PAGE META DESCRIPTORS --------------------------------------
 
-$l['a_meta_charset'] = 'UTF-8';
-$l['a_meta_dir'] = 'ltr';
+$l['a_meta_charset']  = 'UTF-8';
+$l['a_meta_dir']      = 'ltr';
 $l['a_meta_language'] = 'et';
 
 // TRANSLATIONS --------------------------------------

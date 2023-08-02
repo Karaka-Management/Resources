@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 //============================================================+
 // File name   : example_028.php
 // Begin       : 2008-03-04
@@ -48,14 +48,14 @@ $pdf->setDefaultMonospacedFont(PDF_FONT_MONOSPACED);
 $pdf->setMargins(10, PDF_MARGIN_TOP, 10);
 
 // set auto page breaks
-$pdf->setAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
+$pdf->setAutoPageBreak(true, PDF_MARGIN_BOTTOM);
 
 // set image scale factor
 $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
 
 // set some language-dependent strings (optional)
-if (@file_exists(dirname(__FILE__).'/lang/eng.php')) {
-	require_once(dirname(__FILE__).'/lang/eng.php');
+if (@\file_exists(\dirname(__FILE__).'/lang/eng.php')) {
+	require_once(\dirname(__FILE__).'/lang/eng.php');
 	$pdf->setLanguageArray($l);
 }
 
@@ -90,9 +90,7 @@ $pdf->Cell(0, 0, 'A7 PORTRAIT', 1, 1, 'C');
 $pdf->AddPage('L', 'A7');
 $pdf->Cell(0, 0, 'A7 LANDSCAPE', 1, 1, 'C');
 
-
 // --- test backward editing ---
-
 
 $pdf->setPage(1, true);
 $pdf->setY(50);

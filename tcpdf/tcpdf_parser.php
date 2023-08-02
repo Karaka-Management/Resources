@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 //============================================================+
 // File name   : tcpdf_parser.php
 // Version     : 1.0.16
@@ -41,7 +41,7 @@
  */
 
 // include class for decoding filters
-require_once(dirname(__FILE__).'/include/tcpdf_filters.php');
+require_once(\dirname(__FILE__).'/include/tcpdf_filters.php');
 
 /**
  * @class TCPDF_PARSER
@@ -52,7 +52,6 @@ require_once(dirname(__FILE__).'/include/tcpdf_filters.php');
  * @author Nicola Asuni - info@tecnick.com
  */
 class TCPDF_PARSER {
-
 	/**
 	 * Raw content of the PDF document.
 	 * @private
@@ -81,21 +80,21 @@ class TCPDF_PARSER {
 	 * Array of configuration parameters.
 	 * @private
 	 */
-	private $cfg = array(
-		'die_for_errors' => false,
-		'ignore_filter_decoding_errors' => true,
+	private $cfg = [
+		'die_for_errors'                 => false,
+		'ignore_filter_decoding_errors'  => true,
 		'ignore_missing_filter_decoders' => true,
-	);
+	];
 
 // -----------------------------------------------------------------------------
 
 	/**
 	 * Parse a PDF document an return an array of objects.
-	 * @param string $data PDF data to parse.
-	 * @param array $cfg Array of configuration parameters:
-	 * 			'die_for_errors' : if true termitate the program execution in case of error, otherwise thows an exception;
-	 * 			'ignore_filter_decoding_errors' : if true ignore filter decoding errors;
-	 * 			'ignore_missing_filter_decoders' : if true ignore missing filter decoding errors.
+	 * @param string $data PDF data to parse
+	 * @param array  $cfg  array of configuration parameters:
+	 *                     'die_for_errors' : if true termitate the program execution in case of error, otherwise thows an exception;
+	 *                     'ignore_filter_decoding_errors' : if true ignore filter decoding errors;
+	 *                     'ignore_missing_filter_decoders' : if true ignore missing filter decoding errors
 	 * @public
 	 * @since 1.0.000 (2011-05-24)
 	 */
@@ -104,7 +103,7 @@ class TCPDF_PARSER {
 			$this->Error('Empty PDF data.');
 		}
 		// find the pdf header starting position
-		if (($trimpos = \strpos($data, '%PDF-')) === FALSE) {
+		if (($trimpos = \strpos($data, '%PDF-')) === false) {
 			$this->Error('Invalid PDF data: missing %PDF header.');
 		}
 		// get PDF content string
@@ -118,7 +117,7 @@ class TCPDF_PARSER {
 		// parse all document objects
 		$this->objects = [];
 		foreach ($this->xref['xref'] as $obj => $offset) {
-			if (!isset($this->objects[$obj]) AND ($offset > 0)) {
+			if (!isset($this->objects[$obj]) && ($offset > 0)) {
 				// decode objects with positive offset
 				$this->objects[$obj] = $this->getIndirectObject($obj, $offset, true);
 			}
@@ -130,13 +129,13 @@ class TCPDF_PARSER {
 
 	/**
 	 * Set the configuration parameters.
-	 * @param array $cfg Array of configuration parameters:
-	 * 			'die_for_errors' : if true termitate the program execution in case of error, otherwise thows an exception;
-	 * 			'ignore_filter_decoding_errors' : if true ignore filter decoding errors;
-	 * 			'ignore_missing_filter_decoders' : if true ignore missing filter decoding errors.
+	 * @param array $cfg array of configuration parameters:
+	 *                   'die_for_errors' : if true termitate the program execution in case of error, otherwise thows an exception;
+	 *                   'ignore_filter_decoding_errors' : if true ignore filter decoding errors;
+	 *                   'ignore_missing_filter_decoders' : if true ignore missing filter decoding errors
 	 * @public
 	 */
-	protected function setConfig($cfg) {
+	protected function setConfig($cfg) : void {
 		if (isset($cfg['die_for_errors'])) {
 			$this->cfg['die_for_errors'] = !!$cfg['die_for_errors'];
 		}
@@ -150,37 +149,37 @@ class TCPDF_PARSER {
 
 	/**
 	 * Return an array of parsed PDF document objects.
-	 * @return array Array of parsed PDF document objects.
+	 * @return array array of parsed PDF document objects
 	 * @public
 	 * @since 1.0.000 (2011-06-26)
 	 */
 	public function getParsedData() {
-		return array($this->xref, $this->objects);
+		return [$this->xref, $this->objects];
 	}
 
 	/**
 	 * Get Cross-Reference (xref) table and trailer data from PDF document data.
-	 * @param int $offset xref offset (if know).
-	 * @param array $xref previous xref array (if any).
-	 * @return array containing xref and trailer data.
+	 * @param  int   $offset xref offset (if know)
+	 * @param  array $xref   previous xref array (if any)
+	 * @return array containing xref and trailer data
 	 * @protected
 	 * @since 1.0.000 (2011-05-24)
 	 */
 	protected function getXrefData($offset=0, $xref=[]) {
 		if ($offset == 0) {
 			// find last startxref
-			if (preg_match_all('/[\r\n]startxref[\s]*[\r\n]+([0-9]+)[\s]*[\r\n]+%%EOF/i', $this->pdfdata, $matches, PREG_SET_ORDER, $offset) == 0) {
+			if (\preg_match_all('/[\r\n]startxref[\s]*[\r\n]+([0-9]+)[\s]*[\r\n]+%%EOF/i', $this->pdfdata, $matches, \PREG_SET_ORDER, $offset) == 0) {
 				$this->Error('Unable to find startxref');
 			}
-			$matches = array_pop($matches);
+			$matches   = \array_pop($matches);
 			$startxref = $matches[1];
 		} elseif (\strpos($this->pdfdata, 'xref', $offset) == $offset) {
 			// Already pointing at the xref table
 			$startxref = $offset;
-		} elseif (\preg_match('/([0-9]+[\s][0-9]+[\s]obj)/i', $this->pdfdata, $matches, PREG_OFFSET_CAPTURE, $offset)) {
+		} elseif (\preg_match('/([0-9]+[\s][0-9]+[\s]obj)/i', $this->pdfdata, $matches, \PREG_OFFSET_CAPTURE, $offset)) {
 			// Cross-Reference Stream object
 			$startxref = $offset;
-		} elseif (\preg_match('/[\r\n]startxref[\s]*[\r\n]+([0-9]+)[\s]*[\r\n]+%%EOF/i', $this->pdfdata, $matches, PREG_OFFSET_CAPTURE, $offset)) {
+		} elseif (\preg_match('/[\r\n]startxref[\s]*[\r\n]+([0-9]+)[\s]*[\r\n]+%%EOF/i', $this->pdfdata, $matches, \PREG_OFFSET_CAPTURE, $offset)) {
 			// startxref found
 			$startxref = $matches[1][0];
 		} else {
@@ -202,20 +201,20 @@ class TCPDF_PARSER {
 
 	/**
 	 * Decode the Cross-Reference section
-	 * @param int $startxref Offset at which the xref section starts (position of the 'xref' keyword).
-	 * @param array $xref Previous xref array (if any).
-	 * @return array containing xref and trailer data.
+	 * @param  int   $startxref offset at which the xref section starts (position of the 'xref' keyword)
+	 * @param  array $xref      previous xref array (if any)
+	 * @return array containing xref and trailer data
 	 * @protected
 	 * @since 1.0.000 (2011-06-20)
 	 */
 	protected function decodeXref($startxref, $xref=[]) {
 		$startxref += 4; // 4 is the length of the word 'xref'
 		// skip initial white space chars: \x00 null (NUL), \x09 horizontal tab (HT), \x0A line feed (LF), \x0C form feed (FF), \x0D carriage return (CR), \x20 space (SP)
-		$offset = $startxref + strspn($this->pdfdata, "\x00\x09\x0a\x0c\x0d\x20", $startxref);
+		$offset = $startxref + \strspn($this->pdfdata, "\x00\x09\x0a\x0c\x0d\x20", $startxref);
 		// initialize object number
 		$obj_num = 0;
 		// search for cross-reference entries or subsection
-		while (\preg_match('/([0-9]+)[\x20]([0-9]+)[\x20]?([nf]?)(\r\n|[\x20]?[\r\n])/', $this->pdfdata, $matches, PREG_OFFSET_CAPTURE, $offset) > 0) {
+		while (\preg_match('/([0-9]+)[\x20]([0-9]+)[\x20]?([nf]?)(\r\n|[\x20]?[\r\n])/', $this->pdfdata, $matches, \PREG_OFFSET_CAPTURE, $offset) > 0) {
 			if ($matches[0][1] != $offset) {
 				// we are on another section
 				break;
@@ -223,48 +222,48 @@ class TCPDF_PARSER {
 			$offset += \strlen($matches[0][0]);
 			if ($matches[3][0] == 'n') {
 				// create unique object index: [object number]_[generation number]
-				$index = $obj_num.'_'.\intval($matches[2][0]);
+				$index = $obj_num.'_'.(int) ($matches[2][0]);
 				// check if object already exist
 				if (!isset($xref['xref'][$index])) {
 					// store object offset position
-					$xref['xref'][$index] = \intval($matches[1][0]);
+					$xref['xref'][$index] = (int) ($matches[1][0]);
 				}
 				++$obj_num;
 			} elseif ($matches[3][0] == 'f') {
 				++$obj_num;
 			} else {
 				// object number (index)
-				$obj_num = \intval($matches[1][0]);
+				$obj_num = (int) ($matches[1][0]);
 			}
 		}
 		// get trailer data
-		if (\preg_match('/trailer[\s]*<<(.*)>>/isU', $this->pdfdata, $matches, PREG_OFFSET_CAPTURE, $offset) > 0) {
+		if (\preg_match('/trailer[\s]*<<(.*)>>/isU', $this->pdfdata, $matches, \PREG_OFFSET_CAPTURE, $offset) > 0) {
 			$trailer_data = $matches[1][0];
-			if (!isset($xref['trailer']) OR empty($xref['trailer'])) {
+			if (!isset($xref['trailer']) || empty($xref['trailer'])) {
 				// get only the last updated version
 				$xref['trailer'] = [];
 				// parse trailer_data
 				if (\preg_match('/Size[\s]+([0-9]+)/i', $trailer_data, $matches) > 0) {
-					$xref['trailer']['size'] = \intval($matches[1]);
+					$xref['trailer']['size'] = (int) ($matches[1]);
 				}
 				if (\preg_match('/Root[\s]+([0-9]+)[\s]+([0-9]+)[\s]+R/i', $trailer_data, $matches) > 0) {
-					$xref['trailer']['root'] = \intval($matches[1]).'_'.\intval($matches[2]);
+					$xref['trailer']['root'] = (int) ($matches[1]).'_'.(int) ($matches[2]);
 				}
 				if (\preg_match('/Encrypt[\s]+([0-9]+)[\s]+([0-9]+)[\s]+R/i', $trailer_data, $matches) > 0) {
-					$xref['trailer']['encrypt'] = \intval($matches[1]).'_'.\intval($matches[2]);
+					$xref['trailer']['encrypt'] = (int) ($matches[1]).'_'.(int) ($matches[2]);
 				}
 				if (\preg_match('/Info[\s]+([0-9]+)[\s]+([0-9]+)[\s]+R/i', $trailer_data, $matches) > 0) {
-					$xref['trailer']['info'] = \intval($matches[1]).'_'.\intval($matches[2]);
+					$xref['trailer']['info'] = (int) ($matches[1]).'_'.(int) ($matches[2]);
 				}
 				if (\preg_match('/ID[\s]*[\[][\s]*[<]([^>]*)[>][\s]*[<]([^>]*)[>]/i', $trailer_data, $matches) > 0) {
-					$xref['trailer']['id'] = [];
+					$xref['trailer']['id']    = [];
 					$xref['trailer']['id'][0] = $matches[1];
 					$xref['trailer']['id'][1] = $matches[2];
 				}
 			}
 			if (\preg_match('/Prev[\s]+([0-9]+)/i', $trailer_data, $matches) > 0) {
 				// get previous xref
-				$xref = $this->getXrefData(\intval($matches[1]), $xref);
+				$xref = $this->getXrefData((int) ($matches[1]), $xref);
 			}
 		} else {
 			$this->Error('Unable to find trailer');
@@ -274,9 +273,9 @@ class TCPDF_PARSER {
 
 	/**
 	 * Decode the Cross-Reference Stream section
-	 * @param int $startxref Offset at which the xref section starts.
-	 * @param array $xref Previous xref array (if any).
-	 * @return array containing xref and trailer data.
+	 * @param  int   $startxref offset at which the xref section starts
+	 * @param  array $xref      previous xref array (if any)
+	 * @return array containing xref and trailer data
 	 * @protected
 	 * @since 1.0.003 (2013-03-16)
 	 */
@@ -284,10 +283,10 @@ class TCPDF_PARSER {
 		// try to read Cross-Reference Stream
 		$xrefobj = $this->getRawObject($startxref);
 		$xrefcrs = $this->getIndirectObject($xrefobj[1], $startxref, true);
-		if (!isset($xref['trailer']) OR empty($xref['trailer'])) {
+		if (!isset($xref['trailer']) || empty($xref['trailer'])) {
 			// get only the last updated version
 			$xref['trailer'] = [];
-			$filltrailer = true;
+			$filltrailer     = true;
 		} else {
 			$filltrailer = false;
 		}
@@ -295,65 +294,65 @@ class TCPDF_PARSER {
 			$xref['xref'] = [];
 		}
 		$valid_crs = false;
-		$columns = 0;
-		$sarr = $xrefcrs[0][1];
-		if (!is_array($sarr)) {
+		$columns   = 0;
+		$sarr      = $xrefcrs[0][1];
+		if (!\is_array($sarr)) {
 			$sarr = [];
 		}
 		foreach ($sarr as $k => $v) {
-			if (($v[0] == '/') AND ($v[1] == 'Type') AND (isset($sarr[($k +1)]) AND ($sarr[($k +1)][0] == '/') AND ($sarr[($k +1)][1] == 'XRef'))) {
+			if (($v[0] == '/') && ($v[1] == 'Type') && (isset($sarr[($k + 1)]) && ($sarr[($k + 1)][0] == '/') && ($sarr[($k + 1)][1] == 'XRef'))) {
 				$valid_crs = true;
-			} elseif (($v[0] == '/') AND ($v[1] == 'Index') AND (isset($sarr[($k +1)]))) {
+			} elseif (($v[0] == '/') && ($v[1] == 'Index') && (isset($sarr[($k + 1)]))) {
 				// first object number in the subsection
-				$index_first = \intval($sarr[($k +1)][1][0][1]);
+				$index_first = (int) ($sarr[($k + 1)][1][0][1]);
 				// number of entries in the subsection
-				$index_entries = \intval($sarr[($k +1)][1][1][1]);
-			} elseif (($v[0] == '/') AND ($v[1] == 'Prev') AND (isset($sarr[($k +1)]) AND ($sarr[($k +1)][0] == 'numeric'))) {
+				$index_entries = (int) ($sarr[($k + 1)][1][1][1]);
+			} elseif (($v[0] == '/') && ($v[1] == 'Prev') && (isset($sarr[($k + 1)]) && ($sarr[($k + 1)][0] == 'numeric'))) {
 				// get previous xref offset
-				$prevxref = \intval($sarr[($k +1)][1]);
-			} elseif (($v[0] == '/') AND ($v[1] == 'W') AND (isset($sarr[($k +1)]))) {
+				$prevxref = (int) ($sarr[($k + 1)][1]);
+			} elseif (($v[0] == '/') && ($v[1] == 'W') && (isset($sarr[($k + 1)]))) {
 				// number of bytes (in the decoded stream) of the corresponding field
-				$wb = [];
-				$wb[0] = \intval($sarr[($k +1)][1][0][1]);
-				$wb[1] = \intval($sarr[($k +1)][1][1][1]);
-				$wb[2] = \intval($sarr[($k +1)][1][2][1]);
-			} elseif (($v[0] == '/') AND ($v[1] == 'DecodeParms') AND (isset($sarr[($k +1)][1]))) {
-				$decpar = $sarr[($k +1)][1];
+				$wb    = [];
+				$wb[0] = (int) ($sarr[($k + 1)][1][0][1]);
+				$wb[1] = (int) ($sarr[($k + 1)][1][1][1]);
+				$wb[2] = (int) ($sarr[($k + 1)][1][2][1]);
+			} elseif (($v[0] == '/') && ($v[1] == 'DecodeParms') && (isset($sarr[($k + 1)][1]))) {
+				$decpar = $sarr[($k + 1)][1];
 				foreach ($decpar as $kdc => $vdc) {
-					if (($vdc[0] == '/') AND ($vdc[1] == 'Columns') AND (isset($decpar[($kdc +1)]) AND ($decpar[($kdc +1)][0] == 'numeric'))) {
-						$columns = \intval($decpar[($kdc +1)][1]);
-					} elseif (($vdc[0] == '/') AND ($vdc[1] == 'Predictor') AND (isset($decpar[($kdc +1)]) AND ($decpar[($kdc +1)][0] == 'numeric'))) {
-						$predictor = \intval($decpar[($kdc +1)][1]);
+					if (($vdc[0] == '/') && ($vdc[1] == 'Columns') && (isset($decpar[($kdc + 1)]) && ($decpar[($kdc + 1)][0] == 'numeric'))) {
+						$columns = (int) ($decpar[($kdc + 1)][1]);
+					} elseif (($vdc[0] == '/') && ($vdc[1] == 'Predictor') && (isset($decpar[($kdc + 1)]) && ($decpar[($kdc + 1)][0] == 'numeric'))) {
+						$predictor = (int) ($decpar[($kdc + 1)][1]);
 					}
 				}
 			} elseif ($filltrailer) {
-				if (($v[0] == '/') AND ($v[1] == 'Size') AND (isset($sarr[($k +1)]) AND ($sarr[($k +1)][0] == 'numeric'))) {
-					$xref['trailer']['size'] = $sarr[($k +1)][1];
-				} elseif (($v[0] == '/') AND ($v[1] == 'Root') AND (isset($sarr[($k +1)]) AND ($sarr[($k +1)][0] == 'objref'))) {
-					$xref['trailer']['root'] = $sarr[($k +1)][1];
-				} elseif (($v[0] == '/') AND ($v[1] == 'Info') AND (isset($sarr[($k +1)]) AND ($sarr[($k +1)][0] == 'objref'))) {
-					$xref['trailer']['info'] = $sarr[($k +1)][1];
-				} elseif (($v[0] == '/') AND ($v[1] == 'Encrypt') AND (isset($sarr[($k +1)]) AND ($sarr[($k +1)][0] == 'objref'))) {
-					$xref['trailer']['encrypt'] = $sarr[($k +1)][1];
-				} elseif (($v[0] == '/') AND ($v[1] == 'ID') AND (isset($sarr[($k +1)]))) {
-					$xref['trailer']['id'] = [];
-					$xref['trailer']['id'][0] = $sarr[($k +1)][1][0][1];
-					$xref['trailer']['id'][1] = $sarr[($k +1)][1][1][1];
+				if (($v[0] == '/') && ($v[1] == 'Size') && (isset($sarr[($k + 1)]) && ($sarr[($k + 1)][0] == 'numeric'))) {
+					$xref['trailer']['size'] = $sarr[($k + 1)][1];
+				} elseif (($v[0] == '/') && ($v[1] == 'Root') && (isset($sarr[($k + 1)]) && ($sarr[($k + 1)][0] == 'objref'))) {
+					$xref['trailer']['root'] = $sarr[($k + 1)][1];
+				} elseif (($v[0] == '/') && ($v[1] == 'Info') && (isset($sarr[($k + 1)]) && ($sarr[($k + 1)][0] == 'objref'))) {
+					$xref['trailer']['info'] = $sarr[($k + 1)][1];
+				} elseif (($v[0] == '/') && ($v[1] == 'Encrypt') && (isset($sarr[($k + 1)]) && ($sarr[($k + 1)][0] == 'objref'))) {
+					$xref['trailer']['encrypt'] = $sarr[($k + 1)][1];
+				} elseif (($v[0] == '/') && ($v[1] == 'ID') && (isset($sarr[($k + 1)]))) {
+					$xref['trailer']['id']    = [];
+					$xref['trailer']['id'][0] = $sarr[($k + 1)][1][0][1];
+					$xref['trailer']['id'][1] = $sarr[($k + 1)][1][1][1];
 				}
 			}
 		}
 		// decode data
-		if ($valid_crs AND isset($xrefcrs[1][3][0])) {
+		if ($valid_crs && isset($xrefcrs[1][3][0])) {
 			// number of bytes in a row
 			$rowlen = ($columns + 1);
 			// convert the stream into an array of integers
-			$sdata = unpack('C*', $xrefcrs[1][3][0]);
+			$sdata = \unpack('C*', $xrefcrs[1][3][0]);
 			// split the rows
-			$sdata = array_chunk($sdata, $rowlen);
+			$sdata = \array_chunk($sdata, $rowlen);
 			// initialize decoded array
 			$ddata = [];
 			// initialize first row with zeros
-			$prev_row = array_fill (0, $rowlen, 0);
+			$prev_row = \array_fill(0, $rowlen, 0);
 			// for each row apply PNG unpredictor
 			foreach ($sdata as $k => $row) {
 				// initialize new row
@@ -361,15 +360,15 @@ class TCPDF_PARSER {
 				// get PNG predictor value
 				$predictor = (10 + $row[0]);
 				// for each byte on the row
-				for ($i=1; $i<=$columns; ++$i) {
+				for ($i=1; $i <= $columns; ++$i) {
 					// new index
-					$j = ($i - 1);
+					$j      = ($i - 1);
 					$row_up = $prev_row[$j];
 					if ($i == 1) {
-						$row_left = 0;
+						$row_left   = 0;
 						$row_upleft = 0;
 					} else {
-						$row_left = $row[($i - 1)];
+						$row_left   = $row[($i - 1)];
 						$row_upleft = $prev_row[($j - 1)];
 					}
 					switch ($predictor) {
@@ -393,9 +392,9 @@ class TCPDF_PARSER {
 							// initial estimate
 							$p = ($row_left + $row_up - $row_upleft);
 							// distances
-							$pa = \abs($p - $row_left);
-							$pb = \abs($p - $row_up);
-							$pc = \abs($p - $row_upleft);
+							$pa   = \abs($p - $row_left);
+							$pb   = \abs($p - $row_up);
+							$pc   = \abs($p - $row_upleft);
 							$pmin = \min($pa, $pb, $pc);
 							// return minimum distance
 							switch ($pmin) {
@@ -427,7 +426,7 @@ class TCPDF_PARSER {
 			// for every row
 			foreach ($ddata as $k => $row) {
 				// initialize new row
-				$sdata[$k] = array(0, 0, 0);
+				$sdata[$k] = [0, 0, 0];
 				if ($wb[0] == 0) {
 					// default type field
 					$sdata[$k][0] = 1;
@@ -469,7 +468,7 @@ class TCPDF_PARSER {
 					case 2: { // compressed objects
 						// $row[1] = object number of the object stream in which this object is stored
 						// $row[2] = index of this object within the object stream
-						$index = $row[1].'_0_'.$row[2];
+						$index                = $row[1].'_0_'.$row[2];
 						$xref['xref'][$index] = -1;
 						break;
 					}
@@ -489,23 +488,23 @@ class TCPDF_PARSER {
 
 	/**
 	 * Get object type, raw value and offset to next object
-	 * @param int $offset Object offset.
+	 * @param  int   $offset object offset
 	 * @return array containing object type, raw value and offset to next object
 	 * @protected
 	 * @since 1.0.000 (2011-06-20)
 	 */
 	protected function getRawObject($offset=0) {
 		$objtype = ''; // object type to be returned
-		$objval = ''; // object value to be returned
+		$objval  = ''; // object value to be returned
 		// skip initial white space chars: \x00 null (NUL), \x09 horizontal tab (HT), \x0A line feed (LF), \x0C form feed (FF), \x0D carriage return (CR), \x20 space (SP)
-		$offset += strspn($this->pdfdata, "\x00\x09\x0a\x0c\x0d\x20", $offset);
+		$offset += \strspn($this->pdfdata, "\x00\x09\x0a\x0c\x0d\x20", $offset);
 		// get first char
 		$char = $this->pdfdata[$offset];
 		// get object type
 		switch ($char) {
 			case '%': { // \x25 PERCENT SIGN
 				// skip comment and search for next token
-				$next = strcspn($this->pdfdata, "\r\n", $offset);
+				$next = \strcspn($this->pdfdata, "\r\n", $offset);
 				if ($next > 0) {
 					$offset += $next;
 					return $this->getRawObject($offset);
@@ -567,18 +566,18 @@ class TCPDF_PARSER {
 					$objval = [];
 					do {
 						// get element
-						$element = $this->getRawObject($offset);
-						$offset = $element[2];
+						$element  = $this->getRawObject($offset);
+						$offset   = $element[2];
 						$objval[] = $element;
 					} while ($element[0] != ']');
 					// remove closing delimiter
-					array_pop($objval);
+					\array_pop($objval);
 				}
 				break;
 			}
 			case '<':   // \x3C LESS-THAN SIGN
 			case '>': { // \x3E GREATER-THAN SIGN
-				if (isset($this->pdfdata[($offset + 1)]) AND ($this->pdfdata[($offset + 1)] == $char)) {
+				if (isset($this->pdfdata[($offset + 1)]) && ($this->pdfdata[($offset + 1)] == $char)) {
 					// dictionary object
 					$objtype = $char.$char;
 					$offset += 2;
@@ -587,22 +586,22 @@ class TCPDF_PARSER {
 						$objval = [];
 						do {
 							// get element
-							$element = $this->getRawObject($offset);
-							$offset = $element[2];
+							$element  = $this->getRawObject($offset);
+							$offset   = $element[2];
 							$objval[] = $element;
 						} while ($element[0] != '>>');
 						// remove closing delimiter
-						array_pop($objval);
+						\array_pop($objval);
 					}
 				} else {
 					// hexadecimal string object
 					$objtype = $char;
 					++$offset;
-					if (($char == '<') AND (\preg_match('/^([0-9A-Fa-f\x09\x0a\x0c\x0d\x20]+)>/iU', \substr($this->pdfdata, $offset), $matches) == 1)) {
+					if (($char == '<') && (\preg_match('/^([0-9A-Fa-f\x09\x0a\x0c\x0d\x20]+)>/iU', \substr($this->pdfdata, $offset), $matches) == 1)) {
 						// remove white space characters
 						$objval = \str_replace(["\x09", "\x0a", "\x0c", "\x0d", "\x20"], '', $matches[1]);
 						$offset += \strlen($matches[0]);
-					} elseif (($endpos = \strpos($this->pdfdata, '>', $offset)) !== FALSE) {
+					} elseif (($endpos = \strpos($this->pdfdata, '>', $offset)) !== false) {
 						$offset = $endpos + 1;
                     }
 				}
@@ -634,7 +633,7 @@ class TCPDF_PARSER {
 					$offset += 6;
 					if (\preg_match('/^([\r]?[\n])/isU', \substr($this->pdfdata, $offset), $matches) == 1) {
 						$offset += \strlen($matches[0]);
-						if (\preg_match('/(endstream)[\x09\x0a\x0c\x0d\x20]/isU', \substr($this->pdfdata, $offset), $matches, PREG_OFFSET_CAPTURE) == 1) {
+						if (\preg_match('/(endstream)[\x09\x0a\x0c\x0d\x20]/isU', \substr($this->pdfdata, $offset), $matches, \PREG_OFFSET_CAPTURE) == 1) {
 							$objval = \substr($this->pdfdata, $offset, $matches[0][1]);
 							$offset += $matches[1][1];
 						}
@@ -647,73 +646,73 @@ class TCPDF_PARSER {
 					// indirect object reference
 					$objtype = 'objref';
 					$offset += \strlen($matches[0]);
-					$objval = \intval($matches[1]).'_'.\intval($matches[2]);
+					$objval = (int) ($matches[1]).'_'.(int) ($matches[2]);
 				} elseif (\preg_match('/^([0-9]+)[\s]+([0-9]+)[\s]+obj/iU', \substr($this->pdfdata, $offset, 33), $matches) == 1) {
 					// object start
 					$objtype = 'obj';
-					$objval = \intval($matches[1]).'_'.\intval($matches[2]);
-					$offset += strlen ($matches[0]);
-				} elseif (($numlen = strspn($this->pdfdata, '+-.0123456789', $offset)) > 0) {
+					$objval  = (int) ($matches[1]).'_'.(int) ($matches[2]);
+					$offset += \strlen($matches[0]);
+				} elseif (($numlen = \strspn($this->pdfdata, '+-.0123456789', $offset)) > 0) {
 					// numeric object
 					$objtype = 'numeric';
-					$objval = \substr($this->pdfdata, $offset, $numlen);
+					$objval  = \substr($this->pdfdata, $offset, $numlen);
 					$offset += $numlen;
 				}
 				break;
 			}
 		}
-		return array($objtype, $objval, $offset);
+		return [$objtype, $objval, $offset];
 	}
 
 	/**
 	 * Get content of indirect object.
-	 * @param string $obj_ref Object number and generation number separated by underscore character.
-	 * @param int $offset Object offset.
-	 * @param boolean $decoding If true decode streams.
-	 * @return array containing object data.
+	 * @param  string $obj_ref  object number and generation number separated by underscore character
+	 * @param  int    $offset   object offset
+	 * @param  bool   $decoding if true decode streams
+	 * @return array  containing object data
 	 * @protected
 	 * @since 1.0.000 (2011-05-24)
 	 */
 	protected function getIndirectObject($obj_ref, $offset=0, $decoding=true) {
-		$obj = explode('_', $obj_ref);
-		if (($obj === false) OR (count($obj) != 2)) {
+		$obj = \explode('_', $obj_ref);
+		if (($obj === false) || (\count($obj) != 2)) {
 			$this->Error('Invalid object reference: '.$obj);
 			return;
 		}
 		$objref = $obj[0].' '.$obj[1].' obj';
 		// ignore leading zeros
-		$offset += strspn($this->pdfdata, '0', $offset);
+		$offset += \strspn($this->pdfdata, '0', $offset);
 		if (\strpos($this->pdfdata, $objref, $offset) != $offset) {
 			// an indirect reference to an undefined object shall be considered a reference to the null object
-			return array('null', 'null', $offset);
+			return ['null', 'null', $offset];
 		}
 		// starting position of object content
 		$offset += \strlen($objref);
 		// get array of object content
 		$objdata = [];
-		$i = 0; // object main index
+		$i       = 0; // object main index
 		do {
 			$oldoffset = $offset;
                         // get element
 			$element = $this->getRawObject($offset);
-			$offset = $element[2];
+			$offset  = $element[2];
 			// decode stream using stream's dictionary information
-			if ($decoding AND ($element[0] == 'stream') AND (isset($objdata[($i - 1)][0])) AND ($objdata[($i - 1)][0] == '<<')) {
+			if ($decoding && ($element[0] == 'stream') && (isset($objdata[($i - 1)][0])) && ($objdata[($i - 1)][0] == '<<')) {
 				$element[3] = $this->decodeStream($objdata[($i - 1)][1], $element[1]);
 			}
 			$objdata[$i] = $element;
 			++$i;
-		} while (($element[0] != 'endobj') AND ($offset != $oldoffset));
+		} while (($element[0] != 'endobj') && ($offset != $oldoffset));
 		// remove closing delimiter
-		array_pop($objdata);
+		\array_pop($objdata);
 		// return raw object content
 		return $objdata;
 	}
 
 	/**
 	 * Get the content of object, resolving indect object reference if necessary.
-	 * @param string $obj Object value.
-	 * @return array containing object data.
+	 * @param  string $obj object value
+	 * @return array  containing object data
 	 * @protected
 	 * @since 1.0.000 (2011-06-26)
 	 */
@@ -734,9 +733,9 @@ class TCPDF_PARSER {
 
 	/**
 	 * Decode the specified stream.
-	 * @param array $sdic Stream's dictionary array.
-	 * @param string $stream Stream to decode.
-	 * @return array containing decoded stream data and remaining filters.
+	 * @param  array  $sdic   stream's dictionary array
+	 * @param  string $stream stream to decode
+	 * @return array  containing decoded stream data and remaining filters
 	 * @protected
 	 * @since 1.0.000 (2011-06-22)
 	 */
@@ -744,19 +743,19 @@ class TCPDF_PARSER {
 		// get stream length and filters
 		$slength = \strlen($stream);
 		if ($slength <= 0) {
-			return array('', []);
+			return ['', []];
 		}
 		$filters = [];
 		foreach ($sdic as $k => $v) {
 			if ($v[0] == '/') {
-				if (($v[1] == 'Length') AND (isset($sdic[($k + 1)])) AND ($sdic[($k + 1)][0] == 'numeric')) {
+				if (($v[1] == 'Length') && (isset($sdic[($k + 1)])) && ($sdic[($k + 1)][0] == 'numeric')) {
 					// get declared stream length
-					$declength = \intval($sdic[($k + 1)][1]);
+					$declength = (int) ($sdic[($k + 1)][1]);
 					if ($declength < $slength) {
-						$stream = \substr($stream, 0, $declength);
+						$stream  = \substr($stream, 0, $declength);
 						$slength = $declength;
 					}
-				} elseif (($v[1] == 'Filter') AND (isset($sdic[($k + 1)]))) {
+				} elseif (($v[1] == 'Filter') && (isset($sdic[($k + 1)]))) {
 					// resolve indirect object
 					$objval = $this->getObjectVal($sdic[($k + 1)]);
 					if ($objval[0] == '/') {
@@ -776,13 +775,13 @@ class TCPDF_PARSER {
 		// decode the stream
 		$remaining_filters = [];
 		foreach ($filters as $filter) {
-			if (in_array($filter, TCPDF_FILTERS::getAvailableFilters())) {
+			if (\in_array($filter, TCPDF_FILTERS::getAvailableFilters())) {
 				try {
 					$stream = TCPDF_FILTERS::decodeFilter($filter, $stream);
 				} catch (Exception $e) {
 					$emsg = $e->getMessage();
-					if ((($emsg[0] == '~') AND !$this->cfg['ignore_missing_filter_decoders'])
-						OR (($emsg[0] != '~') AND !$this->cfg['ignore_filter_decoding_errors'])) {
+					if ((($emsg[0] == '~') && !$this->cfg['ignore_missing_filter_decoders'])
+						|| (($emsg[0] != '~') && !$this->cfg['ignore_filter_decoding_errors'])) {
 						$this->Error($e->getMessage());
 					}
 				}
@@ -791,7 +790,7 @@ class TCPDF_PARSER {
 				$remaining_filters[] = $filter;
 			}
 		}
-		return array($stream, $remaining_filters);
+		return [$stream, $remaining_filters];
 	}
 
 	/**
@@ -800,14 +799,13 @@ class TCPDF_PARSER {
 	 * @public
 	 * @since 1.0.000 (2011-05-23)
 	 */
-	public function Error($msg) {
+	public function Error($msg) : void {
 		if ($this->cfg['die_for_errors']) {
 			die('<strong>TCPDF_PARSER ERROR: </strong>'.$msg);
 		} else {
 			throw new Exception('TCPDF_PARSER ERROR: '.$msg);
 		}
 	}
-
 } // END OF TCPDF_PARSER CLASS
 
 //============================================================+
