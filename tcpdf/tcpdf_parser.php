@@ -634,7 +634,7 @@ class TCPDF_PARSER {
 					if (\preg_match('/^([\r]?[\n])/isU', \substr($this->pdfdata, $offset), $matches) == 1) {
 						$offset += \strlen($matches[0]);
 						if (\preg_match('/(endstream)[\x09\x0a\x0c\x0d\x20]/isU', \substr($this->pdfdata, $offset), $matches, \PREG_OFFSET_CAPTURE) == 1) {
-							$objval = \substr($this->pdfdata, $offset, $matches[0][1]);
+							$objval = \substr($this->pdfdata, $offset, (int) $matches[0][1]);
 							$offset += $matches[1][1];
 						}
 					}
