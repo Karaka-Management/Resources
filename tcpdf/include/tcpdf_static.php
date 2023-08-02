@@ -173,7 +173,7 @@ class TCPDF_STATIC {
 		if ($headers === false) {
 			return false;
 		}
-    	return (strpos($headers[0], '200') !== false);
+    	return (\strpos($headers[0], '200') !== false);
 	}
 
 	/**
@@ -185,7 +185,7 @@ class TCPDF_STATIC {
 	 * <li>HTML Entity (named): "&amp;shy;"</li>
 	 * <li>How to type in Microsoft Windows: [Alt +00AD] or [Alt 0173]</li>
 	 * <li>UTF-8 (hex): 0xC2 0xAD (c2ad)</li>
-	 * <li>UTF-8 character: chr(194).chr(173)</li>
+	 * <li>UTF-8 character: \chr(194).\chr(173)</li>
 	 * </ul>
 	 * @param string $txt input string
 	 * @param boolean $unicode True if we are in unicode mode, false otherwise.
@@ -194,9 +194,9 @@ class TCPDF_STATIC {
 	 * @public static
 	 */
 	public static function removeSHY($txt='', $unicode=true) {
-		$txt = preg_replace('/([\\xc2]{1}[\\xad]{1})/', '', $txt);
+		$txt = \preg_replace('/([\\xc2]{1}[\\xad]{1})/', '', $txt);
 		if (!$unicode) {
-			$txt = preg_replace('/([\\xad]{1})/', '', $txt);
+			$txt = \preg_replace('/([\\xad]{1})/', '', $txt);
 		}
 		return $txt;
 	}
@@ -220,8 +220,8 @@ class TCPDF_STATIC {
 		}
 		if (is_string($brd)) {
 			// convert string to array
-			$slen = strlen($brd);
-			$newbrd = array();
+			$slen = \strlen($brd);
+			$newbrd = [];
 			for ($i = 0; $i < $slen; ++$i) {
 				$newbrd[$brd[$i]] = array('cap' => 'square', 'join' => 'miter');
 			}
@@ -230,10 +230,10 @@ class TCPDF_STATIC {
 		foreach ($brd as $border => $style) {
 			switch ($position) {
 				case 'start': {
-					if (strpos($border, 'B') !== false) {
+					if (\strpos($border, 'B') !== false) {
 						// remove bottom line
-						$newkey = str_replace('B', '', $border);
-						if (strlen($newkey) > 0) {
+						$newkey = \str_replace('B', '', $border);
+						if (\strlen($newkey) > 0) {
 							$brd[$newkey] = $style;
 						}
 						unset($brd[$border]);
@@ -241,19 +241,19 @@ class TCPDF_STATIC {
 					break;
 				}
 				case 'middle': {
-					if (strpos($border, 'B') !== false) {
+					if (\strpos($border, 'B') !== false) {
 						// remove bottom line
-						$newkey = str_replace('B', '', $border);
-						if (strlen($newkey) > 0) {
+						$newkey = \str_replace('B', '', $border);
+						if (\strlen($newkey) > 0) {
 							$brd[$newkey] = $style;
 						}
 						unset($brd[$border]);
 						$border = $newkey;
 					}
-					if (strpos($border, 'T') !== false) {
+					if (\strpos($border, 'T') !== false) {
 						// remove bottom line
-						$newkey = str_replace('T', '', $border);
-						if (strlen($newkey) > 0) {
+						$newkey = \str_replace('T', '', $border);
+						if (\strlen($newkey) > 0) {
 							$brd[$newkey] = $style;
 						}
 						unset($brd[$border]);
@@ -261,10 +261,10 @@ class TCPDF_STATIC {
 					break;
 				}
 				case 'end': {
-					if (strpos($border, 'T') !== false) {
+					if (\strpos($border, 'T') !== false) {
 						// remove bottom line
-						$newkey = str_replace('T', '', $border);
-						if (strlen($newkey) > 0) {
+						$newkey = \str_replace('T', '', $border);
+						if (\strlen($newkey) > 0) {
 							$brd[$newkey] = $style;
 						}
 						unset($brd[$border]);
@@ -284,7 +284,7 @@ class TCPDF_STATIC {
 	 * @public static
 	 */
 	public static function empty_string($str) {
-		return (is_null($str) OR (is_string($str) AND (strlen($str) == 0)));
+		return (is_null($str) OR (is_string($str) AND (\strlen($str) == 0)));
 	}
 
 	/**
@@ -306,8 +306,8 @@ class TCPDF_STATIC {
 	 * @public static
 	 */
 	public static function _escape($s) {
-		// the chr(13) substitution fixes the Bugs item #1421290.
-		return strtr($s, array(')' => '\\)', '(' => '\\(', '\\' => '\\\\', chr(13) => '\r'));
+		// the \chr(13) substitution fixes the Bugs item #1421290.
+		return strtr($s, array(')' => '\\)', '(' => '\\(', '\\' => '\\\\', \chr(13) => '\r'));
 	}
 
 	/**
@@ -364,8 +364,8 @@ class TCPDF_STATIC {
 	public static function replacePageNumAliases($page, $replace, $diff=0) {
 		foreach ($replace as $rep) {
 			foreach ($rep[3] as $a) {
-				if (strpos($page, $a) !== false) {
-					$page = str_replace($a, $rep[0], $page);
+				if (\strpos($page, $a) !== false) {
+					$page = \str_replace($a, $rep[0], $page);
 					$diff += ($rep[2] - $rep[1]);
 				}
 			}
@@ -383,9 +383,9 @@ class TCPDF_STATIC {
 	public static function getTimestamp($date) {
 		if (($date[0] == 'D') AND ($date[1] == ':')) {
 			// remove date prefix if present
-			$date = substr($date, 2);
+			$date = \substr($date, 2);
 		}
-		return strtotime($date);
+		return \strtotime($date);
 	}
 
 	/**
@@ -396,7 +396,7 @@ class TCPDF_STATIC {
 	 * @public static
 	 */
 	public static function getFormattedDate($time) {
-		return substr_replace(date('YmdHisO', intval($time)), '\'', (0 - 2), 0).'\'';
+		return \substr_replace(date('YmdHisO', \intval($time)), '\'', (0 - 2), 0).'\'';
 	}
 
 	/**
@@ -409,10 +409,10 @@ class TCPDF_STATIC {
 	 */
 	public static function getRandomSeed($seed='') {
 		$rnd = uniqid(rand().microtime(true), true);
-		if (function_exists('posix_getpid')) {
+		if (\function_exists('posix_getpid')) {
 			$rnd .= posix_getpid();
 		}
-		if (function_exists('openssl_random_pseudo_bytes') AND (strtoupper(substr(PHP_OS, 0, 3)) !== 'WIN')) {
+		if (\function_exists('openssl_random_pseudo_bytes') AND (strtoupper(\substr(PHP_OS, 0, 3)) !== 'WIN')) {
 			// this is not used on windows systems because it is very slow for a know bug
 			$rnd .= openssl_random_pseudo_bytes(512);
 		} else {
@@ -446,11 +446,11 @@ class TCPDF_STATIC {
 	 */
 	public static function _AES($key, $text) {
 		// padding (RFC 2898, PKCS #5: Password-Based Cryptography Specification Version 2.0)
-		$padding = 16 - (strlen($text) % 16);
-		$text .= str_repeat(chr($padding), $padding);
+		$padding = 16 - (\strlen($text) % 16);
+		$text .= \str_repeat(\chr($padding), $padding);
 		if (extension_loaded('openssl')) {
 			$algo = 'aes-256-cbc';
-			if (strlen($key) == 16) {
+			if (\strlen($key) == 16) {
 				$algo = 'aes-128-cbc';
 			}
 			$iv = openssl_random_pseudo_bytes(openssl_cipher_iv_length($algo));
@@ -476,14 +476,14 @@ class TCPDF_STATIC {
 	public static function _AESnopad($key, $text) {
 		if (extension_loaded('openssl')) {
 			$algo = 'aes-256-cbc';
-			if (strlen($key) == 16) {
+			if (\strlen($key) == 16) {
 				$algo = 'aes-128-cbc';
 			}
-			$iv = str_repeat("\x00", openssl_cipher_iv_length($algo));
+			$iv = \str_repeat("\x00", openssl_cipher_iv_length($algo));
 			$text = openssl_encrypt($text, $algo, $key, OPENSSL_RAW_DATA, $iv);
-			return substr($text, 0, -16);
+			return \substr($text, 0, -16);
 		}
-		$iv = str_repeat("\x00", mcrypt_get_iv_size(MCRYPT_RIJNDAEL_128, MCRYPT_MODE_CBC));
+		$iv = \str_repeat("\x00", mcrypt_get_iv_size(MCRYPT_RIJNDAEL_128, MCRYPT_MODE_CBC));
 		$text = mcrypt_encrypt(MCRYPT_RIJNDAEL_128, $key, $text, MCRYPT_MODE_CBC, $iv);
 		return $text;
 	}
@@ -501,17 +501,17 @@ class TCPDF_STATIC {
 	 * @public static
 	 */
 	public static function _RC4($key, $text, &$last_enc_key, &$last_enc_key_c) {
-		if (function_exists('mcrypt_encrypt') AND ($out = @mcrypt_encrypt(MCRYPT_ARCFOUR, $key, $text, MCRYPT_MODE_STREAM, ''))) {
+		if (\function_exists('mcrypt_encrypt') AND ($out = @mcrypt_encrypt(MCRYPT_ARCFOUR, $key, $text, MCRYPT_MODE_STREAM, ''))) {
 			// try to use mcrypt function if exist
 			return $out;
 		}
 		if ($last_enc_key != $key) {
-			$k = str_repeat($key, (int) ((256 / strlen($key)) + 1));
+			$k = \str_repeat($key, (int) ((256 / \strlen($key)) + 1));
 			$rc4 = range(0, 255);
 			$j = 0;
 			for ($i = 0; $i < 256; ++$i) {
 				$t = $rc4[$i];
-				$j = ($j + $t + ord($k[$i])) % 256;
+				$j = ($j + $t + \ord($k[$i])) % 256;
 				$rc4[$i] = $rc4[$j];
 				$rc4[$j] = $t;
 			}
@@ -520,7 +520,7 @@ class TCPDF_STATIC {
 		} else {
 			$rc4 = $last_enc_key_c;
 		}
-		$len = strlen($text);
+		$len = \strlen($text);
 		$a = 0;
 		$b = 0;
 		$out = '';
@@ -531,7 +531,7 @@ class TCPDF_STATIC {
 			$rc4[$a] = $rc4[$b];
 			$rc4[$b] = $t;
 			$k = $rc4[($rc4[$a] + $rc4[$b]) % 256];
-			$out .= chr(ord($text[$i]) ^ $k);
+			$out .= \chr(\ord($text[$i]) ^ $k);
 		}
 		return $out;
 	}
@@ -583,14 +583,14 @@ class TCPDF_STATIC {
 	 */
 	public static function convertHexStringToString($bs) {
 		$string = ''; // string to be returned
-		$bslength = strlen($bs);
+		$bslength = \strlen($bs);
 		if (($bslength % 2) != 0) {
 			// padding
 			$bs .= '0';
 			++$bslength;
 		}
 		for ($i = 0; $i < $bslength; $i += 2) {
-			$string .= chr(hexdec($bs[$i].$bs[($i + 1)]));
+			$string .= \chr(hexdec($bs[$i].$bs[($i + 1)]));
 		}
 		return $string;
 	}
@@ -605,9 +605,9 @@ class TCPDF_STATIC {
 	 */
 	public static function convertStringToHexString($s) {
 		$bs = '';
-		$chars = preg_split('//', $s, -1, PREG_SPLIT_NO_EMPTY);
+		$chars = \preg_split('//', $s, -1, PREG_SPLIT_NO_EMPTY);
 		foreach ($chars as $c) {
-			$bs .= sprintf('%02s', dechex(ord($c)));
+			$bs .= \sprintf('%02s', dechex(\ord($c)));
 		}
 		return $bs;
 	}
@@ -621,11 +621,11 @@ class TCPDF_STATIC {
 	 * @public static
 	 */
 	public static function getEncPermissionsString($protection) {
-		$binprot = sprintf('%032b', $protection);
-		$str = chr(bindec(substr($binprot, 24, 8)));
-		$str .= chr(bindec(substr($binprot, 16, 8)));
-		$str .= chr(bindec(substr($binprot, 8, 8)));
-		$str .= chr(bindec(substr($binprot, 0, 8)));
+		$binprot = \sprintf('%032b', $protection);
+		$str = \chr(bindec(\substr($binprot, 24, 8)));
+		$str .= \chr(bindec(\substr($binprot, 16, 8)));
+		$str .= \chr(bindec(\substr($binprot, 8, 8)));
+		$str .= \chr(bindec(\substr($binprot, 0, 8)));
 		return $str;
 	}
 
@@ -639,13 +639,13 @@ class TCPDF_STATIC {
 	 */
 	public static function encodeNameObject($name) {
 		$escname = '';
-		$length = strlen($name);
+		$length = \strlen($name);
 		for ($i = 0; $i < $length; ++$i) {
 			$chr = $name[$i];
-			if (preg_match('/[0-9a-zA-Z#_=-]/', $chr) == 1) {
+			if (\preg_match('/[0-9a-zA-Z#_=-]/', $chr) == 1) {
 				$escname .= $chr;
 			} else {
-				$escname .= sprintf('#%02X', ord($chr));
+				$escname .= \sprintf('#%02X', \ord($chr));
 			}
 		}
 		return $escname;
@@ -662,11 +662,11 @@ class TCPDF_STATIC {
 	 * @public static
 	 */
 	public static function getAnnotOptFromJSProp($prop, &$spot_colors, $rtl=false) {
-		if (isset($prop['aopt']) AND is_array($prop['aopt'])) {
+		if (isset($prop['aopt']) AND \is_array($prop['aopt'])) {
 			// the annotation options are already defined
 			return $prop['aopt'];
 		}
-		$opt = array(); // value to be returned
+		$opt = []; // value to be returned
 		// alignment: Controls how the text is laid out within the text field.
 		if (isset($prop['alignment'])) {
 			switch ($prop['alignment']) {
@@ -690,7 +690,7 @@ class TCPDF_STATIC {
 		}
 		// lineWidth: Specifies the thickness of the border when stroking the perimeter of a field's rectangle.
 		if (isset($prop['lineWidth'])) {
-			$linewidth = intval($prop['lineWidth']);
+			$linewidth = \intval($prop['lineWidth']);
 		} else {
 			$linewidth = 1;
 		}
@@ -732,14 +732,14 @@ class TCPDF_STATIC {
 				}
 			}
 		}
-		if (isset($prop['border']) AND is_array($prop['border'])) {
+		if (isset($prop['border']) AND \is_array($prop['border'])) {
 			$opt['border'] = $prop['border'];
 		}
 		if (!isset($opt['mk'])) {
-			$opt['mk'] = array();
+			$opt['mk'] = [];
 		}
 		if (!isset($opt['mk']['if'])) {
-			$opt['mk']['if'] = array();
+			$opt['mk']['if'] = [];
 		}
 		$opt['mk']['if']['a'] = array(0.5, 0.5);
 		// buttonAlignX: Controls how space is distributed from the left of the button face with respect to the icon.
@@ -830,7 +830,7 @@ class TCPDF_STATIC {
 		}
 		// fillColor: Specifies the background color for a field.
 		if (isset($prop['fillColor'])) {
-			if (is_array($prop['fillColor'])) {
+			if (\is_array($prop['fillColor'])) {
 				$opt['mk']['bg'] = $prop['fillColor'];
 			} else {
 				$opt['mk']['bg'] = TCPDF_COLORS::convertHTMLColorToDec($prop['fillColor'], $spot_colors);
@@ -838,7 +838,7 @@ class TCPDF_STATIC {
 		}
 		// strokeColor: Specifies the stroke color for a field that is used to stroke the rectangle of the field with a line as large as the line width.
 		if (isset($prop['strokeColor'])) {
-			if (is_array($prop['strokeColor'])) {
+			if (\is_array($prop['strokeColor'])) {
 				$opt['mk']['bc'] = $prop['strokeColor'];
 			} else {
 				$opt['mk']['bc'] = TCPDF_COLORS::convertHTMLColorToDec($prop['strokeColor'], $spot_colors);
@@ -850,7 +850,7 @@ class TCPDF_STATIC {
 		}
 		// charLimit: Limits the number of characters that a user can type into a text field.
 		if (isset($prop['charLimit'])) {
-			$opt['maxlen'] = intval($prop['charLimit']);
+			$opt['maxlen'] = \intval($prop['charLimit']);
 		}
 		if (!isset($ff)) {
 			$ff = 0; // default value
@@ -951,13 +951,13 @@ class TCPDF_STATIC {
 		}
 		$opt['f'] = $f;
 		// currentValueIndices: Reads and writes single or multiple values of a list box or combo box.
-		if (isset($prop['currentValueIndices']) AND is_array($prop['currentValueIndices'])) {
+		if (isset($prop['currentValueIndices']) AND \is_array($prop['currentValueIndices'])) {
 			$opt['i'] = $prop['currentValueIndices'];
 		}
 		// value: The value of the field data that the user has entered.
 		if (isset($prop['value'])) {
-			if (is_array($prop['value'])) {
-				$opt['opt'] = array();
+			if (\is_array($prop['value'])) {
+				$opt['opt'] = [];
 				foreach ($prop['value'] AS $key => $optval) {
 					// exportValues: An array of strings representing the export values for the field.
 					if (isset($prop['exportValues'][$key])) {
@@ -1055,30 +1055,30 @@ class TCPDF_STATIC {
 	 */
 	public static function extractCSSproperties($cssdata) {
 		if (empty($cssdata)) {
-			return array();
+			return [];
 		}
 		// remove comments
-		$cssdata = preg_replace('/\/\*[^\*]*\*\//', '', $cssdata);
+		$cssdata = \preg_replace('/\/\*[^\*]*\*\//', '', $cssdata);
 		// remove newlines and multiple spaces
-		$cssdata = preg_replace('/[\s]+/', ' ', $cssdata);
+		$cssdata = \preg_replace('/[\s]+/', ' ', $cssdata);
 		// remove some spaces
-		$cssdata = preg_replace('/[\s]*([;:\{\}]{1})[\s]*/', '\\1', $cssdata);
+		$cssdata = \preg_replace('/[\s]*([;:\{\}]{1})[\s]*/', '\\1', $cssdata);
 		// remove empty blocks
-		$cssdata = preg_replace('/([^\}\{]+)\{\}/', '', $cssdata);
+		$cssdata = \preg_replace('/([^\}\{]+)\{\}/', '', $cssdata);
 		// replace media type parenthesis
-		$cssdata = preg_replace('/@media[\s]+([^\{]*)\{/i', '@media \\1§', $cssdata);
-		$cssdata = preg_replace('/\}\}/si', '}§', $cssdata);
+		$cssdata = \preg_replace('/@media[\s]+([^\{]*)\{/i', '@media \\1§', $cssdata);
+		$cssdata = \preg_replace('/\}\}/si', '}§', $cssdata);
 		// trim string
-		$cssdata = trim($cssdata);
+		$cssdata = \trim($cssdata);
 		// find media blocks (all, braille, embossed, handheld, print, projection, screen, speech, tty, tv)
-		$cssblocks = array();
-		$matches = array();
-		if (preg_match_all('/@media[\s]+([^\§]*)§([^§]*)§/i', $cssdata, $matches) > 0) {
+		$cssblocks = [];
+		$matches = [];
+		if (\preg_match_all('/@media[\s]+([^\§]*)§([^§]*)§/i', $cssdata, $matches) > 0) {
 			foreach ($matches[1] as $key => $type) {
 				$cssblocks[$type] = $matches[2][$key];
 			}
 			// remove media blocks
-			$cssdata = preg_replace('/@media[\s]+([^\§]*)§([^§]*)§/i', '', $cssdata);
+			$cssdata = \preg_replace('/@media[\s]+([^\§]*)§([^§]*)§/i', '', $cssdata);
 		}
 		// keep 'all' and 'print' media, other media types are discarded
 		if (isset($cssblocks['all']) AND !empty($cssblocks['all'])) {
@@ -1088,17 +1088,17 @@ class TCPDF_STATIC {
 			$cssdata .= $cssblocks['print'];
 		}
 		// reset css blocks array
-		$cssblocks = array();
-		$matches = array();
+		$cssblocks = [];
+		$matches = [];
 		// explode css data string into array
-		if (substr($cssdata, -1) == '}') {
+		if (\substr($cssdata, -1) == '}') {
 			// remove last parethesis
-			$cssdata = substr($cssdata, 0, -1);
+			$cssdata = \substr($cssdata, 0, -1);
 		}
-		$matches = explode('}', $cssdata);
+		$matches = \explode('}', $cssdata);
 		foreach ($matches as $key => $block) {
 			// index 0 contains the CSS selector, index 1 contains CSS properties
-			$cssblocks[$key] = explode('{', $block);
+			$cssblocks[$key] = \explode('{', $block);
 			if (!isset($cssblocks[$key][1])) {
 				// remove empty definitions
 				unset($cssblocks[$key]);
@@ -1106,26 +1106,26 @@ class TCPDF_STATIC {
 		}
 		// split groups of selectors (comma-separated list of selectors)
 		foreach ($cssblocks as $key => $block) {
-			if (strpos($block[0], ',') > 0) {
-				$selectors = explode(',', $block[0]);
+			if (\strpos($block[0], ',') > 0) {
+				$selectors = \explode(',', $block[0]);
 				foreach ($selectors as $sel) {
-					$cssblocks[] = array(0 => trim($sel), 1 => $block[1]);
+					$cssblocks[] = array(0 => \trim($sel), 1 => $block[1]);
 				}
 				unset($cssblocks[$key]);
 			}
 		}
 		// covert array to selector => properties
-		$cssdata = array();
+		$cssdata = [];
 		foreach ($cssblocks as $block) {
 			$selector = $block[0];
 			// calculate selector's specificity
-			$matches = array();
+			$matches = [];
 			$a = 0; // the declaration is not from is a 'style' attribute
-			$b = intval(preg_match_all('/[\#]/', $selector, $matches)); // number of ID attributes
-			$c = intval(preg_match_all('/[\[\.]/', $selector, $matches)); // number of other attributes
-			$c += intval(preg_match_all('/[\:]link|visited|hover|active|focus|target|lang|enabled|disabled|checked|indeterminate|root|nth|first|last|only|empty|contains|not/i', $selector, $matches)); // number of pseudo-classes
-			$d = intval(preg_match_all('/[\>\+\~\s]{1}[a-zA-Z0-9]+/', ' '.$selector, $matches)); // number of element names
-			$d += intval(preg_match_all('/[\:][\:]/', $selector, $matches)); // number of pseudo-elements
+			$b = \intval(\preg_match_all('/[\#]/', $selector, $matches)); // number of ID attributes
+			$c = \intval(\preg_match_all('/[\[\.]/', $selector, $matches)); // number of other attributes
+			$c += \intval(\preg_match_all('/[\:]link|visited|hover|active|focus|target|lang|enabled|disabled|checked|indeterminate|root|nth|first|last|only|empty|contains|not/i', $selector, $matches)); // number of pseudo-classes
+			$d = \intval(\preg_match_all('/[\>\+\~\s]{1}[a-zA-Z0-9]+/', ' '.$selector, $matches)); // number of element names
+			$d += \intval(\preg_match_all('/[\:][\:]/', $selector, $matches)); // number of pseudo-elements
 			$specificity = $a.$b.$c.$d;
 			// add specificity to the beginning of the selector
 			$cssdata[$specificity.' '.$selector] = $block[1];
@@ -1178,13 +1178,13 @@ class TCPDF_STATIC {
 		// get the CSS part
 		$tidy_head = tidy_get_head($tidy);
 		$css = $tidy_head->value;
-		$css = preg_replace('/<style([^>]+)>/ims', '<style>', $css);
-		$css = preg_replace('/<\/style>(.*)<style>/ims', "\n", $css);
-		$css = str_replace('/*<![CDATA[*/', '', $css);
-		$css = str_replace('/*]]>*/', '', $css);
+		$css = \preg_replace('/<style([^>]+)>/ims', '<style>', $css);
+		$css = \preg_replace('/<\/style>(.*)<style>/ims', "\n", $css);
+		$css = \str_replace('/*<![CDATA[*/', '', $css);
+		$css = \str_replace('/*]]>*/', '', $css);
 		preg_match('/<style>(.*)<\/style>/ims', $css, $matches);
 		if (isset($matches[1])) {
-			$css = strtolower($matches[1]);
+			$css = \strtolower($matches[1]);
 		} else {
 			$css = '';
 		}
@@ -1194,10 +1194,10 @@ class TCPDF_STATIC {
 		$tidy_body = tidy_get_body($tidy);
 		$html = $tidy_body->value;
 		// fix some self-closing tags
-		$html = str_replace('<br>', '<br />', $html);
+		$html = \str_replace('<br>', '<br />', $html);
 		// remove some empty tag blocks
-		$html = preg_replace('/<div([^\>]*)><\/div>/', '', $html);
-		$html = preg_replace('/<p([^\>]*)><\/p>/', '', $html);
+		$html = \preg_replace('/<div([^\>]*)><\/div>/', '', $html);
+		$html = \preg_replace('/<p([^\>]*)><\/p>/', '', $html);
 		if (!TCPDF_STATIC::empty_string($tagvs)) {
 			// set vertical space for some XHTML tags
 			$tagvspaces = $tagvs;
@@ -1218,45 +1218,45 @@ class TCPDF_STATIC {
 	public static function isValidCSSSelectorForTag($dom, $key, $selector) {
 		$valid = false; // value to be returned
 		$tag = $dom[$key]['value'];
-		$class = array();
+		$class = [];
 		if (isset($dom[$key]['attribute']['class']) AND !empty($dom[$key]['attribute']['class'])) {
-			$class = explode(' ', strtolower($dom[$key]['attribute']['class']));
+			$class = \explode(' ', \strtolower($dom[$key]['attribute']['class']));
 		}
 		$id = '';
 		if (isset($dom[$key]['attribute']['id']) AND !empty($dom[$key]['attribute']['id'])) {
-			$id = strtolower($dom[$key]['attribute']['id']);
+			$id = \strtolower($dom[$key]['attribute']['id']);
 		}
-		$selector = preg_replace('/([\>\+\~\s]{1})([\.]{1})([^\>\+\~\s]*)/si', '\\1*.\\3', $selector);
-		$matches = array();
-		if (preg_match_all('/([\>\+\~\s]{1})([a-zA-Z0-9\*]+)([^\>\+\~\s]*)/si', $selector, $matches, PREG_PATTERN_ORDER | PREG_OFFSET_CAPTURE) > 0) {
-			$parentop = array_pop($matches[1]);
+		$selector = \preg_replace('/([\>\+\~\s]{1})([\.]{1})([^\>\+\~\s]*)/si', '\\1*.\\3', $selector);
+		$matches = [];
+		if (\preg_match_all('/([\>\+\~\s]{1})([a-zA-Z0-9\*]+)([^\>\+\~\s]*)/si', $selector, $matches, PREG_PATTERN_ORDER | PREG_OFFSET_CAPTURE) > 0) {
+			$parentop = \array_pop($matches[1]);
 			$operator = $parentop[0];
 			$offset = $parentop[1];
-			$lasttag = array_pop($matches[2]);
-			$lasttag = strtolower(trim($lasttag[0]));
+			$lasttag = \array_pop($matches[2]);
+			$lasttag = \strtolower(\trim($lasttag[0]));
 			if (($lasttag == '*') OR ($lasttag == $tag)) {
 				// the last element on selector is our tag or 'any tag'
-				$attrib = array_pop($matches[3]);
-				$attrib = strtolower(trim($attrib[0]));
+				$attrib = \array_pop($matches[3]);
+				$attrib = \strtolower(\trim($attrib[0]));
 				if (!empty($attrib)) {
 					// check if matches class, id, attribute, pseudo-class or pseudo-element
 					switch ($attrib[0]) {
 						case '.': { // class
-							if (in_array(substr($attrib, 1), $class)) {
+							if (\in_array(\substr($attrib, 1), $class)) {
 								$valid = true;
 							}
 							break;
 						}
 						case '#': { // ID
-							if (substr($attrib, 1) == $id) {
+							if (\substr($attrib, 1) == $id) {
 								$valid = true;
 							}
 							break;
 						}
 						case '[': { // attribute
-							$attrmatch = array();
-							if (preg_match('/\[([a-zA-Z0-9]*)[\s]*([\~\^\$\*\|\=]*)[\s]*["]?([^"\]]*)["]?\]/i', $attrib, $attrmatch) > 0) {
-								$att = strtolower($attrmatch[1]);
+							$attrmatch = [];
+							if (\preg_match('/\[([a-zA-Z0-9]*)[\s]*([\~\^\$\*\|\=]*)[\s]*["]?([^"\]]*)["]?\]/i', $attrib, $attrmatch) > 0) {
+								$att = \strtolower($attrmatch[1]);
 								$val = $attrmatch[3];
 								if (isset($dom[$key]['attribute'][$att])) {
 									switch ($attrmatch[2]) {
@@ -1267,25 +1267,25 @@ class TCPDF_STATIC {
 											break;
 										}
 										case '~=': {
-											if (in_array($val, explode(' ', $dom[$key]['attribute'][$att]))) {
+											if (\in_array($val, \explode(' ', $dom[$key]['attribute'][$att]))) {
 												$valid = true;
 											}
 											break;
 										}
 										case '^=': {
-											if ($val == substr($dom[$key]['attribute'][$att], 0, strlen($val))) {
+											if ($val == \substr($dom[$key]['attribute'][$att], 0, \strlen($val))) {
 												$valid = true;
 											}
 											break;
 										}
 										case '$=': {
-											if ($val == substr($dom[$key]['attribute'][$att], -strlen($val))) {
+											if ($val == \substr($dom[$key]['attribute'][$att], -\strlen($val))) {
 												$valid = true;
 											}
 											break;
 										}
 										case '*=': {
-											if (strpos($dom[$key]['attribute'][$att], $val) !== false) {
+											if (\strpos($dom[$key]['attribute'][$att], $val) !== false) {
 												$valid = true;
 											}
 											break;
@@ -1293,7 +1293,7 @@ class TCPDF_STATIC {
 										case '|=': {
 											if ($dom[$key]['attribute'][$att] == $val) {
 												$valid = true;
-											} elseif (preg_match('/'.$val.'[\-]{1}/i', $dom[$key]['attribute'][$att]) > 0) {
+											} elseif (\preg_match('/'.$val.'[\-]{1}/i', $dom[$key]['attribute'][$att]) > 0) {
 												$valid = true;
 											}
 											break;
@@ -1323,7 +1323,7 @@ class TCPDF_STATIC {
 				if ($valid AND ($offset > 0)) {
 					$valid = false;
 					// check remaining selector part
-					$selector = substr($selector, 0, $offset);
+					$selector = \substr($selector, 0, $offset);
 					switch ($operator) {
 						case ' ': { // descendant of an element
 							while ($dom[$key]['parent'] > 0) {
@@ -1376,22 +1376,22 @@ class TCPDF_STATIC {
 	 * @public static
 	 */
 	public static function getCSSdataArray($dom, $key, $css) {
-		$cssarray = array(); // style to be returned
+		$cssarray = []; // style to be returned
 		// get parent CSS selectors
-		$selectors = array();
+		$selectors = [];
 		if (isset($dom[($dom[$key]['parent'])]['csssel'])) {
 			$selectors = $dom[($dom[$key]['parent'])]['csssel'];
 		}
 		// get all styles that apply
 		foreach($css as $selector => $style) {
-			$pos = strpos($selector, ' ');
+			$pos = \strpos($selector, ' ');
 			// get specificity
-			$specificity = substr($selector, 0, $pos);
+			$specificity = \substr($selector, 0, $pos);
 			// remove specificity
-			$selector = substr($selector, $pos);
+			$selector = \substr($selector, $pos);
 			// check if this selector apply to current tag
 			if (self::isValidCSSSelectorForTag($dom, $key, $selector)) {
-				if (!in_array($selector, $selectors)) {
+				if (!\in_array($selector, $selectors)) {
 					// add style if not already added on parent selector
 					$cssarray[] = array('k' => $selector, 's' => $specificity, 'c' => $style);
 					$selectors[] = $selector;
@@ -1403,9 +1403,9 @@ class TCPDF_STATIC {
 			$cssarray[] = array('k' => '', 's' => '1000', 'c' => $dom[$key]['attribute']['style']);
 		}
 		// order the css array to account for specificity
-		$cssordered = array();
+		$cssordered = [];
 		foreach ($cssarray as $key => $val) {
-			$skey = sprintf('%04d', $key);
+			$skey = \sprintf('%04d', $key);
 			$cssordered[$val['s'].'_'.$skey] = $val;
 		}
 		// sort selectors alphabetically to account for specificity
@@ -1424,15 +1424,15 @@ class TCPDF_STATIC {
 		$tagstyle = ''; // value to be returned
 		foreach ($css as $style) {
 			// split single css commands
-			$csscmds = explode(';', $style['c']);
+			$csscmds = \explode(';', $style['c']);
 			foreach ($csscmds as $cmd) {
 				if (!empty($cmd)) {
-					$pos = strpos($cmd, ':');
+					$pos = \strpos($cmd, ':');
 					if ($pos !== false) {
-						$cmd = substr($cmd, 0, ($pos + 1));
-						if (strpos($tagstyle, $cmd) !== false) {
+						$cmd = \substr($cmd, 0, ($pos + 1));
+						if (\strpos($tagstyle, $cmd) !== false) {
 							// remove duplicate commands (last commands have high priority)
-							$tagstyle = preg_replace('/'.$cmd.'[^;]+/i', '', $tagstyle);
+							$tagstyle = \preg_replace('/'.$cmd.'[^;]+/i', '', $tagstyle);
 						}
 					}
 				}
@@ -1440,7 +1440,7 @@ class TCPDF_STATIC {
 			$tagstyle .= ';'.$style['c'];
 		}
 		// remove multiple semicolons
-		$tagstyle = preg_replace('/[;]+/', ';', $tagstyle);
+		$tagstyle = \preg_replace('/[;]+/', ';', $tagstyle);
 		return $tagstyle;
 	}
 
@@ -1521,11 +1521,11 @@ class TCPDF_STATIC {
 	 * @since 4.8.038 (2010-03-13)
 	 * @public static
 	 */
-	public static function revstrpos($haystack, $needle, $offset = 0) {
-		$length = strlen($haystack);
+	public static function rev\strpos($haystack, $needle, $offset = 0) {
+		$length = \strlen($haystack);
 		$offset = ($offset > 0)?($length - $offset):abs($offset);
-		$pos = strpos(strrev($haystack), strrev($needle), $offset);
-		return ($pos === false)?false:($length - $pos - strlen($needle));
+		$pos = \strpos(strrev($haystack), strrev($needle), $offset);
+		return ($pos === false)?false:($length - $pos - \strlen($needle));
 	}
 
 	/**
@@ -1540,21 +1540,21 @@ class TCPDF_STATIC {
 		// TEX patterns are available at:
 		// http://www.ctan.org/tex-archive/language/hyph-utf8/tex/generic/hyph-utf8/patterns/
 		$data = file_get_contents($file);
-		$patterns = array();
+		$patterns = [];
 		// remove comments
-		$data = preg_replace('/\%[^\n]*/', '', $data);
+		$data = \preg_replace('/\%[^\n]*/', '', $data);
 		// extract the patterns part
 		preg_match('/\\\\patterns\{([^\}]*)\}/i', $data, $matches);
-		$data = trim(substr($matches[0], 10, -1));
+		$data = \trim(\substr($matches[0], 10, -1));
 		// extract each pattern
-		$patterns_array = preg_split('/[\s]+/', $data);
+		$patterns_array = \preg_split('/[\s]+/', $data);
 		// create new language array of patterns
-		$patterns = array();
+		$patterns = [];
 		foreach($patterns_array as $val) {
 			if (!TCPDF_STATIC::empty_string($val)) {
-				$val = trim($val);
-				$val = str_replace('\'', '\\\'', $val);
-				$key = preg_replace('/[0-9]+/', '', $val);
+				$val = \trim($val);
+				$val = \str_replace('\'', '\\\'', $val);
+				$key = \preg_replace('/[0-9]+/', '', $val);
 				$patterns[$key] = $val;
 			}
 		}
@@ -1663,7 +1663,7 @@ class TCPDF_STATIC {
 	 * @public static
 	 */
 	public static function getTransformationMatrixProduct($ta, $tb) {
-		$tm = array();
+		$tm = [];
 		$tm[0] = ($ta[0] * $tb[0]) + ($ta[2] * $tb[1]);
 		$tm[1] = ($ta[1] * $tb[0]) + ($ta[3] * $tb[1]);
 		$tm[2] = ($ta[0] * $tb[2]) + ($ta[2] * $tb[3]);
@@ -1684,8 +1684,8 @@ class TCPDF_STATIC {
 	public static function getSVGTransformMatrix($attribute) {
 		// identity matrix
 		$tm = array(1, 0, 0, 1, 0, 0);
-		$transform = array();
-		if (preg_match_all('/(matrix|translate|scale|rotate|skewX|skewY)[\s]*\(([^\)]+)\)/si', $attribute, $transform, PREG_SET_ORDER) > 0) {
+		$transform = [];
+		if (\preg_match_all('/(matrix|translate|scale|rotate|skewX|skewY)[\s]*\(([^\)]+)\)/si', $attribute, $transform, PREG_SET_ORDER) > 0) {
 			foreach ($transform as $key => $data) {
 				if (!empty($data[2])) {
 					$a = 1;
@@ -1694,10 +1694,10 @@ class TCPDF_STATIC {
 					$d = 1;
 					$e = 0;
 					$f = 0;
-					$regs = array();
+					$regs = [];
 					switch ($data[1]) {
 						case 'matrix': {
-							if (preg_match('/([a-z0-9\-\.]+)[\,\s]+([a-z0-9\-\.]+)[\,\s]+([a-z0-9\-\.]+)[\,\s]+([a-z0-9\-\.]+)[\,\s]+([a-z0-9\-\.]+)[\,\s]+([a-z0-9\-\.]+)/si', $data[2], $regs)) {
+							if (\preg_match('/([a-z0-9\-\.]+)[\,\s]+([a-z0-9\-\.]+)[\,\s]+([a-z0-9\-\.]+)[\,\s]+([a-z0-9\-\.]+)[\,\s]+([a-z0-9\-\.]+)[\,\s]+([a-z0-9\-\.]+)/si', $data[2], $regs)) {
 								$a = $regs[1];
 								$b = $regs[2];
 								$c = $regs[3];
@@ -1708,27 +1708,27 @@ class TCPDF_STATIC {
 							break;
 						}
 						case 'translate': {
-							if (preg_match('/([a-z0-9\-\.]+)[\,\s]+([a-z0-9\-\.]+)/si', $data[2], $regs)) {
+							if (\preg_match('/([a-z0-9\-\.]+)[\,\s]+([a-z0-9\-\.]+)/si', $data[2], $regs)) {
 								$e = $regs[1];
 								$f = $regs[2];
-							} elseif (preg_match('/([a-z0-9\-\.]+)/si', $data[2], $regs)) {
+							} elseif (\preg_match('/([a-z0-9\-\.]+)/si', $data[2], $regs)) {
 								$e = $regs[1];
 							}
 							break;
 						}
 						case 'scale': {
-							if (preg_match('/([a-z0-9\-\.]+)[\,\s]+([a-z0-9\-\.]+)/si', $data[2], $regs)) {
+							if (\preg_match('/([a-z0-9\-\.]+)[\,\s]+([a-z0-9\-\.]+)/si', $data[2], $regs)) {
 								$a = $regs[1];
 								$d = $regs[2];
-							} elseif (preg_match('/([a-z0-9\-\.]+)/si', $data[2], $regs)) {
+							} elseif (\preg_match('/([a-z0-9\-\.]+)/si', $data[2], $regs)) {
 								$a = $regs[1];
 								$d = $a;
 							}
 							break;
 						}
 						case 'rotate': {
-							if (preg_match('/([0-9\-\.]+)[\,\s]+([a-z0-9\-\.]+)[\,\s]+([a-z0-9\-\.]+)/si', $data[2], $regs)) {
-								$ang = deg2rad($regs[1]);
+							if (\preg_match('/([0-9\-\.]+)[\,\s]+([a-z0-9\-\.]+)[\,\s]+([a-z0-9\-\.]+)/si', $data[2], $regs)) {
+								$ang = \deg2rad($regs[1]);
 								$x = $regs[2];
 								$y = $regs[3];
 								$a = cos($ang);
@@ -1737,8 +1737,8 @@ class TCPDF_STATIC {
 								$d = $a;
 								$e = ($x * (1 - $a)) - ($y * $c);
 								$f = ($y * (1 - $d)) - ($x * $b);
-							} elseif (preg_match('/([0-9\-\.]+)/si', $data[2], $regs)) {
-								$ang = deg2rad($regs[1]);
+							} elseif (\preg_match('/([0-9\-\.]+)/si', $data[2], $regs)) {
+								$ang = \deg2rad($regs[1]);
 								$a = cos($ang);
 								$b = sin($ang);
 								$c = -$b;
@@ -1749,14 +1749,14 @@ class TCPDF_STATIC {
 							break;
 						}
 						case 'skewX': {
-							if (preg_match('/([0-9\-\.]+)/si', $data[2], $regs)) {
-								$c = tan(deg2rad($regs[1]));
+							if (\preg_match('/([0-9\-\.]+)/si', $data[2], $regs)) {
+								$c = tan(\deg2rad($regs[1]));
 							}
 							break;
 						}
 						case 'skewY': {
-							if (preg_match('/([0-9\-\.]+)/si', $data[2], $regs)) {
-								$b = tan(deg2rad($regs[1]));
+							if (\preg_match('/([0-9\-\.]+)/si', $data[2], $regs)) {
+								$b = tan(\deg2rad($regs[1]));
 							}
 							break;
 						}
@@ -1780,8 +1780,8 @@ class TCPDF_STATIC {
 	 */
 	public static function getVectorsAngle($x1, $y1, $x2, $y2) {
 		$dprod = ($x1 * $x2) + ($y1 * $y2);
-		$dist1 = sqrt(($x1 * $x1) + ($y1 * $y1));
-		$dist2 = sqrt(($x2 * $x2) + ($y2 * $y2));
+		$dist1 = \sqrt(($x1 * $x1) + ($y1 * $y1));
+		$dist2 = \sqrt(($x2 * $x2) + ($y2 * $y2));
 		$angle = acos($dprod / ($dist1 * $dist2));
 		if (is_nan($angle)) {
 			$angle = M_PI;
@@ -1794,12 +1794,12 @@ class TCPDF_STATIC {
 
 	/**
 	 * Split string by a regular expression.
-	 * This is a wrapper for the preg_split function to avoid the bug: https://bugs.php.net/bug.php?id=45850
+	 * This is a wrapper for the \preg_split function to avoid the bug: https://bugs.php.net/bug.php?id=45850
 	 * @param string $pattern The regular expression pattern to search for without the modifiers, as a string.
 	 * @param string $modifiers The modifiers part of the pattern,
 	 * @param string $subject The input string.
 	 * @param int $limit If specified, then only substrings up to limit are returned with the rest of the string being placed in the last substring. A limit of -1, 0 or NULL means "no limit" and, as is standard across PHP, you can use NULL to skip to the flags parameter.
-	 * @param int $flags The flags as specified on the preg_split PHP function.
+	 * @param int $flags The flags as specified on the \preg_split PHP function.
 	 * @return array Returns an array containing substrings of subject split along boundaries matched by pattern.modifier
 	 * @author Nicola Asuni
 	 * @since 6.0.023
@@ -1810,18 +1810,18 @@ class TCPDF_STATIC {
 		$limit = $limit === null ? -1 : $limit;
 		$flags = $flags === null ? 0 : $flags;
 		// the bug only happens on PHP 5.2 when using the u modifier
-		if ((strpos($modifiers, 'u') === FALSE) OR (count(preg_split('//u', "\n\t", -1, PREG_SPLIT_NO_EMPTY)) == 2)) {
-			return preg_split($pattern.$modifiers, $subject, $limit, $flags);
+		if ((\strpos($modifiers, 'u') === FALSE) OR (count(\preg_split('//u', "\n\t", -1, PREG_SPLIT_NO_EMPTY)) == 2)) {
+			return \preg_split($pattern.$modifiers, $subject, $limit, $flags);
 		}
-		// preg_split is bugged - try alternative solution
-		$ret = array();
-		while (($nl = strpos($subject, "\n")) !== FALSE) {
-			$ret = array_merge($ret, preg_split($pattern.$modifiers, substr($subject, 0, $nl), $limit, $flags));
+		// \preg_split is bugged - try alternative solution
+		$ret = [];
+		while (($nl = \strpos($subject, "\n")) !== FALSE) {
+			$ret = array_merge($ret, \preg_split($pattern.$modifiers, \substr($subject, 0, $nl), $limit, $flags));
 			$ret[] = "\n";
-			$subject = substr($subject, ($nl + 1));
+			$subject = \substr($subject, ($nl + 1));
 		}
-		if (strlen($subject) > 0) {
-			$ret = array_merge($ret, preg_split($pattern.$modifiers, $subject, $limit, $flags));
+		if (\strlen($subject) > 0) {
+			$ret = array_merge($ret, \preg_split($pattern.$modifiers, $subject, $limit, $flags));
 		}
 		return $ret;
 	}
@@ -1834,7 +1834,7 @@ class TCPDF_STATIC {
 	 * @public static
 	 */
 	public static function fopenLocal($filename, $mode) {
-		if (strpos($filename, '://') === false) {
+		if (\strpos($filename, '://') === false) {
 			$filename = 'file://'.$filename;
 		} elseif (stream_is_local($filename) !== true) {
 			return false;
@@ -1885,7 +1885,7 @@ class TCPDF_STATIC {
 	public static function encodeUrlQuery($url) {
 		$urlData = parse_url($url);
 		if (isset($urlData['query']) && $urlData['query']) {
-			$urlQueryData = array();
+			$urlQueryData = [];
 			parse_str(urldecode($urlData['query']), $urlQueryData);
 			$updatedUrl = $urlData['scheme'] . '://' . $urlData['host'] . $urlData['path'] . '?' . http_build_query($urlQueryData);
 		} else {
@@ -1903,10 +1903,10 @@ class TCPDF_STATIC {
 	 * @public static
 	 */
 	public static function file_exists($filename) {
-		if (preg_match('|^https?://|', $filename) == 1) {
+		if (\preg_match('|^https?://|', $filename) == 1) {
 			return self::url_exists($filename);
 		}
-		if (strpos($filename, '://')) {
+		if (\strpos($filename, '://')) {
 			return false; // only support http and https wrappers for security reasons
 		}
 		return @file_exists($filename);
@@ -1924,40 +1924,40 @@ class TCPDF_STATIC {
 	public static function fileGetContents($file) {
 		$alt = array($file);
 		//
-		if ((strlen($file) > 1)
+		if ((\strlen($file) > 1)
 		    && ($file[0] === '/')
 		    && ($file[1] !== '/')
 		    && !empty($_SERVER['DOCUMENT_ROOT'])
 		    && ($_SERVER['DOCUMENT_ROOT'] !== '/')
 		) {
-		    $findroot = strpos($file, $_SERVER['DOCUMENT_ROOT']);
+		    $findroot = \strpos($file, $_SERVER['DOCUMENT_ROOT']);
 		    if (($findroot === false) || ($findroot > 1)) {
 			$alt[] = htmlspecialchars_decode(urldecode($_SERVER['DOCUMENT_ROOT'].$file));
 		    }
 		}
 		//
 		$protocol = 'http';
-		if (!empty($_SERVER['HTTPS']) && (strtolower($_SERVER['HTTPS']) != 'off')) {
+		if (!empty($_SERVER['HTTPS']) && (\strtolower($_SERVER['HTTPS']) != 'off')) {
 		    $protocol .= 's';
 		}
 		//
 		$url = $file;
-		if (preg_match('%^//%', $url) && !empty($_SERVER['HTTP_HOST'])) {
+		if (\preg_match('%^//%', $url) && !empty($_SERVER['HTTP_HOST'])) {
 			$url = $protocol.':'.str_replace(' ', '%20', $url);
 		}
 		$url = htmlspecialchars_decode($url);
 		$alt[] = $url;
 		//
-		if (preg_match('%^(https?)://%', $url)
+		if (\preg_match('%^(https?)://%', $url)
 		    && empty($_SERVER['HTTP_HOST'])
 		    && empty($_SERVER['DOCUMENT_ROOT'])
 		) {
 			$urldata = parse_url($url);
 			if (empty($urldata['query'])) {
 				$host = $protocol.'://'.$_SERVER['HTTP_HOST'];
-				if (strpos($url, $host) === 0) {
+				if (\strpos($url, $host) === 0) {
 				    // convert URL to full server path
-				    $tmp = str_replace($host, $_SERVER['DOCUMENT_ROOT'], $url);
+				    $tmp = \str_replace($host, $_SERVER['DOCUMENT_ROOT'], $url);
 				    $alt[] = htmlspecialchars_decode(urldecode($tmp));
 				}
 			}
@@ -1982,7 +1982,7 @@ class TCPDF_STATIC {
 			}
 			// try to use CURL for URLs
 			if (!ini_get('allow_url_fopen')
-				&& function_exists('curl_init')
+				&& \function_exists('curl_init')
 				&& preg_match('%^(https?|ftp)://%', $path)
 			) {
 				// try to get remote file data using cURL
@@ -2023,7 +2023,7 @@ class TCPDF_STATIC {
 	 * @public static
 	 */
 	public static function _getULONG($str, $offset) {
-		$v = unpack('Ni', substr($str, $offset, 4));
+		$v = unpack('Ni', \substr($str, $offset, 4));
 		return $v['i'];
 	}
 
@@ -2037,7 +2037,7 @@ class TCPDF_STATIC {
 	 * @public static
 	 */
 	public static function _getUSHORT($str, $offset) {
-		$v = unpack('ni', substr($str, $offset, 2));
+		$v = unpack('ni', \substr($str, $offset, 2));
 		return $v['i'];
 	}
 
@@ -2051,7 +2051,7 @@ class TCPDF_STATIC {
 	 * @public static
 	 */
 	public static function _getSHORT($str, $offset) {
-		$v = unpack('si', substr($str, $offset, 2));
+		$v = unpack('si', \substr($str, $offset, 2));
 		return $v['i'];
 	}
 
@@ -2100,7 +2100,7 @@ class TCPDF_STATIC {
 		$m = self::_getFWORD($str, $offset);
 		// fraction
 		$f = self::_getUSHORT($str, ($offset + 2));
-		$v = floatval(''.$m.'.'.$f.'');
+		$v = \floatval(''.$m.'.'.$f.'');
 		return $v;
 	}
 
@@ -2114,7 +2114,7 @@ class TCPDF_STATIC {
 	 * @public static
 	 */
 	public static function _getBYTE($str, $offset) {
-		$v = unpack('Ci', substr($str, $offset, 1));
+		$v = unpack('Ci', \substr($str, $offset, 1));
 		return $v['i'];
 	}
 	/**
@@ -2132,7 +2132,7 @@ class TCPDF_STATIC {
 		if ($data === false) {
 			return false;
 		}
-		$rest = ($length - strlen($data));
+		$rest = ($length - \strlen($data));
 		if (($rest > 0) && !feof($handle)) {
 			$data .= self::rfread($handle, $rest);
 		}
@@ -2154,7 +2154,7 @@ class TCPDF_STATIC {
 	 * Array of page formats
 	 * measures are calculated in this way: (inches * 72) or (millimeters * 72 / 25.4)
 	 * @public static
-	 * 
+	 *
      * @var array<string,float[]>
 	 */
 	public static $page_formats = array(
@@ -2538,12 +2538,12 @@ class TCPDF_STATIC {
 	 * @since 5.0.010 (2010-05-17)
 	 * @public static
 	 */
-	public static function setPageBoxes($page, $type, $llx, $lly, $urx, $ury, $points, $k, $pagedim=array()) {
+	public static function setPageBoxes($page, $type, $llx, $lly, $urx, $ury, $points, $k, $pagedim=[]) {
 		if (!isset($pagedim[$page])) {
 			// initialize array
-			$pagedim[$page] = array();
+			$pagedim[$page] = [];
 		}
-		if (!in_array($type, self::$pageboxes)) {
+		if (!\in_array($type, self::$pageboxes)) {
 			return;
 		}
 		if ($points) {

@@ -79,13 +79,13 @@ class TCPDF_FONTS {
 		// build new font name for TCPDF compatibility
 		$font_path_parts = pathinfo($fontfile);
 		if (!isset($font_path_parts['filename'])) {
-			$font_path_parts['filename'] = substr($font_path_parts['basename'], 0, -(strlen($font_path_parts['extension']) + 1));
+			$font_path_parts['filename'] = \substr($font_path_parts['basename'], 0, -(strlen($font_path_parts['extension']) + 1));
 		}
-		$font_name = strtolower($font_path_parts['filename']);
-		$font_name = preg_replace('/[^a-z0-9_]/', '', $font_name);
+		$font_name = \strtolower($font_path_parts['filename']);
+		$font_name = \preg_replace('/[^a-z0-9_]/', '', $font_name);
 		$search  = array('bold', 'oblique', 'italic', 'regular');
 		$replace = array('b', 'i', 'i', '');
-		$font_name = str_replace($search, $replace, $font_name);
+		$font_name = \str_replace($search, $replace, $font_name);
 		if (empty($font_name)) {
 			// set generic name
 			$font_name = 'tcpdffont';
@@ -102,14 +102,14 @@ class TCPDF_FONTS {
 		$fmetric['file'] = $font_name;
 		$fmetric['ctg'] = $font_name.'.ctg.z';
 		// get font data
-		$font = file_get_contents($fontfile);
+		$font = \file_get_contents($fontfile);
 		$fmetric['originalsize'] = strlen($font);
 		// autodetect font type
 		if (empty($fonttype)) {
 			if (TCPDF_STATIC::_getULONG($font, 0) == 0x10000) {
 				// True Type (Unicode or not)
 				$fonttype = 'TrueTypeUnicode';
-			} elseif (substr($font, 0, 4) == 'OTTO') {
+			} elseif (\substr($font, 0, 4) == 'OTTO') {
 				// Open Type (Unicode or not)
 				//Unsupported font format: OpenType with CFF data
 				return false;
@@ -145,7 +145,7 @@ class TCPDF_FONTS {
 			}
 		}
 		// set encoding maps (if any)
-		$fmetric['enc'] = preg_replace('/[^A-Za-z0-9_\-]/', '', $enc);
+		$fmetric['enc'] = \preg_replace('/[^A-Za-z0-9_\-]/', '', $enc);
 		$fmetric['diff'] = '';
 		if (($fmetric['type'] == 'TrueType') OR ($fmetric['type'] == 'Type1')) {
 			if (!empty($enc) AND ($enc != 'cp1252') AND isset(TCPDF_FONT_DATA::$encmap[$enc])) {
@@ -168,21 +168,21 @@ class TCPDF_FONTS {
 		if ($fmetric['type'] == 'Type1') {
 			// ---------- TYPE 1 ----------
 			// read first segment
-			$a = unpack('Cmarker/Ctype/Vsize', substr($font, 0, 6));
+			$a = unpack('Cmarker/Ctype/Vsize', \substr($font, 0, 6));
 			if ($a['marker'] != 128) {
 				// Font file is not a valid binary Type1
 				return false;
 			}
 			$fmetric['size1'] = $a['size'];
-			$data = substr($font, 6, $fmetric['size1']);
+			$data = \substr($font, 6, $fmetric['size1']);
 			// read second segment
-			$a = unpack('Cmarker/Ctype/Vsize', substr($font, (6 + $fmetric['size1']), 6));
+			$a = unpack('Cmarker/Ctype/Vsize', \substr($font, (6 + $fmetric['size1']), 6));
 			if ($a['marker'] != 128) {
 				// Font file is not a valid binary Type1
 				return false;
 			}
 			$fmetric['size2'] = $a['size'];
-			$encrypted = substr($font, (12 + $fmetric['size1']), $fmetric['size2']);
+			$encrypted = \substr($font, (12 + $fmetric['size1']), $fmetric['size2']);
 			$data .= $encrypted;
 			// store compressed font
 			$fmetric['file'] .= '.z';
@@ -192,7 +192,7 @@ class TCPDF_FONTS {
 			// get font info
 			$fmetric['Flags'] = $flags;
 			preg_match ('#/FullName[\s]*\(([^\)]*)#', $font, $matches);
-			$fmetric['name'] = preg_replace('/[^a-zA-Z0-9_\-]/', '', $matches[1]);
+			$fmetric['name'] = \preg_replace('/[^a-zA-Z0-9_\-]/', '', $matches[1]);
 			preg_match('#/FontBBox[\s]*{([^}]*)#', $font, $matches);
 			$fmetric['bbox'] = trim($matches[1]);
 			$bv = explode(' ', $fmetric['bbox']);
@@ -272,7 +272,7 @@ class TCPDF_FONTS {
 			}
 			$fmetric['Leading'] = 0;
 			// get charstring data
-			$eplain = substr($eplain, (strpos($eplain, '/CharStrings') + 1));
+			$eplain = \substr($eplain, (strpos($eplain, '/CharStrings') + 1));
 			preg_match_all('#/([A-Za-z0-9\.]*)[\s][0-9]+[\s]RD[\s](.*)[\s]ND#sU', $eplain, $matches, PREG_SET_ORDER);
 			if (!empty($enc) AND isset(TCPDF_FONT_DATA::$encmap[$enc])) {
 				$enc_map = TCPDF_FONT_DATA::$encmap[$enc];
@@ -382,7 +382,7 @@ class TCPDF_FONTS {
 			// ---------- get tables ----------
 			for ($i = 0; $i < $numTables; ++$i) {
 				// get table info
-				$tag = substr($font, $offset, 4);
+				$tag = \substr($font, $offset, 4);
 				$offset += 4;
 				$table[$tag] = array();
 				$table[$tag]['checkSum'] = TCPDF_STATIC::_getULONG($font, $offset);
@@ -508,8 +508,8 @@ class TCPDF_FONTS {
 					$stringOffset = TCPDF_STATIC::_getUSHORT($font, $offset);
 					$offset += 2;
 					$offset = ($table['name']['offset'] + $stringStorageOffset + $stringOffset);
-					$fmetric['name'] = substr($font, $offset, $stringLength);
-					$fmetric['name'] = preg_replace('/[^a-zA-Z0-9_\-]/', '', $fmetric['name']);
+					$fmetric['name'] = \substr($font, $offset, $stringLength);
+					$fmetric['name'] = \preg_replace('/[^a-zA-Z0-9_\-]/', '', $fmetric['name']);
 					break;
 				} else {
 					$offset += 4; // skip String length, String offset
@@ -907,9 +907,9 @@ class TCPDF_FONTS {
 		$pfile .= '\'MissingWidth\'=>'.$fmetric['MissingWidth'].'';
 		$pfile .= ');'."\n";
 		if (!empty($fmetric['cbbox'])) {
-			$pfile .= '$cbbox=array('.substr($fmetric['cbbox'], 1).');'."\n";
+			$pfile .= '$cbbox=array('.\substr($fmetric['cbbox'], 1).');'."\n";
 		}
-		$pfile .= '$cw=array('.substr($fmetric['cw'], 1).');'."\n";
+		$pfile .= '$cw=array('.\substr($fmetric['cw'], 1).');'."\n";
 		$pfile .= '// --- EOF ---'."\n";
 		// store file
 		$fp = TCPDF_STATIC::fopenLocal($outpath.$font_name.'.php', 'w');
@@ -933,7 +933,7 @@ class TCPDF_FONTS {
 		$tlen = ($length / 4);
 		$offset = 0;
 		for ($i = 0; $i < $tlen; ++$i) {
-			$v = unpack('Ni', substr($table, $offset, 4));
+			$v = unpack('Ni', \substr($table, $offset, 4));
 			$sum += $v['i'];
 			$offset += 4;
 		}
@@ -969,7 +969,7 @@ class TCPDF_FONTS {
 		// for each table
 		for ($i = 0; $i < $numTables; ++$i) {
 			// get table info
-			$tag = substr($font, $offset, 4);
+			$tag = \substr($font, $offset, 4);
 			$offset += 4;
 			$table[$tag] = array();
 			$table[$tag]['checkSum'] = TCPDF_STATIC::_getULONG($font, $offset);
@@ -1151,7 +1151,7 @@ class TCPDF_FONTS {
 								$subsetglyphs[$g] = true;
 							}
 						}
-					}	
+					}
 					break;
 				}
 				case 6: { // Format 6: Trimmed table mapping
@@ -1300,7 +1300,7 @@ class TCPDF_FONTS {
 		for ($i = 0; $i < $tot_num_glyphs; ++$i) {
 			if (isset($subsetglyphs[$i])) {
 				$length = ($indexToLoc[($i + 1)] - $indexToLoc[$i]);
-				$glyf .= substr($font, ($glyf_offset + $indexToLoc[$i]), $length);
+				$glyf .= \substr($font, ($glyf_offset + $indexToLoc[$i]), $length);
 			} else {
 				$length = 0;
 			}
@@ -1318,10 +1318,10 @@ class TCPDF_FONTS {
 		$offset = 12;
 		foreach ($table as $tag => $val) {
 			if (in_array($tag, $table_names)) {
-				$table[$tag]['data'] = substr($font, $table[$tag]['offset'], $table[$tag]['length']);
+				$table[$tag]['data'] = \substr($font, $table[$tag]['offset'], $table[$tag]['length']);
 				if ($tag == 'head') {
 					// set the checkSumAdjustment to 0
-					$table[$tag]['data'] = substr($table[$tag]['data'], 0, 8)."\x0\x0\x0\x0".substr($table[$tag]['data'], 12);
+					$table[$tag]['data'] = \substr($table[$tag]['data'], 0, 8)."\x0\x0\x0\x0".\substr($table[$tag]['data'], 12);
 				}
 				$pad = 4 - ($table[$tag]['length'] % 4);
 				if ($pad != 4) {
@@ -1383,7 +1383,7 @@ class TCPDF_FONTS {
 		}
 		// set checkSumAdjustment on head table
 		$checkSumAdjustment = 0xB1B0AFBA - self::_getTTFtableChecksum($font, strlen($font));
-		$font = substr($font, 0, $table['head']['offset'] + 8).pack('N', $checkSumAdjustment).substr($font, $table['head']['offset'] + 12);
+		$font = \substr($font, 0, $table['head']['offset'] + 8).pack('N', $checkSumAdjustment).\substr($font, $table['head']['offset'] + 12);
 		return $font;
 	}
 
@@ -1523,7 +1523,7 @@ class TCPDF_FONTS {
 	 */
 	public static function _getfontpath() {
 		if (!defined('K_PATH_FONTS') AND is_dir($fdir = realpath(dirname(__FILE__).'/../fonts'))) {
-			if (substr($fdir, -1) != '/') {
+			if (\substr($fdir, -1) != '/') {
 				$fdir .= '/';
 			}
 			define('K_PATH_FONTS', $fdir);
@@ -2048,7 +2048,7 @@ class TCPDF_FONTS {
 	}
 
 	/**
-	 * Reverse the RLT substrings using the Bidirectional Algorithm (http://unicode.org/reports/tr9/).
+	 * Reverse the RLT \substrings using the Bidirectional Algorithm (http://unicode.org/reports/tr9/).
 	 * @param string $str string to manipulate.
 	 * @param bool $setbom if true set the Byte Order Mark (BOM = 0xFEFF)
 	 * @param bool $forcertl if true forces RTL text direction
@@ -2064,7 +2064,7 @@ class TCPDF_FONTS {
 	}
 
 	/**
-	 * Reverse the RLT substrings array using the Bidirectional Algorithm (http://unicode.org/reports/tr9/).
+	 * Reverse the RLT \substrings array using the Bidirectional Algorithm (http://unicode.org/reports/tr9/).
 	 * @param array $arr array of unicode values.
 	 * @param string $str string to manipulate (or empty value).
 	 * @param bool $setbom if true set the Byte Order Mark (BOM = 0xFEFF)
@@ -2081,7 +2081,7 @@ class TCPDF_FONTS {
 	}
 
 	/**
-	 * Reverse the RLT substrings using the Bidirectional Algorithm (http://unicode.org/reports/tr9/).
+	 * Reverse the RLT \substrings using the Bidirectional Algorithm (http://unicode.org/reports/tr9/).
 	 * @param array $ta array of characters composing the string.
 	 * @param string $str string to process
 	 * @param bool $forcertl if 'R' forces RTL, if 'L' forces LTR
