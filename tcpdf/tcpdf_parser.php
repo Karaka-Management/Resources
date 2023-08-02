@@ -600,7 +600,7 @@ class TCPDF_PARSER {
 					++$offset;
 					if (($char == '<') AND (preg_match('/^([0-9A-Fa-f\x09\x0a\x0c\x0d\x20]+)>/iU', substr($this->pdfdata, $offset), $matches) == 1)) {
 						// remove white space characters
-						$objval = strtr($matches[1], "\x09\x0a\x0c\x0d\x20", '');
+						$objval = \str_replace(["\x09", "\x0a", "\x0c", "\x0d", "\x20"], '', $matches[1]);
 						$offset += strlen($matches[0]);
 					} elseif (($endpos = strpos($this->pdfdata, '>', $offset)) !== FALSE) {
 						$offset = $endpos + 1;
