@@ -7044,8 +7044,8 @@ class TCPDF {
 		// fit the image on available space
 		list($w, $h, $x, $y) = $this->fitBlock($w, $h, $x, $y, $fitonpage);
 		// calculate new minimum dimensions in pixels
-		$neww = \round($w * $this->k * $dpi / $this->dpi);
-		$newh = \round($h * $this->k * $dpi / $this->dpi);
+		$neww = (int) \round($w * $this->k * $dpi / $this->dpi);
+		$newh = (int) \round($h * $this->k * $dpi / $this->dpi);
 		// check if resize is necessary (resize is used only to reduce the image)
 		$newsize = ($neww * $newh);
 		$pixsize = ($pixw * $pixh);
@@ -7957,11 +7957,11 @@ class TCPDF {
 					$ratio = \preg_replace('/[^0-9\.]/', '', $ratio);
 					$ratio = (float) $ratio;
 					if ($type == 'u') {
-						$chrdiff = \floor(($diff + 12) * $ratio);
+						$chrdiff = (int) \floor(($diff + 12) * $ratio);
 						$shift   = \str_repeat(' ', $chrdiff);
 						$shift   = TCPDF_FONTS::UTF8ToUTF16BE($shift, false, $this->isunicode, $this->CurrentFont);
 					} else {
-						$chrdiff = \floor(($diff + 11) * $ratio);
+						$chrdiff = (int) \floor(($diff + 11) * $ratio);
 						$shift   = \str_repeat(' ', $chrdiff);
 					}
 					$page = \str_replace($aa, $shift, $page);
@@ -15655,7 +15655,7 @@ class TCPDF {
 		$gvars = $this->getGraphicVars();
 		// create new barcode object
 		$barcodeobj = new TCPDF2DBarcode($code, $type);
-		$arrcode    = $barcodeobj->getBarcodeArrayArray();
+		$arrcode    = $barcodeobj->getBarcodeArray();
 		if (empty($arrcode) || !isset($arrcode['num_rows']) || ($arrcode['num_rows'] == 0) || !isset($arrcode['num_cols']) || ($arrcode['num_cols'] == 0)) {
 			$this->Error('Error in 2D barcode string');
 		}
@@ -18035,7 +18035,7 @@ Putting 1 is equivalent to putting 0 and calling Ln() just after. Default value:
 											$newpmid = '[('.\str_replace(\chr(0).\chr(32), ') '.\sprintf('%F', $spacew).' (', $replace).')]';
 											$pos     = \strpos($pmid, $pmatch, $pos);
 											if ($pos !== false) {
-												$pmid = sub\str_replace($pmid, $newpmid, $pos, \strlen($pmatch));
+												$pmid = \substr_replace($pmid, $newpmid, $pos, \strlen($pmatch));
 											}
 											++$pos;
 										}

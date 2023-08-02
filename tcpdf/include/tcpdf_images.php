@@ -54,7 +54,7 @@ class TCPDF_IMAGES {
 	 * Array of hinheritable SVG properties.
 	 * @since 5.0.000 (2010-05-02)
 	 * @public static
-	 * 
+	 *
 	 * @var string[]
 	 */
 	public static $svginheritprop = ['clip-rule', 'color', 'color-interpolation', 'color-interpolation-filters', 'color-profile', 'color-rendering', 'cursor', 'direction', 'display', 'fill', 'fill-opacity', 'fill-rule', 'font', 'font-family', 'font-size', 'font-size-adjust', 'font-stretch', 'font-style', 'font-variant', 'font-weight', 'glyph-orientation-horizontal', 'glyph-orientation-vertical', 'image-rendering', 'kerning', 'letter-spacing', 'marker', 'marker-end', 'marker-mid', 'marker-start', 'pointer-events', 'shape-rendering', 'stroke', 'stroke-dasharray', 'stroke-dashoffset', 'stroke-linecap', 'stroke-linejoin', 'stroke-miterlimit', 'stroke-opacity', 'stroke-width', 'text-anchor', 'text-rendering', 'visibility', 'word-spacing', 'writing-mode'];
@@ -88,9 +88,9 @@ class TCPDF_IMAGES {
 
 	/**
 	 * Set the transparency for the given GD image.
-	 * @param  resource $new_image GD image object
-	 * @param  resource $image     GD image object
-	 * @return resource GD image object $new_image
+	 * @param  \GdImage $new_image GD image object
+	 * @param  \GdImage $image     GD image object
+	 * @return \GdImage GD image object $new_image
 	 * @since 4.9.016 (2010-04-20)
 	 * @public static
 	 */
@@ -113,7 +113,7 @@ class TCPDF_IMAGES {
 	/**
 	 * Convert the loaded image to a PNG and then return a structure for the PDF creator.
 	 * This function requires GD library and write access to the directory defined on K_PATH_CACHE constant.
-	 * @param resource $image    image object
+	 * @param \GdImage $image    image object
 	 * @param string   $tempfile Temporary file name.
 	 *                           return image PNG image object.
 	 * @since 4.9.016 (2010-04-20)
@@ -121,7 +121,7 @@ class TCPDF_IMAGES {
 	 */
 	public static function _toPNG($image, $tempfile) {
 		// turn off interlaced mode
-		\imageinterlace($image, 0);
+		\imageinterlace($image, null);
 		// create temporary PNG image
 		\imagepng($image, $tempfile);
 		// remove image from memory
@@ -136,7 +136,7 @@ class TCPDF_IMAGES {
 	/**
 	 * Convert the loaded image to a JPEG and then return a structure for the PDF creator.
 	 * This function requires GD library and write access to the directory defined on K_PATH_CACHE constant.
-	 * @param resource $image    image object
+	 * @param \GdImage $image    image object
 	 * @param int      $quality  JPEG quality
 	 * @param string   $tempfile Temporary file name.
 	 *                           return array|false image JPEG image object.
