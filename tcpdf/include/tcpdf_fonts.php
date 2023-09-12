@@ -1762,7 +1762,7 @@ class TCPDF_FONTS {
 	 * @since 4.5.037 (2009-04-07)
 	 * @public static
 	 */
-	public static function UniArrSubString($uniarr, $start, $end) {
+	public static function UniArrSubString($uniarr, $start = 0, $end = 0) {
 		if ($end == 0) {
 			$end = \count($uniarr);
 		}
