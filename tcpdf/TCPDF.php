@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 //============================================================+
-// File name   : tcpdf.php
+// File name   : TCPDF.php
 // Version     : 6.4.4
 // Begin       : 2002-08-03
 // Last Update : 2021-12-31
@@ -110,15 +110,15 @@
 // TCPDF configuration
 require_once(__DIR__.'/tcpdf_autoconfig.php');
 // TCPDF static font methods and data
-require_once(__DIR__.'/include/tcpdf_font_data.php');
+require_once(__DIR__.'/include/TCPDF_FONT_DATA.php');
 // TCPDF static font methods and data
-require_once(__DIR__.'/include/tcpdf_fonts.php');
+require_once(__DIR__.'/include/TCPDF_FONTS.php');
 // TCPDF static color methods and data
-require_once(__DIR__.'/include/tcpdf_colors.php');
+require_once(__DIR__.'/include/TCPDF_COLORS.php');
 // TCPDF static image methods and data
-require_once(__DIR__.'/include/tcpdf_images.php');
+require_once(__DIR__.'/include/TCPDF_IMAGES.php');
 // TCPDF static methods and data
-require_once(__DIR__.'/include/tcpdf_static.php');
+require_once(__DIR__.'/include/TCPDF_STATIC.php');
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 

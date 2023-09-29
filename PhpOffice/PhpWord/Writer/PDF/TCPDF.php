@@ -33,7 +33,7 @@ class TCPDF extends AbstractRenderer implements WriterInterface
      *
      * @var string
      */
-    protected $includeFile = 'tcpdf.php';
+    protected $includeFile = 'TCPDF.php';
 
     /**
      * Gets the implementation of external PDF library that should be used.
