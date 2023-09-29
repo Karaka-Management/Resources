@@ -1,36 +1,64 @@
 # General
 
-The Orange Management software is a modular web application for small to mid sized companies that need CRM, ERP, Intranet and/or CMS features. The Orange Management modules can be split into the following different categories:
+This repository contains all external resources for [Karaka](https://github.com/Karaka-Management/Karaka). These resources are an important part for the organization and by using a hard copy reduces the risk of referencing invalid or incompatible resources.
 
-* General
-* Business
-* Education
-* Health Care
+```mermaid
+flowchart TD
+    CSS-->Fonts
+    Fonts-->Icon
+    Icon-->LineIcons
+    Icon-->LinearIcons([LinearIcons])
+    Icon-->FontAwesome([FontAwesome])
+    Fonts-->Text
+    Text-->Roboto
+    JS-->Codes
+    JS-->Charting
+    JS-->PDF
+    Codes-->CodeRecognition
+    CodeRecognition-->Zbar
+    PHP-->PDF
+    PHP-->Office
+    PHP-->Payment
+    PHP-->Search
+    Charting-->Chart
+    Chart-->ChartJs
+    Chart-->D3
+    Chart-->Mermaid
+    Charting-->Map
+    Map-->OpenLayers
+    PDF-->PDFRendering
+    PDFRendering-->mozilla
+    PDF-->PDFBuilding
+    PDFBuilding-->Mpdf
+    Mpdf-.->setasign
+    Mpdf-.->MyClabs
+    Mpdf-.->DeepCopy
+    Mpdf-.->Http
+    Mpdf-.->Psr
+    PDFBuilding-->TCPDF
+    Payment-->Stripe
+    Payment-->PayPal
+    Office-->PhpSpreadsheet
+    PhpSpreadsheet-.->Psr
+    PhpSpreadsheet-.->Http
+    PhpSpreadsheet-.->ZipStream
+    Office-->PhpPresentation
+    Office-->PhpWord
+    PhpWord-.->Laminas
+    Search-->Elastic
+```
 
-There is no limitation on how to combine modules. The modules are structured in a way that there is a minimum amount of dependencies between modules. Often modules provide additional functionality for other modules or modules request features from existing modules. Only in a few cases modules require another module for it's functionality, this is usually only the case for core modules or modules that have a strong relation to an other module.
+## mpdf
 
-Thanks to the modular structure it's easy to have full control over the costs and keep the functionality to the exact amount that is needed. There is no fear of having too many functions that reduce the usability if they are not needed. This also results in a fast environment not just because only the necessary parts get installed but also because the core is built for a good experience in terms of performance.
+### Changes
 
-## Development Status
+* Replaced `../data` path with `/data` path. The problem is that the data is outside of the namespace path which causes problems. In order to fix this the path was changed and the data directory was copied into the namespace directory.
+* Replaces `../ttfonts` path with `/ttfonts` path. Same reason as `data` path.
+* Replaces `../tmp` path with `/tmp` path. Same reason as `data` path.
 
-Currently Orange Management is still fully developing the first Alpha version. As soon as we have a running Beta version we are allowing external testers to use our software and a selected amount of inhouse developed modules.
+## tcpdf
 
-## Developers
+### Changes
 
-We are always looking for people that are interested in joining this project. We are looking for:
-
-* PHP developer
-* JavaScript developer
-* Frontend developer
-* Designer
-
-Are you interested in joining us? Feel free to contact us at spl1nes.com@gmail.com.
-
-## Overview
-
-* Project: Orange Management
-* Group: Orange Management
-* Developers: 1
-* Languages: PHP, JS, Java, HTML, CSS
-* Dependencies: d3.js, THREE.js, tcpdf, PhpExcel
-* Website: [http://orange-management.de/Website](http://orange-management.de/Website)
+* Added global namespacing to many function calls in tcpdf.pdf
+* Simplified the constant definition and definition checks in config.php and similar files
