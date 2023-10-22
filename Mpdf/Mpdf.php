@@ -1552,7 +1552,7 @@ class Mpdf implements \Psr\Log\LoggerAwareInterface
 	/**
 	 * {@inheritdoc}
 	 */
-	public function setLogger(LoggerInterface $logger) : void
+	public function setLogger(LoggerInterface $logger)
 	{
 		$this->logger = $logger;
 
