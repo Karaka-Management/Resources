@@ -7360,7 +7360,7 @@ class TCPDF {
 			}
 		}
 		// GD extension
-		if (($parsed === false) && \function_exists('imagecreatefrompng')) {
+		if (($parsed === false)) {
 			try {
 				// generate images
 				$img      = \imagecreatefrompng($file);
