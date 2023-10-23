@@ -1906,7 +1906,7 @@ class TCPDF_STATIC {
 		if (\strpos($filename, '://')) {
 			return false; // only support http and https wrappers for security reasons
 		}
-		return @\file_exists($filename);
+		return @\is_file($filename);
 	}
 
 	/**
