@@ -6553,7 +6553,7 @@ class Mpdf implements \Psr\Log\LoggerAwareInterface
 			$lastfontreqstyle = null;
 			$lastfontstyle = null;
 		}
-		if ($blockdir == 'ltr' && strpos($lastfontreqstyle, "I") !== false && strpos($lastfontstyle, "I") === false) { // Artificial italic
+		if ($blockdir == 'ltr' && strpos($lastfontreqstyle ?? '', "I") !== false && strpos($lastfontstyle ?? '', "I") === false) { // Artificial italic
 			$lastitalic = $this->FontSize * 0.15 * Mpdf::SCALE;
 		} else {
 			$lastitalic = 0;
@@ -11366,7 +11366,7 @@ class Mpdf implements \Psr\Log\LoggerAwareInterface
 			} elseif (isset($_SERVER['PHP_SELF'])) {
 				$currentPath = dirname($_SERVER['PHP_SELF']);
 			} else {
-				$currentPath = __DIR__ . '/../../';
+				$currentPath = '/';
 			}
 			$currentPath = str_replace("\\", "/", $currentPath);
 			if ($currentPath == '/') {
