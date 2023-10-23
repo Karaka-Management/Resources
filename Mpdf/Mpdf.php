@@ -11363,8 +11363,10 @@ class Mpdf implements \Psr\Log\LoggerAwareInterface
 		if (!$str) {
 			if (isset($_SERVER['SCRIPT_NAME'])) {
 				$currentPath = dirname($_SERVER['SCRIPT_NAME']);
-			} else {
+			} elseif (isset($_SERVER['PHP_SELF'])) {
 				$currentPath = dirname($_SERVER['PHP_SELF']);
+			} else {
+				$currentPath = __DIR__ . '/../../';
 			}
 			$currentPath = str_replace("\\", "/", $currentPath);
 			if ($currentPath == '/') {
