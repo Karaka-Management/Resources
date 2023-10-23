@@ -2216,16 +2216,16 @@ class TCPDF {
 					}
 					$valid_effect = ['Wipe', 'Glitter', 'Fly', 'Cover', 'Uncover', 'Push'];
 					if (isset($format['trans']['Di']) && \in_array($format['trans']['S'], $valid_effect)) {
-						if (((($format['trans']['Di'] == 90) || ($format['trans']['Di'] == 180)) && ($format['trans']['S'] == 'Wipe'))
-							|| (($format['trans']['Di'] == 315) && ($format['trans']['S'] == 'Glitter'))
+						if (((($format['trans']['Di'] == 90) || ($format['trans']['Di'] == 180)) && ($format['trans']['S'] === 'Wipe'))
+							|| (($format['trans']['Di'] == 315) && ($format['trans']['S'] === 'Glitter'))
 							|| (($format['trans']['Di'] == 0) || ($format['trans']['Di'] == 270))) {
 							$this->pagedim[$this->page]['trans']['Di'] = (int) ($format['trans']['Di']);
 						}
 					}
-					if (isset($format['trans']['SS']) && ($format['trans']['S'] == 'Fly')) {
+					if (isset($format['trans']['SS']) && ($format['trans']['S'] === 'Fly')) {
 						$this->pagedim[$this->page]['trans']['SS'] = (float) ($format['trans']['SS']);
 					}
-					if (isset($format['trans']['B']) && ($format['trans']['B'] === true) && ($format['trans']['S'] == 'Fly')) {
+					if (isset($format['trans']['B']) && ($format['trans']['B'] === true) && ($format['trans']['S'] === 'Fly')) {
 						$this->pagedim[$this->page]['trans']['B'] = 'true';
 					}
 				} else {
@@ -2440,7 +2440,7 @@ class TCPDF {
 	 * @since 4.8.014 (2009-11-04)
 	 */
 	public function isRTLTextDir() {
-		return ($this->rtl || ($this->tmprtl == 'R'));
+		return ($this->rtl || ($this->tmprtl === 'R'));
 	}
 
 	/**
@@ -2875,7 +2875,7 @@ class TCPDF {
 	 * @since 1.2
 	 */
 	public function setDisplayMode($zoom, $layout='SinglePage', $mode='UseNone') : void {
-		if (($zoom == 'fullpage') || ($zoom == 'fullwidth') || ($zoom == 'real') || ($zoom == 'default') || (!\is_string($zoom))) {
+		if (($zoom === 'fullpage') || ($zoom === 'fullwidth') || ($zoom === 'real') || ($zoom === 'default') || (!\is_string($zoom))) {
 			$this->ZoomMode = $zoom;
 		} else {
 			$this->Error('Incorrect zoom display mode: '.$zoom);
@@ -3481,9 +3481,9 @@ class TCPDF {
 			}
 			if (($headerdata['logo']) && ($headerdata['logo'] != K_BLANK_IMAGE)) {
 				$imgtype = TCPDF_IMAGES::getImageFileType(K_PATH_IMAGES.$headerdata['logo']);
-				if (($imgtype == 'eps') || ($imgtype == 'ai')) {
+				if (($imgtype === 'eps') || ($imgtype === 'ai')) {
 					$this->ImageEps(K_PATH_IMAGES.$headerdata['logo'], '', '', $headerdata['logo_width']);
-				} elseif ($imgtype == 'svg') {
+				} elseif ($imgtype === 'svg') {
 					$this->ImageSVG(K_PATH_IMAGES.$headerdata['logo'], '', '', $headerdata['logo_width']);
 				} else {
 					$this->Image(K_PATH_IMAGES.$headerdata['logo'], '', '', $headerdata['logo_width']);
@@ -4225,7 +4225,7 @@ class TCPDF {
 	protected function getFontsList() : void {
 		if (($fontsdir = \opendir(TCPDF_FONTS::_getfontpath())) !== false) {
 			while (($file = \readdir($fontsdir)) !== false) {
-				if (\substr($file, -4) == '.php') {
+				if (\substr($file, -4) === '.php') {
 					\array_push($this->fontlist, \strtolower(\basename($file, '.php')));
 				}
 			}
@@ -4261,20 +4261,20 @@ class TCPDF {
 			}
 		}
 		// move embedded styles on $style
-		if (\substr($family, -1) == 'I') {
+		if (\substr($family, -1) === 'I') {
 			$style .= 'I';
 			$family = \substr($family, 0, -1);
 		}
-		if (\substr($family, -1) == 'B') {
+		if (\substr($family, -1) === 'B') {
 			$style .= 'B';
 			$family = \substr($family, 0, -1);
 		}
 		// normalize family name
 		$family = \strtolower($family);
-		if ((!$this->isunicode) && ($family == 'arial')) {
+		if ((!$this->isunicode) && ($family === 'arial')) {
 			$family = 'helvetica';
 		}
-		if (($family == 'symbol') || ($family == 'zapfdingbats')) {
+		if (($family === 'symbol') || ($family === 'zapfdingbats')) {
 			$style = '';
 		}
 		if ($this->pdfa_mode && (isset($this->CoreFonts[$family]))) {
@@ -4326,7 +4326,7 @@ class TCPDF {
 		$fontdir = false;
 		if (!TCPDF_STATIC::empty_string($fontfile)) {
 			$fontdir = \dirname($fontfile);
-			if (TCPDF_STATIC::empty_string($fontdir) || ($fontdir == '.')) {
+			if (TCPDF_STATIC::empty_string($fontdir) || ($fontdir === '.')) {
 				$fontdir = '';
 			} else {
 				$fontdir .= '/';
@@ -4393,14 +4393,14 @@ class TCPDF {
 			}
 		}
 		++$this->numfonts;
-		if ($type == 'core') {
+		if ($type === 'core') {
 			$name   = $this->CoreFonts[$fontkey];
 			$subset = false;
-		} elseif (($type == 'TrueType') || ($type == 'Type1')) {
+		} elseif (($type === 'TrueType') || ($type === 'Type1')) {
 			$subset = false;
-		} elseif ($type == 'TrueTypeUnicode') {
+		} elseif ($type === 'TrueTypeUnicode') {
 			$enc = 'Identity-H';
-		} elseif ($type == 'cidfont0') {
+		} elseif ($type === 'cidfont0') {
 			if ($this->pdfa_mode) {
 				$this->Error('All fonts must be embedded in PDF/A mode!');
 			}
@@ -4777,7 +4777,7 @@ class TCPDF {
 	 */
 	public function setLink($link, $y=0, $page=-1) : void {
 		$fixed = false;
-		if (!empty($page) && (\substr($page, 0, 1) == '*')) {
+		if (!empty($page) && (\substr($page, 0, 1) === '*')) {
 			$page = (int) (\substr($page, 1));
 			// this page number will not be changed when moving/add/deleting pages
 			$fixed = true;
@@ -4887,7 +4887,7 @@ class TCPDF {
 		}
 		$this->PageAnnots[$page][] = ['n' => ++$this->n, 'x' => $x, 'y' => $y, 'w' => $w, 'h' => $h, 'txt' => $text, 'opt' => $opt, 'numspaces' => $spaces];
 		if (!$this->pdfa_mode || ($this->pdfa_mode && $this->pdfa_version == 3)) {
-			if ((($opt['Subtype'] == 'FileAttachment') || ($opt['Subtype'] == 'Sound')) && (!TCPDF_STATIC::empty_string($opt['FS']))
+			if ((($opt['Subtype'] === 'FileAttachment') || ($opt['Subtype'] === 'Sound')) && (!TCPDF_STATIC::empty_string($opt['FS']))
 				&& (@TCPDF_STATIC::file_exists($opt['FS']) || TCPDF_STATIC::isValidURL($opt['FS']))
 				&& (!isset($this->embeddedfiles[\basename($opt['FS'])]))) {
 				$this->embeddedfiles[\basename($opt['FS'])] = ['f' => ++$this->n, 'n' => ++$this->n, 'file' => $opt['FS']];
@@ -5312,7 +5312,7 @@ class TCPDF {
 		if ($txt != '') {
 			$txt2 = $txt;
 			if ($this->isunicode) {
-				if (($this->CurrentFont['type'] == 'core') || ($this->CurrentFont['type'] == 'TrueType') || ($this->CurrentFont['type'] == 'Type1')) {
+				if (($this->CurrentFont['type'] === 'core') || ($this->CurrentFont['type'] === 'TrueType') || ($this->CurrentFont['type'] === 'Type1')) {
 					$txt2 = TCPDF_FONTS::UTF8ToLatin1($txt2, $this->isunicode, $this->CurrentFont);
 				} else {
 					$unicode = TCPDF_FONTS::UTF8StringToArray($txt, $this->isunicode, $this->CurrentFont); // array of UTF-8 unicode values
@@ -5456,7 +5456,7 @@ class TCPDF {
 			$ns = \substr_count($txt, \chr(32));
 			// Justification
 			$spacewidth = 0;
-			if (($align == 'J') && ($ns > 0)) {
+			if (($align === 'J') && ($ns > 0)) {
 				if ($this->isUnicodeFont()) {
 					// get string width without spaces
 					$width = $this->GetStringWidth(\str_replace(' ', '', $txt));
@@ -5575,7 +5575,7 @@ class TCPDF {
 			}
 		}
 		// reset word spacing
-		if (!$this->isUnicodeFont() && ($align == 'J')) {
+		if (!$this->isUnicodeFont() && ($align === 'J')) {
 			$rs .= ' BT 0 Tw ET';
 		}
 		// reset stretching and spacing
@@ -5957,10 +5957,10 @@ class TCPDF {
 					}
 				}
 				if ($text_height < $maxh) {
-					if ($valign == 'M') {
+					if ($valign === 'M') {
 						// text vertically centered
 						$this->y += (($maxh - $text_height) / 2);
-					} elseif ($valign == 'B') {
+					} elseif ($valign === 'B') {
 						// text vertically aligned on bottom
 						$this->y += ($maxh - $text_height);
 					}
@@ -6381,7 +6381,7 @@ class TCPDF {
 			$arabic = false;
 		}
 		// check if string contains RTL text
-		if ($arabic || ($this->tmprtl == 'R') || \preg_match(TCPDF_FONT_DATA::$uni_RE_PATTERN_RTL, $s)) {
+		if ($arabic || ($this->tmprtl === 'R') || \preg_match(TCPDF_FONT_DATA::$uni_RE_PATTERN_RTL, $s)) {
 			$rtlmode = true;
 		} else {
 			$rtlmode = false;
@@ -6444,7 +6444,7 @@ class TCPDF {
 			$c = $chars[$i];
 			if ($c == 10) { // 10 = "\n" = new line
 				//Explicit line break
-				if ($align == 'J') {
+				if ($align === 'J') {
 					if ($this->rtl) {
 						$talign = 'R';
 					} else {
@@ -7100,9 +7100,9 @@ class TCPDF {
 		if ($newimage) {
 			//First use of image, get info
 			$type = \strtolower($type);
-			if ($type == '') {
+			if ($type === '') {
 				$type = TCPDF_IMAGES::getImageFileType($file, $imsize);
-			} elseif ($type == 'jpg') {
+			} elseif ($type === 'jpg') {
 				$type = 'jpeg';
 			}
 			$mqr = TCPDF_STATIC::get_mqr();
@@ -7127,13 +7127,13 @@ class TCPDF {
 					if ($img !== false) {
 						if ($resize) {
 							$imgr = \imagecreatetruecolor($neww, $newh);
-							if (($type == 'gif') || ($type == 'png')) {
+							if (($type === 'gif') || ($type === 'png')) {
 								$imgr = TCPDF_IMAGES::setGDImageTransparency($imgr, $img);
 							}
 							\imagecopyresampled($imgr, $img, 0, 0, 0, 0, $neww, $newh, $pixw, $pixh);
 							$img = $imgr;
 						}
-						if (($type == 'gif') || ($type == 'png')) {
+						if (($type === 'gif') || ($type === 'png')) {
 							$info = TCPDF_IMAGES::_toPNG($img, TCPDF_STATIC::getObjFilename('img', $this->file_id));
 						} else {
 							$info = TCPDF_IMAGES::_toJPEG($img, $this->jpeg_quality, TCPDF_STATIC::getObjFilename('img', $this->file_id));
@@ -7147,7 +7147,7 @@ class TCPDF {
 				try {
 					// ImageMagick library
 					$img = new Imagick();
-					if ($type == 'svg') {
+					if ($type === 'svg') {
 						if ($file[0] === '@') {
 							// image from string
 							$svgimg = \substr($file, 1);
@@ -7229,11 +7229,11 @@ class TCPDF {
 		$this->img_rb_y = $y + $h;
 
 		// set alignment
-		if ($palign == 'L') {
+		if ($palign === 'L') {
 			$ximg = $this->lMargin;
-		} elseif ($palign == 'C') {
+		} elseif ($palign === 'C') {
 			$ximg = ($this->w + $this->lMargin - $this->rMargin - $w) / 2;
-		} elseif ($palign == 'R') {
+		} elseif ($palign === 'R') {
 			$ximg = $this->w - $this->rMargin - $w;
 		} else {
 			$ximg = $x;
@@ -7766,7 +7766,7 @@ class TCPDF {
 				}
 				\fwrite($f, $this->getBuffer(), $this->bufferlen);
 				\fclose($f);
-				if ($dest == 'FI') {
+				if ($dest === 'FI') {
 					// send headers to browser
 					\header('Content-Type: application/pdf');
 					\header('Cache-Control: private, must-revalidate, post-check=0, pre-check=0, max-age=1');
@@ -7776,7 +7776,7 @@ class TCPDF {
 					\header('Last-Modified: '.\gmdate('D, d M Y H:i:s').' GMT');
 					\header('Content-Disposition: inline; filename="'.\basename($name).'"');
 					TCPDF_STATIC::sendOutputData(\file_get_contents($name), \filesize($name));
-				} elseif ($dest == 'FD') {
+				} elseif ($dest === 'FD') {
 					// send headers to browser
 					if (\ob_get_contents()) {
 						$this->Error('Some data has already been output, can\'t send PDF file');
@@ -7956,7 +7956,7 @@ class TCPDF {
 					$ratio = \substr($page, ($pos + $startnum), ($endnum - $pos - $startnum));
 					$ratio = \preg_replace('/[^0-9\.]/', '', $ratio);
 					$ratio = (float) $ratio;
-					if ($type == 'u') {
+					if ($type === 'u') {
 						$chrdiff = (int) \floor(($diff + 12) * $ratio);
 						$shift   = \str_repeat(' ', $chrdiff);
 						$shift   = TCPDF_FONTS::UTF8ToUTF16BE($shift, false, $this->isunicode, $this->CurrentFont);
@@ -8435,7 +8435,7 @@ class TCPDF {
 					switch (\strtolower($pl['opt']['subtype'])) {
 						case 'text': {
 							if (isset($pl['opt']['open'])) {
-								$annots .= ' /Open '. (\strtolower($pl['opt']['open']) == 'true' ? 'true' : 'false');
+								$annots .= ' /Open '. (\strtolower($pl['opt']['open']) === 'true' ? 'true' : 'false');
 							}
 							$iconsapp = ['Comment', 'Help', 'Insert', 'Key', 'NewParagraph', 'Note', 'Paragraph'];
 							if (isset($pl['opt']['name']) && \in_array($pl['opt']['name'], $iconsapp)) {
@@ -8455,7 +8455,7 @@ class TCPDF {
 								$pl['opt']['statemodel'] = 'Marked';
 								$annots .= ' /StateModel /'.$pl['opt']['statemodel'];
 							}
-							if ($pl['opt']['statemodel'] == 'Marked') {
+							if ($pl['opt']['statemodel'] === 'Marked') {
 								$states = ['Accepted', 'Unmarked'];
 							} else {
 								$states = ['Accepted', 'Rejected', 'Cancelled', 'Completed', 'None'];
@@ -8463,7 +8463,7 @@ class TCPDF {
 							if ($hasState && \in_array($pl['opt']['state'], $states)) {
 								$annots .= ' /State /'.$pl['opt']['state'];
 							} else {
-								if ($pl['opt']['statemodel'] == 'Marked') {
+								if ($pl['opt']['statemodel'] === 'Marked') {
 									$annots .= ' /State /Unmarked';
 								} else {
 									$annots .= ' /State /None';
@@ -8473,21 +8473,21 @@ class TCPDF {
 						}
 						case 'link': {
 							if (\is_string($pl['txt']) && !empty($pl['txt'])) {
-								if ($pl['txt'][0] == '#') {
+								if ($pl['txt'][0] === '#') {
 									// internal destination
 									$annots .= ' /A <</S /GoTo /D /'.TCPDF_STATIC::encodeNameObject(\substr($pl['txt'], 1)).'>>';
-								} elseif ($pl['txt'][0] == '%') {
+								} elseif ($pl['txt'][0] === '%') {
 									// embedded PDF file
 									$filename = \basename(\substr($pl['txt'], 1));
 									$annots .= ' /A << /S /GoToE /D [0 /Fit] /NewWindow true /T << /R /C /P '.($n - 1).' /A '.$this->embeddedfiles[$filename]['a'].' >> >>';
-								} elseif ($pl['txt'][0] == '*') {
+								} elseif ($pl['txt'][0] === '*') {
 									// embedded generic file
 									$filename = \basename(\substr($pl['txt'], 1));
 									$jsa      = 'var D=event.target.doc;var MyData=D.dataObjects;for (var i in MyData) if (MyData[i].path=="'.$filename.'") D.exportDataObject( { cName : MyData[i].name, nLaunch : 2});';
 									$annots .= ' /A << /S /JavaScript /JS '.$this->_textstring($jsa, $annot_obj_id).'>>';
 								} else {
 									$parsedUrl = \parse_url($pl['txt']);
-									if (empty($parsedUrl['scheme']) && (!empty($parsedUrl['path']) && \strtolower(\substr($parsedUrl['path'], -4)) == '.pdf')) {
+									if (empty($parsedUrl['scheme']) && (!empty($parsedUrl['path']) && \strtolower(\substr($parsedUrl['path'], -4)) === '.pdf')) {
 										// relative link to a PDF file
 										$dest = '[0 /Fit]'; // default page 0
 										if (!empty($parsedUrl['fragment'])) {
@@ -8889,7 +8889,7 @@ class TCPDF {
 			$fontfile = TCPDF_FONTS::getFontFullPath($file, $info['fontdir']);
 			if (!TCPDF_STATIC::empty_string($fontfile)) {
 				$font       = \file_get_contents($fontfile);
-				$compressed = (\substr($file, -2) == '.z');
+				$compressed = (\substr($file, -2) === '.z');
 				if ((!$compressed) && (isset($info['length2']))) {
 					$header = (\ord($font[0]) == 128);
 					if ($header) {
@@ -8943,7 +8943,7 @@ class TCPDF {
 			$font = $this->getFontBuffer($k);
 			$type = $font['type'];
 			$name = $font['name'];
-			if ($type == 'core') {
+			if ($type === 'core') {
 				// standard core font
 				$out = $this->_getobj($this->font_obj_ids[$k])."\n";
 				$out .= '<</Type /Font';
@@ -8953,14 +8953,14 @@ class TCPDF {
 				if ((\strtolower($name) != 'symbol') && (\strtolower($name) != 'zapfdingbats')) {
 					$out .= ' /Encoding /WinAnsiEncoding';
 				}
-				if ($k == 'helvetica') {
+				if ($k === 'helvetica') {
 					// add default font for annotations
 					$this->annotation_fonts[$k] = $font['i'];
 				}
 				$out .= ' >>';
 				$out .= "\n".'endobj';
 				$this->_out($out);
-			} elseif (($type == 'Type1') || ($type == 'TrueType')) {
+			} elseif (($type === 'Type1') || ($type === 'TrueType')) {
 				// additional Type1 or TrueType font
 				$out = $this->_getobj($this->font_obj_ids[$k])."\n";
 				$out .= '<</Type /Font';
@@ -9003,7 +9003,7 @@ class TCPDF {
 					$s .= ' /'.$fdk.' '.$fdv.'';
 				}
 				if (!TCPDF_STATIC::empty_string($font['file'])) {
-					$s .= ' /FontFile'.($type == 'Type1' ? '' : '2').' '.$this->FontFiles[$font['file']]['n'].' 0 R';
+					$s .= ' /FontFile'.($type === 'Type1' ? '' : '2').' '.$this->FontFiles[$font['file']]['n'].' 0 R';
 				}
 				$s .= '>>';
 				$s .= "\n".'endobj';
@@ -9110,7 +9110,7 @@ class TCPDF {
 			}
 			$stream = $this->_getrawstream(\file_get_contents($fontfile));
 			$out    = '<< /Length '.\strlen($stream).'';
-			if (\substr($fontfile, -2) == '.z') { // check file extension
+			if (\substr($fontfile, -2) === '.z') { // check file extension
 				// Decompresses data encoded using the public-domain
 				// zlib/deflate compression method, reproducing the
 				// original text or binary data
@@ -9242,14 +9242,14 @@ class TCPDF {
 				// ICC Colour Space
 				$icc = true;
 				$out .= ' /ColorSpace [/ICCBased '.($this->n + 1).' 0 R]';
-			} elseif ($info['cs'] == 'Indexed') {
+			} elseif ($info['cs'] === 'Indexed') {
 				// Indexed Colour Space
 				$out .= ' /ColorSpace [/Indexed /DeviceRGB '.((\strlen($info['pal']) / 3) - 1).' '.($this->n + 1).' 0 R]';
 			} else {
 				// Device Colour Space
 				$out .= ' /ColorSpace /'.$info['cs'];
 			}
-			if ($info['cs'] == 'DeviceCMYK') {
+			if ($info['cs'] === 'DeviceCMYK') {
 				$out .= ' /Decode [1 0 1 0 1 0 1 0]';
 			}
 			$out .= ' /BitsPerComponent '.$info['bpc'];
@@ -9276,7 +9276,7 @@ class TCPDF {
 				if (isset($info['trns']) && \is_array($info['trns'])) {
 					$trns       = '';
 					$count_info = \count($info['trns']);
-					if ($info['cs'] == 'Indexed') {
+					if ($info['cs'] === 'Indexed') {
 						$maxval =(\pow(2, $info['bpc']) - 1);
 						for ($i = 0; $i < $count_info; ++$i) {
 							if (($info['trns'][$i] != 0) && ($info['trns'][$i] != $maxval)) {
@@ -9313,7 +9313,7 @@ class TCPDF {
 				$icc = ($this->compress) ? \gzcompress($info['icc']) : $info['icc'];
 				$icc = $this->_getrawstream($icc);
 				$this->_out('<</N '.$info['ch'].' /Alternate /'.$info['cs'].' '.$filter.'/Length '.\strlen($icc).'>> stream'."\n".$icc."\n".'endstream'."\n".'endobj');
-			} elseif ($info['cs'] == 'Indexed') {
+			} elseif ($info['cs'] === 'Indexed') {
 				// colour palette
 				$this->_newobj();
 				$pal = ($this->compress) ? \gzcompress($info['pal']) : $info['pal'];
@@ -9822,11 +9822,11 @@ class TCPDF {
 			$out .= ' /PageMode /UseOutlines';
 		}
 		//$out .= ' /Threads []';
-		if ($this->ZoomMode == 'fullpage') {
+		if ($this->ZoomMode === 'fullpage') {
 			$out .= ' /OpenAction ['.$this->page_obj_id[1].' 0 R /Fit]';
-		} elseif ($this->ZoomMode == 'fullwidth') {
+		} elseif ($this->ZoomMode === 'fullwidth') {
 			$out .= ' /OpenAction ['.$this->page_obj_id[1].' 0 R /FitH null]';
-		} elseif ($this->ZoomMode == 'real') {
+		} elseif ($this->ZoomMode === 'real') {
 			$out .= ' /OpenAction ['.$this->page_obj_id[1].' 0 R /XYZ null null 1]';
 		} elseif (!\is_string($this->ZoomMode)) {
 			$out .= \sprintf(' /OpenAction ['.$this->page_obj_id[1].' 0 R /XYZ null null %F]', ($this->ZoomMode / 100));
@@ -10471,7 +10471,7 @@ class TCPDF {
 	public function setLanguageArray($language) : void {
 		$this->l = $language;
 		if (isset($this->l['a_meta_dir'])) {
-			$this->rtl = $this->l['a_meta_dir'] == 'rtl' ? true : false;
+			$this->rtl = $this->l['a_meta_dir'] === 'rtl' ? true : false;
 		} else {
 			$this->rtl = false;
 		}
@@ -10501,7 +10501,7 @@ class TCPDF {
 	 * @public
 	 */
 	public function addHtmlLink($url, $name, $fill=false, $firstline=false, $color=null, $style=-1, $firstblock=false) {
-		if (isset($url[1]) && ($url[0] == '#') && \is_numeric($url[1])) {
+		if (isset($url[1]) && ($url[0] === '#') && \is_numeric($url[1])) {
 			// convert url to internal link
 			$lnkdata = \explode(',', $url);
 			if (isset($lnkdata[0])) {
@@ -11747,7 +11747,7 @@ class TCPDF {
 			$this->setFillColorArray($fill_color);
 		}
 		$op = TCPDF_STATIC::getPathPaintOperator($style);
-		if ($op == 'f') {
+		if ($op === 'f') {
 			$line_style = [];
 		}
 		if ($line_style) {
@@ -11790,7 +11790,7 @@ class TCPDF {
 			$this->setFillColorArray($fill_color);
 		}
 		$op = TCPDF_STATIC::getPathPaintOperator($style);
-		if ($op == 'f') {
+		if ($op === 'f') {
 			$line_style = [];
 		}
 		if ($line_style) {
@@ -12009,7 +12009,7 @@ class TCPDF {
 			$this->setFillColorArray($fill_color);
 		}
 		$op = TCPDF_STATIC::getPathPaintOperator($style);
-		if ($op == 'f') {
+		if ($op === 'f') {
 			$line_style = [];
 		}
 		$draw = true;
@@ -12018,7 +12018,7 @@ class TCPDF {
 				$this->setLineStyle($line_style['all']);
 			} else {
 				$draw = false;
-				if ($op == 'B') {
+				if ($op === 'B') {
 					// draw fill
 					$op = 'f';
 					$this->_outPoint($p[0], $p[1]);
@@ -12202,7 +12202,7 @@ class TCPDF {
 		if ($this->state != 2) {
 			return;
 		}
-		if (($round_corner == '0000') || (($rx == $ry) && ($rx == 0))) {
+		if (($round_corner === '0000') || (($rx == $ry) && ($rx == 0))) {
 			// Not rounded
 			$this->Rect($x, $y, $w, $h, $style, $border_style, $fill_color);
 			return;
@@ -12212,7 +12212,7 @@ class TCPDF {
 			$this->setFillColorArray($fill_color);
 		}
 		$op = TCPDF_STATIC::getPathPaintOperator($style);
-		if ($op == 'f') {
+		if ($op === 'f') {
 			$border_style = [];
 		}
 		if ($border_style) {
@@ -12354,7 +12354,7 @@ class TCPDF {
 			$x = $this->w;
 		}
 		$fixed = false;
-		if (!empty($page) && (\substr($page, 0, 1) == '*')) {
+		if (!empty($page) && (\substr($page, 0, 1) === '*')) {
 			$page = (int) (\substr($page, 1));
 			// this page number will not be changed when moving/add/deleting pages
 			$fixed = true;
@@ -12458,7 +12458,7 @@ class TCPDF {
 		}
 		$fixed        = false;
 		$pageAsString = (string) $page;
-		if ($pageAsString && $pageAsString[0] == '*') {
+		if ($pageAsString && $pageAsString[0] === '*') {
 			$page = (int) (\substr($page, 1));
 			// this page number will not be changed when moving/add/deleting pages
 			$fixed = true;
@@ -12554,14 +12554,14 @@ class TCPDF {
 			if (isset($o['u']) && !empty($o['u'])) {
 				// link
 				if (\is_string($o['u'])) {
-					if ($o['u'][0] == '#') {
+					if ($o['u'][0] === '#') {
 						// internal destination
 						$out .= ' /Dest /'.TCPDF_STATIC::encodeNameObject(\substr($o['u'], 1));
-					} elseif ($o['u'][0] == '%') {
+					} elseif ($o['u'][0] === '%') {
 						// embedded PDF file
 						$filename = \basename(\substr($o['u'], 1));
 						$out .= ' /A <</S /GoToE /D [0 /Fit] /NewWindow true /T << /R /C /P '.($o['p'] - 1).' /A '.$this->embeddedfiles[$filename]['a'].' >> >>';
-					} elseif ($o['u'][0] == '*') {
+					} elseif ($o['u'][0] === '*') {
 						// embedded generic file
 						$filename = \basename(\substr($o['u'], 1));
 						$jsa      = 'var D=event.target.doc;var MyData=D.dataObjects;for (var i in MyData) if (MyData[i].path=="'.$filename.'") D.exportDataObject( { cName : MyData[i].name, nLaunch : 2});';
@@ -13317,17 +13317,17 @@ class TCPDF {
 				$opt['aa'] = '/D <<';
 				$bmode     = ['SubmitForm', 'ResetForm', 'ImportData'];
 				foreach ($action as $key => $val) {
-					if (($key == 'S') && \in_array($val, $bmode)) {
+					if (($key === 'S') && \in_array($val, $bmode)) {
 						$opt['aa'] .= ' /S /'.$val;
-					} elseif (($key == 'F') && (!empty($val))) {
+					} elseif (($key === 'F') && (!empty($val))) {
 						$opt['aa'] .= ' /F '.$this->_datastring($val, $ann_obj_id);
-					} elseif (($key == 'Fields') && \is_array($val) && !empty($val)) {
+					} elseif (($key === 'Fields') && \is_array($val) && !empty($val)) {
 						$opt['aa'] .= ' /Fields [';
 						foreach ($val as $field) {
 							$opt['aa'] .= ' '.$this->_textstring($field, $ann_obj_id);
 						}
 						$opt['aa'] .= ']';
-					} elseif (($key == 'Flags')) {
+					} elseif (($key === 'Flags')) {
 						$ff = 0;
 						if (\is_array($val)) {
 							foreach ($val as $flag) {
@@ -14048,7 +14048,7 @@ class TCPDF {
 		} else {
 			$nonstroking = (float) $nonstroking;
 		}
-		if ($bm[0] == '/') {
+		if ($bm[0] === '/') {
 			// remove trailing slash
 			$bm = \substr($bm, 1);
 		}
@@ -14929,7 +14929,7 @@ class TCPDF {
 			$xc = ($this->w - $xc);
 		}
 		$op = TCPDF_STATIC::getPathPaintOperator($style);
-		if ($op == 'f') {
+		if ($op === 'f') {
 			$line_style = [];
 		}
 		if ($cw) {
@@ -15052,22 +15052,22 @@ class TCPDF {
 		$this->img_rb_y = $y + $h;
 		// set alignment
 		if ($this->rtl) {
-			if ($palign == 'L') {
+			if ($palign === 'L') {
 				$ximg = $this->lMargin;
-			} elseif ($palign == 'C') {
+			} elseif ($palign === 'C') {
 				$ximg = ($this->w + $this->lMargin - $this->rMargin - $w) / 2;
-			} elseif ($palign == 'R') {
+			} elseif ($palign === 'R') {
 				$ximg = $this->w - $this->rMargin - $w;
 			} else {
 				$ximg = $x - $w;
 			}
 			$this->img_rb_x = $ximg;
 		} else {
-			if ($palign == 'L') {
+			if ($palign === 'L') {
 				$ximg = $this->lMargin;
-			} elseif ($palign == 'C') {
+			} elseif ($palign === 'C') {
 				$ximg = ($this->w + $this->lMargin - $this->rMargin - $w) / 2;
-			} elseif ($palign == 'R') {
+			} elseif ($palign === 'R') {
 				$ximg = $this->w - $this->rMargin - $w;
 			} else {
 				$ximg = $x;
@@ -15095,7 +15095,7 @@ class TCPDF {
 		$cnt   = \count($lines);
 		for ($i=0; $i < $cnt; ++$i) {
 			$line = $lines[$i];
-			if (($line == '') || ($line[0] == '%')) {
+			if (($line === '') || ($line[0] === '%')) {
 				continue;
 			}
 			$len = \strlen($line);
@@ -15114,11 +15114,11 @@ class TCPDF {
 			$chunks = \explode(' ', $line);
 			$cmd    = \trim(\array_pop($chunks));
 			// RGB
-			if (($cmd == 'Xa') || ($cmd == 'XA')) {
+			if (($cmd === 'Xa') || ($cmd === 'XA')) {
 				$b = \array_pop($chunks);
 				$g = \array_pop($chunks);
 				$r = \array_pop($chunks);
-				$this->_out(''.$r.' '.$g.' '.$b.' '.($cmd == 'Xa'?'rg':'RG')); //\substr($line, 0, -2).'rg' -> in EPS (AI8): c m y k r g b rg!
+				$this->_out(''.$r.' '.$g.' '.$b.' '.($cmd === 'Xa'?'rg':'RG')); //\substr($line, 0, -2).'rg' -> in EPS (AI8): c m y k r g b rg!
 				continue;
 			}
 			$skip = false;
@@ -15214,7 +15214,7 @@ class TCPDF {
 						$isU = false;
 						$max = \min(($i + 5), $cnt);
 						for ($j = ($i + 1); $j < $max; ++$j) {
-							$isU = ($isU || (($lines[$j] == 'U') || ($lines[$j] == '*U')));
+							$isU = ($isU || (($lines[$j] === 'U') || ($lines[$j] === '*U')));
 						}
 						if ($isU) {
 							$this->_out('f*');
@@ -15347,7 +15347,7 @@ class TCPDF {
 		// set default values
 		if (!isset($style['position'])) {
 			$style['position'] = '';
-		} elseif ($style['position'] == 'S') {
+		} elseif ($style['position'] === 'S') {
 			// keep this for backward compatibility
 			$style['position'] = '';
 			$style['stretch']  = true;
@@ -15507,22 +15507,22 @@ class TCPDF {
 		$this->img_rb_y = $y + $h;
 		// set alignment
 		if ($this->rtl) {
-			if ($style['position'] == 'L') {
+			if ($style['position'] === 'L') {
 				$xpos = $this->lMargin;
-			} elseif ($style['position'] == 'C') {
+			} elseif ($style['position'] === 'C') {
 				$xpos = ($this->w + $this->lMargin - $this->rMargin - $w) / 2;
-			} elseif ($style['position'] == 'R') {
+			} elseif ($style['position'] === 'R') {
 				$xpos = $this->w - $this->rMargin - $w;
 			} else {
 				$xpos = $x - $w;
 			}
 			$this->img_rb_x = $xpos;
 		} else {
-			if ($style['position'] == 'L') {
+			if ($style['position'] === 'L') {
 				$xpos = $this->lMargin;
-			} elseif ($style['position'] == 'C') {
+			} elseif ($style['position'] === 'C') {
 				$xpos = ($this->w + $this->lMargin - $this->rMargin - $w) / 2;
-			} elseif ($style['position'] == 'R') {
+			} elseif ($style['position'] === 'R') {
 				$xpos = $this->w - $this->rMargin - $w;
 			} else {
 				$xpos = $x;
@@ -15775,22 +15775,22 @@ class TCPDF {
 		$this->img_rb_y = $y + $h;
 		// set alignment
 		if ($this->rtl) {
-			if ($style['position'] == 'L') {
+			if ($style['position'] === 'L') {
 				$xpos = $this->lMargin;
-			} elseif ($style['position'] == 'C') {
+			} elseif ($style['position'] === 'C') {
 				$xpos = ($this->w + $this->lMargin - $this->rMargin - $w) / 2;
-			} elseif ($style['position'] == 'R') {
+			} elseif ($style['position'] === 'R') {
 				$xpos = $this->w - $this->rMargin - $w;
 			} else {
 				$xpos = $x - $w;
 			}
 			$this->img_rb_x = $xpos;
 		} else {
-			if ($style['position'] == 'L') {
+			if ($style['position'] === 'L') {
 				$xpos = $this->lMargin;
-			} elseif ($style['position'] == 'C') {
+			} elseif ($style['position'] === 'C') {
 				$xpos = ($this->w + $this->lMargin - $this->rMargin - $w) / 2;
-			} elseif ($style['position'] == 'R') {
+			} elseif ($style['position'] === 'R') {
 				$xpos = $this->w - $this->rMargin - $w;
 			} else {
 				$xpos = $x;
@@ -15963,11 +15963,11 @@ class TCPDF {
 	 * @since 5.7.000 (2010-08-02)
 	 */
 	protected function getCSSBorderWidth($width) {
-		if ($width == 'thin') {
+		if ($width === 'thin') {
 			$width = (2 / $this->k);
-		} elseif ($width == 'medium') {
+		} elseif ($width === 'medium') {
 			$width = (4 / $this->k);
-		} elseif ($width == 'thick') {
+		} elseif ($width === 'thick') {
 			$width = (6 / $this->k);
 		} else {
 			$width = $this->getHTMLUnitToUnits($width, 1, 'px', false);
@@ -16047,7 +16047,7 @@ class TCPDF {
 				break;
 			}
 		}
-		if ($style == 'none') {
+		if ($style === 'none') {
 			return [];
 		}
 		$border['cap']  = 'square';
@@ -16220,7 +16220,7 @@ class TCPDF {
 				break;
 			}
 			case 'inherit': {
-				if ($parent == 'normal') {
+				if ($parent === 'normal') {
 					$val = 0;
 				} else {
 					$val = $parent;
@@ -16291,7 +16291,7 @@ class TCPDF {
 				break;
 			}
 			case 'inherit': {
-				if ($parent == 'normal') {
+				if ($parent === 'normal') {
 					$val = 100;
 				} else {
 					$val = $parent;
@@ -16389,7 +16389,7 @@ class TCPDF {
 					\preg_match('/media[\s]*=[\s]*"([^"]*)"/', $link, $type);
 					// get 'all' and 'print' media, other media types are discarded
 					// (all, braille, embossed, handheld, print, projection, screen, speech, tty, tv)
-					if (empty($type) || (isset($type[1]) && (($type[1] == 'all') || ($type[1] == 'print')))) {
+					if (empty($type) || (isset($type[1]) && (($type[1] === 'all') || ($type[1] === 'print')))) {
 						$type = [];
 						if (\preg_match('/href[\s]*=[\s]*"([^"]*)"/', $link, $type) > 0) {
 							// read CSS data file
@@ -16410,7 +16410,7 @@ class TCPDF {
 				\preg_match('/media[\s]*=[\s]*"([^"]*)"/', $media, $type);
 				// get 'all' and 'print' media, other media types are discarded
 				// (all, braille, embossed, handheld, print, projection, screen, speech, tty, tv)
-				if (empty($type) || (isset($type[1]) && (($type[1] == 'all') || ($type[1] == 'print')))) {
+				if (empty($type) || (isset($type[1]) && (($type[1] === 'all') || ($type[1] === 'print')))) {
 					$cssdata = $matches[2][$key];
 					$css     = \array_merge($css, TCPDF_STATIC::extractCSSproperties($cssdata));
 				}
@@ -16557,8 +16557,8 @@ class TCPDF {
 				\preg_match('/[\/]?([a-zA-Z0-9]*)/', $element, $tag);
 				$tagname = \strtolower($tag[1]);
 				// check if we are inside a table header
-				if ($tagname == 'thead') {
-					if ($element[0] == '/') {
+				if ($tagname === 'thead') {
+					if ($element[0] === '/') {
 						$thead = false;
 					} else {
 						$thead = true;
@@ -16573,7 +16573,7 @@ class TCPDF {
 				} else {
 					$dom[$key]['block'] = false;
 				}
-				if ($element[0] == '/') {
+				if ($element[0] === '/') {
 					// *** closing html tag
 					$dom[$key]['opening'] = false;
 					$dom[$key]['parent']  = \end($level);
@@ -16598,10 +16598,10 @@ class TCPDF {
 						$dom[$key]['listtype'] = $dom[($dom[($dom[$key]['parent'])]['parent'])]['listtype'];
 					}
 					// set the number of columns in table tag
-					if (($dom[$key]['value'] == 'tr') && (!isset($dom[($dom[($dom[$key]['parent'])]['parent'])]['cols']))) {
+					if (($dom[$key]['value'] === 'tr') && (!isset($dom[($dom[($dom[$key]['parent'])]['parent'])]['cols']))) {
 						$dom[($dom[($dom[$key]['parent'])]['parent'])]['cols'] = $dom[($dom[$key]['parent'])]['cols'];
 					}
-					if (($dom[$key]['value'] == 'td') || ($dom[$key]['value'] == 'th')) {
+					if (($dom[$key]['value'] === 'td') || ($dom[$key]['value'] === 'th')) {
 						$dom[($dom[$key]['parent'])]['content'] = $csstagarray;
 						for ($i = ($dom[$key]['parent'] + 1); $i < $key; ++$i) {
 							$dom[($dom[$key]['parent'])]['content'] .= \stripslashes($a[$dom[$i]['elkey']]);
@@ -16631,7 +16631,7 @@ class TCPDF {
 						// header elements must be always contained in a single page
 						$dom[($dom[$key]['parent'])]['attribute']['nobr'] = 'true';
 					}
-					if (($dom[$key]['value'] == 'table') && (!TCPDF_STATIC::empty_string($dom[($dom[$key]['parent'])]['thead']))) {
+					if (($dom[$key]['value'] === 'table') && (!TCPDF_STATIC::empty_string($dom[($dom[$key]['parent'])]['thead']))) {
 						// remove the nobr attributes from the table header
 						$dom[($dom[$key]['parent'])]['thead'] = \str_replace(' nobr="true"', '', $dom[($dom[$key]['parent'])]['thead']);
 						$dom[($dom[$key]['parent'])]['thead'] .= '</tablehead>';
@@ -16640,7 +16640,7 @@ class TCPDF {
 					// *** opening or self-closing html tag
 					$dom[$key]['opening'] = true;
 					$dom[$key]['parent']  = \end($level);
-					if ((\substr($element, -1, 1) == '/') || (\in_array($dom[$key]['value'], $selfclosingtags))) {
+					if ((\substr($element, -1, 1) === '/') || (\in_array($dom[$key]['value'], $selfclosingtags))) {
 						// self-closing tag
 						$dom[$key]['self'] = true;
 					} else {
@@ -16699,7 +16699,7 @@ class TCPDF {
 						}
 						// display
 						if (isset($dom[$key]['style']['display'])) {
-							$dom[$key]['hide'] = (\trim(\strtolower($dom[$key]['style']['display'])) == 'none');
+							$dom[$key]['hide'] = (\trim(\strtolower($dom[$key]['style']['display'])) === 'none');
 						}
 						// font family
 						if (isset($dom[$key]['style']['font-family'])) {
@@ -16708,14 +16708,14 @@ class TCPDF {
 						// list-style-type
 						if (isset($dom[$key]['style']['list-style-type'])) {
 							$dom[$key]['listtype'] = \trim(\strtolower($dom[$key]['style']['list-style-type']));
-							if ($dom[$key]['listtype'] == 'inherit') {
+							if ($dom[$key]['listtype'] === 'inherit') {
 								$dom[$key]['listtype'] = $dom[$parentkey]['listtype'];
 							}
 						}
 						// text-indent
 						if (isset($dom[$key]['style']['text-indent'])) {
 							$dom[$key]['text-indent'] = $this->getHTMLUnitToUnits($dom[$key]['style']['text-indent']);
-							if ($dom[$key]['text-indent'] == 'inherit') {
+							if ($dom[$key]['text-indent'] === 'inherit') {
 								$dom[$key]['text-indent'] = $dom[$parentkey]['text-indent'];
 							}
 						}
@@ -16766,21 +16766,21 @@ class TCPDF {
 						}
 						// font style
 						if (isset($dom[$key]['style']['font-weight'])) {
-							if (\strtolower($dom[$key]['style']['font-weight'][0]) == 'n') {
+							if (\strtolower($dom[$key]['style']['font-weight'][0]) === 'n') {
 								if (\strpos($dom[$key]['fontstyle'], 'B') !== false) {
 									$dom[$key]['fontstyle'] = \str_replace('B', '', $dom[$key]['fontstyle']);
 								}
-							} elseif (\strtolower($dom[$key]['style']['font-weight'][0]) == 'b') {
+							} elseif (\strtolower($dom[$key]['style']['font-weight'][0]) === 'b') {
 								$dom[$key]['fontstyle'] .= 'B';
 							}
 						}
-						if (isset($dom[$key]['style']['font-style']) && (\strtolower($dom[$key]['style']['font-style'][0]) == 'i')) {
+						if (isset($dom[$key]['style']['font-style']) && (\strtolower($dom[$key]['style']['font-style'][0]) === 'i')) {
 							$dom[$key]['fontstyle'] .= 'I';
 						}
 						// font color
 						if (isset($dom[$key]['style']['color']) && (!TCPDF_STATIC::empty_string($dom[$key]['style']['color']))) {
 							$dom[$key]['fgcolor'] = TCPDF_COLORS::convertHTMLColorToDec($dom[$key]['style']['color'], $this->spot_colors);
-						} elseif ($dom[$key]['value'] == 'a') {
+						} elseif ($dom[$key]['value'] === 'a') {
 							$dom[$key]['fgcolor'] = $this->htmlLinkColorArray;
 						}
 						// background color
@@ -16793,19 +16793,19 @@ class TCPDF {
 							foreach ($decors as $dec) {
 								$dec = \trim($dec);
 								if (!TCPDF_STATIC::empty_string($dec)) {
-									if ($dec[0] == 'u') {
+									if ($dec[0] === 'u') {
 										// underline
 										$dom[$key]['fontstyle'] .= 'U';
-									} elseif ($dec[0] == 'l') {
+									} elseif ($dec[0] === 'l') {
 										// line-through
 										$dom[$key]['fontstyle'] .= 'D';
-									} elseif ($dec[0] == 'o') {
+									} elseif ($dec[0] === 'o') {
 										// overline
 										$dom[$key]['fontstyle'] .= 'O';
 									}
 								}
 							}
-						} elseif ($dom[$key]['value'] == 'a') {
+						} elseif ($dom[$key]['value'] === 'a') {
 							$dom[$key]['fontstyle'] = $this->htmlLinkFontStyle;
 						}
 						// check for width attribute
@@ -16940,32 +16940,32 @@ class TCPDF {
 							$dom[$key]['border-spacing'] = $this->getCSSBorderMargin($dom[$key]['style']['border-spacing']);
 						}
 						// page-break-inside
-						if (isset($dom[$key]['style']['page-break-inside']) && ($dom[$key]['style']['page-break-inside'] == 'avoid')) {
+						if (isset($dom[$key]['style']['page-break-inside']) && ($dom[$key]['style']['page-break-inside'] === 'avoid')) {
 							$dom[$key]['attribute']['nobr'] = 'true';
 						}
 						// page-break-before
 						if (isset($dom[$key]['style']['page-break-before'])) {
-							if ($dom[$key]['style']['page-break-before'] == 'always') {
+							if ($dom[$key]['style']['page-break-before'] === 'always') {
 								$dom[$key]['attribute']['pagebreak'] = 'true';
-							} elseif ($dom[$key]['style']['page-break-before'] == 'left') {
+							} elseif ($dom[$key]['style']['page-break-before'] === 'left') {
 								$dom[$key]['attribute']['pagebreak'] = 'left';
-							} elseif ($dom[$key]['style']['page-break-before'] == 'right') {
+							} elseif ($dom[$key]['style']['page-break-before'] === 'right') {
 								$dom[$key]['attribute']['pagebreak'] = 'right';
 							}
 						}
 						// page-break-after
 						if (isset($dom[$key]['style']['page-break-after'])) {
-							if ($dom[$key]['style']['page-break-after'] == 'always') {
+							if ($dom[$key]['style']['page-break-after'] === 'always') {
 								$dom[$key]['attribute']['pagebreakafter'] = 'true';
-							} elseif ($dom[$key]['style']['page-break-after'] == 'left') {
+							} elseif ($dom[$key]['style']['page-break-after'] === 'left') {
 								$dom[$key]['attribute']['pagebreakafter'] = 'left';
-							} elseif ($dom[$key]['style']['page-break-after'] == 'right') {
+							} elseif ($dom[$key]['style']['page-break-after'] === 'right') {
 								$dom[$key]['attribute']['pagebreakafter'] = 'right';
 							}
 						}
 					}
 					if (isset($dom[$key]['attribute']['display'])) {
-						$dom[$key]['hide'] = (\trim(\strtolower($dom[$key]['attribute']['display'])) == 'none');
+						$dom[$key]['hide'] = (\trim(\strtolower($dom[$key]['attribute']['display'])) === 'none');
 					}
 					if (isset($dom[$key]['attribute']['border']) && ($dom[$key]['attribute']['border'] != 0)) {
 						$borderstyle = $this->getCSSBorderStyle($dom[$key]['attribute']['border'].' solid black');
@@ -16974,7 +16974,7 @@ class TCPDF {
 						}
 					}
 					// check for font tag
-					if ($dom[$key]['value'] == 'font') {
+					if ($dom[$key]['value'] === 'font') {
 						// font family
 						if (isset($dom[$key]['attribute']['face'])) {
 							$dom[$key]['fontname'] = $this->getFontFamilyName($dom[$key]['attribute']['face']);
@@ -16982,9 +16982,9 @@ class TCPDF {
 						// font size
 						if (isset($dom[$key]['attribute']['size'])) {
 							if ($key > 0) {
-								if ($dom[$key]['attribute']['size'][0] == '+') {
+								if ($dom[$key]['attribute']['size'][0] === '+') {
 									$dom[$key]['fontsize'] = $dom[($dom[$key]['parent'])]['fontsize'] + (int) (\substr($dom[$key]['attribute']['size'], 1));
-								} elseif ($dom[$key]['attribute']['size'][0] == '-') {
+								} elseif ($dom[$key]['attribute']['size'][0] === '-') {
 									$dom[$key]['fontsize'] = $dom[($dom[$key]['parent'])]['fontsize'] - (int) (\substr($dom[$key]['attribute']['size'], 1));
 								} else {
 									$dom[$key]['fontsize'] = (int) ($dom[$key]['attribute']['size']);
@@ -16995,7 +16995,7 @@ class TCPDF {
 						}
 					}
 					// force natural alignment for lists
-					if ((($dom[$key]['value'] == 'ul') || ($dom[$key]['value'] == 'ol') || ($dom[$key]['value'] == 'dl'))
+					if ((($dom[$key]['value'] === 'ul') || ($dom[$key]['value'] === 'ol') || ($dom[$key]['value'] === 'dl'))
 						&& (!isset($dom[$key]['align']) || TCPDF_STATIC::empty_string($dom[$key]['align']) || ($dom[$key]['align'] != 'J'))) {
 						if ($this->rtl) {
 							$dom[$key]['align'] = 'R';
@@ -17003,30 +17003,30 @@ class TCPDF {
 							$dom[$key]['align'] = 'L';
 						}
 					}
-					if (($dom[$key]['value'] == 'small') || ($dom[$key]['value'] == 'sup') || ($dom[$key]['value'] == 'sub')) {
+					if (($dom[$key]['value'] === 'small') || ($dom[$key]['value'] === 'sup') || ($dom[$key]['value'] === 'sub')) {
 						if (!isset($dom[$key]['attribute']['size']) && !isset($dom[$key]['style']['font-size'])) {
 							$dom[$key]['fontsize'] = $dom[$key]['fontsize'] * K_SMALL_RATIO;
 						}
 					}
-					if (($dom[$key]['value'] == 'strong') || ($dom[$key]['value'] == 'b')) {
+					if (($dom[$key]['value'] === 'strong') || ($dom[$key]['value'] === 'b')) {
 						$dom[$key]['fontstyle'] .= 'B';
 					}
-					if (($dom[$key]['value'] == 'em') || ($dom[$key]['value'] == 'i')) {
+					if (($dom[$key]['value'] === 'em') || ($dom[$key]['value'] === 'i')) {
 						$dom[$key]['fontstyle'] .= 'I';
 					}
-					if ($dom[$key]['value'] == 'u') {
+					if ($dom[$key]['value'] === 'u') {
 						$dom[$key]['fontstyle'] .= 'U';
 					}
-					if (($dom[$key]['value'] == 'del') || ($dom[$key]['value'] == 's') || ($dom[$key]['value'] == 'strike')) {
+					if (($dom[$key]['value'] === 'del') || ($dom[$key]['value'] === 's') || ($dom[$key]['value'] === 'strike')) {
 						$dom[$key]['fontstyle'] .= 'D';
 					}
-					if (!isset($dom[$key]['style']['text-decoration']) && ($dom[$key]['value'] == 'a')) {
+					if (!isset($dom[$key]['style']['text-decoration']) && ($dom[$key]['value'] === 'a')) {
 						$dom[$key]['fontstyle'] = $this->htmlLinkFontStyle;
 					}
-					if (($dom[$key]['value'] == 'pre') || ($dom[$key]['value'] == 'tt')) {
+					if (($dom[$key]['value'] === 'pre') || ($dom[$key]['value'] === 'tt')) {
 						$dom[$key]['fontname'] = $this->default_monospaced_font;
 					}
-					if (!empty($dom[$key]['value']) && ($dom[$key]['value'][0] == 'h') && ((int) ($dom[$key]['value'][1]) > 0) && ((int) ($dom[$key]['value'][1]) < 7)) {
+					if (!empty($dom[$key]['value']) && ($dom[$key]['value'][0] === 'h') && ((int) ($dom[$key]['value'][1]) > 0) && ((int) ($dom[$key]['value'][1]) < 7)) {
 						// headings h1, h2, h3, h4, h5, h6
 						if (!isset($dom[$key]['attribute']['size']) && !isset($dom[$key]['style']['font-size'])) {
 							$headsize              = (4 - (int) ($dom[$key]['value'][1])) * 2;
@@ -17036,12 +17036,12 @@ class TCPDF {
 							$dom[$key]['fontstyle'] .= 'B';
 						}
 					}
-					if (($dom[$key]['value'] == 'table')) {
+					if (($dom[$key]['value'] === 'table')) {
 						$dom[$key]['rows']  = 0; // number of rows
 						$dom[$key]['trids'] = []; // IDs of TR elements
 						$dom[$key]['thead'] = ''; // table header rows
 					}
-					if (($dom[$key]['value'] == 'tr')) {
+					if (($dom[$key]['value'] === 'tr')) {
 						$dom[$key]['cols'] = 0;
 						if ($thead) {
 							$dom[$key]['thead'] = true;
@@ -17064,7 +17064,7 @@ class TCPDF {
 							\array_push($dom[$parent]['trids'], $key);
 						}
 					}
-					if (($dom[$key]['value'] == 'th') || ($dom[$key]['value'] == 'td')) {
+					if (($dom[$key]['value'] === 'th') || ($dom[$key]['value'] === 'td')) {
 						if (isset($dom[$key]['attribute']['colspan'])) {
 							$colspan = (int) ($dom[$key]['attribute']['colspan']);
 						} else {
@@ -17080,7 +17080,7 @@ class TCPDF {
 					// set foreground color attribute
 					if (isset($dom[$key]['attribute']['color']) && (!TCPDF_STATIC::empty_string($dom[$key]['attribute']['color']))) {
 						$dom[$key]['fgcolor'] = TCPDF_COLORS::convertHTMLColorToDec($dom[$key]['attribute']['color'], $this->spot_colors);
-					} elseif (!isset($dom[$key]['style']['color']) && ($dom[$key]['value'] == 'a')) {
+					} elseif (!isset($dom[$key]['style']['color']) && ($dom[$key]['value'] === 'a')) {
 						$dom[$key]['fgcolor'] = $this->htmlLinkColorArray;
 					}
 					// set background color attribute
@@ -17110,7 +17110,7 @@ class TCPDF {
 					}
 					if (isset($dom[$key]['attribute']['fill'])) {
 						// font fill
-						if ($dom[$key]['attribute']['fill'] == 'true') {
+						if ($dom[$key]['attribute']['fill'] === 'true') {
 							$dom[$key]['fill'] = true;
 						} else {
 							$dom[$key]['fill'] = false;
@@ -17118,7 +17118,7 @@ class TCPDF {
 					}
 					if (isset($dom[$key]['attribute']['clip'])) {
 						// clipping mode
-						if ($dom[$key]['attribute']['clip'] == 'true') {
+						if ($dom[$key]['attribute']['clip'] === 'true') {
 							$dom[$key]['clip'] = true;
 						} else {
 							$dom[$key]['clip'] = false;
@@ -17364,20 +17364,20 @@ Putting 1 is equivalent to putting 0 and calling Ln() just after. Default value:
 			}
 			if ($dom[$key]['tag'] && isset($dom[$key]['attribute']['pagebreak'])) {
 				// check for pagebreak
-				if (($dom[$key]['attribute']['pagebreak'] == 'true') || ($dom[$key]['attribute']['pagebreak'] == 'left') || ($dom[$key]['attribute']['pagebreak'] == 'right')) {
+				if (($dom[$key]['attribute']['pagebreak'] === 'true') || ($dom[$key]['attribute']['pagebreak'] === 'left') || ($dom[$key]['attribute']['pagebreak'] === 'right')) {
 					// add a page (or trig AcceptPageBreak() for multicolumn mode)
 					$this->checkPageBreak($this->PageBreakTrigger + 1);
 					$this->htmlvspace = ($this->PageBreakTrigger + 1);
 				}
-				if ((($dom[$key]['attribute']['pagebreak'] == 'left') && (((!$this->rtl) && (($this->page % 2) == 0)) || (($this->rtl) && (($this->page % 2) != 0))))
-					|| (($dom[$key]['attribute']['pagebreak'] == 'right') && (((!$this->rtl) && (($this->page % 2) != 0)) || (($this->rtl) && (($this->page % 2) == 0))))) {
+				if ((($dom[$key]['attribute']['pagebreak'] === 'left') && (((!$this->rtl) && (($this->page % 2) == 0)) || (($this->rtl) && (($this->page % 2) != 0))))
+					|| (($dom[$key]['attribute']['pagebreak'] === 'right') && (((!$this->rtl) && (($this->page % 2) != 0)) || (($this->rtl) && (($this->page % 2) == 0))))) {
 					// add a page (or trig AcceptPageBreak() for multicolumn mode)
 					$this->checkPageBreak($this->PageBreakTrigger + 1);
 					$this->htmlvspace = ($this->PageBreakTrigger + 1);
 				}
 			}
-			if ($dom[$key]['tag'] && $dom[$key]['opening'] && isset($dom[$key]['attribute']['nobr']) && ($dom[$key]['attribute']['nobr'] == 'true')) {
-				if (isset($dom[($dom[$key]['parent'])]['attribute']['nobr']) && ($dom[($dom[$key]['parent'])]['attribute']['nobr'] == 'true')) {
+			if ($dom[$key]['tag'] && $dom[$key]['opening'] && isset($dom[$key]['attribute']['nobr']) && ($dom[$key]['attribute']['nobr'] === 'true')) {
+				if (isset($dom[($dom[$key]['parent'])]['attribute']['nobr']) && ($dom[($dom[$key]['parent'])]['attribute']['nobr'] === 'true')) {
 					$dom[$key]['attribute']['nobr'] = false;
 				} else {
 					// store current object
@@ -17427,7 +17427,7 @@ Putting 1 is equivalent to putting 0 and calling Ln() just after. Default value:
 				}
 			}
 			// print THEAD block
-			if (($dom[$key]['value'] == 'tr') && isset($dom[$key]['thead']) && $dom[$key]['thead']) {
+			if (($dom[$key]['value'] === 'tr') && isset($dom[$key]['thead']) && $dom[$key]['thead']) {
 				if (isset($dom[$key]['parent']) && isset($dom[$dom[$key]['parent']]['thead']) && !TCPDF_STATIC::empty_string($dom[$dom[$key]['parent']]['thead'])) {
 					$this->inthead = true;
 					// print table header (thead)
@@ -17474,17 +17474,17 @@ Putting 1 is equivalent to putting 0 and calling Ln() just after. Default value:
 				}
 				// move $key index forward to skip THEAD block
 				while (($key < $maxel) && (!(
-					($dom[$key]['tag'] && $dom[$key]['opening'] && ($dom[$key]['value'] == 'tr') && (!isset($dom[$key]['thead']) || !$dom[$key]['thead']))
-					|| ($dom[$key]['tag'] && (!$dom[$key]['opening']) && ($dom[$key]['value'] == 'table'))))) {
+					($dom[$key]['tag'] && $dom[$key]['opening'] && ($dom[$key]['value'] === 'tr') && (!isset($dom[$key]['thead']) || !$dom[$key]['thead']))
+					|| ($dom[$key]['tag'] && (!$dom[$key]['opening']) && ($dom[$key]['value'] === 'table'))))) {
 					++$key;
 				}
 			}
 			if ($dom[$key]['tag'] || ($key == 0)) {
-				if ((($dom[$key]['value'] == 'table') || ($dom[$key]['value'] == 'tr')) && (isset($dom[$key]['align']))) {
+				if ((($dom[$key]['value'] === 'table') || ($dom[$key]['value'] === 'tr')) && (isset($dom[$key]['align']))) {
 					$dom[$key]['align'] = ($this->rtl) ? 'R' : 'L';
 				}
 				// vertically align image in line
-				if ((!$this->newline) && ($dom[$key]['value'] == 'img') && (isset($dom[$key]['height'])) && ($dom[$key]['height'] > 0)) {
+				if ((!$this->newline) && ($dom[$key]['value'] === 'img') && (isset($dom[$key]['height'])) && ($dom[$key]['height'] > 0)) {
 					// get image height
 					$imgh          = $this->getHTMLUnitToUnits($dom[$key]['height'], ($dom[$key]['fontsize'] / $this->k), 'px');
 					$autolinebreak = false;
@@ -17496,7 +17496,7 @@ Putting 1 is equivalent to putting 0 and calling Ln() just after. Default value:
 							// add automatic line break
 							$autolinebreak = true;
 							$this->Ln('', $cell);
-							if ((!$dom[($key - 1)]['tag']) && ($dom[($key - 1)]['value'] == ' ')) {
+							if ((!$dom[($key - 1)]['tag']) && ($dom[($key - 1)]['value'] === ' ')) {
 								// go back to evaluate this line break
 								--$key;
 							}
@@ -17571,9 +17571,9 @@ Putting 1 is equivalent to putting 0 and calling Ln() just after. Default value:
 					$fontdescent = $this->getFontDescent($fontname, $fontstyle, $fontsize);
 					if (($fontname != $curfontname) || ($fontstyle != $curfontstyle) || ($fontsize != $curfontsize)
 						|| ($this->cell_height_ratio != $dom[$key]['line-height'])
-						|| ($dom[$key]['tag'] && $dom[$key]['opening'] && ($dom[$key]['value'] == 'li'))) {
+						|| ($dom[$key]['tag'] && $dom[$key]['opening'] && ($dom[$key]['value'] === 'li'))) {
 						if (($key < ($maxel - 1)) && (
-								($dom[$key]['tag'] && $dom[$key]['opening'] && ($dom[$key]['value'] == 'li'))
+								($dom[$key]['tag'] && $dom[$key]['opening'] && ($dom[$key]['value'] === 'li'))
 								|| ($this->cell_height_ratio != $dom[$key]['line-height'])
 								|| (!$this->newline && \is_numeric($fontsize) && \is_numeric($curfontsize)
 								&& ($fontsize >= 0) && ($curfontsize >= 0)
@@ -17662,7 +17662,7 @@ Putting 1 is equivalent to putting 0 and calling Ln() just after. Default value:
 				if (isset($dom[$key]['letter-spacing']) && ($dom[$key]['letter-spacing'] !== false)) {
 					$this->setFontSpacing($dom[$key]['letter-spacing']);
 				}
-				if (($plalign == 'J') && $dom[$key]['block']) {
+				if (($plalign === 'J') && $dom[$key]['block']) {
 					$plalign = '';
 				}
 				// get current position on page buffer
@@ -17735,10 +17735,10 @@ Putting 1 is equivalent to putting 0 and calling Ln() just after. Default value:
 							$pend = '';
 						}
 					}
-					if ((isset($plalign) && ((($plalign == 'C') || ($plalign == 'J') || (($plalign == 'R') && (!$this->rtl)) || (($plalign == 'L') && ($this->rtl)))))) {
+					if ((isset($plalign) && ((($plalign === 'C') || ($plalign === 'J') || (($plalign === 'R') && (!$this->rtl)) || (($plalign === 'L') && ($this->rtl)))))) {
 						// calculate shifting amount
 						$tw = $w;
-						if (($plalign == 'J') && $this->isRTLTextDir() && ($this->num_columns > 1)) {
+						if (($plalign === 'J') && $this->isRTLTextDir() && ($this->num_columns > 1)) {
 							$tw += $this->cell_padding['R'];
 						}
 						if ($this->lMargin != $prevlMargin) {
@@ -17763,7 +17763,7 @@ Putting 1 is equivalent to putting 0 and calling Ln() just after. Default value:
 								}
 								if ($pos1 == $pos2) {
 									$pmid = \substr($pmid, 0, ($pos1 + 2)).\substr($pmid, ($pos1 + 2 + $spacelen));
-									if (\substr($pmid, $pos1, 4) == '[()]') {
+									if (\substr($pmid, $pos1, 4) === '[()]') {
 										$linew -= $one_space_width;
 									} elseif ($pos1 == \strpos($pmid, '[(')) {
 										$no = 1;
@@ -17789,19 +17789,19 @@ Putting 1 is equivalent to putting 0 and calling Ln() just after. Default value:
 							}
 						}
 						$mdiff = ($tw - $linew);
-						if ($plalign == 'C') {
+						if ($plalign === 'C') {
 							if ($this->rtl) {
 								$t_x = -($mdiff / 2);
 							} else {
 								$t_x = ($mdiff / 2);
 							}
-						} elseif ($plalign == 'R') {
+						} elseif ($plalign === 'R') {
 							// right alignment on LTR document
 							$t_x = $mdiff;
-						} elseif ($plalign == 'L') {
+						} elseif ($plalign === 'L') {
 							// left alignment on RTL document
 							$t_x = -$mdiff;
-						} elseif (($plalign == 'J') && ($plalign == $lalign)) {
+						} elseif (($plalign === 'J') && ($plalign == $lalign)) {
 							// Justification
 							if ($this->isRTLTextDir()) {
 								// align text on the left
@@ -17856,7 +17856,7 @@ Putting 1 is equivalent to putting 0 and calling Ln() just after. Default value:
 									if (($stroffset !== false) && ($stroffset <= $strpiece[2][1])) {
 										// set offset to the end of string section
 										$offset = \strpos($pmid, ')]', $stroffset);
-										while (($offset !== false) && ($pmid[($offset - 1)] == '\\')) {
+										while (($offset !== false) && ($pmid[($offset - 1)] === '\\')) {
 											$offset = \strpos($pmid, ')]', ($offset + 1));
 										}
 										if ($offset === false) {
@@ -17903,7 +17903,7 @@ Putting 1 is equivalent to putting 0 and calling Ln() just after. Default value:
 											}
 											$currentxpos = $xmatches[1];
 											$textpos     = $currentxpos;
-											if (($strcount <= $maxkk) && ($strpiece[2][0] == 'Td')) {
+											if (($strcount <= $maxkk) && ($strpiece[2][0] === 'Td')) {
 												$ns = $lnstring[3][$strcount];
 												if ($this->isRTLTextDir()) {
 													$spacew = ($spacewidth * ($nsmax - $ns));
@@ -18100,9 +18100,9 @@ Putting 1 is equivalent to putting 0 and calling Ln() just after. Default value:
 				$this->newline = false;
 				$startlinex    = $this->x;
 				$startliney    = $this->y;
-				if ($dom[$dom[$key]['parent']]['value'] == 'sup') {
+				if ($dom[$dom[$key]['parent']]['value'] === 'sup') {
 					$startliney -= ((0.3 * $this->FontSizePt) / $this->k);
-				} elseif ($dom[$dom[$key]['parent']]['value'] == 'sub') {
+				} elseif ($dom[$dom[$key]['parent']]['value'] === 'sub') {
 					$startliney -= (($this->FontSizePt / 0.7) / $this->k);
 				} else {
 					$minstartliney  = $startliney;
@@ -18133,7 +18133,7 @@ Putting 1 is equivalent to putting 0 and calling Ln() just after. Default value:
 				} else {
 					$pask = 0;
 				}
-				if (!($dom[$key]['tag'] && !$dom[$key]['opening'] && ($dom[$key]['value'] == 'table')
+				if (!($dom[$key]['tag'] && !$dom[$key]['opening'] && ($dom[$key]['value'] === 'table')
 					&& (isset($this->emptypagemrk[$this->page]))
 					&& ($this->emptypagemrk[$this->page] == $this->pagelen[$this->page]))) {
 					$this->setFont($fontname, $fontstyle, $fontsize);
@@ -18153,7 +18153,7 @@ Putting 1 is equivalent to putting 0 and calling Ln() just after. Default value:
 						$this->newline    = true;
 					}
 					// table
-					if (($dom[$key]['value'] == 'table') && isset($dom[$key]['cols']) && ($dom[$key]['cols'] > 0)) {
+					if (($dom[$key]['value'] === 'table') && isset($dom[$key]['cols']) && ($dom[$key]['cols'] > 0)) {
 						// available page width
 						if ($this->rtl) {
 							$wtmp = $this->x - $this->lMargin;
@@ -18192,12 +18192,12 @@ Putting 1 is equivalent to putting 0 and calling Ln() just after. Default value:
 						$table_colwidths = \array_fill(0, $dom[$key]['cols'], $table_min_column_width);
 					}
 					// table row
-					if ($dom[$key]['value'] == 'tr') {
+					if ($dom[$key]['value'] === 'tr') {
 						// reset column counter
 						$colid = 0;
 					}
 					// table cell
-					if (($dom[$key]['value'] == 'td') || ($dom[$key]['value'] == 'th')) {
+					if (($dom[$key]['value'] === 'td') || ($dom[$key]['value'] === 'th')) {
 						$trid     = $dom[$key]['parent'];
 						$table_el = $dom[$trid]['parent'];
 						if (!isset($dom[$table_el]['cols'])) {
@@ -18617,9 +18617,9 @@ Putting 1 is equivalent to putting 0 and calling Ln() just after. Default value:
 				}
 			}
 			++$key;
-			if (isset($dom[$key]['tag']) && $dom[$key]['tag'] && (!isset($dom[$key]['opening']) || !$dom[$key]['opening']) && isset($dom[($dom[$key]['parent'])]['attribute']['nobr']) && ($dom[($dom[$key]['parent'])]['attribute']['nobr'] == 'true')) {
+			if (isset($dom[$key]['tag']) && $dom[$key]['tag'] && (!isset($dom[$key]['opening']) || !$dom[$key]['opening']) && isset($dom[($dom[$key]['parent'])]['attribute']['nobr']) && ($dom[($dom[$key]['parent'])]['attribute']['nobr'] === 'true')) {
 				// check if we are on a new page or on a new column
-				if ((!$undo) && (($this->y < $this->start_transaction_y) || (($dom[$key]['value'] == 'tr') && ($dom[($dom[$key]['parent'])]['endy'] < $this->start_transaction_y)))) {
+				if ((!$undo) && (($this->y < $this->start_transaction_y) || (($dom[$key]['value'] === 'tr') && ($dom[($dom[$key]['parent'])]['endy'] < $this->start_transaction_y)))) {
 					// we are on a new page or on a new column and the total object height is less than the available vertical space.
 					// restore previous object
 					$this->rollbackTransaction(true);
@@ -18686,7 +18686,7 @@ Putting 1 is equivalent to putting 0 and calling Ln() just after. Default value:
 					$pend = '';
 				}
 			}
-			if ((isset($plalign) && ((($plalign == 'C') || (($plalign == 'R') && (!$this->rtl)) || (($plalign == 'L') && ($this->rtl)))))) {
+			if ((isset($plalign) && ((($plalign === 'C') || (($plalign === 'R') && (!$this->rtl)) || (($plalign === 'L') && ($this->rtl)))))) {
 				// calculate shifting amount
 				$tw = $w;
 				if ($this->lMargin != $prevlMargin) {
@@ -18711,7 +18711,7 @@ Putting 1 is equivalent to putting 0 and calling Ln() just after. Default value:
 						}
 						if ($pos1 == $pos2) {
 							$pmid = \substr($pmid, 0, ($pos1 + 2)).\substr($pmid, ($pos1 + 2 + $spacelen));
-							if (\substr($pmid, $pos1, 4) == '[()]') {
+							if (\substr($pmid, $pos1, 4) === '[()]') {
 								$linew -= $one_space_width;
 							} elseif ($pos1 == \strpos($pmid, '[(')) {
 								$no = 1;
@@ -18737,16 +18737,16 @@ Putting 1 is equivalent to putting 0 and calling Ln() just after. Default value:
 					}
 				}
 				$mdiff = ($tw - $linew);
-				if ($plalign == 'C') {
+				if ($plalign === 'C') {
 					if ($this->rtl) {
 						$t_x = -($mdiff / 2);
 					} else {
 						$t_x = ($mdiff / 2);
 					}
-				} elseif ($plalign == 'R') {
+				} elseif ($plalign === 'R') {
 					// right alignment on LTR document
 					$t_x = $mdiff;
-				} elseif ($plalign == 'L') {
+				} elseif ($plalign === 'L') {
 					// left alignment on RTL document
 					$t_x = -$mdiff;
 				}
@@ -18795,7 +18795,7 @@ Putting 1 is equivalent to putting 0 and calling Ln() just after. Default value:
 		$this->listordered       = $prev_listordered;
 		$this->listcount         = $prev_listcount;
 		$this->lispacer          = $prev_lispacer;
-		if ($ln && (!($cell && ($dom[$key - 1]['value'] == 'table')))) {
+		if ($ln && (!($cell && ($dom[$key - 1]['value'] === 'table')))) {
 			$this->Ln($this->lasth);
 			if (($this->y < $maxbottomliney) && ($startlinepage == $this->page)) {
 				$this->y = $maxbottomliney;
@@ -18852,7 +18852,7 @@ Putting 1 is equivalent to putting 0 and calling Ln() just after. Default value:
 					$hbz = $this->getCellHeight($this->FontSize);
 				}
 			}
-			if (isset($dom[($key - 1)]) && ($dom[($key - 1)]['value'] == 'table')) {
+			if (isset($dom[($key - 1)]) && ($dom[($key - 1)]['value'] === 'table')) {
 				// fix vertical space after table
 				$hbz = 0;
 			}
@@ -19002,7 +19002,7 @@ Putting 1 is equivalent to putting 0 and calling Ln() just after. Default value:
 						// fix image path
 						$findroot = \strpos($imgsrc, $_SERVER['DOCUMENT_ROOT']);
 						if (($findroot === false) || ($findroot > 1)) {
-							if (\substr($_SERVER['DOCUMENT_ROOT'], -1) == '/') {
+							if (\substr($_SERVER['DOCUMENT_ROOT'], -1) === '/') {
 								$imgsrc = \substr($_SERVER['DOCUMENT_ROOT'], 0, -1).$imgsrc;
 							} else {
 								$imgsrc = $_SERVER['DOCUMENT_ROOT'].$imgsrc;
@@ -19055,7 +19055,7 @@ Putting 1 is equivalent to putting 0 and calling Ln() just after. Default value:
 				$imglink = '';
 				if (isset($this->HREF['url']) && !TCPDF_STATIC::empty_string($this->HREF['url'])) {
 					$imglink = $this->HREF['url'];
-					if ($imglink[0] == '#') {
+					if ($imglink[0] === '#') {
 						// convert url to internal link
 						$lnkdata = \explode(',', $imglink);
 						if (isset($lnkdata[0])) {
@@ -19086,9 +19086,9 @@ Putting 1 is equivalent to putting 0 and calling Ln() just after. Default value:
 				if (isset($tag['height'])) {
 					$ih = $this->getHTMLUnitToUnits($tag['height'], ($tag['fontsize'] / $this->k), 'px', false);
 				}
-				if (($type == 'eps') || ($type == 'ai')) {
+				if (($type === 'eps') || ($type === 'ai')) {
 					$this->ImageEps($imgsrc, $xpos, $this->y, $iw, $ih, $imglink, true, $align, '', $border, true);
-				} elseif ($type == 'svg') {
+				} elseif ($type === 'svg') {
 					$this->ImageSVG($imgsrc, $xpos, $this->y, $iw, $ih, $imglink, $align, '', $border, true);
 				} else {
 					$this->Image($imgsrc, $xpos, $this->y, $iw, $ih, '', $imglink, $align, false, 300, '', false, false, $border, false, false, true);
@@ -19135,7 +19135,7 @@ Putting 1 is equivalent to putting 0 and calling Ln() just after. Default value:
 			case 'ul':
 			case 'ol': {
 				++$this->listnum;
-				if ($tag['value'] == 'ol') {
+				if ($tag['value'] === 'ol') {
 					$this->listordered[$this->listnum] = true;
 				} else {
 					$this->listordered[$this->listnum] = false;
@@ -19281,7 +19281,7 @@ Putting 1 is equivalent to putting 0 and calling Ln() just after. Default value:
 				} else {
 					$w = $h;
 				}
-				if (isset($tag['attribute']['checked']) && (($tag['attribute']['checked'] == 'checked') || ($tag['attribute']['checked'] == 'true'))) {
+				if (isset($tag['attribute']['checked']) && (($tag['attribute']['checked'] === 'checked') || ($tag['attribute']['checked'] === 'true'))) {
 					$checked = true;
 				} else {
 					$checked = false;
@@ -19345,7 +19345,7 @@ Putting 1 is equivalent to putting 0 and calling Ln() just after. Default value:
 						if ($this->form_enctype != 'FDF') {
 							$action['Flags'] = ['ExportFormat'];
 						}
-						if ($this->form_mode == 'get') {
+						if ($this->form_mode === 'get') {
 							$action['Flags'] = ['GetMethod'];
 						}
 						$this->Button($name, $w, $h, $value, $action, $prop, $opt, '', '', false);
@@ -19514,12 +19514,12 @@ Putting 1 is equivalent to putting 0 and calling Ln() just after. Default value:
 		if ($dom[$key]['self'] && isset($dom[$key]['attribute']['pagebreakafter'])) {
 			$pba = $dom[$key]['attribute']['pagebreakafter'];
 			// check for pagebreak
-			if (($pba == 'true') || ($pba == 'left') || ($pba == 'right')) {
+			if (($pba === 'true') || ($pba === 'left') || ($pba === 'right')) {
 				// add a page (or trig AcceptPageBreak() for multicolumn mode)
 				$this->checkPageBreak($this->PageBreakTrigger + 1);
 			}
-			if ((($pba == 'left') && (((!$this->rtl) && (($this->page % 2) == 0)) || (($this->rtl) && (($this->page % 2) != 0))))
-				|| (($pba == 'right') && (((!$this->rtl) && (($this->page % 2) != 0)) || (($this->rtl) && (($this->page % 2) == 0))))) {
+			if ((($pba === 'left') && (((!$this->rtl) && (($this->page % 2) == 0)) || (($this->rtl) && (($this->page % 2) != 0))))
+				|| (($pba === 'right') && (((!$this->rtl) && (($this->page % 2) != 0)) || (($this->rtl) && (($this->page % 2) == 0))))) {
 				// add a page (or trig AcceptPageBreak() for multicolumn mode)
 				$this->checkPageBreak($this->PageBreakTrigger + 1);
 			}
@@ -19539,7 +19539,7 @@ Putting 1 is equivalent to putting 0 and calling Ln() just after. Default value:
 	protected function closeHTMLTagHandler($dom, $key, $cell, $maxbottomliney=0) {
 		$tag           = $dom[$key];
 		$parent        = $dom[($dom[$key]['parent'])];
-		$lasttag       = ((!isset($dom[($key + 1)])) || ((!isset($dom[($key + 2)])) && ($dom[($key + 1)]['value'] == 'marker')));
+		$lasttag       = ((!isset($dom[($key + 1)])) || ((!isset($dom[($key + 2)])) && ($dom[($key + 1)]['value'] === 'marker')));
 		$in_table_head = false;
 		// maximum x position (used to draw borders)
 		if ($this->rtl) {
@@ -19565,7 +19565,7 @@ Putting 1 is equivalent to putting 0 and calling Ln() just after. Default value:
 			} else {
 				$cn = 1;
 			}
-			if ((!isset($this->tagvspaces[$tag['value']])) && ($tag['value'] == 'div')) {
+			if ((!isset($this->tagvspaces[$tag['value']])) && ($tag['value'] === 'div')) {
 				$hb = 0;
 			} else {
 				$hb = ($cn * $pre_h);
@@ -19926,7 +19926,7 @@ Putting 1 is equivalent to putting 0 and calling Ln() just after. Default value:
 						$plendiff = ($this->pagelen[$this->numpages] - $this->emptypagemrk[$this->numpages]);
 						if (($plendiff > 0) && ($plendiff < 60)) {
 							$pagediff = \substr($this->getPageBuffer($this->numpages), $this->emptypagemrk[$this->numpages], $plendiff);
-							if (\substr($pagediff, 0, 5) == 'BT /F') {
+							if (\substr($pagediff, 0, 5) === 'BT /F') {
 								// the difference is only a font setting
 								$plendiff = 0;
 							}
@@ -20060,12 +20060,12 @@ Putting 1 is equivalent to putting 0 and calling Ln() just after. Default value:
 		if (isset($dom[($dom[$key]['parent'])]['attribute']['pagebreakafter'])) {
 			$pba = $dom[($dom[$key]['parent'])]['attribute']['pagebreakafter'];
 			// check for pagebreak
-			if (($pba == 'true') || ($pba == 'left') || ($pba == 'right')) {
+			if (($pba === 'true') || ($pba === 'left') || ($pba === 'right')) {
 				// add a page (or trig AcceptPageBreak() for multicolumn mode)
 				$this->checkPageBreak($this->PageBreakTrigger + 1);
 			}
-			if ((($pba == 'left') && (((!$this->rtl) && (($this->page % 2) == 0)) || (($this->rtl) && (($this->page % 2) != 0))))
-				|| (($pba == 'right') && (((!$this->rtl) && (($this->page % 2) != 0)) || (($this->rtl) && (($this->page % 2) == 0))))) {
+			if ((($pba === 'left') && (((!$this->rtl) && (($this->page % 2) == 0)) || (($this->rtl) && (($this->page % 2) != 0))))
+				|| (($pba === 'right') && (((!$this->rtl) && (($this->page % 2) != 0)) || (($this->rtl) && (($this->page % 2) == 0))))) {
 				// add a page (or trig AcceptPageBreak() for multicolumn mode)
 				$this->checkPageBreak($this->PageBreakTrigger + 1);
 			}
@@ -20329,7 +20329,7 @@ Putting 1 is equivalent to putting 0 and calling Ln() just after. Default value:
 	 */
 	public function setLIsymbol($symbol='!') : void {
 		// check for custom image symbol
-		if (\substr($symbol, 0, 4) == 'img|') {
+		if (\substr($symbol, 0, 4) === 'img|') {
 			$this->lisymbol = $symbol;
 			return;
 		}
@@ -20533,18 +20533,18 @@ Putting 1 is equivalent to putting 0 and calling Ln() just after. Default value:
 		$textitem    = '';
 		$tmpx        = $this->x;
 		$lspace      = $this->GetStringWidth('  ');
-		if ($listtype == '^') {
+		if ($listtype === '^') {
 			// special symbol used for avoid justification of rect bullet
 			$this->lispacer = '';
 			return;
-		} elseif ($listtype == '!') {
+		} elseif ($listtype === '!') {
 			// set default list type for unordered list
 			$deftypes = ['disc', 'circle', 'square'];
 			$listtype = $deftypes[($listdepth - 1) % 3];
-		} elseif ($listtype == '#') {
+		} elseif ($listtype === '#') {
 			// set default list type for ordered list
 			$listtype = 'decimal';
-		} elseif (\substr($listtype, 0, 4) == 'img|') {
+		} elseif (\substr($listtype, 0, 4) === 'img|') {
 			// custom image type ('img|type|width|height|image.ext')
 			$img      = \explode('|', $listtype);
 			$listtype = 'img';
@@ -21691,7 +21691,7 @@ Putting 1 is equivalent to putting 0 and calling Ln() just after. Default value:
 		foreach ($templates as $level => $html) {
 			$dom = $this->getHtmlDomArray($html);
 			foreach ($dom as $key => $value) {
-				if ($value['value'] == '#TOC_PAGE_NUMBER#') {
+				if ($value['value'] === '#TOC_PAGE_NUMBER#') {
 					$this->setFont($dom[($key - 1)]['fontname']);
 					$templates['F'.$level] = $this->isUnicodeFont();
 				}
@@ -22242,7 +22242,7 @@ Putting 1 is equivalent to putting 0 and calling Ln() just after. Default value:
 		$unichars = TCPDF_FONTS::UTF8StringToArray($text, $this->isunicode, $this->CurrentFont);
 		// for each char
 		foreach ($unichars as $char) {
-			if ((!$intag) && (!$skip) && TCPDF_FONT_DATA::$uni_type[$char] == 'L') {
+			if ((!$intag) && (!$skip) && TCPDF_FONT_DATA::$uni_type[$char] === 'L') {
 				// letter character
 				$word[] = $char;
 			} else {
@@ -22253,10 +22253,10 @@ Putting 1 is equivalent to putting 0 and calling Ln() just after. Default value:
 					$word   = [];
 				}
 				$txtarr[] = $char;
-				if (\chr($char) == '<') {
+				if (\chr($char) === '<') {
 					// we are inside an HTML tag
 					$intag = true;
-				} elseif ($intag && (\chr($char) == '>')) {
+				} elseif ($intag && (\chr($char) === '>')) {
 					// end of HTML tag
 					$intag = false;
 					// check for style tag
@@ -22372,7 +22372,7 @@ Putting 1 is equivalent to putting 0 and calling Ln() just after. Default value:
 	 * @since 5.8.002 (2010-08-14)
 	 */
 	public function isUnicodeFont() {
-		return (($this->CurrentFont['type'] == 'TrueTypeUnicode') || ($this->CurrentFont['type'] == 'cidfont0'));
+		return (($this->CurrentFont['type'] === 'TrueTypeUnicode') || ($this->CurrentFont['type'] === 'cidfont0'));
 	}
 
 	/**
@@ -22569,22 +22569,22 @@ Putting 1 is equivalent to putting 0 and calling Ln() just after. Default value:
 		$rb_y = $y + $h;
 		// set alignment
 		if ($this->rtl) {
-			if ($palign == 'L') {
+			if ($palign === 'L') {
 				$xt = $this->lMargin;
-			} elseif ($palign == 'C') {
+			} elseif ($palign === 'C') {
 				$xt = ($this->w + $this->lMargin - $this->rMargin - $w) / 2;
-			} elseif ($palign == 'R') {
+			} elseif ($palign === 'R') {
 				$xt = $this->w - $this->rMargin - $w;
 			} else {
 				$xt = $x - $w;
 			}
 			$rb_x = $xt;
 		} else {
-			if ($palign == 'L') {
+			if ($palign === 'L') {
 				$xt = $this->lMargin;
-			} elseif ($palign == 'C') {
+			} elseif ($palign === 'C') {
 				$xt = ($this->w + $this->lMargin - $this->rMargin - $w) / 2;
-			} elseif ($palign == 'R') {
+			} elseif ($palign === 'R') {
 				$xt = $this->w - $this->rMargin - $w;
 			} else {
 				$xt = $x;
@@ -22740,7 +22740,7 @@ Putting 1 is equivalent to putting 0 and calling Ln() just after. Default value:
 		}
 		if (isset($region['xt']) && isset($region['xb']) && ($region['xt'] > 0) && ($region['xb'] > 0)
 			&& isset($region['yt']) && isset($region['yb']) && ($region['yt'] >= 0) && ($region['yt'] < $region['yb'])
-			&& isset($region['side']) && (($region['side'] == 'L') || ($region['side'] == 'R'))) {
+			&& isset($region['side']) && (($region['side'] === 'L') || ($region['side'] === 'R'))) {
 			$this->page_regions[] = $region;
 		}
 	}
@@ -22816,7 +22816,7 @@ Putting 1 is equivalent to putting 0 and calling Ln() just after. Default value:
 					$yb   = \min(($yt + $h), $regdata['yb']);
 					$xt   = (($yt - $regdata['yt']) * $minv) + $regdata['xt'];
 					$xb   = (($yb - $regdata['yt']) * $minv) + $regdata['xt'];
-					if ($regdata['side'] == 'L') { // left side
+					if ($regdata['side'] === 'L') { // left side
 						$new_margin = \max($xt, $xb);
 						if ($this->lMargin < $new_margin) {
 							if ($this->rtl) {
@@ -22832,7 +22832,7 @@ Putting 1 is equivalent to putting 0 and calling Ln() just after. Default value:
 								}
 							}
 						}
-					} elseif ($regdata['side'] == 'R') { // right side
+					} elseif ($regdata['side'] === 'R') { // right side
 						$new_margin = \min($xt, $xb);
 						if (($this->w - $this->rMargin) > $new_margin) {
 							if (!$this->rtl) {
@@ -22999,22 +22999,22 @@ Putting 1 is equivalent to putting 0 and calling Ln() just after. Default value:
 		$this->img_rb_y = $y + $h;
 		// set alignment
 		if ($this->rtl) {
-			if ($palign == 'L') {
+			if ($palign === 'L') {
 				$ximg = $this->lMargin;
-			} elseif ($palign == 'C') {
+			} elseif ($palign === 'C') {
 				$ximg = ($this->w + $this->lMargin - $this->rMargin - $w) / 2;
-			} elseif ($palign == 'R') {
+			} elseif ($palign === 'R') {
 				$ximg = $this->w - $this->rMargin - $w;
 			} else {
 				$ximg = $x - $w;
 			}
 			$this->img_rb_x = $ximg;
 		} else {
-			if ($palign == 'L') {
+			if ($palign === 'L') {
 				$ximg = $this->lMargin;
-			} elseif ($palign == 'C') {
+			} elseif ($palign === 'C') {
 				$ximg = ($this->w + $this->lMargin - $this->rMargin - $w) / 2;
-			} elseif ($palign == 'R') {
+			} elseif ($palign === 'R') {
 				$ximg = $this->w - $this->rMargin - $w;
 			} else {
 				$ximg = $x;
@@ -23045,7 +23045,7 @@ Putting 1 is equivalent to putting 0 and calling Ln() just after. Default value:
 			$svgscale_old_x = $svgscale_x;
 			$svgscale_old_y = $svgscale_y;
 			// force uniform scaling
-			if ($aspect_ratio_ms == 'slice') {
+			if ($aspect_ratio_ms === 'slice') {
 				// the entire viewport is covered by the viewBox
 				if ($svgscale_x > $svgscale_y) {
 					$svgscale_y = $svgscale_x;
@@ -23275,7 +23275,7 @@ Putting 1 is equivalent to putting 0 and calling Ln() just after. Default value:
 			$cy     = $y + $top;
 			$cw     = $w - $left - $right;
 			$ch     = $h - $top - $bottom;
-			if ($svgstyle['clip-rule'] == 'evenodd') {
+			if ($svgstyle['clip-rule'] === 'evenodd') {
 				$clip_rule = 'CNZ';
 			} else {
 				$clip_rule = 'CEO';
@@ -23308,7 +23308,7 @@ Putting 1 is equivalent to putting 0 and calling Ln() just after. Default value:
 					list($x, $y, $w, $h) = $bbox;
 				}
 			}
-			if ($gradient['mode'] == 'measure') {
+			if ($gradient['mode'] === 'measure') {
 				if (!isset($gradient['coords'][4])) {
 					$gradient['coords'][4] = 0.5;
 				}
@@ -23339,7 +23339,7 @@ Putting 1 is equivalent to putting 0 and calling Ln() just after. Default value:
 					$h = $minlen;
 				}
 				// shift units
-				if ($gradient['gradientUnits'] == 'objectBoundingBox') {
+				if ($gradient['gradientUnits'] === 'objectBoundingBox') {
 					// convert to SVG coordinate system
 					$gradient['coords'][0] += $x;
 					$gradient['coords'][1] += $y;
@@ -23352,7 +23352,7 @@ Putting 1 is equivalent to putting 0 and calling Ln() just after. Default value:
 				$gradient['coords'][2] = (($gradient['coords'][2] - $x) / $w);
 				$gradient['coords'][3] = (($gradient['coords'][3] - $y) / $h);
 				$gradient['coords'][4] /= $w;
-			} elseif ($gradient['mode'] == 'percentage') {
+			} elseif ($gradient['mode'] === 'percentage') {
 				foreach($gradient['coords'] as $key => $val) {
 					$gradient['coords'][$key] = ((int) $val / 100);
 					if ($val < 0) {
@@ -23392,7 +23392,7 @@ Putting 1 is equivalent to putting 0 and calling Ln() just after. Default value:
 				$this->setAlpha($this->alpha['CA'], 'Normal', $svgstyle['fill-opacity'], false);
 			}
 			$this->setFillColorArray($fill_color);
-			if ($svgstyle['fill-rule'] == 'evenodd') {
+			if ($svgstyle['fill-rule'] === 'evenodd') {
 				$objstyle .= 'F*';
 			} else {
 				$objstyle .= 'F';
@@ -23483,9 +23483,9 @@ Putting 1 is equivalent to putting 0 and calling Ln() just after. Default value:
 				break;
 			}
 			case 'normal': {
-				if ((\substr($font_family, -1) == 'I') && (\substr($font_family, -2, 1) == 'B')) {
+				if ((\substr($font_family, -1) === 'I') && (\substr($font_family, -2, 1) === 'B')) {
 					$font_family = \substr($font_family, 0, -2).'I';
-				} elseif (\substr($font_family, -1) == 'B') {
+				} elseif (\substr($font_family, -1) === 'B') {
 					$font_family = \substr($font_family, 0, -1);
 				}
 				break;
@@ -23704,7 +23704,7 @@ Putting 1 is equivalent to putting 0 and calling Ln() just after. Default value:
 					foreach ($params as $ck => $cp) {
 						$params[$ck] = $cp;
 						if ((($ck + 1) % 4) == 0) {
-							if (($key > 0) && ((\strtoupper($paths[($key - 1)][1]) == 'C') || (\strtoupper($paths[($key - 1)][1]) == 'S'))) {
+							if (($key > 0) && ((\strtoupper($paths[($key - 1)][1]) === 'C') || (\strtoupper($paths[($key - 1)][1]) === 'S'))) {
 								$x1 = (2 * $x) - $x2;
 								$y1 = (2 * $y) - $y2;
 							} else {
@@ -23758,7 +23758,7 @@ Putting 1 is equivalent to putting 0 and calling Ln() just after. Default value:
 					foreach ($params as $ck => $cp) {
 						$params[$ck] = $cp;
 						if (($ck % 2) != 0) {
-							if (($key > 0) && ((\strtoupper($paths[($key - 1)][1]) == 'Q') || (\strtoupper($paths[($key - 1)][1]) == 'T'))) {
+							if (($key > 0) && ((\strtoupper($paths[($key - 1)][1]) === 'Q') || (\strtoupper($paths[($key - 1)][1]) === 'T'))) {
 								$x1 = (2 * $x) - $x1;
 								$y1 = (2 * $y) - $y1;
 							} else {
@@ -23860,7 +23860,7 @@ Putting 1 is equivalent to putting 0 and calling Ln() just after. Default value:
 									$angf += 360;
 								}
 								$pie = false;
-								if (($key == 0) && (isset($paths[($key + 1)][1])) && (\trim($paths[($key + 1)][1]) == 'z')) {
+								if (($key == 0) && (isset($paths[($key + 1)][1])) && (\trim($paths[($key + 1)][1]) === 'z')) {
 									$pie = true;
 								}
 								list($axmin, $aymin, $axmax, $aymax) = $this->_outellipticalarc($cx, $cy, $rx, $ry, $ang, $angs, $angf, $pie, 2, false, ($fs == 0), true);
@@ -23939,7 +23939,7 @@ Putting 1 is equivalent to putting 0 and calling Ln() just after. Default value:
 			return;
 		}
 		$clipping = false;
-		if ($parser == 'clip-path') {
+		if ($parser === 'clip-path') {
 			// set clipping mode
 			$clipping = true;
 		}
@@ -23961,7 +23961,7 @@ Putting 1 is equivalent to putting 0 and calling Ln() just after. Default value:
 			}
 			if (isset($attribs[$key]) && !TCPDF_STATIC::empty_string($attribs[$key])) {
 				// specific attribute settings
-				if ($attribs[$key] == 'inherit') {
+				if ($attribs[$key] === 'inherit') {
 					$svgstyle[$key] = $val;
 				} else {
 					$svgstyle[$key] = $attribs[$key];
@@ -23970,7 +23970,7 @@ Putting 1 is equivalent to putting 0 and calling Ln() just after. Default value:
 				// CSS style syntax
 				$attrval = [];
 				if (\preg_match('/[;\"\s]{1}'.$key.'[\s]*:[\s]*([^;\"]*)/si', $attribs['style'], $attrval) && isset($attrval[1])) {
-					if ($attrval[1] == 'inherit') {
+					if ($attrval[1] === 'inherit') {
 						$svgstyle[$key] = $val;
 					} else {
 						$svgstyle[$key] = $attrval[1];
@@ -23989,7 +23989,7 @@ Putting 1 is equivalent to putting 0 and calling Ln() just after. Default value:
 		}
 		$svgstyle['transfmatrix'] = $tm;
 		$invisible                = false;
-		if (($svgstyle['visibility'] == 'hidden') || ($svgstyle['visibility'] == 'collapse') || ($svgstyle['display'] == 'none')) {
+		if (($svgstyle['visibility'] === 'hidden') || ($svgstyle['visibility'] === 'collapse') || ($svgstyle['display'] === 'none')) {
 			// the current graphics element is invisible (nothing is painted)
 			$invisible = true;
 		}
@@ -24051,7 +24051,7 @@ Putting 1 is equivalent to putting 0 and calling Ln() just after. Default value:
 						$aspectY = 'YMid';
 						$fit     = 'meet';
 						if (isset($attribs['preserveAspectRatio'])) {
-							if($attribs['preserveAspectRatio'] == 'none') {
+							if($attribs['preserveAspectRatio'] === 'none') {
 								$fit = 'none';
 							} else {
 								\preg_match_all('/[a-zA-Z]+/', $attribs['preserveAspectRatio'], $tmp);
@@ -24066,19 +24066,19 @@ Putting 1 is equivalent to putting 0 and calling Ln() just after. Default value:
 						$wr = ($svgW / $vw);
 						$hr = ($svgH / $vh);
 						$ax = $ay = 0;
-						if ((($fit == 'meet') && ($hr < $wr)) || (($fit == 'slice') && ($hr > $wr))) {
-							if ($aspectX == 'xMax') {
+						if ((($fit === 'meet') && ($hr < $wr)) || (($fit === 'slice') && ($hr > $wr))) {
+							if ($aspectX === 'xMax') {
 								$ax = (($vw * ($wr / $hr)) - $vw);
 							}
-							if ($aspectX == 'xMid') {
+							if ($aspectX === 'xMid') {
 								$ax = ((($vw * ($wr / $hr)) - $vw) / 2);
 							}
 							$wr = $hr;
-						} elseif ((($fit == 'meet') && ($hr > $wr)) || (($fit == 'slice') && ($hr < $wr))) {
-							if ($aspectY == 'YMax') {
+						} elseif ((($fit === 'meet') && ($hr > $wr)) || (($fit === 'slice') && ($hr < $wr))) {
+							if ($aspectY === 'YMax') {
 								$ay = (($vh * ($hr / $wr)) - $vh);
 							}
-							if ($aspectY == 'YMid') {
+							if ($aspectY === 'YMid') {
 								$ay = ((($vh * ($hr / $wr)) - $vh) / 2);
 							}
 							$hr = $wr;
@@ -24122,10 +24122,10 @@ Putting 1 is equivalent to putting 0 and calling Ln() just after. Default value:
 				}
 				//$attribs['spreadMethod']
 				if (((!isset($attribs['x1'])) && (!isset($attribs['y1'])) && (!isset($attribs['x2'])) && (!isset($attribs['y2'])))
-					|| ((isset($attribs['x1']) && (\substr($attribs['x1'], -1) == '%'))
-						|| (isset($attribs['y1']) && (\substr($attribs['y1'], -1) == '%'))
-						|| (isset($attribs['x2']) && (\substr($attribs['x2'], -1) == '%'))
-						|| (isset($attribs['y2']) && (\substr($attribs['y2'], -1) == '%')))) {
+					|| ((isset($attribs['x1']) && (\substr($attribs['x1'], -1) === '%'))
+						|| (isset($attribs['y1']) && (\substr($attribs['y1'], -1) === '%'))
+						|| (isset($attribs['x2']) && (\substr($attribs['x2'], -1) === '%'))
+						|| (isset($attribs['y2']) && (\substr($attribs['y2'], -1) === '%')))) {
 					$this->svggradients[$this->svggradientid]['mode'] = 'percentage';
 				} else {
 					$this->svggradients[$this->svggradientid]['mode'] = 'measure';
@@ -24162,8 +24162,8 @@ Putting 1 is equivalent to putting 0 and calling Ln() just after. Default value:
 				}
 				//$attribs['spreadMethod']
 				if (((!isset($attribs['cx'])) && (!isset($attribs['cy'])))
-					|| ((isset($attribs['cx']) && (\substr($attribs['cx'], -1) == '%'))
-					|| (isset($attribs['cy']) && (\substr($attribs['cy'], -1) == '%')))) {
+					|| ((isset($attribs['cx']) && (\substr($attribs['cx'], -1) === '%'))
+					|| (isset($attribs['cy']) && (\substr($attribs['cy'], -1) === '%')))) {
 					$this->svggradients[$this->svggradientid]['mode'] = 'percentage';
 				} elseif (isset($attribs['r']) && \is_numeric($attribs['r']) && ($attribs['r']) <= 1) {
 					$this->svggradients[$this->svggradientid]['mode'] = 'ratio';
@@ -24187,7 +24187,7 @@ Putting 1 is equivalent to putting 0 and calling Ln() just after. Default value:
 			}
 			case 'stop': {
 				// gradient stops
-				if (\substr($attribs['offset'], -1) == '%') {
+				if (\substr($attribs['offset'], -1) === '%') {
 					$offset = (float) (\substr($attribs['offset'], 0, -1)) / 100;
 				} else {
 					$offset = (float) ($attribs['offset']);
@@ -24359,7 +24359,7 @@ Putting 1 is equivalent to putting 0 and calling Ln() just after. Default value:
 				$y = $ymin;
 				$w = ($xmax - $xmin);
 				$h = ($ymax - $ymin);
-				if ($name == 'polyline') {
+				if ($name === 'polyline') {
 					$this->StartTransform();
 					$this->SVGTransform($tm);
 					$obstyle = $this->setSVGStyles($svgstyle, $prev_svgstyle, $x, $y, $w, $h, 'PolyLine', [$p, 'CNZ']);
@@ -24405,14 +24405,14 @@ Putting 1 is equivalent to putting 0 and calling Ln() just after. Default value:
 						$img = '@'.\base64_decode(\substr($img, \strlen($m[0])));
 					} else {
 						// fix image path
-						if (!TCPDF_STATIC::empty_string($this->svgdir) && (($img[0] == '.') || (\basename($img) == $img))) {
+						if (!TCPDF_STATIC::empty_string($this->svgdir) && (($img[0] === '.') || (\basename($img) == $img))) {
 							// replace relative path with full server path
 							$img = $this->svgdir.'/'.$img;
 						}
-						if (($img[0] == '/') && !empty($_SERVER['DOCUMENT_ROOT']) && ($_SERVER['DOCUMENT_ROOT'] != '/')) {
+						if (($img[0] === '/') && !empty($_SERVER['DOCUMENT_ROOT']) && ($_SERVER['DOCUMENT_ROOT'] != '/')) {
 							$findroot = \strpos($img, $_SERVER['DOCUMENT_ROOT']);
 							if (($findroot === false) || ($findroot > 1)) {
-								if (\substr($_SERVER['DOCUMENT_ROOT'], -1) == '/') {
+								if (\substr($_SERVER['DOCUMENT_ROOT'], -1) === '/') {
 									$img = \substr($_SERVER['DOCUMENT_ROOT'], 0, -1).$img;
 								} else {
 									$img = $_SERVER['DOCUMENT_ROOT'].$img;
@@ -24431,9 +24431,9 @@ Putting 1 is equivalent to putting 0 and calling Ln() just after. Default value:
 					}
 					// get image type
 					$imgtype = TCPDF_IMAGES::getImageFileType($img);
-					if (($imgtype == 'eps') || ($imgtype == 'ai')) {
+					if (($imgtype === 'eps') || ($imgtype === 'ai')) {
 						$this->ImageEps($img, $x, $y, $w, $h);
-					} elseif ($imgtype == 'svg') {
+					} elseif ($imgtype === 'svg') {
 						// store SVG vars
 						$svggradients  = $this->svggradients;
 						$svggradientid = $this->svggradientid;
@@ -24478,7 +24478,7 @@ Putting 1 is equivalent to putting 0 and calling Ln() just after. Default value:
 				\array_push($this->svgstyles, $svgstyle);
 				if (isset($attribs['x'])) {
 					$x = $this->getHTMLUnitToUnits($attribs['x'], 0, $this->svgunit, false);
-				} elseif ($name == 'tspan') {
+				} elseif ($name === 'tspan') {
 					$x = $this->x;
 				} else {
 					$x = 0;
@@ -24488,7 +24488,7 @@ Putting 1 is equivalent to putting 0 and calling Ln() just after. Default value:
 				}
 				if (isset($attribs['y'])) {
 					$y = $this->getHTMLUnitToUnits($attribs['y'], 0, $this->svgunit, false);
-				} elseif ($name == 'tspan') {
+				} elseif ($name === 'tspan') {
 					$y = $this->y;
 				} else {
 					$y = 0;
@@ -24504,7 +24504,7 @@ Putting 1 is equivalent to putting 0 and calling Ln() just after. Default value:
 					$this->svgtextmode['text-anchor'] = 'start';
 				}
 				if (isset($svgstyle['direction'])) {
-					if ($svgstyle['direction'] == 'rtl') {
+					if ($svgstyle['direction'] === 'rtl') {
 						$this->svgtextmode['rtl'] = true;
 					} else {
 						$this->svgtextmode['rtl'] = false;
@@ -24639,13 +24639,13 @@ Putting 1 is equivalent to putting 0 and calling Ln() just after. Default value:
 				$textlen = $this->GetStringWidth($text);
 				if ($this->svgtextmode['text-anchor'] != 'start') {
 					// check if string is RTL text
-					if ($this->svgtextmode['text-anchor'] == 'end') {
+					if ($this->svgtextmode['text-anchor'] === 'end') {
 						if ($this->svgtextmode['rtl']) {
 							$this->x += $textlen;
 						} else {
 							$this->x -= $textlen;
 						}
-					} elseif ($this->svgtextmode['text-anchor'] == 'middle') {
+					} elseif ($this->svgtextmode['text-anchor'] === 'middle') {
 						if ($this->svgtextmode['rtl']) {
 							$this->x += ($textlen / 2);
 						} else {
@@ -24656,14 +24656,14 @@ Putting 1 is equivalent to putting 0 and calling Ln() just after. Default value:
 				$textrendermode  = $this->textrendermode;
 				$textstrokewidth = $this->textstrokewidth;
 				$this->setTextRenderingMode($this->svgtextmode['stroke'], true, false);
-				if ($name == 'text') {
+				if ($name === 'text') {
 					// store current coordinates
 					$tmpx = $this->x;
 					$tmpy = $this->y;
 				}
 				// print the text
 				$this->Cell($textlen, 0, $text, 0, 0, '', false, '', 0, false, 'L', 'T');
-				if ($name == 'text') {
+				if ($name === 'text') {
 					// restore coordinates
 					$this->x = $tmpx;
 					$this->y = $tmpy;

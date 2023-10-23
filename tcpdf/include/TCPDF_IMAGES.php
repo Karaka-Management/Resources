@@ -73,14 +73,14 @@ class TCPDF_IMAGES {
 		$type = '';
 		if (isset($iminfo['mime']) && !empty($iminfo['mime'])) {
 			$mime = \explode('/', $iminfo['mime']);
-			if ((\count($mime) > 1) && ($mime[0] == 'image') && (!empty($mime[1]))) {
+			if ((\count($mime) > 1) && ($mime[0] === 'image') && (!empty($mime[1]))) {
 				$type = \strtolower(\trim($mime[1]));
 			}
 		}
 		if (empty($type)) {
             $type = \strtolower(\trim(\pathinfo(\parse_url($imgfile, \PHP_URL_PATH), \PATHINFO_EXTENSION)));
 		}
-		if ($type == 'jpg') {
+		if ($type === 'jpg') {
 			$type = 'jpeg';
 		}
 		return $type;
@@ -294,11 +294,11 @@ class TCPDF_IMAGES {
 		$n    = TCPDF_STATIC::_freadint($f);
 		do {
 			$type = \fread($f, 4);
-			if ($type == 'PLTE') {
+			if ($type === 'PLTE') {
 				// read palette
 				$pal = TCPDF_STATIC::rfread($f, $n);
 				\fread($f, 4);
-			} elseif ($type == 'tRNS') {
+			} elseif ($type === 'tRNS') {
 				// read transparency info
 				$t = TCPDF_STATIC::rfread($f, $n);
 				if ($ct == 0) { // DeviceGray
@@ -314,11 +314,11 @@ class TCPDF_IMAGES {
 					}
 				}
 				\fread($f, 4);
-			} elseif ($type == 'IDAT') {
+			} elseif ($type === 'IDAT') {
 				// read image data block
 				$data .= TCPDF_STATIC::rfread($f, $n);
 				\fread($f, 4);
-			} elseif ($type == 'iCCP') {
+			} elseif ($type === 'iCCP') {
 				// skip profile name
 				$len = 0;
 				while ((\ord(\fread($f, 1)) != 0) && ($len < 80)) {
@@ -335,14 +335,14 @@ class TCPDF_IMAGES {
 				// decompress profile
 				$icc = \gzuncompress($icc);
 				\fread($f, 4);
-			} elseif ($type == 'IEND') {
+			} elseif ($type === 'IEND') {
 				break;
 			} else {
 				TCPDF_STATIC::rfread($f, $n + 4);
 			}
 			$n = TCPDF_STATIC::_freadint($f);
 		} while ($n);
-		if (($colspace == 'Indexed') && (empty($pal))) {
+		if (($colspace === 'Indexed') && (empty($pal))) {
 			// Missing palette
 			\fclose($f);
 			return false;
