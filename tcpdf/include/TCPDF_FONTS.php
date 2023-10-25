@@ -51,6 +51,7 @@ class TCPDF_FONTS {
 	 * @protected
 	 */
 	protected static $cache_uniord = [];
+	public static $cache_unichr = [];
 
 	/**
 	 * Convert and add the selected TrueType or Type1 font to the fonts folder (that must be writeable).
@@ -1724,7 +1725,13 @@ class TCPDF_FONTS {
 	 * @public static
 	 */
 	public static function UTF8ArrayToUniArray($ta, $isunicode=true) {
-		return \array_map(['TCPDF_FONTS', 'unichr'], $ta);
+		$temp = [];
+		foreach ($ta as $t) {
+			$temp[] = self::$cache_unichr[$t] ?? (self::$cache_unichr[$t] = self::unichr($t, $isunicode));
+		}
+
+		//return \array_map(['TCPDF_FONTS', 'unichr'], $ta);
+		return $temp;
 	}
 
 	/**
@@ -1745,7 +1752,7 @@ class TCPDF_FONTS {
 		}
 		$string = '';
 		for ($i = $start; $i < $end; ++$i) {
-			$string .= self::unichr($strarr[$i], $unicode);
+			$string .= self::$cache_unichr[$strarr[$i]] ?? (self::$cache_unichr[$strarr[$i]] = self::unichr($strarr[$i], $unicode));
 		}
 		return $string;
 	}

@@ -6256,11 +6256,11 @@ class TCPDF {
 			$charWidth = $charsWidth[$i];
 			if (($c != 160)
 					&& (($c == 173)
-						|| \preg_match($this->re_spaces, TCPDF_FONTS::unichr($c, $this->isunicode))
+						|| \preg_match($this->re_spaces, TCPDF_FONTS::$cache_unichr[$c] ?? (TCPDF_FONTS::$cache_unichr[$c] = TCPDF_FONTS::unichr($c, $this->isunicode)))
 						|| (($c == 45)
 							&& ($i > 0) && ($i < ($length - 1))
-							&& @\preg_match('/[\p{L}]/'.$this->re_space['m'], TCPDF_FONTS::unichr($chars[($i - 1)], $this->isunicode))
-							&& @\preg_match('/[\p{L}]/'.$this->re_space['m'], TCPDF_FONTS::unichr($chars[($i + 1)], $this->isunicode))
+							&& @\preg_match('/[\p{L}]/'.$this->re_space['m'], TCPDF_FONTS::$cache_unichr[$chars[($i - 1)]] ?? (TCPDF_FONTS::$cache_unichr[$chars[($i - 1)]] = TCPDF_FONTS::unichr($chars[($i - 1)], $this->isunicode)))
+							&& @\preg_match('/[\p{L}]/'.$this->re_space['m'], TCPDF_FONTS::$cache_unichr[$chars[($i + 1)]] ?? (TCPDF_FONTS::$cache_unichr[$chars[($i + 1)]] = TCPDF_FONTS::unichr($chars[($i + 1)], $this->isunicode)))
 						)
 					)
 				) {
@@ -6413,7 +6413,7 @@ class TCPDF {
 		$nb = \count($chars);
 		// replacement for SHY character (minus symbol)
 		$shy_replacement      = 45;
-		$shy_replacement_char = TCPDF_FONTS::unichr($shy_replacement, $this->isunicode);
+		$shy_replacement_char = TCPDF_FONTS::$cache_unichr[$shy_replacement] ?? (TCPDF_FONTS::$cache_unichr[$shy_replacement] = TCPDF_FONTS::unichr($shy_replacement, $this->isunicode));
 		// widht for SHY replacement
 		$shy_replacement_width = $this->GetCharWidth($shy_replacement);
 		// page width
