@@ -2719,17 +2719,17 @@ class TCPDF {
 	 * @since 5.9.000 (2010-10-03)
 	 * @see getCellMargins()
 	 */
-	public function setCellMargins($left=null, $top=null, $right=null, $bottom=null) : void {
-		if (!TCPDF_STATIC::empty_string($left) && ($left >= 0)) {
+	public function setCellMargins($left=-1.0, $top=-1.0, $right=-1.0, $bottom=-1.0) : void {
+		if ($left >= 0) {
 			$this->cell_margin['L'] = $left;
 		}
-		if (!TCPDF_STATIC::empty_string($top) && ($top >= 0)) {
+		if ($top >= 0) {
 			$this->cell_margin['T'] = $top;
 		}
-		if (!TCPDF_STATIC::empty_string($right) && ($right >= 0)) {
+		if ($right >= 0) {
 			$this->cell_margin['R'] = $right;
 		}
-		if (!TCPDF_STATIC::empty_string($bottom) && ($bottom >= 0)) {
+		if ($bottom >= 0) {
 			$this->cell_margin['B'] = $bottom;
 		}
 	}
@@ -4725,7 +4725,7 @@ class TCPDF {
 		if (empty($subs)) {
 			return $text;
 		}
-		if (TCPDF_STATIC::empty_string($font)) {
+		if ($font === '') {
 			$font = $this->FontFamily;
 		}
 		$fontdata = $this->AddFont($font, $style);
@@ -4788,7 +4788,7 @@ class TCPDF {
 	public function setLink($link, $y=0, $page=-1) : void {
 		$fixed = false;
 		if (!empty($page) && (\substr($page, 0, 1) === '*')) {
-			$page = (int) (\substr($page, 1));
+			$page = (int) \substr($page, 1);
 			// this page number will not be changed when moving/add/deleting pages
 			$fixed = true;
 		}
