@@ -4140,10 +4140,26 @@ class TCPDF {
 		}
 		$w  = 0; // total width
 		$wa = []; // array of characters widths
-		foreach ($sa as $ck => $char) {
-			// character width
-			$cw   = $this->GetCharWidth($char, isset($sa[($ck + 1)]));
-			$wa[] = $cw;
+
+		$length = \count($sa);
+		for ($i = 0; $i < $length; ++$i) {
+			//$cw = $this->GetCharWidth($sa[$i], $i + 1 !== $length);
+
+			// inlined GetCharWidth
+			$cw = $this->cachedRawFontWidths[$sa[$i]] ?? ($this->cachedRawFontWidths[$sa[$i]] = $this->getRawCharWidth($sa[$i]));
+			if (($this->font_spacing < 0) || (($this->font_spacing > 0) && $i + 1 !== $length)) {
+				// increase/decrease font spacing
+				$cw += $this->font_spacing;
+			}
+			if ($this->font_stretching != 100) {
+				// fixed stretching mode
+				$cw *= ($this->font_stretching / 100);
+			}
+
+			if ($getarray) {
+				$wa[] = $cw;
+			}
+
 			$w += $cw;
 		}
 		// restore previous values
@@ -4167,7 +4183,7 @@ class TCPDF {
 	 */
 	public function GetCharWidth($char, $notlast=true) {
 		// get raw width
-		$chw = $this->cachedRawFontWidths[$char] ?? $this->getRawCharWidth($char);
+		$chw = $this->cachedRawFontWidths[$char] ?? ($this->cachedRawFontWidths[$char] = $this->getRawCharWidth($char));
 		if (($this->font_spacing < 0) || (($this->font_spacing > 0) && $notlast)) {
 			// increase/decrease font spacing
 			$chw += $this->font_spacing;
@@ -5159,7 +5175,7 @@ class TCPDF {
 	 */
 	protected function getCellCode($w, $h=0, $txt='', $border=0, $ln=0, $align='', $fill=false, $link='', $stretch=0, $ignore_min_height=false, $calign='T', $valign='M') {
 		// replace 'NO-BREAK SPACE' (U+00A0) character with a simple space
-		$txt               = \str_replace(TCPDF_FONTS::unichr(160, $this->isunicode), ' ', $txt);
+		$txt               = \str_replace(TCPDF_FONTS::$cache_unichr[160] ?? (TCPDF_FONTS::$cache_unichr[160] = TCPDF_FONTS::unichr(160, $this->isunicode)), ' ', $txt);
 		$prev_cell_margin  = $this->cell_margin;
 		$prev_cell_padding = $this->cell_padding;
 		$txt               = TCPDF_STATIC::removeSHY($txt, $this->isunicode);
@@ -6525,11 +6541,11 @@ class TCPDF {
 				// \p{Lo} is needed because Chinese characters are packed next to each other without spaces in between.
 				if (($c != 160)
 					&& (($c == 173)
-						|| \preg_match($this->re_spaces, TCPDF_FONTS::unichr($c, $this->isunicode))
+						|| \preg_match($this->re_spaces, TCPDF_FONTS::$cache_unichr[$c] ?? (TCPDF_FONTS::$cache_unichr[$c] = TCPDF_FONTS::unichr($c, $this->isunicode)))
 						|| (($c == 45)
 							&& ($i < ($nb - 1))
-							&& @\preg_match('/[\p{L}]/'.$this->re_space['m'], TCPDF_FONTS::unichr($pc, $this->isunicode))
-							&& @\preg_match('/[\p{L}]/'.$this->re_space['m'], TCPDF_FONTS::unichr($chars[($i + 1)], $this->isunicode))
+							&& @\preg_match('/[\p{L}]/'.$this->re_space['m'], TCPDF_FONTS::$cache_unichr[$pc] ?? (TCPDF_FONTS::$cache_unichr[$pc] = TCPDF_FONTS::unichr($pc, $this->isunicode)))
+							&& @\preg_match('/[\p{L}]/'.$this->re_space['m'], TCPDF_FONTS::$cache_unichr[$chars[($i + 1)]] ?? (TCPDF_FONTS::$cache_unichr[$chars[($i + 1)]] = TCPDF_FONTS::unichr($chars[($i + 1)], $this->isunicode)))
 						)
 					)
 				) {
