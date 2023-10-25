@@ -2586,37 +2586,21 @@ class TCPDF_STATIC {
 		switch ($layout) {
 			case 'default':
 			case 'single':
-			case 'SinglePage': {
-				$layout_mode = 'SinglePage';
-				break;
-			}
+			case 'SinglePage':
+				return 'SinglePage';
 			case 'continuous':
-			case 'OneColumn': {
-				$layout_mode = 'OneColumn';
-				break;
-			}
+			case 'OneColumn':
+				return 'OneColumn';
 			case 'two':
-			case 'TwoColumnLeft': {
-				$layout_mode = 'TwoColumnLeft';
-				break;
-			}
-			case 'TwoColumnRight': {
-				$layout_mode = 'TwoColumnRight';
-				break;
-			}
-			case 'TwoPageLeft': {
-				$layout_mode = 'TwoPageLeft';
-				break;
-			}
-			case 'TwoPageRight': {
-				$layout_mode = 'TwoPageRight';
-				break;
-			}
-			default: {
-				$layout_mode = 'SinglePage';
-			}
+			case 'TwoColumnLeft':
+				return 'TwoColumnLeft';
+			case 'TwoColumnRight':
+			case 'TwoPageLeft':
+			case 'TwoPageRight':
+				return $layout;
+			default:
+				return 'SinglePage';
 		}
-		return $layout_mode;
 	}
 
 	/**
@@ -2627,35 +2611,17 @@ class TCPDF_STATIC {
 	 */
 	public static function getPageMode($mode='UseNone') {
 		switch ($mode) {
-			case 'UseNone': {
-				$page_mode = 'UseNone';
-				break;
-			}
-			case 'UseOutlines': {
-				$page_mode = 'UseOutlines';
-				break;
-			}
-			case 'UseThumbs': {
-				$page_mode = 'UseThumbs';
-				break;
-			}
-			case 'FullScreen': {
-				$page_mode = 'FullScreen';
-				break;
-			}
-			case 'UseOC': {
-				$page_mode = 'UseOC';
-				break;
-			}
-			case '': {
-				$page_mode = 'UseAttachments';
-				break;
-			}
-			default: {
-				$page_mode = 'UseNone';
-			}
+			case 'UseNone':
+			case 'UseOutlines':
+			case 'UseThumbs':
+			case 'FullScreen':
+			case 'UseOC':
+				return $mode;
+			case '':
+				return 'UseAttachments';
+			default:
+				return 'UseNone';
 		}
-		return $page_mode;
 	}
 } // END OF TCPDF_STATIC CLASS
 

@@ -1724,10 +1724,7 @@ class TCPDF_FONTS {
 	 * @public static
 	 */
 	public static function UTF8ArrayToUniArray($ta, $isunicode=true) {
-		if ($isunicode) {
-			return \array_map(['TCPDF_FONTS', 'unichrUnicode'], $ta);
-		}
-		return \array_map(['TCPDF_FONTS', 'unichrASCII'], $ta);
+		return \array_map(['TCPDF_FONTS', 'unichr'], $ta);
 	}
 
 	/**
@@ -1786,7 +1783,7 @@ class TCPDF_FONTS {
 		foreach ($unicode as $char) {
 			if ($char < 256) {
 				$outarr[] = $char;
-			} elseif (\array_key_exists($char, TCPDF_FONT_DATA::$uni_utf8tolatin)) {
+			} elseif (isset(TCPDF_FONT_DATA::$uni_utf8tolatin[$char])) {
 				// map from UTF-8
 				$outarr[] = TCPDF_FONT_DATA::$uni_utf8tolatin[$char];
 			} elseif ($char == 0xFFFD) {
@@ -1811,7 +1808,7 @@ class TCPDF_FONTS {
 		foreach ($unicode as $char) {
 			if ($char < 256) {
 				$outstr .= \chr($char);
-			} elseif (\array_key_exists($char, TCPDF_FONT_DATA::$uni_utf8tolatin)) {
+			} elseif (isset(TCPDF_FONT_DATA::$uni_utf8tolatin[$char])) {
 				// map from UTF-8
 				$outstr .= \chr(TCPDF_FONT_DATA::$uni_utf8tolatin[$char]);
 			} elseif ($char == 0xFFFD) {
@@ -1832,7 +1829,7 @@ class TCPDF_FONTS {
 	 */
 	public static function uniord($uch) {
 		if (!isset(self::$cache_uniord[$uch])) {
-			self::$cache_uniord[$uch] = self::getUniord($uch);
+			self::$cache_uniord[$uch] = \mb_ord($uch); //self::getUniord($uch);
 		}
 		return self::$cache_uniord[$uch];
 	}
@@ -1942,11 +1939,11 @@ class TCPDF_FONTS {
 	public static function UTF8StringToArray($str, $isunicode, &$currentfont) {
 		if ($isunicode) {
 			// requires PCRE unicode support turned on
-			$chars = TCPDF_STATIC::pregSplit('//','u', $str, -1, \PREG_SPLIT_NO_EMPTY);
-			$carr  = \array_map(['TCPDF_FONTS', 'uniord'], $chars);
+			$chars = \preg_split('//u', $str, -1, \PREG_SPLIT_NO_EMPTY);
+			$carr  = \array_map('\mb_ord', $chars); // uniord
 		} else {
 			$chars = \str_split($str);
-			$carr  = \array_map('ord', $chars);
+			$carr = \array_map('\ord', $chars);
 		}
 		if (\is_array($currentfont['subsetchars']) && \is_array($carr)) {
 			$currentfont['subsetchars'] += \array_fill_keys($carr, true);

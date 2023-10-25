@@ -777,6 +777,9 @@ class TCPDF {
 	 */
 	protected $lispacer = '';
 
+	// @todo: consider to make this static and also include fontname, fontstyle, fontsize
+	protected array $cachedRawFontWidths = [];
+
 	/**
 	 * Default encoding.
 	 * @protected
@@ -4125,7 +4128,7 @@ class TCPDF {
 	 */
 	public function GetArrStringWidth($sa, $fontname='', $fontstyle='', $fontsize=0, $getarray=false) {
 		// store current values
-		if (!TCPDF_STATIC::empty_string($fontname)) {
+		if ($fontname !== '') {
 			$prev_FontFamily = $this->FontFamily;
 			$prev_FontStyle  = $this->FontStyle;
 			$prev_FontSizePt = $this->FontSizePt;
@@ -4144,7 +4147,7 @@ class TCPDF {
 			$w += $cw;
 		}
 		// restore previous values
-		if (!TCPDF_STATIC::empty_string($fontname)) {
+		if ($fontname !== '') {
 			$this->setFont($prev_FontFamily, $prev_FontStyle, $prev_FontSizePt, '', 'default', false);
 		}
 		if ($getarray) {
@@ -4164,7 +4167,7 @@ class TCPDF {
 	 */
 	public function GetCharWidth($char, $notlast=true) {
 		// get raw width
-		$chw = $this->getRawCharWidth($char);
+		$chw = $this->cachedRawFontWidths[$char] ?? $this->getRawCharWidth($char);
 		if (($this->font_spacing < 0) || (($this->font_spacing > 0) && $notlast)) {
 			// increase/decrease font spacing
 			$chw += $this->font_spacing;
@@ -4200,7 +4203,10 @@ class TCPDF {
 		} else {
 			$w = 600;
 		}
-		return $this->getAbsFontMeasure($w);
+
+		$this->cachedRawFontWidths[$char] = $this->getAbsFontMeasure($w);
+
+		return $this->cachedRawFontWidths[$char];
 	}
 
 	/**
@@ -4226,7 +4232,7 @@ class TCPDF {
 		if (($fontsdir = \opendir(TCPDF_FONTS::_getfontpath())) !== false) {
 			while (($file = \readdir($fontsdir)) !== false) {
 				if (\substr($file, -4) === '.php') {
-					\array_push($this->fontlist, \strtolower(\basename($file, '.php')));
+					$this->fontlist[] = \strtolower(\basename($file, '.php'));
 				}
 			}
 			\closedir($fontsdir);
@@ -4324,9 +4330,9 @@ class TCPDF {
 		}
 		// get specified font directory (if any)
 		$fontdir = false;
-		if (!TCPDF_STATIC::empty_string($fontfile)) {
+		if (!empty($fontfile)) {
 			$fontdir = \dirname($fontfile);
-			if (TCPDF_STATIC::empty_string($fontdir) || ($fontdir === '.')) {
+			if (empty($fontdir) || ($fontdir === '.')) {
 				$fontdir = '';
 			} else {
 				$fontdir .= '/';
@@ -4335,11 +4341,11 @@ class TCPDF {
 		// true when the font style variation is missing
 		$missing_style = false;
 		// search and include font file
-		if (TCPDF_STATIC::empty_string($fontfile) || (!@TCPDF_STATIC::file_exists($fontfile))) {
+		if (empty($fontfile) || (!@TCPDF_STATIC::file_exists($fontfile))) {
 			// build a standard filenames for specified font
 			$tmp_fontfile = \str_replace(' ', '', $family).\strtolower($style).'.php';
 			$fontfile     = TCPDF_FONTS::getFontFullPath($tmp_fontfile, $fontdir);
-			if (TCPDF_STATIC::empty_string($fontfile)) {
+			if (empty($fontfile)) {
 				$missing_style = true;
 				// try to remove the style part
 				$tmp_fontfile = \str_replace(' ', '', $family).'.php';
@@ -4347,7 +4353,7 @@ class TCPDF {
 			}
 		}
 		// include font file
-		if (!TCPDF_STATIC::empty_string($fontfile) && (@TCPDF_STATIC::file_exists($fontfile))) {
+		if (!empty($fontfile) && (@TCPDF_STATIC::file_exists($fontfile))) {
 			include($fontfile);
 		} else {
 			$this->Error('Could not include font definition file: '.$family.'');
@@ -4510,6 +4516,9 @@ class TCPDF {
 		if ($size < 0) {
 			$size = 0;
 		}
+
+		$this->cachedRawFontWidths = [];
+
 		// try to add font (if not already added)
 		$fontdata         = $this->AddFont($family, $style, $fontfile, $subset);
 		$this->FontFamily = $fontdata['family'];
@@ -4536,6 +4545,7 @@ class TCPDF {
 		$this->FontSizePt = $size;
 		// font size in user units
 		$this->FontSize = $size / $this->k;
+		$this->cachedRawFontWidths = [];
 		// calculate some font metrics
 		if (isset($this->CurrentFont['desc']['FontBBox'])) {
 			$bbox        = \explode(' ', \substr($this->CurrentFont['desc']['FontBBox'], 1, -1));
@@ -5413,7 +5423,7 @@ class TCPDF {
 			}
 			$txt2 = TCPDF_STATIC::_escape($txt2);
 			// get current text width (considering general font stretching and spacing)
-			$txwidth = $this->GetStringWidth($txt);
+			$txwidth = $this->GetArrStringWidth(TCPDF_FONTS::utf8Bidi(TCPDF_FONTS::UTF8StringToArray($txt, $this->isunicode, $this->CurrentFont), $txt, $this->tmprtl, $this->isunicode, $this->CurrentFont), '', '', 0, false);
 			$width   = $txwidth;
 			// check for stretch mode
 			if ($stretch > 0) {
@@ -5467,8 +5477,7 @@ class TCPDF {
 						$spacewidth /= ($this->font_stretching / 100);
 					}
 					// set word position to be used with TJ operator
-					$txt2                  = \str_replace(\chr(0).\chr(32), ') '.\sprintf('%F', $spacewidth).' (', $txt2);
-					$unicode_justification = true;
+					$txt2 = \str_replace(\chr(0).\chr(32), ') '.\sprintf('%F', $spacewidth).' (', $txt2);
 				} else {
 					// get string width
 					$width = $txwidth;
@@ -6392,7 +6401,11 @@ class TCPDF {
 		$chars = TCPDF_FONTS::UTF8StringToArray($s, $this->isunicode, $this->CurrentFont);
 		// calculate maximum width for a single character on string
 		$chrw = $this->GetArrStringWidth($chars, '', '', 0, true);
-		\array_walk($chrw, [$this, 'getRawCharWidth']);
+
+		// @todo: WHY is tcpdf doing the next step? The function getRawCharWidth doesn't modify the values in $chars!!!
+		//\array_walk($chars, [$this, 'getRawCharWidth']);
+		//\array_walk($chrw, [$this, 'getRawCharWidth']); This was the old call, which is even more stupid, since chrw contains widths
+
 		$maxchwidth = \max($chrw);
 		// get array of chars
 		$uchars = TCPDF_FONTS::UTF8ArrayToUniArray($chars, $this->isunicode);
@@ -8887,7 +8900,7 @@ class TCPDF {
 		foreach ($this->FontFiles as $file => $info) {
 			// search and get font file to embedd
 			$fontfile = TCPDF_FONTS::getFontFullPath($file, $info['fontdir']);
-			if (!TCPDF_STATIC::empty_string($fontfile)) {
+			if (!empty($fontfile)) {
 				$font       = \file_get_contents($fontfile);
 				$compressed = (\substr($file, -2) === '.z');
 				if ((!$compressed) && (isset($info['length2']))) {
@@ -9105,7 +9118,7 @@ class TCPDF {
 			$ctgfile = \strtolower($font['ctg']);
 			// search and get ctg font file to embedd
 			$fontfile = TCPDF_FONTS::getFontFullPath($ctgfile, $fontdir);
-			if (TCPDF_STATIC::empty_string($fontfile)) {
+			if (empty($fontfile)) {
 				$this->Error('Font file not found: '.$ctgfile);
 			}
 			$stream = $this->_getrawstream(\file_get_contents($fontfile));
@@ -10215,7 +10228,7 @@ class TCPDF {
 	 * @protected
 	 */
 	protected function _dounderline($x, $y, $txt) {
-		$w = $this->GetStringWidth($txt);
+		$w = $this->GetArrStringWidth(TCPDF_FONTS::utf8Bidi(TCPDF_FONTS::UTF8StringToArray($txt, $this->isunicode, $this->CurrentFont), $txt, $this->tmprtl, $this->isunicode, $this->CurrentFont), '', '', 0, false);
 		return $this->_dounderlinew($x, $y, $w);
 	}
 
@@ -10240,7 +10253,7 @@ class TCPDF {
 	 * @protected
 	 */
 	protected function _dolinethrough($x, $y, $txt) {
-		$w = $this->GetStringWidth($txt);
+		$w = $this->GetArrStringWidth(TCPDF_FONTS::utf8Bidi(TCPDF_FONTS::UTF8StringToArray($txt, $this->isunicode, $this->CurrentFont), $txt, $this->tmprtl, $this->isunicode, $this->CurrentFont), '', '', 0, false);
 		return $this->_dolinethroughw($x, $y, $w);
 	}
 
@@ -10266,7 +10279,7 @@ class TCPDF {
 	 * @since 4.9.015 (2010-04-19)
 	 */
 	protected function _dooverline($x, $y, $txt) {
-		$w = $this->GetStringWidth($txt);
+		$w = $this->GetArrStringWidth(TCPDF_FONTS::utf8Bidi(TCPDF_FONTS::UTF8StringToArray($txt, $this->isunicode, $this->CurrentFont), $txt, $this->tmprtl, $this->isunicode, $this->CurrentFont), '', '', 0, false);
 		return $this->_dooverlinew($x, $y, $w);
 	}
 
@@ -11476,7 +11489,7 @@ class TCPDF {
 		if (isset($style['dash'])) {
 			$dash_string = '';
 			if ($style['dash']) {
-				if (\preg_match('/^.+,/', $style['dash']) > 0) {
+				if (\preg_match('/^.+,/', (string) $style['dash']) > 0) {
 					$tab = \explode(',', $style['dash']);
 				} else {
 					$tab = [$style['dash']];
@@ -17747,7 +17760,7 @@ Putting 1 is equivalent to putting 0 and calling Ln() just after. Default value:
 						if ($this->rMargin != $prevrMargin) {
 							$tw += ($prevrMargin - $this->rMargin);
 						}
-						$one_space_width = $this->GetStringWidth(\chr(32));
+						$one_space_width = $this->GetArrStringWidth(TCPDF_FONTS::utf8Bidi(TCPDF_FONTS::UTF8StringToArray(\chr(32), $this->isunicode, $this->CurrentFont), \chr(32), $this->tmprtl, $this->isunicode, $this->CurrentFont), '', '', 0, false);
 						$no              = 0; // number of spaces on a line contained on a single block
 						if ($this->isRTLTextDir()) { // RTL
 							// remove left space if exist
@@ -18695,7 +18708,7 @@ Putting 1 is equivalent to putting 0 and calling Ln() just after. Default value:
 				if ($this->rMargin != $prevrMargin) {
 					$tw += ($prevrMargin - $this->rMargin);
 				}
-				$one_space_width = $this->GetStringWidth(\chr(32));
+				$one_space_width = $this->GetArrStringWidth(TCPDF_FONTS::utf8Bidi(TCPDF_FONTS::UTF8StringToArray(\chr(32), $this->isunicode, $this->CurrentFont), \chr(32), $this->tmprtl, $this->isunicode, $this->CurrentFont), '', '', 0, false);
 				$no              = 0; // number of spaces on a line contained on a single block
 				if ($this->isRTLTextDir()) { // RTL
 					// remove left space if exist
@@ -19277,7 +19290,7 @@ Putting 1 is equivalent to putting 0 and calling Ln() just after. Default value:
 				}
 				$h = $this->getCellHeight($this->FontSize);
 				if (isset($tag['attribute']['size']) && !TCPDF_STATIC::empty_string($tag['attribute']['size'])) {
-					$w = (int) ($tag['attribute']['size']) * $this->GetStringWidth(\chr(32)) * 2;
+					$w = (int) ($tag['attribute']['size']) * $this->GetArrStringWidth(TCPDF_FONTS::utf8Bidi(TCPDF_FONTS::UTF8StringToArray(\chr(32), $this->isunicode, $this->CurrentFont), \chr(32), $this->tmprtl, $this->isunicode, $this->CurrentFont), '', '', 0, false) * 2;
 				} else {
 					$w = $h;
 				}
@@ -19336,7 +19349,7 @@ Putting 1 is equivalent to putting 0 and calling Ln() just after. Default value:
 						if (!isset($value)) {
 							$value = 'submit';
 						}
-						$w = $this->GetStringWidth($value) * 1.5;
+						$w = $this->GetArrStringWidth(TCPDF_FONTS::utf8Bidi(TCPDF_FONTS::UTF8StringToArray($value, $this->isunicode, $this->CurrentFont), $value, $this->tmprtl, $this->isunicode, $this->CurrentFont), '', '', 0, false) * 1.5;
 						$h *= 1.6;
 						$prop        = ['lineWidth'=>1, 'borderStyle'=>'beveled', 'fillColor'=>[196, 196, 196], 'strokeColor'=>[255, 255, 255]];
 						$action      = [];
@@ -19355,7 +19368,7 @@ Putting 1 is equivalent to putting 0 and calling Ln() just after. Default value:
 						if (!isset($value)) {
 							$value = 'reset';
 						}
-						$w = $this->GetStringWidth($value) * 1.5;
+						$w = $this->GetArrStringWidth(TCPDF_FONTS::utf8Bidi(TCPDF_FONTS::UTF8StringToArray($value, $this->isunicode, $this->CurrentFont), $value, $this->tmprtl, $this->isunicode, $this->CurrentFont), '', '', 0, false) * 1.5;
 						$h *= 1.6;
 						$prop = ['lineWidth'=>1, 'borderStyle'=>'beveled', 'fillColor'=>[196, 196, 196], 'strokeColor'=>[255, 255, 255]];
 						$this->Button($name, $w, $h, $value, ['S'=>'ResetForm'], $prop, $opt, '', '', false);
@@ -19367,7 +19380,7 @@ Putting 1 is equivalent to putting 0 and calling Ln() just after. Default value:
 						if (!isset($value)) {
 							$value = '*';
 						}
-						$w = $this->GetStringWidth($value) * 2;
+						$w = $this->GetArrStringWidth(TCPDF_FONTS::utf8Bidi(TCPDF_FONTS::UTF8StringToArray($value, $this->isunicode, $this->CurrentFont), $value, $this->tmprtl, $this->isunicode, $this->CurrentFont), '', '', 0, false) * 2;
 						$h *= 1.2;
 						$prop     = ['lineWidth'=>1, 'borderStyle'=>'beveled', 'fillColor'=>[196, 196, 196], 'strokeColor'=>[255, 255, 255]];
 						$jsaction = 'var f=this.getField(\''.$name.'\'); f.browseForFileToSubmit();';
@@ -19403,7 +19416,7 @@ Putting 1 is equivalent to putting 0 and calling Ln() just after. Default value:
 						if (!isset($value)) {
 							$value = ' ';
 						}
-						$w = $this->GetStringWidth($value) * 1.5;
+						$w = $this->GetArrStringWidth(TCPDF_FONTS::utf8Bidi(TCPDF_FONTS::UTF8StringToArray($value, $this->isunicode, $this->CurrentFont), $value, $this->tmprtl, $this->isunicode, $this->CurrentFont), '', '', 0, false) * 1.5;
 						$h *= 1.6;
 						$prop = ['lineWidth'=>1, 'borderStyle'=>'beveled', 'fillColor'=>[196, 196, 196], 'strokeColor'=>[255, 255, 255]];
 						if (isset($tag['attribute']['onclick']) && !empty($tag['attribute']['onclick'])) {
@@ -19432,7 +19445,7 @@ Putting 1 is equivalent to putting 0 and calling Ln() just after. Default value:
 					$opt['v'] = $tag['attribute']['value'];
 				}
 				if (isset($tag['attribute']['cols']) && !TCPDF_STATIC::empty_string($tag['attribute']['cols'])) {
-					$w = (int) ($tag['attribute']['cols']) * $this->GetStringWidth(\chr(32)) * 2;
+					$w = (int) ($tag['attribute']['cols']) * $this->GetArrStringWidth(TCPDF_FONTS::utf8Bidi(TCPDF_FONTS::UTF8StringToArray(\chr(32), $this->isunicode, $this->CurrentFont), \chr(32), $this->tmprtl, $this->isunicode, $this->CurrentFont), '', '', 0, false) * 2;
 				} else {
 					$w = 40;
 				}
@@ -21471,7 +21484,7 @@ Putting 1 is equivalent to putting 0 and calling Ln() just after. Default value:
 		$fontfamily      = $this->FontFamily;
 		$fontstyle       = $this->FontStyle;
 		$w               = $this->w - $this->lMargin - $this->rMargin;
-		$spacer          = $this->GetStringWidth(\chr(32)) * 4;
+		$spacer          = $this->GetArrStringWidth(TCPDF_FONTS::utf8Bidi(TCPDF_FONTS::UTF8StringToArray(\chr(32), $this->isunicode, $this->CurrentFont), \chr(32), $this->tmprtl, $this->isunicode, $this->CurrentFont), '', '', 0, false) * 4;
 		$lmargin         = $this->lMargin;
 		$rmargin         = $this->rMargin;
 		$x_start         = $this->GetX();
