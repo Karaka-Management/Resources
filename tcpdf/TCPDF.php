@@ -777,7 +777,7 @@ class TCPDF {
 	 */
 	protected $lispacer = '';
 
-	// @todo: consider to make this static and also include fontname, fontstyle, fontsize
+	// @todo consider to make this static and also include fontname, fontstyle, fontsize
 	protected array $cachedRawFontWidths = [];
 
 	/**
@@ -6418,7 +6418,7 @@ class TCPDF {
 		// calculate maximum width for a single character on string
 		$chrw = $this->GetArrStringWidth($chars, '', '', 0, true);
 
-		// @todo: WHY is tcpdf doing the next step? The function getRawCharWidth doesn't modify the values in $chars!!!
+		// @todo WHY is tcpdf doing the next step? The function getRawCharWidth doesn't modify the values in $chars!!!
 		//\array_walk($chars, [$this, 'getRawCharWidth']);
 		//\array_walk($chrw, [$this, 'getRawCharWidth']); This was the old call, which is even more stupid, since chrw contains widths
 
@@ -9309,7 +9309,7 @@ class TCPDF {
 						$maxval =(\pow(2, $info['bpc']) - 1);
 						for ($i = 0; $i < $count_info; ++$i) {
 							if (($info['trns'][$i] != 0) && ($info['trns'][$i] != $maxval)) {
-								// this is not a binary type mask @TODO: create a SMask
+								// this is not a binary type mask @todo create a SMask
 								$trns = '';
 								break;
 							} elseif (empty($trns) && ($info['trns'][$i] == 0)) {
@@ -13705,7 +13705,7 @@ class TCPDF {
 		if (!$this->tsa_timestamp) {
 			return $signature;
 		}
-		//@TODO: implement this feature
+		//@todo implement this feature
 		return $signature;
 	}
 
@@ -24497,7 +24497,7 @@ Putting 1 is equivalent to putting 0 and calling Ln() just after. Default value:
 			case 'text':
 			case 'tspan': {
 				if (isset($this->svgtextmode['text-anchor']) && !empty($this->svgtext)) {
-					// @TODO: unsupported feature
+					// @todo unsupported feature
 				}
 				// only basic support - advanced features must be implemented
 				$this->svgtextmode['invisible'] = $invisible;
