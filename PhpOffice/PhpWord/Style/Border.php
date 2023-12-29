@@ -499,6 +499,6 @@ class Border extends AbstractStyle
     {
         $borders = $this->getBorderSize();
 
-        return $borders !== array_filter($borders, 'is_null');
+        return $borders !== \array_filter($borders, 'is_null');
     }
 }

@@ -33,12 +33,12 @@ class File
         // Sick construction, but it seems that
         // file_exists returns strange values when
         // doing the original file_exists on ZIP archives...
-        if (strtolower(substr($pFilename, 0, 3)) == 'zip') {
+        if (\strtolower(\substr($pFilename, 0, 3)) == 'zip') {
             // Open ZIP file and verify if the file exists
-            $zipFile = substr($pFilename, 6, strpos($pFilename, '#') - 6);
-            $archiveFile = substr($pFilename, strpos($pFilename, '#') + 1);
+            $zipFile = \substr($pFilename, 6, \strpos($pFilename, '#') - 6);
+            $archiveFile = \substr($pFilename, \strpos($pFilename, '#') + 1);
 
-            $zip = new ZipArchive();
+            $zip = new \ZipArchive();
             if ($zip->open($zipFile) === true) {
                 $returnValue = ($zip->getFromName($archiveFile) !== false);
                 $zip->close();
@@ -50,7 +50,7 @@ class File
         }
 
         // Regular file_exists
-        return file_exists($pFilename);
+        return \file_exists($pFilename);
     }
 
     /**
@@ -65,12 +65,12 @@ class File
         if (!self::fileExists($pFilename)) {
             return null;
         }
-        if (strtolower(substr($pFilename, 0, 3)) == 'zip') {
+        if (\strtolower(\substr($pFilename, 0, 3)) == 'zip') {
             // Open ZIP file and verify if the file exists
-            $zipFile = substr($pFilename, 6, strpos($pFilename, '#') - 6);
-            $archiveFile = substr($pFilename, strpos($pFilename, '#') + 1);
+            $zipFile = \substr($pFilename, 6, \strpos($pFilename, '#') - 6);
+            $archiveFile = \substr($pFilename, \strpos($pFilename, '#') + 1);
 
-            $zip = new ZipArchive();
+            $zip = new \ZipArchive();
             if ($zip->open($zipFile) === true) {
                 $returnValue = $zip->getFromName($archiveFile);
                 $zip->close();
@@ -81,7 +81,7 @@ class File
             return null;
         }
         // Regular file contents
-        return file_get_contents($pFilename);
+        return \file_get_contents($pFilename);
     }
 
     /**
@@ -94,13 +94,13 @@ class File
     public static function realpath(string $pFilename): string
     {
         // Try using realpath()
-        $returnValue = realpath($pFilename);
+        $returnValue = \realpath($pFilename);
 
         // Found something?
         if (empty($returnValue)) {
-            $pathArray = explode('/', $pFilename);
-            while (in_array('..', $pathArray) && $pathArray[0] != '..') {
-                $numPathArray = count($pathArray);
+            $pathArray = \explode('/', $pFilename);
+            while (\in_array('..', $pathArray) && $pathArray[0] != '..') {
+                $numPathArray = \count($pathArray);
                 for ($i = 0; $i < $numPathArray; ++$i) {
                     if ($pathArray[$i] == '..' && $i > 0) {
                         unset($pathArray[$i]);
@@ -109,7 +109,7 @@ class File
                     }
                 }
             }
-            $returnValue = implode('/', $pathArray);
+            $returnValue = \implode('/', $pathArray);
         }
 
         // Return

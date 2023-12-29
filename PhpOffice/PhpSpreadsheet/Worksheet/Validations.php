@@ -17,16 +17,16 @@ class Validations
      */
     public static function validateCellAddress($cellAddress): string
     {
-        if (is_string($cellAddress)) {
+        if (\is_string($cellAddress)) {
             [$worksheet, $address] = Worksheet::extractSheetTitle($cellAddress, true);
 //            if (!empty($worksheet) && $worksheet !== $this->getTitle()) {
 //                throw new Exception('Reference is not for this worksheet');
 //            }
 
-            return empty($worksheet) ? strtoupper("$address") : $worksheet . '!' . strtoupper("$address");
+            return empty($worksheet) ? \strtoupper("$address") : $worksheet . '!' . \strtoupper("$address");
         }
 
-        if (is_array($cellAddress)) {
+        if (\is_array($cellAddress)) {
             $cellAddress = CellAddress::fromColumnRowArray($cellAddress);
         }
 
@@ -42,11 +42,11 @@ class Validations
      */
     public static function validateCellOrCellRange($cellRange): string
     {
-        if (is_string($cellRange) || is_numeric($cellRange)) {
+        if (\is_string($cellRange) || \is_numeric($cellRange)) {
             // Convert a single column reference like 'A' to 'A:A',
             //    a single row reference like '1' to '1:1'
-            $cellRange = (string) preg_replace('/^([A-Z]+|\d+)$/', '${1}:${1}', (string) $cellRange);
-        } elseif (is_object($cellRange) && $cellRange instanceof CellAddress) {
+            $cellRange = (string) \preg_replace('/^([A-Z]+|\d+)$/', '${1}:${1}', (string) $cellRange);
+        } elseif (\is_object($cellRange) && $cellRange instanceof CellAddress) {
             $cellRange = new CellRange($cellRange, $cellRange);
         }
 
@@ -62,22 +62,22 @@ class Validations
      */
     public static function validateCellRange($cellRange): string
     {
-        if (is_string($cellRange)) {
+        if (\is_string($cellRange)) {
             [$worksheet, $addressRange] = Worksheet::extractSheetTitle($cellRange, true);
 
             // Convert Column ranges like 'A:C' to 'A1:C1048576'
             //      or Row ranges like '1:3' to 'A1:XFD3'
-            $addressRange = (string) preg_replace(
+            $addressRange = (string) \preg_replace(
                 ['/^([A-Z]+):([A-Z]+)$/i', '/^(\\d+):(\\d+)$/'],
                 ['${1}1:${2}1048576', 'A${1}:XFD${2}'],
                 $addressRange
             );
 
-            return empty($worksheet) ? strtoupper($addressRange) : $worksheet . '!' . strtoupper($addressRange);
+            return empty($worksheet) ? \strtoupper($addressRange) : $worksheet . '!' . \strtoupper($addressRange);
         }
 
-        if (is_array($cellRange)) {
-            switch (count($cellRange)) {
+        if (\is_array($cellRange)) {
+            switch (\count($cellRange)) {
                 case 2:
                     $from = [$cellRange[0], $cellRange[1]];
                     $to = [$cellRange[0], $cellRange[1]];
@@ -100,13 +100,13 @@ class Validations
     public static function definedNameToCoordinate(string $coordinate, Worksheet $worksheet): string
     {
         // Uppercase coordinate
-        $coordinate = strtoupper($coordinate);
+        $coordinate = \strtoupper($coordinate);
         // Eliminate leading equal sign
-        $testCoordinate = (string) preg_replace('/^=/', '', $coordinate);
+        $testCoordinate = (string) \preg_replace('/^=/', '', $coordinate);
         $defined = $worksheet->getParent()->getDefinedName($testCoordinate, $worksheet);
         if ($defined !== null) {
             if ($defined->getWorksheet() === $worksheet && !$defined->isFormula()) {
-                $coordinate = (string) preg_replace('/^=/', '', $defined->getValue());
+                $coordinate = (string) \preg_replace('/^=/', '', $defined->getValue());
             }
         }
 

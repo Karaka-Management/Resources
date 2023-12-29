@@ -44,7 +44,7 @@ class Title
     public function getCaptionText(): string
     {
         $caption = $this->caption;
-        if (is_string($caption)) {
+        if (\is_string($caption)) {
             return $caption;
         }
         if ($caption instanceof RichText) {

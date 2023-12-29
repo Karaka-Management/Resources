@@ -24,7 +24,7 @@ class FileCopyException extends PhpPresentationException
 {
     public function __construct(string $source, string $destination)
     {
-        parent::__construct(sprintf(
+        parent::__construct(\sprintf(
             'The file %s can\'t be copied to %s',
             $source,
             $destination

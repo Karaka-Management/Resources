@@ -36,7 +36,7 @@ class BesselJ
      */
     public static function BESSELJ($x, $ord)
     {
-        if (is_array($x) || is_array($ord)) {
+        if (\is_array($x) || \is_array($ord)) {
             return self::evaluateArrayArguments([self::class, __FUNCTION__], $x, $ord);
         }
 
@@ -53,7 +53,7 @@ class BesselJ
 
         $fResult = self::calculate($x, $ord);
 
-        return (is_nan($fResult)) ? ExcelError::NAN() : $fResult;
+        return (\is_nan($fResult)) ? ExcelError::NAN() : $fResult;
     }
 
     private static function calculate(float $x, int $ord): float
@@ -71,7 +71,7 @@ class BesselJ
 
     private static function besselJ0(float $x): float
     {
-        $ax = abs($x);
+        $ax = \abs($x);
 
         if ($ax < 8.0) {
             $y = $x * $x;
@@ -90,12 +90,12 @@ class BesselJ
         $ans2 = -0.1562499995e-1 + $y * (0.1430488765e-3 + $y * (-0.6911147651e-5 + $y *
                     (0.7621095161e-6 - $y * 0.934935152e-7)));
 
-        return sqrt(0.636619772 / $ax) * (cos($xx) * $ans1 - $z * sin($xx) * $ans2);
+        return \sqrt(0.636619772 / $ax) * (\cos($xx) * $ans1 - $z * \sin($xx) * $ans2);
     }
 
     private static function besselJ1(float $x): float
     {
-        $ax = abs($x);
+        $ax = \abs($x);
 
         if ($ax < 8.0) {
             $y = $x * $x;
@@ -114,14 +114,14 @@ class BesselJ
         $ans1 = 1.0 + $y * (0.183105e-2 + $y * (-0.3516396496e-4 + $y * (0.2457520174e-5 + $y * (-0.240337019e-6))));
         $ans2 = 0.04687499995 + $y * (-0.2002690873e-3 + $y * (0.8449199096e-5 + $y *
                     (-0.88228987e-6 + $y * 0.105787412e-6)));
-        $ans = sqrt(0.636619772 / $ax) * (cos($xx) * $ans1 - $z * sin($xx) * $ans2);
+        $ans = \sqrt(0.636619772 / $ax) * (\cos($xx) * $ans1 - $z * \sin($xx) * $ans2);
 
         return ($x < 0.0) ? -$ans : $ans;
     }
 
     private static function besselJ2(float $x, int $ord): float
     {
-        $ax = abs($x);
+        $ax = \abs($x);
         if ($ax === 0.0) {
             return 0.0;
         }
@@ -154,11 +154,11 @@ class BesselJ
         $jsum = false;
         $bjp = $ans = $sum = 0.0;
         $bj = 1.0;
-        for ($j = 2 * ($ord + (int) sqrt(40.0 * $ord)); $j > 0; --$j) {
+        for ($j = 2 * ($ord + (int) \sqrt(40.0 * $ord)); $j > 0; --$j) {
             $bjm = $j * $tox * $bj - $bjp;
             $bjp = $bj;
             $bj = $bjm;
-            if (abs($bj) > 1.0e+10) {
+            if (\abs($bj) > 1.0e+10) {
                 $bj *= 1.0e-10;
                 $bjp *= 1.0e-10;
                 $ans *= 1.0e-10;

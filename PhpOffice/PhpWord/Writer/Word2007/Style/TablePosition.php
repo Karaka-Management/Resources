@@ -47,11 +47,11 @@ class TablePosition extends AbstractStyle
         ];
         foreach ($properties as $property) {
             $method = 'get' . $property;
-            if (method_exists($style, $method)) {
+            if (\method_exists($style, $method)) {
                 $values[$property] = $style->$method();
             }
         }
-        $values = array_filter($values);
+        $values = \array_filter($values);
 
         if ($values) {
             $xmlWriter = $this->getXmlWriter();

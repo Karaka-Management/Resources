@@ -81,23 +81,23 @@ class Gnumeric extends BaseReader
     public function canRead(string $filename): bool
     {
         // Check if gzlib functions are available
-        if (File::testFileNoThrow($filename) && function_exists('gzread')) {
+        if (File::testFileNoThrow($filename) && \function_exists('gzread')) {
             // Read signature data (first 3 bytes)
-            $fh = fopen($filename, 'rb');
+            $fh = \fopen($filename, 'rb');
             if ($fh !== false) {
-                $data = fread($fh, 2);
-                fclose($fh);
+                $data = \fread($fh, 2);
+                \fclose($fh);
             }
         }
 
-        return isset($data) && $data === chr(0x1F) . chr(0x8B);
+        return isset($data) && $data === \chr(0x1F) . \chr(0x8B);
     }
 
-    private static function matchXml(XMLReader $xml, string $expectedLocalName): bool
+    private static function matchXml(\XMLReader $xml, string $expectedLocalName): bool
     {
         return $xml->namespaceURI === self::NAMESPACE_GNM
             && $xml->localName === $expectedLocalName
-            && $xml->nodeType === XMLReader::ELEMENT;
+            && $xml->nodeType === \XMLReader::ELEMENT;
     }
 
     /**
@@ -111,8 +111,8 @@ class Gnumeric extends BaseReader
     {
         File::assertFile($filename);
 
-        $xml = new XMLReader();
-        $xml->xml($this->securityScanner->scanFile('compress.zlib://' . realpath($filename)), null, Settings::getLibXmlLoaderOptions());
+        $xml = new \XMLReader();
+        $xml->xml($this->securityScanner->scanFile('compress.zlib://' . \realpath($filename)), null, Settings::getLibXmlLoaderOptions());
         $xml->setParserProperty(2, true);
 
         $worksheetNames = [];
@@ -140,8 +140,8 @@ class Gnumeric extends BaseReader
     {
         File::assertFile($filename);
 
-        $xml = new XMLReader();
-        $xml->xml($this->securityScanner->scanFile('compress.zlib://' . realpath($filename)), null, Settings::getLibXmlLoaderOptions());
+        $xml = new \XMLReader();
+        $xml->xml($this->securityScanner->scanFile('compress.zlib://' . \realpath($filename)), null, Settings::getLibXmlLoaderOptions());
         $xml->setParserProperty(2, true);
 
         $worksheetInfo = [];
@@ -185,13 +185,13 @@ class Gnumeric extends BaseReader
      */
     private function gzfileGetContents($filename)
     {
-        $file = @gzopen($filename, 'rb');
+        $file = @\gzopen($filename, 'rb');
         $data = '';
         if ($file !== false) {
-            while (!gzeof($file)) {
-                $data .= gzread($file, 1024);
+            while (!\gzeof($file)) {
+                $data .= \gzread($file, 1024);
             }
-            gzclose($file);
+            \gzclose($file);
         }
 
         return $data;
@@ -199,10 +199,10 @@ class Gnumeric extends BaseReader
 
     public static function gnumericMappings(): array
     {
-        return array_merge(self::$mappings, Styles::$mappings);
+        return \array_merge(self::$mappings, Styles::$mappings);
     }
 
-    private function processComments(SimpleXMLElement $sheet): void
+    private function processComments(\SimpleXMLElement $sheet): void
     {
         if ((!$this->readDataOnly) && (isset($sheet->Objects))) {
             foreach ($sheet->Objects->children(self::NAMESPACE_GNM) as $key => $comment) {
@@ -220,9 +220,9 @@ class Gnumeric extends BaseReader
     /**
      * @param mixed $value
      */
-    private static function testSimpleXml($value): SimpleXMLElement
+    private static function testSimpleXml($value): \SimpleXMLElement
     {
-        return ($value instanceof SimpleXMLElement) ? $value : new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><root></root>');
+        return ($value instanceof \SimpleXMLElement) ? $value : new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><root></root>');
     }
 
     /**
@@ -248,7 +248,7 @@ class Gnumeric extends BaseReader
 
         $gFileData = $this->gzfileGetContents($filename);
 
-        $xml2 = simplexml_load_string($this->securityScanner->scan($gFileData), 'SimpleXMLElement', Settings::getLibXmlLoaderOptions());
+        $xml2 = \simplexml_load_string($this->securityScanner->scan($gFileData), 'SimpleXMLElement', Settings::getLibXmlLoaderOptions());
         $xml = self::testSimpleXml($xml2);
 
         $gnmXML = $xml->children(self::NAMESPACE_GNM);
@@ -258,7 +258,7 @@ class Gnumeric extends BaseReader
         foreach ($gnmXML->Sheets->Sheet as $sheetOrNull) {
             $sheet = self::testSimpleXml($sheetOrNull);
             $worksheetName = (string) $sheet->Name;
-            if (is_array($this->loadSheetsOnly) && !in_array($worksheetName, $this->loadSheetsOnly, true)) {
+            if (\is_array($this->loadSheetsOnly) && !\in_array($worksheetName, $this->loadSheetsOnly, true)) {
                 continue;
             }
 
@@ -289,8 +289,8 @@ class Gnumeric extends BaseReader
                 $row = (int) $cellAttributes->Row + 1;
                 $column = (int) $cellAttributes->Col;
 
-                $maxRow = max($maxRow, $row);
-                $maxCol = max($maxCol, $column);
+                $maxRow = \max($maxRow, $row);
+                $maxCol = \max($maxCol, $column);
 
                 $column = Coordinate::stringFromColumnIndex($column + 1);
 
@@ -326,7 +326,7 @@ class Gnumeric extends BaseReader
         return $this->spreadsheet;
     }
 
-    private function setSelectedSheet(SimpleXMLElement $gnmXML): void
+    private function setSelectedSheet(\SimpleXMLElement $gnmXML): void
     {
         if (isset($gnmXML->UIData)) {
             $attributes = self::testSimpleXml($gnmXML->UIData->attributes());
@@ -335,7 +335,7 @@ class Gnumeric extends BaseReader
         }
     }
 
-    private function setSelectedCells(?SimpleXMLElement $sheet): void
+    private function setSelectedCells(?\SimpleXMLElement $sheet): void
     {
         if ($sheet !== null && isset($sheet->Selections)) {
             foreach ($sheet->Selections as $selection) {
@@ -357,19 +357,19 @@ class Gnumeric extends BaseReader
         }
     }
 
-    private function processMergedCells(?SimpleXMLElement $sheet): void
+    private function processMergedCells(?\SimpleXMLElement $sheet): void
     {
         //    Handle Merged Cells in this worksheet
         if ($sheet !== null && isset($sheet->MergedRegions)) {
             foreach ($sheet->MergedRegions->Merge as $mergeCells) {
-                if (strpos((string) $mergeCells, ':') !== false) {
+                if (\strpos((string) $mergeCells, ':') !== false) {
                     $this->spreadsheet->getActiveSheet()->mergeCells($mergeCells, Worksheet::MERGE_CELL_CONTENT_HIDE);
                 }
             }
         }
     }
 
-    private function processAutofilter(?SimpleXMLElement $sheet): void
+    private function processAutofilter(?\SimpleXMLElement $sheet): void
     {
         if ($sheet !== null && isset($sheet->Filters)) {
             foreach ($sheet->Filters->Filter as $autofilter) {
@@ -401,7 +401,7 @@ class Gnumeric extends BaseReader
         }
     }
 
-    private function processColumnLoop(int $whichColumn, int $maxCol, ?SimpleXMLElement $columnOverride, float $defaultWidth): int
+    private function processColumnLoop(int $whichColumn, int $maxCol, ?\SimpleXMLElement $columnOverride, float $defaultWidth): int
     {
         $columnOverride = self::testSimpleXml($columnOverride);
         $columnAttributes = self::testSimpleXml($columnOverride->attributes());
@@ -424,7 +424,7 @@ class Gnumeric extends BaseReader
         return $whichColumn;
     }
 
-    private function processColumnWidths(?SimpleXMLElement $sheet, int $maxCol): void
+    private function processColumnWidths(?\SimpleXMLElement $sheet, int $maxCol): void
     {
         if ((!$this->readDataOnly) && $sheet !== null && (isset($sheet->Cols))) {
             //    Column Widths
@@ -460,7 +460,7 @@ class Gnumeric extends BaseReader
         }
     }
 
-    private function processRowLoop(int $whichRow, int $maxRow, ?SimpleXMLElement $rowOverride, float $defaultHeight): int
+    private function processRowLoop(int $whichRow, int $maxRow, ?\SimpleXMLElement $rowOverride, float $defaultHeight): int
     {
         $rowOverride = self::testSimpleXml($rowOverride);
         $rowAttributes = self::testSimpleXml($rowOverride->attributes());
@@ -483,7 +483,7 @@ class Gnumeric extends BaseReader
         return $whichRow;
     }
 
-    private function processRowHeights(?SimpleXMLElement $sheet, int $maxRow): void
+    private function processRowHeights(?\SimpleXMLElement $sheet, int $maxRow): void
     {
         if ((!$this->readDataOnly) && $sheet !== null && (isset($sheet->Rows))) {
             //    Row Heights
@@ -507,19 +507,19 @@ class Gnumeric extends BaseReader
         }
     }
 
-    private function processDefinedNames(?SimpleXMLElement $gnmXML): void
+    private function processDefinedNames(?\SimpleXMLElement $gnmXML): void
     {
         //    Loop through definedNames (global named ranges)
         if ($gnmXML !== null && isset($gnmXML->Names)) {
             foreach ($gnmXML->Names->Name as $definedName) {
                 $name = (string) $definedName->name;
                 $value = (string) $definedName->value;
-                if (stripos($value, '#REF!') !== false) {
+                if (\stripos($value, '#REF!') !== false) {
                     continue;
                 }
 
                 [$worksheetName] = Worksheet::extractSheetTitle($value, true);
-                $worksheetName = trim($worksheetName, "'");
+                $worksheetName = \trim($worksheetName, "'");
                 $worksheet = $this->spreadsheet->getSheetByName($worksheetName);
                 // Worksheet might still be null if we're only loading selected sheets rather than the full spreadsheet
                 if ($worksheet !== null) {
@@ -538,9 +538,9 @@ class Gnumeric extends BaseReader
     }
 
     private function loadCell(
-        SimpleXMLElement $cell,
+        \SimpleXMLElement $cell,
         string $worksheetName,
-        SimpleXMLElement $cellAttributes,
+        \SimpleXMLElement $cellAttributes,
         string $column,
         int $row
     ): void {
@@ -568,7 +568,7 @@ class Gnumeric extends BaseReader
             $type = DataType::TYPE_FORMULA;
         } else {
             $vtype = (string) $ValueType;
-            if (array_key_exists($vtype, self::$mappings['dataType'])) {
+            if (\array_key_exists($vtype, self::$mappings['dataType'])) {
                 $type = self::$mappings['dataType'][$vtype];
             }
             if ($vtype === '20') {        //    Boolean

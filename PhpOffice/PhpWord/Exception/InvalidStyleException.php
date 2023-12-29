@@ -22,6 +22,6 @@ use InvalidArgumentException;
 /**
  * Exception used for when a style value is invalid.
  */
-class InvalidStyleException extends InvalidArgumentException
+class InvalidStyleException extends \InvalidArgumentException
 {
 }

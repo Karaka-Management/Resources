@@ -12,7 +12,7 @@ class StatisticalValidations
      */
     public static function validateFloat($value): float
     {
-        if (!is_numeric($value)) {
+        if (!\is_numeric($value)) {
             throw new Exception(ExcelError::VALUE());
         }
 
@@ -24,11 +24,11 @@ class StatisticalValidations
      */
     public static function validateInt($value): int
     {
-        if (!is_numeric($value)) {
+        if (!\is_numeric($value)) {
             throw new Exception(ExcelError::VALUE());
         }
 
-        return (int) floor((float) $value);
+        return (int) \floor((float) $value);
     }
 
     /**
@@ -36,7 +36,7 @@ class StatisticalValidations
      */
     public static function validateBool($value): bool
     {
-        if (!is_bool($value) && !is_numeric($value)) {
+        if (!\is_bool($value) && !\is_numeric($value)) {
             throw new Exception(ExcelError::VALUE());
         }
 

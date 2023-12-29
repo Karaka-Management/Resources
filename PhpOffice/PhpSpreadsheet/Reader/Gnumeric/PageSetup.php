@@ -20,7 +20,7 @@ class PageSetup
         $this->spreadsheet = $spreadsheet;
     }
 
-    public function printInformation(SimpleXMLElement $sheet): self
+    public function printInformation(\SimpleXMLElement $sheet): self
     {
         if (isset($sheet->PrintInformation, $sheet->PrintInformation[0])) {
             $printInformation = $sheet->PrintInformation[0];
@@ -42,7 +42,7 @@ class PageSetup
         return $this;
     }
 
-    public function sheetMargins(SimpleXMLElement $sheet): self
+    public function sheetMargins(\SimpleXMLElement $sheet): self
     {
         if (isset($sheet->PrintInformation, $sheet->PrintInformation->Margins)) {
             $marginSet = [
@@ -62,7 +62,7 @@ class PageSetup
         return $this;
     }
 
-    private function buildMarginSet(SimpleXMLElement $sheet, array $marginSet): array
+    private function buildMarginSet(\SimpleXMLElement $sheet, array $marginSet): array
     {
         foreach ($sheet->PrintInformation->Margins->children(Gnumeric::NAMESPACE_GNM) as $key => $margin) {
             $marginAttributes = $margin->attributes();

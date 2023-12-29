@@ -34,7 +34,7 @@ class Complex
      */
     public static function COMPLEX($realNumber = 0.0, $imaginary = 0.0, $suffix = 'i')
     {
-        if (is_array($realNumber) || is_array($imaginary) || is_array($suffix)) {
+        if (\is_array($realNumber) || \is_array($imaginary) || \is_array($suffix)) {
             return self::evaluateArrayArguments([self::class, __FUNCTION__], $realNumber, $imaginary, $suffix);
         }
 
@@ -76,7 +76,7 @@ class Complex
      */
     public static function IMAGINARY($complexNumber)
     {
-        if (is_array($complexNumber)) {
+        if (\is_array($complexNumber)) {
             return self::evaluateSingleArgumentArray([self::class, __FUNCTION__], $complexNumber);
         }
 
@@ -106,7 +106,7 @@ class Complex
      */
     public static function IMREAL($complexNumber)
     {
-        if (is_array($complexNumber)) {
+        if (\is_array($complexNumber)) {
             return self::evaluateSingleArgumentArray([self::class, __FUNCTION__], $complexNumber);
         }
 

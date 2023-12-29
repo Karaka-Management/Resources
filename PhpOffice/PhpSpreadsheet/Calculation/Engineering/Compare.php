@@ -31,7 +31,7 @@ class Compare
      */
     public static function DELTA($a, $b = 0.0)
     {
-        if (is_array($a) || is_array($b)) {
+        if (\is_array($a) || \is_array($b)) {
             return self::evaluateArrayArguments([self::class, __FUNCTION__], $a, $b);
         }
 
@@ -42,7 +42,7 @@ class Compare
             return $e->getMessage();
         }
 
-        return (int) (abs($a - $b) < 1.0e-15);
+        return (int) (\abs($a - $b) < 1.0e-15);
     }
 
     /**
@@ -66,7 +66,7 @@ class Compare
      */
     public static function GESTEP($number, $step = 0.0)
     {
-        if (is_array($number) || is_array($step)) {
+        if (\is_array($number) || \is_array($step)) {
             return self::evaluateArrayArguments([self::class, __FUNCTION__], $number, $step);
         }
 

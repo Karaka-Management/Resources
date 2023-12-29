@@ -120,10 +120,10 @@ class Numbering extends AbstractStyle
      */
     public function setLevels($values)
     {
-        if (is_array($values)) {
+        if (\is_array($values)) {
             foreach ($values as $key => $value) {
                 $numberingLevel = new NumberingLevel();
-                if (is_array($value)) {
+                if (\is_array($value)) {
                     $numberingLevel->setStyleByArray($value);
                     $numberingLevel->setLevel($key);
                 }

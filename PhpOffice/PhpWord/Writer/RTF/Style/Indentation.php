@@ -36,9 +36,9 @@ class Indentation extends AbstractStyle
             return '';
         }
 
-        $content = '\fi' . round($style->getFirstLine());
-        $content .= '\li' . round($style->getLeft());
-        $content .= '\ri' . round($style->getRight());
+        $content = '\fi' . \round($style->getFirstLine());
+        $content .= '\li' . \round($style->getLeft());
+        $content .= '\ri' . \round($style->getRight());
 
         return $content . ' ';
     }

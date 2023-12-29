@@ -76,13 +76,13 @@ abstract class AbstractPart extends Word2007AbstractPart
         $fontTable = [];
         $styles = Style::getStyles();
         $numFonts = 0;
-        if (count($styles) > 0) {
+        if (\count($styles) > 0) {
             foreach ($styles as $style) {
                 // Font
                 if ($style instanceof Font) {
                     ++$numFonts;
                     $name = $style->getName();
-                    if (!in_array($name, $fontTable)) {
+                    if (!\in_array($name, $fontTable)) {
                         $fontTable[] = $name;
 
                         // style:font-face
@@ -94,7 +94,7 @@ abstract class AbstractPart extends Word2007AbstractPart
                 }
             }
         }
-        if (!in_array(Settings::getDefaultFontName(), $fontTable)) {
+        if (!\in_array(Settings::getDefaultFontName(), $fontTable)) {
             $xmlWriter->startElement('style:font-face');
             $xmlWriter->writeAttribute('style:name', Settings::getDefaultFontName());
             $xmlWriter->writeAttribute('svg:font-family', Settings::getDefaultFontName());

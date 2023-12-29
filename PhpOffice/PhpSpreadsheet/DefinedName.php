@@ -99,21 +99,21 @@ abstract class DefinedName
 
     public static function testIfFormula(string $value): bool
     {
-        if (substr($value, 0, 1) === '=') {
-            $value = substr($value, 1);
+        if (\substr($value, 0, 1) === '=') {
+            $value = \substr($value, 1);
         }
 
-        if (is_numeric($value)) {
+        if (\is_numeric($value)) {
             return true;
         }
 
         $segMatcher = false;
-        foreach (explode("'", $value) as $subVal) {
+        foreach (\explode("'", $value) as $subVal) {
             //    Only test in alternate array entries (the non-quoted blocks)
             $segMatcher = $segMatcher === false;
             if (
                 $segMatcher &&
-                (preg_match('/' . self::REGEXP_IDENTIFY_FORMULA . '/miu', $subVal))
+                (\preg_match('/' . self::REGEXP_IDENTIFY_FORMULA . '/miu', $subVal))
             ) {
                 return true;
             }
@@ -261,9 +261,9 @@ abstract class DefinedName
      */
     public function __clone()
     {
-        $vars = get_object_vars($this);
+        $vars = \get_object_vars($this);
         foreach ($vars as $key => $value) {
-            if (is_object($value)) {
+            if (\is_object($value)) {
                 $this->$key = clone $value;
             } else {
                 $this->$key = $value;

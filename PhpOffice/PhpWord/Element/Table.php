@@ -82,7 +82,7 @@ class Table extends AbstractElement
      */
     public function addCell($width = null, $style = null)
     {
-        $index = count($this->rows) - 1;
+        $index = \count($this->rows) - 1;
         $row = $this->rows[$index];
         $cell = $row->addCell($width, $style);
 
@@ -138,11 +138,11 @@ class Table extends AbstractElement
     {
         $columnCount = 0;
 
-        $rowCount = count($this->rows);
+        $rowCount = \count($this->rows);
         for ($i = 0; $i < $rowCount; ++$i) {
             /** @var \PhpOffice\PhpWord\Element\Row $row Type hint */
             $row = $this->rows[$i];
-            $cellCount = count($row->getCells());
+            $cellCount = \count($row->getCells());
             if ($columnCount < $cellCount) {
                 $columnCount = $cellCount;
             }
@@ -162,7 +162,7 @@ class Table extends AbstractElement
 
         foreach ($this->rows as $row) {
             $cells = $row->getCells();
-            if (count($cells) <= count($cellWidths)) {
+            if (\count($cells) <= \count($cellWidths)) {
                 continue;
             }
             $cellWidths = [];

@@ -48,7 +48,7 @@ class Drawing extends BaseDrawing
      */
     public function getFilename()
     {
-        return basename($this->path);
+        return \basename($this->path);
     }
 
     /**
@@ -56,7 +56,7 @@ class Drawing extends BaseDrawing
      */
     public function getIndexedFilename(): string
     {
-        return md5($this->path) . '.' . $this->getExtension();
+        return \md5($this->path) . '.' . $this->getExtension();
     }
 
     /**
@@ -66,9 +66,9 @@ class Drawing extends BaseDrawing
      */
     public function getExtension()
     {
-        $exploded = explode('.', basename($this->path));
+        $exploded = \explode('.', \basename($this->path));
 
-        return $exploded[count($exploded) - 1];
+        return $exploded[\count($exploded) - 1];
     }
 
     /**
@@ -78,11 +78,11 @@ class Drawing extends BaseDrawing
      */
     public function getMediaFilename()
     {
-        if (!array_key_exists($this->type, self::IMAGE_TYPES_CONVERTION_MAP)) {
+        if (!\array_key_exists($this->type, self::IMAGE_TYPES_CONVERTION_MAP)) {
             throw new PhpSpreadsheetException('Unsupported image type in comment background. Supported types: PNG, JPEG, BMP, GIF.');
         }
 
-        return sprintf('image%d%s', $this->getImageIndex(), $this->getImageFileExtensionForSave());
+        return \sprintf('image%d%s', $this->getImageIndex(), $this->getImageFileExtensionForSave());
     }
 
     /**
@@ -100,32 +100,32 @@ class Drawing extends BaseDrawing
      *
      * @param string $path File path
      * @param bool $verifyFile Verify file
-     * @param ZipArchive $zip Zip archive instance
+     * @param \ZipArchive $zip Zip archive instance
      *
      * @return $this
      */
     public function setPath($path, $verifyFile = true, $zip = null)
     {
-        if ($verifyFile && preg_match('~^data:image/[a-z]+;base64,~', $path) !== 1) {
+        if ($verifyFile && \preg_match('~^data:image/[a-z]+;base64,~', $path) !== 1) {
             // Check if a URL has been passed. https://stackoverflow.com/a/2058596/1252979
-            if (filter_var($path, FILTER_VALIDATE_URL)) {
+            if (\filter_var($path, FILTER_VALIDATE_URL)) {
                 $this->path = $path;
                 // Implicit that it is a URL, rather store info than running check above on value in other places.
                 $this->isUrl = true;
-                $imageContents = file_get_contents($path);
-                $filePath = tempnam(sys_get_temp_dir(), 'Drawing');
+                $imageContents = \file_get_contents($path);
+                $filePath = \tempnam(\sys_get_temp_dir(), 'Drawing');
                 if ($filePath) {
-                    file_put_contents($filePath, $imageContents);
-                    if (file_exists($filePath)) {
+                    \file_put_contents($filePath, $imageContents);
+                    if (\file_exists($filePath)) {
                         $this->setSizesAndType($filePath);
-                        unlink($filePath);
+                        \unlink($filePath);
                     }
                 }
-            } elseif (file_exists($path)) {
+            } elseif (\file_exists($path)) {
                 $this->path = $path;
                 $this->setSizesAndType($path);
-            } elseif ($zip instanceof ZipArchive) {
-                $zipPath = explode('#', $path)[1];
+            } elseif ($zip instanceof \ZipArchive) {
+                $zipPath = \explode('#', $path)[1];
                 if ($zip->locateName($zipPath) !== false) {
                     $this->path = $path;
                     $this->setSizesAndType($path);
@@ -167,7 +167,7 @@ class Drawing extends BaseDrawing
      */
     public function getHashCode()
     {
-        return md5(
+        return \md5(
             $this->path .
             parent::getHashCode() .
             __CLASS__
@@ -179,7 +179,7 @@ class Drawing extends BaseDrawing
      */
     public function getImageTypeForSave(): int
     {
-        if (!array_key_exists($this->type, self::IMAGE_TYPES_CONVERTION_MAP)) {
+        if (!\array_key_exists($this->type, self::IMAGE_TYPES_CONVERTION_MAP)) {
             throw new PhpSpreadsheetException('Unsupported image type in comment background. Supported types: PNG, JPEG, BMP, GIF.');
         }
 
@@ -191,11 +191,11 @@ class Drawing extends BaseDrawing
      */
     public function getImageFileExtensionForSave(bool $includeDot = true): string
     {
-        if (!array_key_exists($this->type, self::IMAGE_TYPES_CONVERTION_MAP)) {
+        if (!\array_key_exists($this->type, self::IMAGE_TYPES_CONVERTION_MAP)) {
             throw new PhpSpreadsheetException('Unsupported image type in comment background. Supported types: PNG, JPEG, BMP, GIF.');
         }
 
-        $result = image_type_to_extension(self::IMAGE_TYPES_CONVERTION_MAP[$this->type], $includeDot);
+        $result = \image_type_to_extension(self::IMAGE_TYPES_CONVERTION_MAP[$this->type], $includeDot);
 
         return "$result";
     }
@@ -205,10 +205,10 @@ class Drawing extends BaseDrawing
      */
     public function getImageMimeType(): string
     {
-        if (!array_key_exists($this->type, self::IMAGE_TYPES_CONVERTION_MAP)) {
+        if (!\array_key_exists($this->type, self::IMAGE_TYPES_CONVERTION_MAP)) {
             throw new PhpSpreadsheetException('Unsupported image type in comment background. Supported types: PNG, JPEG, BMP, GIF.');
         }
 
-        return image_type_to_mime_type(self::IMAGE_TYPES_CONVERTION_MAP[$this->type]);
+        return \image_type_to_mime_type(self::IMAGE_TYPES_CONVERTION_MAP[$this->type]);
     }
 }

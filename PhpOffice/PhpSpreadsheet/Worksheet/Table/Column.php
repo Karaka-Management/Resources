@@ -87,7 +87,7 @@ class Column
     public function setColumnIndex($column): self
     {
         // Uppercase coordinate
-        $column = strtoupper($column);
+        $column = \strtoupper($column);
         if ($this->table !== null) {
             $this->table->isColumnInRange($column);
         }
@@ -225,14 +225,14 @@ class Column
 
     private static function updateStructuredReferencesInCells(Worksheet $worksheet, string $oldTitle, string $newTitle): void
     {
-        $pattern = '/\[(@?)' . preg_quote($oldTitle) . '\]/mui';
+        $pattern = '/\[(@?)' . \preg_quote($oldTitle) . '\]/mui';
 
         foreach ($worksheet->getCoordinates(false) as $coordinate) {
             $cell = $worksheet->getCell($coordinate);
             if ($cell->getDataType() === DataType::TYPE_FORMULA) {
                 $formula = $cell->getValue();
-                if (preg_match($pattern, $formula) === 1) {
-                    $formula = preg_replace($pattern, "[$1{$newTitle}]", $formula);
+                if (\preg_match($pattern, $formula) === 1) {
+                    $formula = \preg_replace($pattern, "[$1{$newTitle}]", $formula);
                     $cell->setValueExplicit($formula, DataType::TYPE_FORMULA);
                 }
             }
@@ -241,12 +241,12 @@ class Column
 
     private static function updateStructuredReferencesInNamedFormulae(Spreadsheet $spreadsheet, string $oldTitle, string $newTitle): void
     {
-        $pattern = '/\[(@?)' . preg_quote($oldTitle) . '\]/mui';
+        $pattern = '/\[(@?)' . \preg_quote($oldTitle) . '\]/mui';
 
         foreach ($spreadsheet->getNamedFormulae() as $namedFormula) {
             $formula = $namedFormula->getValue();
-            if (preg_match($pattern, $formula) === 1) {
-                $formula = preg_replace($pattern, "[$1{$newTitle}]", $formula);
+            if (\preg_match($pattern, $formula) === 1) {
+                $formula = \preg_replace($pattern, "[$1{$newTitle}]", $formula);
                 $namedFormula->setValue($formula); // @phpstan-ignore-line
             }
         }

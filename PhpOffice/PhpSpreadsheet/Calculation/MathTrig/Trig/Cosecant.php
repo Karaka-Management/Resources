@@ -23,7 +23,7 @@ class Cosecant
      */
     public static function csc($angle)
     {
-        if (is_array($angle)) {
+        if (\is_array($angle)) {
             return self::evaluateSingleArgumentArray([self::class, __FUNCTION__], $angle);
         }
 
@@ -33,7 +33,7 @@ class Cosecant
             return $e->getMessage();
         }
 
-        return Helpers::verySmallDenominator(1.0, sin($angle));
+        return Helpers::verySmallDenominator(1.0, \sin($angle));
     }
 
     /**
@@ -49,7 +49,7 @@ class Cosecant
      */
     public static function csch($angle)
     {
-        if (is_array($angle)) {
+        if (\is_array($angle)) {
             return self::evaluateSingleArgumentArray([self::class, __FUNCTION__], $angle);
         }
 
@@ -59,6 +59,6 @@ class Cosecant
             return $e->getMessage();
         }
 
-        return Helpers::verySmallDenominator(1.0, sinh($angle));
+        return Helpers::verySmallDenominator(1.0, \sinh($angle));
     }
 }

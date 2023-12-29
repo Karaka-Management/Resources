@@ -18,7 +18,7 @@ class ErfC
      *    Note: In Excel 2007 or earlier, if you input a negative value for the lower bound argument,
      *        the function would return a #NUM! error. However, in Excel 2010, the function algorithm was
      *        improved, so that it can now calculate the function for both positive and negative x values.
-     *            PhpSpreadsheet follows Excel 2010 behaviour, and accepts nagative arguments.
+     *            PhpSpreadsheet follows Excel 2010 behavior, and accepts nagative arguments.
      *
      *    Excel Function:
      *        ERFC(x)
@@ -32,11 +32,11 @@ class ErfC
      */
     public static function ERFC($value)
     {
-        if (is_array($value)) {
+        if (\is_array($value)) {
             return self::evaluateSingleArgumentArray([self::class, __FUNCTION__], $value);
         }
 
-        if (is_numeric($value)) {
+        if (\is_numeric($value)) {
             return self::erfcValue($value);
         }
 
@@ -50,7 +50,7 @@ class ErfC
 
     private static function erfcValue($value)
     {
-        if (abs($value) < 2.2) {
+        if (\abs($value) < 2.2) {
             return 1 - Erf::erfValue($value);
         }
         if ($value < 0) {
@@ -70,8 +70,8 @@ class ErfC
             $n += 0.5;
             $q1 = $q2;
             $q2 = $b / $d;
-        } while ((abs($q1 - $q2) / $q2) > Functions::PRECISION);
+        } while ((\abs($q1 - $q2) / $q2) > Functions::PRECISION);
 
-        return self::$oneSqrtPi * exp(-$value * $value) * $q2;
+        return self::$oneSqrtPi * \exp(-$value * $value) * $q2;
     }
 }

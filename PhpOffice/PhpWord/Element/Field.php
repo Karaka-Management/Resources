@@ -133,7 +133,7 @@ class Field extends AbstractElement
     {
         if ($style instanceof Font) {
             $this->fontStyle = $style;
-        } elseif (is_array($style)) {
+        } elseif (\is_array($style)) {
             $this->fontStyle = new Font('text');
             $this->fontStyle->setStyleByArray($style);
         } elseif (null === $style) {
@@ -186,7 +186,7 @@ class Field extends AbstractElement
             if (isset($this->fieldsArray[$type])) {
                 $this->type = $type;
             } else {
-                throw new InvalidArgumentException("Invalid type '$type'");
+                throw new \InvalidArgumentException("Invalid type '$type'");
             }
         }
 
@@ -212,13 +212,13 @@ class Field extends AbstractElement
      */
     public function setProperties($properties = [])
     {
-        if (is_array($properties)) {
-            foreach (array_keys($properties) as $propkey) {
+        if (\is_array($properties)) {
+            foreach (\array_keys($properties) as $propkey) {
                 if (!(isset($this->fieldsArray[$this->type]['properties'][$propkey]))) {
-                    throw new InvalidArgumentException("Invalid property '$propkey'");
+                    throw new \InvalidArgumentException("Invalid property '$propkey'");
                 }
             }
-            $this->properties = array_merge($this->properties, $properties);
+            $this->properties = \array_merge($this->properties, $properties);
         }
 
         return $this->properties;
@@ -243,13 +243,13 @@ class Field extends AbstractElement
      */
     public function setOptions($options = [])
     {
-        if (is_array($options)) {
-            foreach (array_keys($options) as $optionkey) {
-                if (!(isset($this->fieldsArray[$this->type]['options'][$optionkey])) && substr($optionkey, 0, 1) !== '\\') {
-                    throw new InvalidArgumentException("Invalid option '$optionkey', possible values are " . implode(', ', $this->fieldsArray[$this->type]['options']));
+        if (\is_array($options)) {
+            foreach (\array_keys($options) as $optionkey) {
+                if (!(isset($this->fieldsArray[$this->type]['options'][$optionkey])) && \substr($optionkey, 0, 1) !== '\\') {
+                    throw new \InvalidArgumentException("Invalid option '$optionkey', possible values are " . \implode(', ', $this->fieldsArray[$this->type]['options']));
                 }
             }
-            $this->options = array_merge($this->options, $options);
+            $this->options = \array_merge($this->options, $options);
         }
 
         return $this->options;
@@ -275,10 +275,10 @@ class Field extends AbstractElement
     public function setText($text = null)
     {
         if (isset($text)) {
-            if (is_string($text) || $text instanceof TextRun) {
+            if (\is_string($text) || $text instanceof TextRun) {
                 $this->text = $text;
             } else {
-                throw new InvalidArgumentException('Invalid text');
+                throw new \InvalidArgumentException('Invalid text');
             }
         }
 

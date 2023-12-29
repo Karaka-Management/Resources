@@ -207,8 +207,8 @@ class RichText extends AbstractShape implements ComparableInterface
      */
     public function setActiveParagraph(int $index = 0): Paragraph
     {
-        if ($index >= count($this->richTextParagraphs)) {
-            throw new OutOfBoundsException(0, count($this->richTextParagraphs), $index);
+        if ($index >= \count($this->richTextParagraphs)) {
+            throw new OutOfBoundsException(0, \count($this->richTextParagraphs), $index);
         }
 
         $this->activeParagraph = $index;
@@ -223,8 +223,8 @@ class RichText extends AbstractShape implements ComparableInterface
      */
     public function getParagraph(int $index = 0): Paragraph
     {
-        if ($index >= count($this->richTextParagraphs)) {
-            throw new OutOfBoundsException(0, count($this->richTextParagraphs), $index);
+        if ($index >= \count($this->richTextParagraphs)) {
+            throw new OutOfBoundsException(0, \count($this->richTextParagraphs), $index);
         }
 
         return $this->richTextParagraphs[$index];
@@ -235,7 +235,7 @@ class RichText extends AbstractShape implements ComparableInterface
      */
     public function createParagraph(): Paragraph
     {
-        $numParagraphs = count($this->richTextParagraphs);
+        $numParagraphs = \count($this->richTextParagraphs);
         if ($numParagraphs > 0) {
             $alignment = clone $this->getActiveParagraph()->getAlignment();
             $font = clone $this->getActiveParagraph()->getFont();
@@ -243,7 +243,7 @@ class RichText extends AbstractShape implements ComparableInterface
         }
 
         $this->richTextParagraphs[] = new Paragraph();
-        $this->activeParagraph = count($this->richTextParagraphs) - 1;
+        $this->activeParagraph = \count($this->richTextParagraphs) - 1;
 
         if (isset($alignment)) {
             $this->getActiveParagraph()->setAlignment($alignment);
@@ -351,7 +351,7 @@ class RichText extends AbstractShape implements ComparableInterface
     public function setParagraphs(array $paragraphs = []): self
     {
         $this->richTextParagraphs = $paragraphs;
-        $this->activeParagraph = count($this->richTextParagraphs) - 1;
+        $this->activeParagraph = \count($this->richTextParagraphs) - 1;
 
         return $this;
     }
@@ -419,11 +419,11 @@ class RichText extends AbstractShape implements ComparableInterface
     {
         $this->autoFit = $value;
 
-        if (!is_null($fontScale)) {
+        if (!\is_null($fontScale)) {
             $this->fontScale = $fontScale;
         }
 
-        if (!is_null($lnSpcReduction)) {
+        if (!\is_null($lnSpcReduction)) {
             $this->lnSpcReduction = $lnSpcReduction;
         }
 
@@ -722,7 +722,7 @@ class RichText extends AbstractShape implements ComparableInterface
             $hashElements .= $element->getHashCode();
         }
 
-        return md5(
+        return \md5(
             $hashElements
             . $this->wrap
             . $this->autoFit

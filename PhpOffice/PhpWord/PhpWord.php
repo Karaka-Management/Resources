@@ -105,7 +105,7 @@ class PhpWord
      */
     public function __call($function, $args)
     {
-        $function = strtolower($function);
+        $function = \strtolower($function);
 
         $getCollection = [];
         $addCollection = [];
@@ -113,25 +113,25 @@ class PhpWord
 
         $collections = ['Bookmark', 'Title', 'Footnote', 'Endnote', 'Chart', 'Comment'];
         foreach ($collections as $collection) {
-            $getCollection[] = strtolower("get{$collection}s");
-            $addCollection[] = strtolower("add{$collection}");
+            $getCollection[] = \strtolower("get{$collection}s");
+            $addCollection[] = \strtolower("add{$collection}");
         }
 
         $styles = ['Paragraph', 'Font', 'Table', 'Numbering', 'Link', 'Title'];
         foreach ($styles as $style) {
-            $addStyle[] = strtolower("add{$style}Style");
+            $addStyle[] = \strtolower("add{$style}Style");
         }
 
         // Run get collection method
-        if (in_array($function, $getCollection)) {
-            $key = ucfirst(str_replace('get', '', $function));
+        if (\in_array($function, $getCollection)) {
+            $key = \ucfirst(\str_replace('get', '', $function));
 
             return $this->collections[$key];
         }
 
         // Run add collection item method
-        if (in_array($function, $addCollection)) {
-            $key = ucfirst(str_replace('add', '', $function) . 's');
+        if (\in_array($function, $addCollection)) {
+            $key = \ucfirst(\str_replace('add', '', $function) . 's');
 
             /** @var \PhpOffice\PhpWord\Collection\AbstractCollection $collectionObject */
             $collectionObject = $this->collections[$key];
@@ -140,12 +140,12 @@ class PhpWord
         }
 
         // Run add style method
-        if (in_array($function, $addStyle)) {
-            return forward_static_call_array(['PhpOffice\\PhpWord\\Style', $function], $args);
+        if (\in_array($function, $addStyle)) {
+            return \forward_static_call_array(['PhpOffice\\PhpWord\\Style', $function], $args);
         }
 
         // Exception
-        throw new BadMethodCallException("Method $function is not defined.");
+        throw new \BadMethodCallException("Method $function is not defined.");
     }
 
     /**
@@ -201,7 +201,7 @@ class PhpWord
      */
     public function getSection($index)
     {
-        if (array_key_exists($index, $this->sections)) {
+        if (\array_key_exists($index, $this->sections)) {
             return $this->sections[$index];
         }
 
@@ -217,7 +217,7 @@ class PhpWord
      */
     public function addSection($style = null)
     {
-        $section = new Section(count($this->sections) + 1, $style);
+        $section = new Section(\count($this->sections) + 1, $style);
         $section->setPhpWord($this);
         $this->sections[] = $section;
 
@@ -233,7 +233,7 @@ class PhpWord
      */
     public function sortSections($sorter): void
     {
-        usort($this->sections, $sorter);
+        \usort($this->sections, $sorter);
     }
 
     /**
@@ -312,12 +312,12 @@ class PhpWord
         $writer = IOFactory::createWriter($this, $format);
 
         if ($download === true) {
-            header('Content-Description: File Transfer');
-            header('Content-Disposition: attachment; filename="' . $filename . '"');
-            header('Content-Type: ' . $mime[$format]);
-            header('Content-Transfer-Encoding: binary');
-            header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
-            header('Expires: 0');
+            \header('Content-Description: File Transfer');
+            \header('Content-Disposition: attachment; filename="' . $filename . '"');
+            \header('Content-Type: ' . $mime[$format]);
+            \header('Content-Transfer-Encoding: binary');
+            \header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+            \header('Expires: 0');
             $filename = 'php://output'; // Change filename to force download
         }
 

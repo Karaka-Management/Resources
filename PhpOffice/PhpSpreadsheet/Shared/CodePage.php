@@ -71,7 +71,7 @@ class CodePage
 
     public static function validate(string $codePage): bool
     {
-        return in_array($codePage, self::$pageArray, true);
+        return \in_array($codePage, self::$pageArray, true);
     }
 
     /**
@@ -84,11 +84,11 @@ class CodePage
      */
     public static function numberToName(int $codePage): string
     {
-        if (array_key_exists($codePage, self::$pageArray)) {
+        if (\array_key_exists($codePage, self::$pageArray)) {
             $value = self::$pageArray[$codePage];
-            if (is_array($value)) {
+            if (\is_array($value)) {
                 foreach ($value as $encoding) {
-                    if (@iconv('UTF-8', $encoding, ' ') !== false) {
+                    if (@\iconv('UTF-8', $encoding, ' ') !== false) {
                         self::$pageArray[$codePage] = $encoding;
 
                         return $encoding;

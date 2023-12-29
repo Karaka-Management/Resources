@@ -60,12 +60,12 @@ class DomPDF extends AbstractRenderer implements WriterInterface
 
         //  Create PDF
         $pdf = $this->createExternalWriterInstance();
-        $pdf->setPaper(strtolower($paperSize), $orientation);
-        $pdf->loadHtml(str_replace(PHP_EOL, '', $this->getContent()));
+        $pdf->setPaper(\strtolower($paperSize), $orientation);
+        $pdf->loadHtml(\str_replace(PHP_EOL, '', $this->getContent()));
         $pdf->render();
 
         //  Write to file
-        fwrite($fileHandle, $pdf->output());
+        \fwrite($fileHandle, $pdf->output());
 
         parent::restoreStateAfterSave($fileHandle);
     }

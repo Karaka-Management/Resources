@@ -100,9 +100,9 @@ class Color implements ComparableInterface
     public function getAlpha(): int
     {
         $alpha = 100;
-        if (strlen($this->argb) >= 6) {
-            $dec = hexdec(substr($this->argb, 0, 2));
-            $alpha = (int) number_format(($dec / 255) * 100, 0);
+        if (\strlen($this->argb) >= 6) {
+            $dec = \hexdec(\substr($this->argb, 0, 2));
+            $alpha = (int) \number_format(($dec / 255) * 100, 0);
         }
 
         return $alpha;
@@ -123,10 +123,10 @@ class Color implements ComparableInterface
         if ($alpha > 100) {
             $alpha = 100;
         }
-        $alpha = round(($alpha / 100) * 255);
-        $alpha = dechex((int) $alpha);
-        $alpha = str_pad($alpha, 2, '0', STR_PAD_LEFT);
-        $this->argb = $alpha . substr($this->argb, 2);
+        $alpha = \round(($alpha / 100) * 255);
+        $alpha = \dechex((int) $alpha);
+        $alpha = \str_pad($alpha, 2, '0', STR_PAD_LEFT);
+        $this->argb = $alpha . \substr($this->argb, 2);
 
         return $this;
     }
@@ -138,10 +138,10 @@ class Color implements ComparableInterface
      */
     public function getRGB()
     {
-        if (6 == strlen($this->argb)) {
+        if (6 == \strlen($this->argb)) {
             return $this->argb;
         } else {
-            return substr($this->argb, 2);
+            return \substr($this->argb, 2);
         }
     }
 
@@ -173,7 +173,7 @@ class Color implements ComparableInterface
      */
     public function getHashCode(): string
     {
-        return md5(
+        return \md5(
             $this->argb
             . __CLASS__
         );

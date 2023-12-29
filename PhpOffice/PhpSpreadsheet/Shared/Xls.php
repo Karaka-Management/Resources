@@ -73,7 +73,7 @@ class Xls
             // then we have a row dimension
             $rowDimension = $rowDimensions[$row];
             $rowHeight = $rowDimension->getRowHeight();
-            $pixelRowHeight = (int) ceil(4 * $rowHeight / 3); // here we assume Arial 10
+            $pixelRowHeight = (int) \ceil(4 * $rowHeight / 3); // here we assume Arial 10
         } elseif ($worksheet->getDefaultRowDimension()->getRowHeight() != -1) {
             // then we have a default row dimension with explicit height
             $defaultRowDimension = $worksheet->getDefaultRowDimension();
@@ -117,10 +117,10 @@ class Xls
         }
 
         // correct for offsetX in startcell
-        $distanceX -= (int) floor(self::sizeCol($worksheet, $startColumn) * $startOffsetX / 1024);
+        $distanceX -= (int) \floor(self::sizeCol($worksheet, $startColumn) * $startOffsetX / 1024);
 
         // correct for offsetX in endcell
-        $distanceX -= (int) floor(self::sizeCol($worksheet, $endColumn) * (1 - $endOffsetX / 1024));
+        $distanceX -= (int) \floor(self::sizeCol($worksheet, $endColumn) * (1 - $endOffsetX / 1024));
 
         return $distanceX;
     }
@@ -146,10 +146,10 @@ class Xls
         }
 
         // correct for offsetX in startcell
-        $distanceY -= (int) floor(self::sizeRow($worksheet, $startRow) * $startOffsetY / 256);
+        $distanceY -= (int) \floor(self::sizeRow($worksheet, $startRow) * $startOffsetY / 256);
 
         // correct for offsetX in endcell
-        $distanceY -= (int) floor(self::sizeRow($worksheet, $endRow) * (1 - $endOffsetY / 256));
+        $distanceY -= (int) \floor(self::sizeRow($worksheet, $endRow) * (1 - $endOffsetY / 256));
 
         return $distanceY;
     }

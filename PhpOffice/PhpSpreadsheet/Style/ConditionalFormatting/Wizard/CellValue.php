@@ -66,7 +66,7 @@ class CellValue extends WizardAbstract implements WizardInterface
      */
     protected function operand(int $index, $operand, string $operandValueType = Wizard::VALUE_TYPE_LITERAL): void
     {
-        if (is_string($operand)) {
+        if (\is_string($operand)) {
             $operand = $this->validateOperand($operand, $operandValueType);
         }
 
@@ -81,9 +81,9 @@ class CellValue extends WizardAbstract implements WizardInterface
      */
     protected function wrapValue($value, string $operandValueType)
     {
-        if (!is_numeric($value) && !is_bool($value) && null !== $value) {
+        if (!\is_numeric($value) && !\is_bool($value) && null !== $value) {
             if ($operandValueType === Wizard::VALUE_TYPE_LITERAL) {
-                return '"' . str_replace('"', '""', $value) . '"';
+                return '"' . \str_replace('"', '""', $value) . '"';
             }
 
             return $this->cellConditionCheck($value);
@@ -91,7 +91,7 @@ class CellValue extends WizardAbstract implements WizardInterface
 
         if (null === $value) {
             $value = 'NULL';
-        } elseif (is_bool($value)) {
+        } elseif (\is_bool($value)) {
             $value = $value ? 'TRUE' : 'FALSE';
         }
 
@@ -103,7 +103,7 @@ class CellValue extends WizardAbstract implements WizardInterface
         if (!isset(self::RANGE_OPERATORS[$this->operator])) {
             unset($this->operand[1], $this->operandValueType[1]);
         }
-        $values = array_map([$this, 'wrapValue'], $this->operand, $this->operandValueType);
+        $values = \array_map([$this, 'wrapValue'], $this->operand, $this->operandValueType);
 
         $conditional = new Conditional();
         $conditional->setConditionType(Conditional::CONDITION_CELLIS);
@@ -117,11 +117,11 @@ class CellValue extends WizardAbstract implements WizardInterface
 
     protected static function unwrapString(string $condition): string
     {
-        if ((strpos($condition, '"') === 0) && (strpos(strrev($condition), '"') === 0)) {
-            $condition = substr($condition, 1, -1);
+        if ((\strpos($condition, '"') === 0) && (\strpos(\strrev($condition), '"') === 0)) {
+            $condition = \substr($condition, 1, -1);
         }
 
-        return str_replace('""', '"', $condition);
+        return \str_replace('""', '"', $condition);
     }
 
     public static function fromConditional(Conditional $conditional, string $cellRange = 'A1'): WizardInterface
@@ -139,15 +139,15 @@ class CellValue extends WizardAbstract implements WizardInterface
         foreach ($conditions as $index => $condition) {
             // Best-guess to try and identify if the text is a string literal, a cell reference or a formula?
             $operandValueType = Wizard::VALUE_TYPE_LITERAL;
-            if (is_string($condition)) {
+            if (\is_string($condition)) {
                 if (Calculation::keyInExcelConstants($condition)) {
                     $condition = Calculation::getExcelConstants($condition);
-                } elseif (preg_match('/^' . Calculation::CALCULATION_REGEXP_CELLREF_RELATIVE . '$/i', $condition)) {
+                } elseif (\preg_match('/^' . Calculation::CALCULATION_REGEXP_CELLREF_RELATIVE . '$/i', $condition)) {
                     $operandValueType = Wizard::VALUE_TYPE_CELL;
                     $condition = self::reverseAdjustCellRef($condition, $cellRange);
                 } elseif (
-                    preg_match('/\(\)/', $condition) ||
-                    preg_match('/' . Calculation::CALCULATION_REGEXP_CELLREF_RELATIVE . '/i', $condition)
+                    \preg_match('/\(\)/', $condition) ||
+                    \preg_match('/' . Calculation::CALCULATION_REGEXP_CELLREF_RELATIVE . '/i', $condition)
                 ) {
                     $operandValueType = Wizard::VALUE_TYPE_FORMULA;
                     $condition = self::reverseAdjustCellRef($condition, $cellRange);
@@ -178,7 +178,7 @@ class CellValue extends WizardAbstract implements WizardInterface
 
             // Scrutinizer ignores its own suggested workaround.
             //$this->operand(1, /** @scrutinizer ignore-type */ ...$arguments);
-            if (count($arguments) < 2) {
+            if (\count($arguments) < 2) {
                 $this->operand(1, $arguments[0]);
             } else {
                 $this->operand(1, $arguments[0], $arguments[1]);
@@ -189,7 +189,7 @@ class CellValue extends WizardAbstract implements WizardInterface
 
         $this->operator(self::MAGIC_OPERATIONS[$methodName]);
         //$this->operand(0, ...$arguments);
-        if (count($arguments) < 2) {
+        if (\count($arguments) < 2) {
             $this->operand(0, $arguments[0]);
         } else {
             $this->operand(0, $arguments[0], $arguments[1]);

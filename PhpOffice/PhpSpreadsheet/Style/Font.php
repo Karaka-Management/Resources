@@ -376,13 +376,13 @@ class Font extends Supervisor
      */
     public function setSize($sizeInPoints, bool $nullOk = false)
     {
-        if (is_string($sizeInPoints) || is_int($sizeInPoints)) {
+        if (\is_string($sizeInPoints) || \is_int($sizeInPoints)) {
             $sizeInPoints = (float) $sizeInPoints; // $pValue = 0 if given string is not numeric
         }
 
         // Size must be a positive floating point number
         // ECMA-376-1:2016, part 1, chapter 18.4.11 sz (Font Size), p. 1536
-        if (!is_float($sizeInPoints) || !($sizeInPoints > 0)) {
+        if (!\is_float($sizeInPoints) || !($sizeInPoints > 0)) {
             if (!$nullOk || $sizeInPoints !== null) {
                 $sizeInPoints = 10.0;
             }
@@ -659,7 +659,7 @@ class Font extends Supervisor
      */
     public function setUnderline($underlineStyle)
     {
-        if (is_bool($underlineStyle)) {
+        if (\is_bool($underlineStyle)) {
             $underlineStyle = ($underlineStyle) ? self::UNDERLINE_SINGLE : self::UNDERLINE_NONE;
         } elseif ($underlineStyle == '') {
             $underlineStyle = self::UNDERLINE_NONE;
@@ -764,7 +764,7 @@ class Font extends Supervisor
             return $this->getSharedComponent()->getHashCode();
         }
 
-        return md5(
+        return \md5(
             $this->name .
             $this->size .
             ($this->bold ? 't' : 'f') .
@@ -774,7 +774,7 @@ class Font extends Supervisor
             $this->underline .
             ($this->strikethrough ? 't' : 'f') .
             $this->color->getHashCode() .
-            implode(
+            \implode(
                 '*',
                 [
                     $this->latin,

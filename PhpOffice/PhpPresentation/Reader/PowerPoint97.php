@@ -397,7 +397,7 @@ class PowerPoint97 implements ReaderInterface
     public function fileSupportsUnserializePhpPresentation(string $pFilename = ''): bool
     {
         // Check if file exists
-        if (!file_exists($pFilename)) {
+        if (!\file_exists($pFilename)) {
             throw new FileNotFoundException($pFilename);
         }
 
@@ -408,7 +408,7 @@ class PowerPoint97 implements ReaderInterface
             $ole->read($pFilename);
 
             return true;
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             return false;
         }
     }
@@ -652,8 +652,8 @@ class PowerPoint97 implements ReaderInterface
         $recLen = self::getInt4d($stream, $pos + 4);
 
         return [
-            'recVer' => ($rec >> 0) & bindec('1111'),
-            'recInstance' => ($rec >> 4) & bindec('111111111111'),
+            'recVer' => ($rec >> 0) & \bindec('1111'),
+            'recInstance' => ($rec >> 4) & \bindec('111111111111'),
             'recType' => $recType,
             'recLen' => $recLen,
         ];
@@ -664,7 +664,7 @@ class PowerPoint97 implements ReaderInterface
      */
     public static function getInt1d(string $data, int $pos): int
     {
-        return ord($data[$pos]);
+        return \ord($data[$pos]);
     }
 
     /**
@@ -672,7 +672,7 @@ class PowerPoint97 implements ReaderInterface
      */
     public static function getInt2d(string $data, int $pos): int
     {
-        return ord($data[$pos]) | (ord($data[$pos + 1]) << 8);
+        return \ord($data[$pos]) | (\ord($data[$pos + 1]) << 8);
     }
 
     /**
@@ -683,15 +683,15 @@ class PowerPoint97 implements ReaderInterface
         // FIX: represent numbers correctly on 64-bit system
         // http://sourceforge.net/tracker/index.php?func=detail&aid=1487372&group_id=99160&atid=623334
         // Hacked by Andreas Rehm 2006 to ensure correct result of the <<24 block on 32 and 64bit systems
-        $or24 = ord($data[$pos + 3]);
+        $or24 = \ord($data[$pos + 3]);
 
         $ord24 = ($or24 & 127) << 24;
         if ($or24 >= 128) {
             // negative number
-            $ord24 = -abs((256 - $or24) << 24);
+            $ord24 = -\abs((256 - $or24) << 24);
         }
 
-        return ord($data[$pos]) | (ord($data[$pos + 1]) << 8) | (ord($data[$pos + 2]) << 16) | $ord24;
+        return \ord($data[$pos]) | (\ord($data[$pos + 1]) << 8) | (\ord($data[$pos + 2]) << 16) | $ord24;
     }
 
     /**
@@ -781,7 +781,7 @@ class PowerPoint97 implements ReaderInterface
                                 $char = self::getInt2d($stream, $pos);
                                 $pos += 2;
                                 $exObjList['recLen'] -= 2;
-                                $this->arrayHyperlinks[$exHyperlinkId]['text'] .= chr($char);
+                                $this->arrayHyperlinks[$exHyperlinkId]['text'] .= \chr($char);
                             }
                         }
                         // targetAtom
@@ -794,7 +794,7 @@ class PowerPoint97 implements ReaderInterface
                                 $char = self::getInt2d($stream, $pos);
                                 $pos += 2;
                                 $exObjList['recLen'] -= 2;
-                                $this->arrayHyperlinks[$exHyperlinkId]['url'] .= chr($char);
+                                $this->arrayHyperlinks[$exHyperlinkId]['url'] .= \chr($char);
                             }
                         }
                         // locationAtom
@@ -807,7 +807,7 @@ class PowerPoint97 implements ReaderInterface
                                 $char = self::getInt2d($stream, $pos);
                                 $pos += 2;
                                 $exObjList['recLen'] -= 2;
-                                $string .= chr($char);
+                                $string .= \chr($char);
                             }
                         }
                         break;
@@ -845,7 +845,7 @@ class PowerPoint97 implements ReaderInterface
                         $char = self::getInt2d($stream, $pos);
                         $pos += 2;
                         $fontCollection['recLen'] -= 2;
-                        $string .= chr($char);
+                        $string .= \chr($char);
                     }
                     $this->arrayFonts[] = $string;
 
@@ -1238,7 +1238,7 @@ class PowerPoint97 implements ReaderInterface
                     ++$arrayReturn['length'];
                     --$data['recLen'];
                     // BLIPFileData
-                    $arrayReturn['picture'] = substr($this->streamPictures, $pos + $arrayReturn['length'], $data['recLen']);
+                    $arrayReturn['picture'] = \substr($this->streamPictures, $pos + $arrayReturn['length'], $data['recLen']);
                     $arrayReturn['length'] += $data['recLen'];
                     break;
                 default:
@@ -1431,10 +1431,10 @@ class PowerPoint97 implements ReaderInterface
                         //@link : http://msdn.microsoft.com/en-us/library/dd947973(v=office.12).aspx
                         if (0x0000 == $rhChild['recInstance']) {
                             //@todo : MouseClickTextInteractiveInfoAtom
-                            $arrayReturn['hyperlink'][count($arrayReturn['hyperlink']) - 1]['start'] = self::getInt4d($stream, $pos + +$arrayReturn['length']);
+                            $arrayReturn['hyperlink'][\count($arrayReturn['hyperlink']) - 1]['start'] = self::getInt4d($stream, $pos + +$arrayReturn['length']);
                             $arrayReturn['length'] += 4;
 
-                            $arrayReturn['hyperlink'][count($arrayReturn['hyperlink']) - 1]['end'] = self::getInt4d($stream, $pos + +$arrayReturn['length']);
+                            $arrayReturn['hyperlink'][\count($arrayReturn['hyperlink']) - 1]['end'] = self::getInt4d($stream, $pos + +$arrayReturn['length']);
                             $arrayReturn['length'] += 4;
                         }
                         if (0x0001 == $rhChild['recInstance']) {
@@ -1552,7 +1552,7 @@ class PowerPoint97 implements ReaderInterface
             // Informations about group are not defined
             $arrayDimensions = [];
             $bIsGroup = false;
-            if (is_object($this->oCurrentGroup)) {
+            if (\is_object($this->oCurrentGroup)) {
                 if (!$this->bFirstShapeGroup) {
                     if ($clientAnchor['length'] > 0) {
                         // $this->oCurrentGroup->setOffsetX($clientAnchor['left']);
@@ -1578,7 +1578,7 @@ class PowerPoint97 implements ReaderInterface
                     // isDrawing
                     $drawingPib = $shpPrimaryOptions['pib'];
                     if (isset($this->arrayPictures[$drawingPib - 1])) {
-                        $gdImage = imagecreatefromstring($this->arrayPictures[$drawingPib - 1]);
+                        $gdImage = \imagecreatefromstring($this->arrayPictures[$drawingPib - 1]);
                         $arrayReturn['shape'] = new Drawing\Gd();
                         $arrayReturn['shape']->setImageResource($gdImage);
                     }
@@ -1621,7 +1621,7 @@ class PowerPoint97 implements ReaderInterface
                             }
                         }
                         // Texte
-                        $sText = substr(isset($clientTextbox['text']) ? $clientTextbox['text'] : '', $start, $clientTextbox['part' . $inc]['partLength']);
+                        $sText = \substr(isset($clientTextbox['text']) ? $clientTextbox['text'] : '', $start, $clientTextbox['part' . $inc]['partLength']);
                         $sHyperlinkURL = '';
                         if (empty($sText)) {
                             // Is there a hyperlink ?
@@ -1637,9 +1637,9 @@ class PowerPoint97 implements ReaderInterface
                         }
                         // New paragraph
                         $bCreateParagraph = false;
-                        if (false !== strpos($sText, "\r")) {
+                        if (false !== \strpos($sText, "\r")) {
                             $bCreateParagraph = true;
-                            $sText = str_replace("\r", '', $sText);
+                            $sText = \str_replace("\r", '', $sText);
                         }
                         // TextRun
                         $txtRun = $arrayReturn['shape']->createTextRun($sText);
@@ -1787,10 +1787,10 @@ class PowerPoint97 implements ReaderInterface
                         $data['recLen'] -= $fileBlock['length'];
                         // Core
                         //@todo
-                        if (!is_null($fileBlock['shape'])) {
+                        if (!\is_null($fileBlock['shape'])) {
                             switch ($this->inMainType) {
                                 case self::RT_NOTES:
-                                    $arrayIdxSlide = array_flip($this->arrayNotes);
+                                    $arrayIdxSlide = \array_flip($this->arrayNotes);
                                     if ($this->currentNote > 0 && isset($arrayIdxSlide[$this->currentNote])) {
                                         $oSlide = $this->oPhpPresentation->getSlide($arrayIdxSlide[$this->currentNote]);
                                         if (0 == $oSlide->getNote()->getShapeCollection()->count()) {
@@ -1843,9 +1843,9 @@ class PowerPoint97 implements ReaderInterface
                 $optOp = self::getInt4d($this->streamPowerpointDocument, $pos + $arrayReturn['length']);
                 $arrayReturn['length'] += 4;
                 $officeArtFOPTE[] = [
-                    'opid' => ($opid >> 0) & bindec('11111111111111'),
-                    'fBid' => ($opid >> 14) & bindec('1'),
-                    'fComplex' => ($opid >> 15) & bindec('1'),
+                    'opid' => ($opid >> 0) & \bindec('11111111111111'),
+                    'fBid' => ($opid >> 14) & \bindec('1'),
+                    'fComplex' => ($opid >> 15) & \bindec('1'),
                     'op' => $optOp,
                 ];
             }
@@ -1975,9 +1975,9 @@ class PowerPoint97 implements ReaderInterface
                 $arrayReturn['length'] += 4;
                 $data['recLen'] -= 4;
                 $officeArtFOPTE[] = [
-                    'opid' => ($opid >> 0) & bindec('11111111111111'),
-                    'fBid' => ($opid >> 14) & bindec('1'),
-                    'fComplex' => ($opid >> 15) & bindec('1'),
+                    'opid' => ($opid >> 0) & \bindec('11111111111111'),
+                    'fBid' => ($opid >> 14) & \bindec('1'),
+                    'fComplex' => ($opid >> 15) & \bindec('1'),
                     'op' => $optOp,
                 ];
             }
@@ -2120,17 +2120,17 @@ class PowerPoint97 implements ReaderInterface
                     case 0x0181:
                         // Fill : fillColor
                         //@link : http://msdn.microsoft.com/en-us/library/dd921332(v=office.12).aspx
-                        $strColor = str_pad(dechex(($opt['op'] >> 0) & bindec('11111111')), 2, '0', STR_PAD_LEFT);
-                        $strColor .= str_pad(dechex(($opt['op'] >> 8) & bindec('11111111')), 2, '0', STR_PAD_LEFT);
-                        $strColor .= str_pad(dechex(($opt['op'] >> 16) & bindec('11111111')), 2, '0', STR_PAD_LEFT);
+                        $strColor = \str_pad(\dechex(($opt['op'] >> 0) & \bindec('11111111')), 2, '0', STR_PAD_LEFT);
+                        $strColor .= \str_pad(\dechex(($opt['op'] >> 8) & \bindec('11111111')), 2, '0', STR_PAD_LEFT);
+                        $strColor .= \str_pad(\dechex(($opt['op'] >> 16) & \bindec('11111111')), 2, '0', STR_PAD_LEFT);
                         // echo 'fillColor  : '.$strColor.EOL;
                         break;
                     case 0x0183:
                         // Fill : fillBackColor
                         //@link : http://msdn.microsoft.com/en-us/library/dd950634(v=office.12).aspx
-                        $strColor = str_pad(dechex(($opt['op'] >> 0) & bindec('11111111')), 2, '0', STR_PAD_LEFT);
-                        $strColor .= str_pad(dechex(($opt['op'] >> 8) & bindec('11111111')), 2, '0', STR_PAD_LEFT);
-                        $strColor .= str_pad(dechex(($opt['op'] >> 16) & bindec('11111111')), 2, '0', STR_PAD_LEFT);
+                        $strColor = \str_pad(\dechex(($opt['op'] >> 0) & \bindec('11111111')), 2, '0', STR_PAD_LEFT);
+                        $strColor .= \str_pad(\dechex(($opt['op'] >> 8) & \bindec('11111111')), 2, '0', STR_PAD_LEFT);
+                        $strColor .= \str_pad(\dechex(($opt['op'] >> 16) & \bindec('11111111')), 2, '0', STR_PAD_LEFT);
                         // echo 'fillBackColor  : '.$strColor.EOL;
                         break;
                     case 0x0193:
@@ -2150,9 +2150,9 @@ class PowerPoint97 implements ReaderInterface
                     case 0x01C0:
                         // Line Style : lineColor
                         //@link : http://msdn.microsoft.com/en-us/library/dd920397(v=office.12).aspx
-                        $strColor = str_pad(dechex(($opt['op'] >> 0) & bindec('11111111')), 2, '0', STR_PAD_LEFT);
-                        $strColor .= str_pad(dechex(($opt['op'] >> 8) & bindec('11111111')), 2, '0', STR_PAD_LEFT);
-                        $strColor .= str_pad(dechex(($opt['op'] >> 16) & bindec('11111111')), 2, '0', STR_PAD_LEFT);
+                        $strColor = \str_pad(\dechex(($opt['op'] >> 0) & \bindec('11111111')), 2, '0', STR_PAD_LEFT);
+                        $strColor .= \str_pad(\dechex(($opt['op'] >> 8) & \bindec('11111111')), 2, '0', STR_PAD_LEFT);
+                        $strColor .= \str_pad(\dechex(($opt['op'] >> 16) & \bindec('11111111')), 2, '0', STR_PAD_LEFT);
                         $arrayReturn['lineColor'] = $strColor;
                         break;
                     case 0x01C1:
@@ -2277,10 +2277,10 @@ class PowerPoint97 implements ReaderInterface
             // data
             $data = self::getInt4d($this->streamPowerpointDocument, $pos + $arrayReturn['length']);
             $arrayReturn['length'] += 4;
-            $arrayReturn['fGroup'] = ($data >> 0) & bindec('1');
-            $arrayReturn['fChild'] = ($data >> 1) & bindec('1');
-            $arrayReturn['fPatriarch'] = ($data >> 2) & bindec('1');
-            $arrayReturn['fDeleted'] = ($data >> 3) & bindec('1');
+            $arrayReturn['fGroup'] = ($data >> 0) & \bindec('1');
+            $arrayReturn['fChild'] = ($data >> 1) & \bindec('1');
+            $arrayReturn['fPatriarch'] = ($data >> 2) & \bindec('1');
+            $arrayReturn['fDeleted'] = ($data >> 3) & \bindec('1');
         }
 
         return $arrayReturn;
@@ -2399,7 +2399,7 @@ class PowerPoint97 implements ReaderInterface
             ];
             do {
                 $dataHeaderRG = $this->loadRecordHeader($stream, $pos + $arrayReturn['length']);
-                if (in_array($dataHeaderRG['recType'], $array)) {
+                if (\in_array($dataHeaderRG['recType'], $array)) {
                     switch ($dataHeaderRG['recType']) {
                         case self::RT_PROGTAGS:
                             $dataRG = $this->readRecordShapeProgTagsContainer($stream, $pos + $arrayReturn['length']);
@@ -2418,7 +2418,7 @@ class PowerPoint97 implements ReaderInterface
                             throw new FeatureNotImplementedException();
                     }
                 }
-            } while (in_array($dataHeaderRG['recType'], $array));
+            } while (\in_array($dataHeaderRG['recType'], $array));
         }
 
         return $arrayReturn;
@@ -2445,7 +2445,7 @@ class PowerPoint97 implements ReaderInterface
             $pos += 4;
             $rHeader['recLen'] -= 4;
             //$persistId  = ($data >> 0) & bindec('11111111111111111111');
-            $cPersist = ($data >> 20) & bindec('111111111111');
+            $cPersist = ($data >> 20) & \bindec('111111111111');
 
             $rgPersistOffset = [];
             for ($inc = 0; $inc < $cPersist; ++$inc) {
@@ -3023,46 +3023,46 @@ class PowerPoint97 implements ReaderInterface
         $arrayReturn['length'] += 4;
 
         $masksData = [];
-        $masksData['bold'] = ($masks >> 0) & bindec('1');
-        $masksData['italic'] = ($masks >> 1) & bindec('1');
-        $masksData['underline'] = ($masks >> 2) & bindec('1');
-        $masksData['unused1'] = ($masks >> 3) & bindec('1');
-        $masksData['shadow'] = ($masks >> 4) & bindec('1');
-        $masksData['fehint'] = ($masks >> 5) & bindec('1');
-        $masksData['unused2'] = ($masks >> 6) & bindec('1');
-        $masksData['kumi'] = ($masks >> 7) & bindec('1');
-        $masksData['unused3'] = ($masks >> 8) & bindec('1');
-        $masksData['emboss'] = ($masks >> 9) & bindec('1');
-        $masksData['fHasStyle'] = ($masks >> 10) & bindec('1111');
-        $masksData['unused4'] = ($masks >> 14) & bindec('11');
-        $masksData['typeface'] = ($masks >> 16) & bindec('1');
-        $masksData['size'] = ($masks >> 17) & bindec('1');
-        $masksData['color'] = ($masks >> 18) & bindec('1');
-        $masksData['position'] = ($masks >> 19) & bindec('1');
-        $masksData['pp10ext'] = ($masks >> 20) & bindec('1');
-        $masksData['oldEATypeface'] = ($masks >> 21) & bindec('1');
-        $masksData['ansiTypeface'] = ($masks >> 22) & bindec('1');
-        $masksData['symbolTypeface'] = ($masks >> 23) & bindec('1');
-        $masksData['newEATypeface'] = ($masks >> 24) & bindec('1');
-        $masksData['csTypeface'] = ($masks >> 25) & bindec('1');
-        $masksData['pp11ext'] = ($masks >> 26) & bindec('1');
+        $masksData['bold'] = ($masks >> 0) & \bindec('1');
+        $masksData['italic'] = ($masks >> 1) & \bindec('1');
+        $masksData['underline'] = ($masks >> 2) & \bindec('1');
+        $masksData['unused1'] = ($masks >> 3) & \bindec('1');
+        $masksData['shadow'] = ($masks >> 4) & \bindec('1');
+        $masksData['fehint'] = ($masks >> 5) & \bindec('1');
+        $masksData['unused2'] = ($masks >> 6) & \bindec('1');
+        $masksData['kumi'] = ($masks >> 7) & \bindec('1');
+        $masksData['unused3'] = ($masks >> 8) & \bindec('1');
+        $masksData['emboss'] = ($masks >> 9) & \bindec('1');
+        $masksData['fHasStyle'] = ($masks >> 10) & \bindec('1111');
+        $masksData['unused4'] = ($masks >> 14) & \bindec('11');
+        $masksData['typeface'] = ($masks >> 16) & \bindec('1');
+        $masksData['size'] = ($masks >> 17) & \bindec('1');
+        $masksData['color'] = ($masks >> 18) & \bindec('1');
+        $masksData['position'] = ($masks >> 19) & \bindec('1');
+        $masksData['pp10ext'] = ($masks >> 20) & \bindec('1');
+        $masksData['oldEATypeface'] = ($masks >> 21) & \bindec('1');
+        $masksData['ansiTypeface'] = ($masks >> 22) & \bindec('1');
+        $masksData['symbolTypeface'] = ($masks >> 23) & \bindec('1');
+        $masksData['newEATypeface'] = ($masks >> 24) & \bindec('1');
+        $masksData['csTypeface'] = ($masks >> 25) & \bindec('1');
+        $masksData['pp11ext'] = ($masks >> 26) & \bindec('1');
         if (1 == $masksData['bold'] || 1 == $masksData['italic'] || 1 == $masksData['underline'] || 1 == $masksData['shadow'] || 1 == $masksData['fehint'] || 1 == $masksData['kumi'] || 1 == $masksData['emboss'] || 1 == $masksData['fHasStyle']) {
             $data = self::getInt2d($stream, $pos + $arrayReturn['length']);
             $arrayReturn['length'] += 2;
 
             $fontStyleFlags = [];
-            $fontStyleFlags['bold'] = ($data >> 0) & bindec('1');
-            $fontStyleFlags['italic'] = ($data >> 1) & bindec('1');
-            $fontStyleFlags['underline'] = ($data >> 2) & bindec('1');
-            $fontStyleFlags['unused1'] = ($data >> 3) & bindec('1');
-            $fontStyleFlags['shadow'] = ($data >> 4) & bindec('1');
-            $fontStyleFlags['fehint'] = ($data >> 5) & bindec('1');
-            $fontStyleFlags['unused2'] = ($data >> 6) & bindec('1');
-            $fontStyleFlags['kumi'] = ($data >> 7) & bindec('1');
-            $fontStyleFlags['unused3'] = ($data >> 8) & bindec('1');
-            $fontStyleFlags['emboss'] = ($data >> 9) & bindec('1');
-            $fontStyleFlags['pp9rt'] = ($data >> 10) & bindec('1111');
-            $fontStyleFlags['unused4'] = ($data >> 14) & bindec('11');
+            $fontStyleFlags['bold'] = ($data >> 0) & \bindec('1');
+            $fontStyleFlags['italic'] = ($data >> 1) & \bindec('1');
+            $fontStyleFlags['underline'] = ($data >> 2) & \bindec('1');
+            $fontStyleFlags['unused1'] = ($data >> 3) & \bindec('1');
+            $fontStyleFlags['shadow'] = ($data >> 4) & \bindec('1');
+            $fontStyleFlags['fehint'] = ($data >> 5) & \bindec('1');
+            $fontStyleFlags['unused2'] = ($data >> 6) & \bindec('1');
+            $fontStyleFlags['kumi'] = ($data >> 7) & \bindec('1');
+            $fontStyleFlags['unused3'] = ($data >> 8) & \bindec('1');
+            $fontStyleFlags['emboss'] = ($data >> 9) & \bindec('1');
+            $fontStyleFlags['pp9rt'] = ($data >> 10) & \bindec('1111');
+            $fontStyleFlags['unused4'] = ($data >> 14) & \bindec('11');
 
             $arrayReturn['bold'] = (1 == $fontStyleFlags['bold']) ? true : false;
             $arrayReturn['italic'] = (1 == $fontStyleFlags['italic']) ? true : false;
@@ -3100,9 +3100,9 @@ class PowerPoint97 implements ReaderInterface
             ++$arrayReturn['length'];
 
             if (0xFE == $index) {
-                $strColor = str_pad(dechex($red), 2, '0', STR_PAD_LEFT);
-                $strColor .= str_pad(dechex($green), 2, '0', STR_PAD_LEFT);
-                $strColor .= str_pad(dechex($blue), 2, '0', STR_PAD_LEFT);
+                $strColor = \str_pad(\dechex($red), 2, '0', STR_PAD_LEFT);
+                $strColor .= \str_pad(\dechex($green), 2, '0', STR_PAD_LEFT);
+                $strColor .= \str_pad(\dechex($blue), 2, '0', STR_PAD_LEFT);
 
                 $arrayReturn['color'] = new Color('FF' . $strColor);
             }
@@ -3142,47 +3142,47 @@ class PowerPoint97 implements ReaderInterface
         $arrayReturn['length'] += 4;
 
         $masksData = [];
-        $masksData['hasBullet'] = ($masks >> 0) & bindec('1');
-        $masksData['bulletHasFont'] = ($masks >> 1) & bindec('1');
-        $masksData['bulletHasColor'] = ($masks >> 2) & bindec('1');
-        $masksData['bulletHasSize'] = ($masks >> 3) & bindec('1');
-        $masksData['bulletFont'] = ($masks >> 4) & bindec('1');
-        $masksData['bulletColor'] = ($masks >> 5) & bindec('1');
-        $masksData['bulletSize'] = ($masks >> 6) & bindec('1');
-        $masksData['bulletChar'] = ($masks >> 7) & bindec('1');
-        $masksData['leftMargin'] = ($masks >> 8) & bindec('1');
-        $masksData['unused'] = ($masks >> 9) & bindec('1');
-        $masksData['indent'] = ($masks >> 10) & bindec('1');
-        $masksData['align'] = ($masks >> 11) & bindec('1');
-        $masksData['lineSpacing'] = ($masks >> 12) & bindec('1');
-        $masksData['spaceBefore'] = ($masks >> 13) & bindec('1');
-        $masksData['spaceAfter'] = ($masks >> 14) & bindec('1');
-        $masksData['defaultTabSize'] = ($masks >> 15) & bindec('1');
-        $masksData['fontAlign'] = ($masks >> 16) & bindec('1');
-        $masksData['charWrap'] = ($masks >> 17) & bindec('1');
-        $masksData['wordWrap'] = ($masks >> 18) & bindec('1');
-        $masksData['overflow'] = ($masks >> 19) & bindec('1');
-        $masksData['tabStops'] = ($masks >> 20) & bindec('1');
-        $masksData['textDirection'] = ($masks >> 21) & bindec('1');
-        $masksData['reserved1'] = ($masks >> 22) & bindec('1');
-        $masksData['bulletBlip'] = ($masks >> 23) & bindec('1');
-        $masksData['bulletScheme'] = ($masks >> 24) & bindec('1');
-        $masksData['bulletHasScheme'] = ($masks >> 25) & bindec('1');
+        $masksData['hasBullet'] = ($masks >> 0) & \bindec('1');
+        $masksData['bulletHasFont'] = ($masks >> 1) & \bindec('1');
+        $masksData['bulletHasColor'] = ($masks >> 2) & \bindec('1');
+        $masksData['bulletHasSize'] = ($masks >> 3) & \bindec('1');
+        $masksData['bulletFont'] = ($masks >> 4) & \bindec('1');
+        $masksData['bulletColor'] = ($masks >> 5) & \bindec('1');
+        $masksData['bulletSize'] = ($masks >> 6) & \bindec('1');
+        $masksData['bulletChar'] = ($masks >> 7) & \bindec('1');
+        $masksData['leftMargin'] = ($masks >> 8) & \bindec('1');
+        $masksData['unused'] = ($masks >> 9) & \bindec('1');
+        $masksData['indent'] = ($masks >> 10) & \bindec('1');
+        $masksData['align'] = ($masks >> 11) & \bindec('1');
+        $masksData['lineSpacing'] = ($masks >> 12) & \bindec('1');
+        $masksData['spaceBefore'] = ($masks >> 13) & \bindec('1');
+        $masksData['spaceAfter'] = ($masks >> 14) & \bindec('1');
+        $masksData['defaultTabSize'] = ($masks >> 15) & \bindec('1');
+        $masksData['fontAlign'] = ($masks >> 16) & \bindec('1');
+        $masksData['charWrap'] = ($masks >> 17) & \bindec('1');
+        $masksData['wordWrap'] = ($masks >> 18) & \bindec('1');
+        $masksData['overflow'] = ($masks >> 19) & \bindec('1');
+        $masksData['tabStops'] = ($masks >> 20) & \bindec('1');
+        $masksData['textDirection'] = ($masks >> 21) & \bindec('1');
+        $masksData['reserved1'] = ($masks >> 22) & \bindec('1');
+        $masksData['bulletBlip'] = ($masks >> 23) & \bindec('1');
+        $masksData['bulletScheme'] = ($masks >> 24) & \bindec('1');
+        $masksData['bulletHasScheme'] = ($masks >> 25) & \bindec('1');
 
         $bulletFlags = [];
         if (1 == $masksData['hasBullet'] || 1 == $masksData['bulletHasFont'] || 1 == $masksData['bulletHasColor'] || 1 == $masksData['bulletHasSize']) {
             $data = self::getInt2d($stream, $pos + $arrayReturn['length']);
             $arrayReturn['length'] += 2;
 
-            $bulletFlags['fHasBullet'] = ($data >> 0) & bindec('1');
-            $bulletFlags['fBulletHasFont'] = ($data >> 1) & bindec('1');
-            $bulletFlags['fBulletHasColor'] = ($data >> 2) & bindec('1');
-            $bulletFlags['fBulletHasSize'] = ($data >> 3) & bindec('1');
+            $bulletFlags['fHasBullet'] = ($data >> 0) & \bindec('1');
+            $bulletFlags['fBulletHasFont'] = ($data >> 1) & \bindec('1');
+            $bulletFlags['fBulletHasColor'] = ($data >> 2) & \bindec('1');
+            $bulletFlags['fBulletHasSize'] = ($data >> 3) & \bindec('1');
         }
         if (1 == $masksData['bulletChar']) {
             $data = self::getInt2d($stream, $pos + $arrayReturn['length']);
             $arrayReturn['length'] += 2;
-            $arrayReturn['bulletChar'] = chr($data);
+            $arrayReturn['bulletChar'] = \chr($data);
         }
         if (1 == $masksData['bulletFont']) {
             // $data = self::getInt2d($stream, $pos);
@@ -3252,12 +3252,12 @@ class PowerPoint97 implements ReaderInterface
         if (1 == $masksData['leftMargin']) {
             $data = self::getInt2d($stream, $pos + $arrayReturn['length']);
             $arrayReturn['length'] += 2;
-            $arrayReturn['leftMargin'] = (int) round($data / 6);
+            $arrayReturn['leftMargin'] = (int) \round($data / 6);
         }
         if (1 == $masksData['indent']) {
             $data = self::getInt2d($stream, $pos + $arrayReturn['length']);
             $arrayReturn['length'] += 2;
-            $arrayReturn['indent'] = (int) round($data / 6);
+            $arrayReturn['indent'] = (int) \round($data / 6);
         }
         if (1 == $masksData['defaultTabSize']) {
             // $data = self::getInt2d($stream, $pos + $arrayReturn['length']);
@@ -3303,24 +3303,24 @@ class PowerPoint97 implements ReaderInterface
         $data = self::getInt4d($stream, $pos + $arrayReturn['length']);
         $arrayReturn['length'] += 4;
         $masksData = [];
-        $masksData['spell'] = ($data >> 0) & bindec('1');
-        $masksData['lang'] = ($data >> 1) & bindec('1');
-        $masksData['altLang'] = ($data >> 2) & bindec('1');
-        $masksData['unused1'] = ($data >> 3) & bindec('1');
-        $masksData['unused2'] = ($data >> 4) & bindec('1');
-        $masksData['fPp10ext'] = ($data >> 5) & bindec('1');
-        $masksData['fBidi'] = ($data >> 6) & bindec('1');
-        $masksData['unused3'] = ($data >> 7) & bindec('1');
-        $masksData['reserved1'] = ($data >> 8) & bindec('1');
-        $masksData['smartTag'] = ($data >> 9) & bindec('1');
+        $masksData['spell'] = ($data >> 0) & \bindec('1');
+        $masksData['lang'] = ($data >> 1) & \bindec('1');
+        $masksData['altLang'] = ($data >> 2) & \bindec('1');
+        $masksData['unused1'] = ($data >> 3) & \bindec('1');
+        $masksData['unused2'] = ($data >> 4) & \bindec('1');
+        $masksData['fPp10ext'] = ($data >> 5) & \bindec('1');
+        $masksData['fBidi'] = ($data >> 6) & \bindec('1');
+        $masksData['unused3'] = ($data >> 7) & \bindec('1');
+        $masksData['reserved1'] = ($data >> 8) & \bindec('1');
+        $masksData['smartTag'] = ($data >> 9) & \bindec('1');
 
         if (1 == $masksData['spell']) {
             $data = self::getInt2d($stream, $pos + $arrayReturn['length']);
             $arrayReturn['length'] += 2;
             $masksSpell = [];
-            $masksSpell['error'] = ($data >> 0) & bindec('1');
-            $masksSpell['clean'] = ($data >> 1) & bindec('1');
-            $masksSpell['grammar'] = ($data >> 2) & bindec('1');
+            $masksSpell['error'] = ($data >> 0) & \bindec('1');
+            $masksSpell['clean'] = ($data >> 1) & \bindec('1');
+            $masksSpell['grammar'] = ($data >> 2) & \bindec('1');
         }
         if (1 == $masksData['lang']) {
             // $data = self::getInt2d($stream, $pos);
@@ -3362,19 +3362,19 @@ class PowerPoint97 implements ReaderInterface
         $arrayReturn['length'] += 4;
 
         $masksData = [];
-        $masksData['fDefaultTabSize'] = ($data >> 0) & bindec('1');
-        $masksData['fCLevels'] = ($data >> 1) & bindec('1');
-        $masksData['fTabStops'] = ($data >> 2) & bindec('1');
-        $masksData['fLeftMargin1'] = ($data >> 3) & bindec('1');
-        $masksData['fLeftMargin2'] = ($data >> 4) & bindec('1');
-        $masksData['fLeftMargin3'] = ($data >> 5) & bindec('1');
-        $masksData['fLeftMargin4'] = ($data >> 6) & bindec('1');
-        $masksData['fLeftMargin5'] = ($data >> 7) & bindec('1');
-        $masksData['fIndent1'] = ($data >> 8) & bindec('1');
-        $masksData['fIndent2'] = ($data >> 9) & bindec('1');
-        $masksData['fIndent3'] = ($data >> 10) & bindec('1');
-        $masksData['fIndent4'] = ($data >> 11) & bindec('1');
-        $masksData['fIndent5'] = ($data >> 12) & bindec('1');
+        $masksData['fDefaultTabSize'] = ($data >> 0) & \bindec('1');
+        $masksData['fCLevels'] = ($data >> 1) & \bindec('1');
+        $masksData['fTabStops'] = ($data >> 2) & \bindec('1');
+        $masksData['fLeftMargin1'] = ($data >> 3) & \bindec('1');
+        $masksData['fLeftMargin2'] = ($data >> 4) & \bindec('1');
+        $masksData['fLeftMargin3'] = ($data >> 5) & \bindec('1');
+        $masksData['fLeftMargin4'] = ($data >> 6) & \bindec('1');
+        $masksData['fLeftMargin5'] = ($data >> 7) & \bindec('1');
+        $masksData['fIndent1'] = ($data >> 8) & \bindec('1');
+        $masksData['fIndent2'] = ($data >> 9) & \bindec('1');
+        $masksData['fIndent3'] = ($data >> 10) & \bindec('1');
+        $masksData['fIndent4'] = ($data >> 11) & \bindec('1');
+        $masksData['fIndent5'] = ($data >> 12) & \bindec('1');
 
         if (1 == $masksData['fCLevels']) {
             throw new FeatureNotImplementedException();

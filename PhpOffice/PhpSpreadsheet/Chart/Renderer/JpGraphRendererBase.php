@@ -77,10 +77,10 @@ abstract class JpGraphRendererBase implements IRenderer
 
     private function formatPointMarker($seriesPlot, $markerID)
     {
-        $plotMarkKeys = array_keys(self::$markSet);
+        $plotMarkKeys = \array_keys(self::$markSet);
         if ($markerID === null) {
             //    Use default plot marker (next marker in the series)
-            self::$plotMark %= count(self::$markSet);
+            self::$plotMark %= \count(self::$markSet);
             $seriesPlot->mark->SetType(self::$markSet[$plotMarkKeys[self::$plotMark++]]);
         } elseif ($markerID !== 'none') {
             //    Use specified plot marker (if it exists)
@@ -88,7 +88,7 @@ abstract class JpGraphRendererBase implements IRenderer
                 $seriesPlot->mark->SetType(self::$markSet[$markerID]);
             } else {
                 //    If the specified plot marker doesn't exist, use default plot marker (next marker in the series)
-                self::$plotMark %= count(self::$markSet);
+                self::$plotMark %= \count(self::$markSet);
                 $seriesPlot->mark->SetType(self::$markSet[$plotMarkKeys[self::$plotMark++]]);
             }
         } else {
@@ -106,16 +106,16 @@ abstract class JpGraphRendererBase implements IRenderer
     {
         $datasetLabelFormatCode = $this->chart->getPlotArea()->getPlotGroupByIndex($groupID)->getPlotCategoryByIndex(0)->getFormatCode() ?? '';
         //    Retrieve any label formatting code
-        $datasetLabelFormatCode = stripslashes($datasetLabelFormatCode);
+        $datasetLabelFormatCode = \stripslashes($datasetLabelFormatCode);
 
         $testCurrentIndex = 0;
         foreach ($datasetLabels as $i => $datasetLabel) {
-            if (is_array($datasetLabel)) {
+            if (\is_array($datasetLabel)) {
                 if ($rotation == 'bar') {
-                    $datasetLabels[$i] = implode(' ', $datasetLabel);
+                    $datasetLabels[$i] = \implode(' ', $datasetLabel);
                 } else {
-                    $datasetLabel = array_reverse($datasetLabel);
-                    $datasetLabels[$i] = implode("\n", $datasetLabel);
+                    $datasetLabel = \array_reverse($datasetLabel);
+                    $datasetLabels[$i] = \implode("\n", $datasetLabel);
                 }
             } else {
                 //    Format labels according to any formatting code
@@ -167,9 +167,9 @@ abstract class JpGraphRendererBase implements IRenderer
         //    Test if we have a title caption to display
         if ($caption !== null) {
             //    If we do, it could be a plain string or an array
-            if (is_array($caption)) {
+            if (\is_array($caption)) {
                 //    Implode an array to a plain string
-                $caption = implode('', $caption);
+                $caption = \implode('', $caption);
             }
         }
 
@@ -221,7 +221,7 @@ abstract class JpGraphRendererBase implements IRenderer
 
     private function renderCartesianPlotArea($type = 'textlin'): void
     {
-        $this->graph = new Graph(self::$width, self::$height);
+        $this->graph = new \Graph(self::$width, self::$height);
         $this->graph->SetScale($type);
 
         $this->renderTitle();
@@ -258,14 +258,14 @@ abstract class JpGraphRendererBase implements IRenderer
 
     private function renderPiePlotArea(): void
     {
-        $this->graph = new PieGraph(self::$width, self::$height);
+        $this->graph = new \PieGraph(self::$width, self::$height);
 
         $this->renderTitle();
     }
 
     private function renderRadarPlotArea(): void
     {
-        $this->graph = new RadarGraph(self::$width, self::$height);
+        $this->graph = new \RadarGraph(self::$width, self::$height);
         $this->graph->SetScale('lin');
 
         $this->renderTitle();
@@ -275,7 +275,7 @@ abstract class JpGraphRendererBase implements IRenderer
     {
         $grouping = $this->chart->getPlotArea()->getPlotGroupByIndex($groupID)->getPlotGrouping();
 
-        $index = array_keys($this->chart->getPlotArea()->getPlotGroupByIndex($groupID)->getPlotOrder())[0];
+        $index = \array_keys($this->chart->getPlotArea()->getPlotGroupByIndex($groupID)->getPlotOrder())[0];
         $labelCount = $this->chart->getPlotArea()->getPlotGroupByIndex($groupID)->getPlotValuesByIndex($index)->getPointCount();
         if ($labelCount > 0) {
             $datasetLabels = $this->chart->getPlotArea()->getPlotGroupByIndex($groupID)->getPlotCategoryByIndex(0)->getDataValues();
@@ -293,7 +293,7 @@ abstract class JpGraphRendererBase implements IRenderer
 
         //    Loop through each data series in turn
         for ($i = 0; $i < $seriesCount; ++$i) {
-            $index = array_keys($this->chart->getPlotArea()->getPlotGroupByIndex($groupID)->getPlotOrder())[$i];
+            $index = \array_keys($this->chart->getPlotArea()->getPlotGroupByIndex($groupID)->getPlotOrder())[$i];
             $dataValues = $this->chart->getPlotArea()->getPlotGroupByIndex($groupID)->getPlotValuesByIndex($index)->getDataValues();
             $marker = $this->chart->getPlotArea()->getPlotGroupByIndex($groupID)->getPlotValuesByIndex($index)->getPointMarker();
 
@@ -311,7 +311,7 @@ abstract class JpGraphRendererBase implements IRenderer
                 ++$testCurrentIndex;
             }
 
-            $seriesPlot = new LinePlot($dataValues);
+            $seriesPlot = new \LinePlot($dataValues);
             if ($combination) {
                 $seriesPlot->SetBarCenter();
             }
@@ -333,7 +333,7 @@ abstract class JpGraphRendererBase implements IRenderer
         if ($grouping == 'standard') {
             $groupPlot = $seriesPlots;
         } else {
-            $groupPlot = new AccLinePlot($seriesPlots);
+            $groupPlot = new \AccLinePlot($seriesPlots);
         }
         $this->graph->Add($groupPlot);
     }
@@ -347,14 +347,14 @@ abstract class JpGraphRendererBase implements IRenderer
         }
         $grouping = $this->chart->getPlotArea()->getPlotGroupByIndex($groupID)->getPlotGrouping();
 
-        $index = array_keys($this->chart->getPlotArea()->getPlotGroupByIndex($groupID)->getPlotOrder())[0];
+        $index = \array_keys($this->chart->getPlotArea()->getPlotGroupByIndex($groupID)->getPlotOrder())[0];
         $labelCount = $this->chart->getPlotArea()->getPlotGroupByIndex($groupID)->getPlotValuesByIndex($index)->getPointCount();
         if ($labelCount > 0) {
             $datasetLabels = $this->chart->getPlotArea()->getPlotGroupByIndex($groupID)->getPlotCategoryByIndex(0)->getDataValues();
             $datasetLabels = $this->formatDataSetLabels($groupID, $datasetLabels, $rotation);
             //    Rotate for bar rather than column chart
             if ($rotation == 'bar') {
-                $datasetLabels = array_reverse($datasetLabels);
+                $datasetLabels = \array_reverse($datasetLabels);
                 $this->graph->yaxis->SetPos('max');
                 $this->graph->yaxis->SetLabelAlign('center', 'top');
                 $this->graph->yaxis->SetLabelSide(SIDE_RIGHT);
@@ -372,7 +372,7 @@ abstract class JpGraphRendererBase implements IRenderer
 
         //    Loop through each data series in turn
         for ($j = 0; $j < $seriesCount; ++$j) {
-            $index = array_keys($this->chart->getPlotArea()->getPlotGroupByIndex($groupID)->getPlotOrder())[$j];
+            $index = \array_keys($this->chart->getPlotArea()->getPlotGroupByIndex($groupID)->getPlotOrder())[$j];
             $dataValues = $this->chart->getPlotArea()->getPlotGroupByIndex($groupID)->getPlotValuesByIndex($index)->getDataValues();
             if ($grouping == 'percentStacked') {
                 $dataValues = $this->percentageAdjustValues($dataValues, $sumValues);
@@ -390,9 +390,9 @@ abstract class JpGraphRendererBase implements IRenderer
 
             //    Reverse the $dataValues order for bar rather than column chart
             if ($rotation == 'bar') {
-                $dataValues = array_reverse($dataValues);
+                $dataValues = \array_reverse($dataValues);
             }
-            $seriesPlot = new BarPlot($dataValues);
+            $seriesPlot = new \BarPlot($dataValues);
             $seriesPlot->SetColor('black');
             $seriesPlot->SetFillColor(self::$colourSet[self::$plotColour++]);
             if ($dimensions == '3d') {
@@ -409,15 +409,15 @@ abstract class JpGraphRendererBase implements IRenderer
         }
         //    Reverse the plot order for bar rather than column chart
         if (($rotation == 'bar') && ($grouping != 'percentStacked')) {
-            $seriesPlots = array_reverse($seriesPlots);
+            $seriesPlots = \array_reverse($seriesPlots);
         }
 
         if ($grouping == 'clustered') {
-            $groupPlot = new GroupBarPlot($seriesPlots);
+            $groupPlot = new \GroupBarPlot($seriesPlots);
         } elseif ($grouping == 'standard') {
-            $groupPlot = new GroupBarPlot($seriesPlots);
+            $groupPlot = new \GroupBarPlot($seriesPlots);
         } else {
-            $groupPlot = new AccBarPlot($seriesPlots);
+            $groupPlot = new \AccBarPlot($seriesPlots);
             if ($dimensions == '3d') {
                 $groupPlot->SetShadow();
             }
@@ -441,14 +441,14 @@ abstract class JpGraphRendererBase implements IRenderer
                 $dataValuesY[$k] = $k;
             }
 
-            $seriesPlot = new ScatterPlot($dataValuesX, $dataValuesY);
+            $seriesPlot = new \ScatterPlot($dataValuesX, $dataValuesY);
             if ($scatterStyle == 'lineMarker') {
                 $seriesPlot->SetLinkPoints();
                 $seriesPlot->link->SetColor(self::$colourSet[self::$plotColour]);
             } elseif ($scatterStyle == 'smoothMarker') {
-                $spline = new Spline($dataValuesY, $dataValuesX);
-                [$splineDataY, $splineDataX] = $spline->Get(count($dataValuesX) * self::$width / 20);
-                $lplot = new LinePlot($splineDataX, $splineDataY);
+                $spline = new \Spline($dataValuesY, $dataValuesX);
+                [$splineDataY, $splineDataX] = $spline->Get(\count($dataValuesX) * self::$width / 20);
+                $lplot = new \LinePlot($splineDataX, $splineDataY);
                 $lplot->SetColor(self::$colourSet[self::$plotColour]);
 
                 $this->graph->Add($lplot);
@@ -483,16 +483,16 @@ abstract class JpGraphRendererBase implements IRenderer
 
             $dataValues = [];
             foreach ($dataValuesY as $k => $dataValueY) {
-                $dataValues[$k] = implode(' ', array_reverse($dataValueY));
+                $dataValues[$k] = \implode(' ', \array_reverse($dataValueY));
             }
-            $tmp = array_shift($dataValues);
+            $tmp = \array_shift($dataValues);
             $dataValues[] = $tmp;
-            $tmp = array_shift($dataValuesX);
+            $tmp = \array_shift($dataValuesX);
             $dataValuesX[] = $tmp;
 
-            $this->graph->SetTitles(array_reverse($dataValues));
+            $this->graph->SetTitles(\array_reverse($dataValues));
 
-            $seriesPlot = new RadarPlot(array_reverse($dataValuesX));
+            $seriesPlot = new \RadarPlot(\array_reverse($dataValuesX));
 
             $dataLabel = $this->chart->getPlotArea()->getPlotGroupByIndex($groupID)->getPlotLabelByIndex($i)->getDataValue();
             $seriesPlot->SetColor(self::$colourSet[self::$plotColour++]);
@@ -517,7 +517,7 @@ abstract class JpGraphRendererBase implements IRenderer
 
             $dataValues[$i] = $dataValuesX;
         }
-        $seriesPlot = new ContourPlot($dataValues);
+        $seriesPlot = new \ContourPlot($dataValues);
 
         $this->graph->Add($seriesPlot);
     }
@@ -545,7 +545,7 @@ abstract class JpGraphRendererBase implements IRenderer
 
         $dataValuesPlot = [];
         // Flatten the plot arrays to a single dimensional array to work with jpgraph
-        $jMax = count($dataValues[0]);
+        $jMax = \count($dataValues[0]);
         for ($j = 0; $j < $jMax; ++$j) {
             for ($i = 0; $i < $seriesCount; ++$i) {
                 $dataValuesPlot[] = $dataValues[$i][$j] ?? null;
@@ -560,7 +560,7 @@ abstract class JpGraphRendererBase implements IRenderer
             $this->graph->xaxis->SetTickLabels($datasetLabels);
         }
 
-        $seriesPlot = new StockPlot($dataValuesPlot);
+        $seriesPlot = new \StockPlot($dataValuesPlot);
         $seriesPlot->SetWidth(20);
 
         $this->graph->Add($seriesPlot);
@@ -645,12 +645,12 @@ abstract class JpGraphRendererBase implements IRenderer
                 }
 
                 if ($dimensions == '3d') {
-                    $seriesPlot = new PiePlot3D($dataValues);
+                    $seriesPlot = new \PiePlot3D($dataValues);
                 } else {
                     if ($doughnut) {
-                        $seriesPlot = new PiePlotC($dataValues);
+                        $seriesPlot = new \PiePlotC($dataValues);
                     } else {
-                        $seriesPlot = new PiePlot($dataValues);
+                        $seriesPlot = new \PiePlot($dataValues);
                     }
                 }
 
@@ -658,13 +658,13 @@ abstract class JpGraphRendererBase implements IRenderer
                     $seriesPlot->SetSize(($jLimit - $j) / ($jLimit * 4));
                 }
 
-                if ($doughnut && method_exists($seriesPlot, 'SetMidColor')) {
+                if ($doughnut && \method_exists($seriesPlot, 'SetMidColor')) {
                     $seriesPlot->SetMidColor('white');
                 }
 
                 $seriesPlot->SetColor(self::$colourSet[self::$plotColour++]);
-                if (count($datasetLabels) > 0) {
-                    $seriesPlot->SetLabels(array_fill(0, count($datasetLabels), ''));
+                if (\count($datasetLabels) > 0) {
+                    $seriesPlot->SetLabels(\array_fill(0, \count($datasetLabels), ''));
                 }
                 if ($dimensions != '3d') {
                     $seriesPlot->SetGuideLines(false);
@@ -769,10 +769,10 @@ abstract class JpGraphRendererBase implements IRenderer
             for ($i = 0; $i < $groupCount; ++$i) {
                 $chartTypes[] = $this->chart->getPlotArea()->getPlotGroupByIndex($i)->getPlotType();
             }
-            $chartTypes = array_unique($chartTypes);
-            if (count($chartTypes) == 1) {
-                $chartType = array_pop($chartTypes);
-            } elseif (count($chartTypes) == 0) {
+            $chartTypes = \array_unique($chartTypes);
+            if (\count($chartTypes) == 1) {
+                $chartType = \array_pop($chartTypes);
+            } elseif (\count($chartTypes) == 0) {
                 echo 'Chart is not yet implemented<br />';
 
                 return false;

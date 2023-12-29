@@ -35,7 +35,7 @@ class Normal
      */
     public static function distribution($value, $mean, $stdDev, $cumulative)
     {
-        if (is_array($value) || is_array($mean) || is_array($stdDev) || is_array($cumulative)) {
+        if (\is_array($value) || \is_array($mean) || \is_array($stdDev) || \is_array($cumulative)) {
             return self::evaluateArrayArguments([self::class, __FUNCTION__], $value, $mean, $stdDev, $cumulative);
         }
 
@@ -53,10 +53,10 @@ class Normal
         }
 
         if ($cumulative) {
-            return 0.5 * (1 + Engineering\Erf::erfValue(($value - $mean) / ($stdDev * sqrt(2))));
+            return 0.5 * (1 + Engineering\Erf::erfValue(($value - $mean) / ($stdDev * \sqrt(2))));
         }
 
-        return (1 / (self::SQRT2PI * $stdDev)) * exp(0 - (($value - $mean) ** 2 / (2 * ($stdDev * $stdDev))));
+        return (1 / (self::SQRT2PI * $stdDev)) * \exp(0 - (($value - $mean) ** 2 / (2 * ($stdDev * $stdDev))));
     }
 
     /**
@@ -77,7 +77,7 @@ class Normal
      */
     public static function inverse($probability, $mean, $stdDev)
     {
-        if (is_array($probability) || is_array($mean) || is_array($stdDev)) {
+        if (\is_array($probability) || \is_array($mean) || \is_array($stdDev)) {
             return self::evaluateArrayArguments([self::class, __FUNCTION__], $probability, $mean, $stdDev);
         }
 
@@ -158,13 +158,13 @@ class Normal
 
         if (0 < $p && $p < $p_low) {
             //    Rational approximation for lower region.
-            $q = sqrt(-2 * log($p));
+            $q = \sqrt(-2 * \log($p));
 
             return ((((($c[1] * $q + $c[2]) * $q + $c[3]) * $q + $c[4]) * $q + $c[5]) * $q + $c[6]) /
                 (((($d[1] * $q + $d[2]) * $q + $d[3]) * $q + $d[4]) * $q + 1);
         } elseif ($p_high < $p && $p < 1) {
             //    Rational approximation for upper region.
-            $q = sqrt(-2 * log(1 - $p));
+            $q = \sqrt(-2 * \log(1 - $p));
 
             return -((((($c[1] * $q + $c[2]) * $q + $c[3]) * $q + $c[4]) * $q + $c[5]) * $q + $c[6]) /
                 (((($d[1] * $q + $d[2]) * $q + $d[3]) * $q + $d[4]) * $q + 1);

@@ -104,6 +104,6 @@ class Author
      */
     public function getHashCode(): string
     {
-        return md5($this->getInitials() . $this->getName() . __CLASS__);
+        return \md5($this->getInitials() . $this->getName() . __CLASS__);
     }
 }

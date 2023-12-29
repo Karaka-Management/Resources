@@ -266,16 +266,16 @@ class Chart extends AbstractPart
                 $this->writeSeriesItem($xmlWriter, 'val', $values);
 
                 // check that there are colors
-                if (is_array($colors) && count($colors) > 0) {
+                if (\is_array($colors) && \count($colors) > 0) {
                     // assign a color to each value
                     $valueIndex = 0;
-                    for ($i = 0; $i < count($values); ++$i) {
+                    for ($i = 0; $i < \count($values); ++$i) {
                         // check that there are still enought colors
                         $xmlWriter->startElement('c:dPt');
                         $xmlWriter->writeElementBlock('c:idx', 'val', $valueIndex);
                         $xmlWriter->startElement('c:spPr');
                         $xmlWriter->startElement('a:solidFill');
-                        $xmlWriter->writeElementBlock('a:srgbClr', 'val', $colors[$colorIndex++ % count($colors)]);
+                        $xmlWriter->writeElementBlock('a:srgbClr', 'val', $colors[$colorIndex++ % \count($colors)]);
                         $xmlWriter->endElement(); // a:solidFill
                         $xmlWriter->endElement(); // c:spPr
                         $xmlWriter->endElement(); // c:dPt
@@ -307,7 +307,7 @@ class Chart extends AbstractPart
 
         $xmlWriter->startElement($itemType);
         $xmlWriter->startElement($itemLit);
-        $xmlWriter->writeElementBlock('c:ptCount', 'val', count($values));
+        $xmlWriter->writeElementBlock('c:ptCount', 'val', \count($values));
 
         $index = 0;
         foreach ($values as $value) {

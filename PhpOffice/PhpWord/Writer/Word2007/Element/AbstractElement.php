@@ -97,7 +97,7 @@ abstract class AbstractElement
         if (!$this->withoutP) {
             $this->xmlWriter->startElement('w:p');
             // Paragraph style
-            if (method_exists($this->element, 'getParagraphStyle')) {
+            if (\method_exists($this->element, 'getParagraphStyle')) {
                 $this->writeParagraphStyle();
             }
         }
@@ -190,7 +190,7 @@ abstract class AbstractElement
 
         /** @var \PhpOffice\PhpWord\Writer\Word2007\Style\AbstractStyle $styleWriter Type Hint */
         $styleWriter = new $class($this->xmlWriter, $styleObject);
-        if (method_exists($styleWriter, 'setIsInline')) {
+        if (\method_exists($styleWriter, 'setIsInline')) {
             $styleWriter->setIsInline(true);
         }
 

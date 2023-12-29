@@ -61,7 +61,7 @@ class Title extends AbstractElement
 
         // Actual text
         $text = $element->getText();
-        if (is_string($text)) {
+        if (\is_string($text)) {
             $xmlWriter->startElement('w:r');
             $xmlWriter->startElement('w:t');
             $this->writeText($text);

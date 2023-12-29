@@ -48,8 +48,8 @@ class Delimiter
 
     protected function countPotentialDelimiters(): void
     {
-        $this->counts = array_fill_keys(self::POTENTIAL_DELIMETERS, []);
-        $delimiterKeys = array_flip(self::POTENTIAL_DELIMETERS);
+        $this->counts = \array_fill_keys(self::POTENTIAL_DELIMETERS, []);
+        $delimiterKeys = \array_flip(self::POTENTIAL_DELIMETERS);
 
         // Count how many times each of the potential delimiters appears in each line
         $this->numberLines = 0;
@@ -60,10 +60,10 @@ class Delimiter
 
     protected function countDelimiterValues(string $line, array $delimiterKeys): void
     {
-        $splitString = str_split($line, 1);
-        if (is_array($splitString)) {
-            $distribution = array_count_values($splitString);
-            $countLine = array_intersect_key($distribution, $delimiterKeys);
+        $splitString = \str_split($line, 1);
+        if (\is_array($splitString)) {
+            $distribution = \array_count_values($splitString);
+            $countLine = \array_intersect_key($distribution, $delimiterKeys);
 
             foreach (self::POTENTIAL_DELIMETERS as $delimiter) {
                 $this->counts[$delimiter][] = $countLine[$delimiter] ?? 0;
@@ -76,11 +76,11 @@ class Delimiter
         // Calculate the mean square deviations for each delimiter
         //     (ignoring delimiters that haven't been found consistently)
         $meanSquareDeviations = [];
-        $middleIdx = floor(($this->numberLines - 1) / 2);
+        $middleIdx = \floor(($this->numberLines - 1) / 2);
 
         foreach (self::POTENTIAL_DELIMETERS as $delimiter) {
             $series = $this->counts[$delimiter];
-            sort($series);
+            \sort($series);
 
             $median = ($this->numberLines % 2)
                 ? $series[$middleIdx]
@@ -90,12 +90,12 @@ class Delimiter
                 continue;
             }
 
-            $meanSquareDeviations[$delimiter] = array_reduce(
+            $meanSquareDeviations[$delimiter] = \array_reduce(
                 $series,
                 function ($sum, $value) use ($median) {
                     return $sum + ($value - $median) ** 2;
                 }
-            ) / count($series);
+            ) / \count($series);
         }
 
         // ... and pick the delimiter with the smallest mean square deviation
@@ -124,12 +124,12 @@ class Delimiter
     {
         $line = '';
         $enclosure = ($this->escapeCharacter === '' ? ''
-                : ('(?<!' . preg_quote($this->escapeCharacter, '/') . ')'))
-            . preg_quote($this->enclosure, '/');
+                : ('(?<!' . \preg_quote($this->escapeCharacter, '/') . ')'))
+            . \preg_quote($this->enclosure, '/');
 
         do {
             // Get the next line in the file
-            $newLine = fgets($this->fileHandle);
+            $newLine = \fgets($this->fileHandle);
 
             // Return false if there is no next line
             if ($newLine === false) {
@@ -140,11 +140,11 @@ class Delimiter
             $line = $line . $newLine;
 
             // Drop everything that is enclosed to avoid counting false positives in enclosures
-            $line = (string) preg_replace('/(' . $enclosure . '.*' . $enclosure . ')/Us', '', $line);
+            $line = (string) \preg_replace('/(' . $enclosure . '.*' . $enclosure . ')/Us', '', $line);
 
             // See if we have any enclosures left in the line
             // if we still have an enclosure then we need to read the next line as well
-        } while (preg_match('/(' . $enclosure . ')/', $line) > 0);
+        } while (\preg_match('/(' . $enclosure . ')/', $line) > 0);
 
         return ($line !== '') ? $line : false;
     }

@@ -20,12 +20,12 @@ class Service
      */
     public static function webService(string $url)
     {
-        $url = trim($url);
-        if (strlen($url) > 2048) {
+        $url = \trim($url);
+        if (\strlen($url) > 2048) {
             return ExcelError::VALUE(); // Invalid URL length
         }
 
-        if (!preg_match('/^http[s]?:\/\//', $url)) {
+        if (!\preg_match('/^http[s]?:\/\//', $url)) {
             return ExcelError::VALUE(); // Invalid protocol
         }
 
@@ -45,7 +45,7 @@ class Service
         }
 
         $output = $response->getBody()->getContents();
-        if (strlen($output) > 32767) {
+        if (\strlen($output) > 32767) {
             return ExcelError::VALUE(); // Output not a string or too long
         }
 
@@ -66,10 +66,10 @@ class Service
      */
     public static function urlEncode($text)
     {
-        if (!is_string($text)) {
+        if (!\is_string($text)) {
             return ExcelError::VALUE();
         }
 
-        return str_replace('+', '%20', urlencode($text));
+        return \str_replace('+', '%20', \urlencode($text));
     }
 }

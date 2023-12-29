@@ -61,7 +61,7 @@ class HashTable
         $hash = $source->getHashCode();
         if (!isset($this->items[$hash])) {
             $this->items[$hash] = $source;
-            $this->keyMap[count($this->items) - 1] = $hash;
+            $this->keyMap[\count($this->items) - 1] = $hash;
         }
     }
 
@@ -86,7 +86,7 @@ class HashTable
                     $deleteKey = $key;
                 }
             }
-            unset($this->keyMap[count($this->keyMap) - 1]);
+            unset($this->keyMap[\count($this->keyMap) - 1]);
         }
     }
 
@@ -106,7 +106,7 @@ class HashTable
      */
     public function count()
     {
-        return count($this->items);
+        return \count($this->items);
     }
 
     /**
@@ -117,7 +117,7 @@ class HashTable
     public function getIndexForHashCode(string $hashCode)
     {
         // Scrutinizer thinks the following could return string. It is wrong.
-        return array_search($hashCode, $this->keyMap, true);
+        return \array_search($hashCode, $this->keyMap, true);
     }
 
     /**
@@ -163,13 +163,13 @@ class HashTable
      */
     public function __clone()
     {
-        $vars = get_object_vars($this);
+        $vars = \get_object_vars($this);
         foreach ($vars as $key => $value) {
             // each member of this class is an array
-            if (is_array($value)) {
+            if (\is_array($value)) {
                 $array1 = $value;
                 foreach ($array1 as $key1 => $value1) {
-                    if (is_object($value1)) {
+                    if (\is_object($value1)) {
                         $array1[$key1] = clone $value1;
                     }
                 }

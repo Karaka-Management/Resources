@@ -91,18 +91,18 @@ abstract class AbstractContainer extends AbstractElement
         ];
         $functions = [];
         foreach ($elements as $element) {
-            $functions['add' . strtolower($element)] = $element == 'Object' ? 'OLEObject' : $element;
+            $functions['add' . \strtolower($element)] = $element == 'Object' ? 'OLEObject' : $element;
         }
 
         // Run valid `add` command
-        $function = strtolower($function);
+        $function = \strtolower($function);
         if (isset($functions[$function])) {
             $element = $functions[$function];
 
             // Special case for TextBreak
             // @todo Remove the `$count` parameter in 1.0.0 to make this element similiar to other elements?
             if ($element == 'TextBreak') {
-                [$count, $fontStyle, $paragraphStyle] = array_pad($args, 3, null);
+                [$count, $fontStyle, $paragraphStyle] = \array_pad($args, 3, null);
                 if ($count === null) {
                     $count = 1;
                 }
@@ -111,9 +111,9 @@ abstract class AbstractContainer extends AbstractElement
                 }
             } else {
                 // All other elements
-                array_unshift($args, $element); // Prepend element name to the beginning of args array
+                \array_unshift($args, $element); // Prepend element name to the beginning of args array
 
-                return call_user_func_array([$this, 'addElement'], $args);
+                return \call_user_func_array([$this, 'addElement'], $args);
             }
         }
 
@@ -135,16 +135,16 @@ abstract class AbstractContainer extends AbstractElement
         $this->checkValidity($elementName);
 
         // Get arguments
-        $args = func_get_args();
-        $withoutP = in_array($this->container, ['TextRun', 'Footnote', 'Endnote', 'ListItemRun', 'Field']);
+        $args = \func_get_args();
+        $withoutP = \in_array($this->container, ['TextRun', 'Footnote', 'Endnote', 'ListItemRun', 'Field']);
         if ($withoutP && ($elementName == 'Text' || $elementName == 'PreserveText')) {
             $args[3] = null; // Remove paragraph style for texts in textrun
         }
 
         // Create element using reflection
-        $reflection = new ReflectionClass($elementClass);
+        $reflection = new \ReflectionClass($elementClass);
         $elementArgs = $args;
-        array_shift($elementArgs); // Shift the $elementName off the beginning of array
+        \array_shift($elementArgs); // Shift the $elementName off the beginning of array
 
         /** @var \PhpOffice\PhpWord\Element\AbstractElement $element Type hint */
         $element = $reflection->newInstanceArgs($elementArgs);
@@ -178,7 +178,7 @@ abstract class AbstractContainer extends AbstractElement
      */
     public function getElement($index)
     {
-        if (array_key_exists($index, $this->elements)) {
+        if (\array_key_exists($index, $this->elements)) {
             return $this->elements[$index];
         }
 
@@ -192,7 +192,7 @@ abstract class AbstractContainer extends AbstractElement
      */
     public function removeElement($toRemove): void
     {
-        if (is_int($toRemove) && array_key_exists($toRemove, $this->elements)) {
+        if (\is_int($toRemove) && \array_key_exists($toRemove, $this->elements)) {
             unset($this->elements[$toRemove]);
         } elseif ($toRemove instanceof \PhpOffice\PhpWord\Element\AbstractElement) {
             foreach ($this->elements as $key => $element) {
@@ -212,7 +212,7 @@ abstract class AbstractContainer extends AbstractElement
      */
     public function countElements()
     {
-        return count($this->elements);
+        return \count($this->elements);
     }
 
     /**
@@ -266,8 +266,8 @@ abstract class AbstractContainer extends AbstractElement
 
         // Check if a method is valid for current container
         if (isset($validContainers[$method])) {
-            if (!in_array($this->container, $validContainers[$method])) {
-                throw new BadMethodCallException("Cannot add {$method} in {$this->container}.");
+            if (!\in_array($this->container, $validContainers[$method])) {
+                throw new \BadMethodCallException("Cannot add {$method} in {$this->container}.");
             }
         }
 
@@ -277,8 +277,8 @@ abstract class AbstractContainer extends AbstractElement
             $containers = $rules[0];
             $allowedDocParts = $rules[1];
             foreach ($containers as $container) {
-                if ($this->container == $container && !in_array($this->getDocPart(), $allowedDocParts)) {
-                    throw new BadMethodCallException("Cannot add {$method} in {$this->container}.");
+                if ($this->container == $container && !\in_array($this->getDocPart(), $allowedDocParts)) {
+                    throw new \BadMethodCallException("Cannot add {$method} in {$this->container}.");
                 }
             }
         }

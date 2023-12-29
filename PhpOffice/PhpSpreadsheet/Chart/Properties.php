@@ -437,7 +437,7 @@ abstract class Properties
     protected function getArrayElementsValue($properties, $elements)
     {
         $reference = &$properties;
-        if (!is_array($elements)) {
+        if (!\is_array($elements)) {
             return $reference[$elements];
         }
 
@@ -488,7 +488,7 @@ abstract class Properties
                 'type' => $this->glowColor->getColorProperty('type'),
                 'alpha' => $this->glowColor->getColorProperty('alpha'),
             ];
-        } elseif (is_array($property) && count($property) >= 2 && $property[0] === 'color') {
+        } elseif (\is_array($property) && \count($property) >= 2 && $property[0] === 'color') {
             $retVal = $this->glowColor->getColorProperty($property[1]);
         }
 
@@ -565,7 +565,7 @@ abstract class Properties
     public function setShadowProperty(string $propertyName, $value): self
     {
         $this->activateObject();
-        if ($propertyName === 'color' && is_array($value)) {
+        if ($propertyName === 'color' && \is_array($value)) {
             $this->shadowColor->setColorPropertiesArray($value);
         } else {
             $this->shadowProperties[$propertyName] = $value;
@@ -599,7 +599,7 @@ abstract class Properties
         if ($colorType !== null) {
             $this->shadowColor->setType($colorType);
         }
-        if (is_numeric($colorAlpha)) {
+        if (\is_numeric($colorAlpha)) {
             $this->shadowColor->setAlpha((int) $colorAlpha);
         }
         $this
@@ -636,8 +636,8 @@ abstract class Properties
     {
         $base_reference = $reference;
         foreach ($propertiesMap as $property_key => $property_val) {
-            if (is_array($property_val)) {
-                if (in_array($property_key, self::SHADOW_ARRAY_KEYS, true)) {
+            if (\is_array($property_val)) {
+                if (\in_array($property_key, self::SHADOW_ARRAY_KEYS, true)) {
                     $reference = &$this->shadowProperties[$property_key];
                     $this->setShadowPropertiesMapValues($property_val, $reference);
                 }
@@ -678,7 +678,7 @@ abstract class Properties
      */
     protected function setShadowAngle($angle)
     {
-        if (is_numeric($angle)) {
+        if (\is_numeric($angle)) {
             $this->shadowProperties['direction'] = $angle;
         }
 
@@ -828,7 +828,7 @@ abstract class Properties
     public function setLineStyleProperties($lineWidth = null, $compoundType = '', $dashType = '', $capType = '', $joinType = '', $headArrowType = '', $headArrowSize = '', $endArrowType = '', $endArrowSize = '', $headArrowWidth = '', $headArrowLength = '', $endArrowWidth = '', $endArrowLength = ''): void
     {
         $this->activateObject();
-        if (is_numeric($lineWidth)) {
+        if (\is_numeric($lineWidth)) {
             $this->lineStyleProperties['width'] = $lineWidth;
         }
         if ($compoundType !== '') {
@@ -846,7 +846,7 @@ abstract class Properties
         if ($headArrowType !== '') {
             $this->lineStyleProperties['arrow']['head']['type'] = $headArrowType;
         }
-        if (array_key_exists($headArrowSize, self::ARROW_SIZES)) {
+        if (\array_key_exists($headArrowSize, self::ARROW_SIZES)) {
             $this->lineStyleProperties['arrow']['head']['size'] = $headArrowSize;
             $this->lineStyleProperties['arrow']['head']['w'] = self::ARROW_SIZES[$headArrowSize]['w'];
             $this->lineStyleProperties['arrow']['head']['len'] = self::ARROW_SIZES[$headArrowSize]['len'];
@@ -854,7 +854,7 @@ abstract class Properties
         if ($endArrowType !== '') {
             $this->lineStyleProperties['arrow']['end']['type'] = $endArrowType;
         }
-        if (array_key_exists($endArrowSize, self::ARROW_SIZES)) {
+        if (\array_key_exists($endArrowSize, self::ARROW_SIZES)) {
             $this->lineStyleProperties['arrow']['end']['size'] = $endArrowSize;
             $this->lineStyleProperties['arrow']['end']['w'] = self::ARROW_SIZES[$endArrowSize]['w'];
             $this->lineStyleProperties['arrow']['end']['len'] = self::ARROW_SIZES[$endArrowSize]['len'];

@@ -76,7 +76,7 @@ class Content extends AbstractPart
                         }
 
                         $element = $section->addText($node->nodeValue);
-                        if (isset($changed) && is_array($changed)) {
+                        if (isset($changed) && \is_array($changed)) {
                             $element->setTrackChange($changed['changed']);
                             if (isset($changed['textNodes'])) {
                                 foreach ($changed['textNodes'] as $changedNode) {
@@ -103,8 +103,8 @@ class Content extends AbstractPart
                             $author = $creatorNode[0]->nodeValue;
                             $dateNode = $xmlReader->getElements('office:change-info/dc:date', $changedRegion->firstChild);
                             $date = $dateNode[0]->nodeValue;
-                            $date = preg_replace('/\.\d+$/', '', $date);
-                            $date = DateTime::createFromFormat('Y-m-d\TH:i:s', $date);
+                            $date = \preg_replace('/\.\d+$/', '', $date);
+                            $date = \DateTime::createFromFormat('Y-m-d\TH:i:s', $date);
                             $changed = new TrackChange($type, $author, $date);
                             $textNodes = $xmlReader->getElements('text:deletion/text:p', $changedRegion);
                             $trackedChanges[$changedRegion->getAttribute('text:id')] = ['changed' => $changed, 'textNodes' => $textNodes];

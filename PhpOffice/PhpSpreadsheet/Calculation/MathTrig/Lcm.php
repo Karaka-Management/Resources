@@ -13,20 +13,20 @@ class Lcm
     //
     private static function factors(float $value): array
     {
-        $startVal = floor(sqrt($value));
+        $startVal = \floor(\sqrt($value));
 
         $factorArray = [];
         for ($i = $startVal; $i > 1; --$i) {
             if (($value % $i) == 0) {
-                $factorArray = array_merge($factorArray, self::factors($value / $i));
-                $factorArray = array_merge($factorArray, self::factors($i));
-                if ($i <= sqrt($value)) {
+                $factorArray = \array_merge($factorArray, self::factors($value / $i));
+                $factorArray = \array_merge($factorArray, self::factors($i));
+                if ($i <= \sqrt($value)) {
                     break;
                 }
             }
         }
         if (!empty($factorArray)) {
-            rsort($factorArray);
+            \rsort($factorArray);
 
             return $factorArray;
         }
@@ -74,8 +74,8 @@ class Lcm
         $allPoweredFactors = [];
         // Loop through arguments
         foreach ($arrayArgs as $value) {
-            $myFactors = self::factors(floor($value));
-            $myCountedFactors = array_count_values($myFactors);
+            $myFactors = self::factors(\floor($value));
+            $myCountedFactors = \array_count_values($myFactors);
             $myPoweredFactors = [];
             foreach ($myCountedFactors as $myCountedFactor => $myCountedPower) {
                 $myPoweredFactors[$myCountedFactor] = $myCountedFactor ** $myCountedPower;

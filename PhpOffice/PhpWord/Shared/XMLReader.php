@@ -35,14 +35,14 @@ class XMLReader
     /**
      * DOMDocument object.
      *
-     * @var DOMDocument
+     * @var \DOMDocument
      */
     private $dom;
 
     /**
      * DOMXpath object.
      *
-     * @var DOMXpath
+     * @var \DOMXpath
      */
     private $xpath;
 
@@ -52,15 +52,15 @@ class XMLReader
      * @param string $zipFile
      * @param string $xmlFile
      *
-     * @return DOMDocument|false
+     * @return \DOMDocument|false
      */
     public function getDomFromZip($zipFile, $xmlFile)
     {
-        if (file_exists($zipFile) === false) {
-            throw new Exception('Cannot find archive file.');
+        if (\file_exists($zipFile) === false) {
+            throw new \Exception('Cannot find archive file.');
         }
 
-        $zip = new ZipArchive();
+        $zip = new \ZipArchive();
         $zip->open($zipFile);
         $content = $zip->getFromName($xmlFile);
         $zip->close();
@@ -77,17 +77,17 @@ class XMLReader
      *
      * @param string $content
      *
-     * @return DOMDocument
+     * @return \DOMDocument
      */
     public function getDomFromString($content)
     {
         if (\PHP_VERSION_ID < 80000) {
-            $originalLibXMLEntityValue = libxml_disable_entity_loader(true);
+            $originalLibXMLEntityValue = \libxml_disable_entity_loader(true);
         }
-        $this->dom = new DOMDocument();
+        $this->dom = new \DOMDocument();
         $this->dom->loadXML($content);
         if (\PHP_VERSION_ID < 80000) {
-            libxml_disable_entity_loader($originalLibXMLEntityValue);
+            \libxml_disable_entity_loader($originalLibXMLEntityValue);
         }
 
         return $this->dom;
@@ -97,17 +97,17 @@ class XMLReader
      * Get elements.
      *
      * @param string $path
-     * @param DOMElement $contextNode
+     * @param \DOMElement $contextNode
      *
-     * @return DOMNodeList
+     * @return \DOMNodeList
      */
-    public function getElements($path, ?DOMElement $contextNode = null)
+    public function getElements($path, ?\DOMElement $contextNode = null)
     {
         if ($this->dom === null) {
             return [];
         }
         if ($this->xpath === null) {
-            $this->xpath = new DOMXpath($this->dom);
+            $this->xpath = new \DOMXpath($this->dom);
         }
 
         if (null === $contextNode) {
@@ -128,10 +128,10 @@ class XMLReader
     public function registerNamespace($prefix, $namespaceURI)
     {
         if ($this->dom === null) {
-            throw new InvalidArgumentException('Dom needs to be loaded before registering a namespace');
+            throw new \InvalidArgumentException('Dom needs to be loaded before registering a namespace');
         }
         if ($this->xpath === null) {
-            $this->xpath = new DOMXpath($this->dom);
+            $this->xpath = new \DOMXpath($this->dom);
         }
 
         return $this->xpath->registerNamespace($prefix, $namespaceURI);
@@ -141,11 +141,11 @@ class XMLReader
      * Get element.
      *
      * @param string $path
-     * @param DOMElement $contextNode
+     * @param \DOMElement $contextNode
      *
-     * @return null|DOMElement
+     * @return null|\DOMElement
      */
-    public function getElement($path, ?DOMElement $contextNode = null)
+    public function getElement($path, ?\DOMElement $contextNode = null)
     {
         $elements = $this->getElements($path, $contextNode);
         if ($elements->length > 0) {
@@ -159,18 +159,18 @@ class XMLReader
      * Get element attribute.
      *
      * @param string $attribute
-     * @param DOMElement $contextNode
+     * @param \DOMElement $contextNode
      * @param string $path
      *
      * @return null|string
      */
-    public function getAttribute($attribute, ?DOMElement $contextNode = null, $path = null)
+    public function getAttribute($attribute, ?\DOMElement $contextNode = null, $path = null)
     {
         $return = null;
         if ($path !== null) {
             $elements = $this->getElements($path, $contextNode);
             if ($elements->length > 0) {
-                /** @var DOMElement $node Type hint */
+                /** @var \DOMElement $node Type hint */
                 $node = $elements->item(0);
                 $return = $node->getAttribute($attribute);
             }
@@ -187,11 +187,11 @@ class XMLReader
      * Get element value.
      *
      * @param string $path
-     * @param DOMElement $contextNode
+     * @param \DOMElement $contextNode
      *
      * @return null|string
      */
-    public function getValue($path, ?DOMElement $contextNode = null)
+    public function getValue($path, ?\DOMElement $contextNode = null)
     {
         $elements = $this->getElements($path, $contextNode);
         if ($elements->length > 0) {
@@ -205,11 +205,11 @@ class XMLReader
      * Count elements.
      *
      * @param string $path
-     * @param DOMElement $contextNode
+     * @param \DOMElement $contextNode
      *
      * @return int
      */
-    public function countElements($path, ?DOMElement $contextNode = null)
+    public function countElements($path, ?\DOMElement $contextNode = null)
     {
         $elements = $this->getElements($path, $contextNode);
 
@@ -220,11 +220,11 @@ class XMLReader
      * Element exists.
      *
      * @param string $path
-     * @param DOMElement $contextNode
+     * @param \DOMElement $contextNode
      *
      * @return bool
      */
-    public function elementExists($path, ?DOMElement $contextNode = null)
+    public function elementExists($path, ?\DOMElement $contextNode = null)
     {
         return $this->getElements($path, $contextNode)->length > 0;
     }

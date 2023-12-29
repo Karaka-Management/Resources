@@ -33,7 +33,7 @@ class ExponentialBestFit extends BestFit
      */
     public function getValueOfXForY($yValue)
     {
-        return log(($yValue + $this->yOffset) / $this->getIntersect()) / log($this->getSlope());
+        return \log(($yValue + $this->yOffset) / $this->getIntersect()) / \log($this->getSlope());
     }
 
     /**
@@ -61,10 +61,10 @@ class ExponentialBestFit extends BestFit
     public function getSlope($dp = 0)
     {
         if ($dp != 0) {
-            return round(exp($this->slope), $dp);
+            return \round(\exp($this->slope), $dp);
         }
 
-        return exp($this->slope);
+        return \exp($this->slope);
     }
 
     /**
@@ -77,10 +77,10 @@ class ExponentialBestFit extends BestFit
     public function getIntersect($dp = 0)
     {
         if ($dp != 0) {
-            return round(exp($this->intersect), $dp);
+            return \round(\exp($this->intersect), $dp);
         }
 
-        return exp($this->intersect);
+        return \exp($this->intersect);
     }
 
     /**
@@ -91,9 +91,9 @@ class ExponentialBestFit extends BestFit
      */
     private function exponentialRegression(array $yValues, array $xValues, bool $const): void
     {
-        $adjustedYValues = array_map(
+        $adjustedYValues = \array_map(
             function ($value) {
-                return ($value < 0.0) ? 0 - log(abs($value)) : log($value);
+                return ($value < 0.0) ? 0 - \log(\abs($value)) : \log($value);
             },
             $yValues
         );

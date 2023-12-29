@@ -56,7 +56,7 @@ class FormField extends Text
         }
         $value = $element->getValue();
         if ($value === null) {
-            $value = str_repeat(' ', self::FILLER_LENGTH);
+            $value = \str_repeat(' ', self::FILLER_LENGTH);
         }
 
         $this->startElementP();
@@ -156,7 +156,7 @@ class FormField extends Text
         $xmlWriter->writeElementBlock('w:default', 'w:val', $default);
         foreach ($entries as $entry) {
             if ($entry == null || $entry == '') {
-                $entry = str_repeat(' ', self::FILLER_LENGTH);
+                $entry = \str_repeat(' ', self::FILLER_LENGTH);
             }
             $xmlWriter->writeElementBlock('w:listEntry', 'w:val', $entry);
         }

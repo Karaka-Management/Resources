@@ -30,7 +30,7 @@ class Mean
         $aArgs = Functions::flattenArray($args);
 
         $aMean = MathTrig\Operations::product($aArgs);
-        if (is_numeric($aMean) && ($aMean > 0)) {
+        if (\is_numeric($aMean) && ($aMean > 0)) {
             $aCount = Counts::COUNT($aArgs);
             if (Minimum::min($aArgs) > 0) {
                 return $aMean ** (1 / $aCount);
@@ -65,7 +65,7 @@ class Mean
         $aCount = 0;
         foreach ($aArgs as $arg) {
             // Is it a numeric value?
-            if ((is_numeric($arg)) && (!is_string($arg))) {
+            if ((\is_numeric($arg)) && (!\is_string($arg))) {
                 if ($arg <= 0) {
                     return ExcelError::NAN();
                 }
@@ -101,9 +101,9 @@ class Mean
         $aArgs = Functions::flattenArray($args);
 
         // Calculate
-        $percent = array_pop($aArgs);
+        $percent = \array_pop($aArgs);
 
-        if ((is_numeric($percent)) && (!is_string($percent))) {
+        if ((\is_numeric($percent)) && (!\is_string($percent))) {
             if (($percent < 0) || ($percent > 1)) {
                 return ExcelError::NAN();
             }
@@ -111,17 +111,17 @@ class Mean
             $mArgs = [];
             foreach ($aArgs as $arg) {
                 // Is it a numeric value?
-                if ((is_numeric($arg)) && (!is_string($arg))) {
+                if ((\is_numeric($arg)) && (!\is_string($arg))) {
                     $mArgs[] = $arg;
                 }
             }
 
-            $discard = floor(Counts::COUNT($mArgs) * $percent / 2);
-            sort($mArgs);
+            $discard = \floor(Counts::COUNT($mArgs) * $percent / 2);
+            \sort($mArgs);
 
             for ($i = 0; $i < $discard; ++$i) {
-                array_pop($mArgs);
-                array_shift($mArgs);
+                \array_pop($mArgs);
+                \array_shift($mArgs);
             }
 
             return Averages::average($mArgs);

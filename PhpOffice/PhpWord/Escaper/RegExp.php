@@ -28,6 +28,6 @@ class RegExp extends AbstractEscaper
 
     protected function escapeSingleValue($input)
     {
-        return self::REG_EXP_DELIMITER . preg_quote($input, self::REG_EXP_DELIMITER) . self::REG_EXP_DELIMITER . 'u';
+        return self::REG_EXP_DELIMITER . \preg_quote($input, self::REG_EXP_DELIMITER) . self::REG_EXP_DELIMITER . 'u';
     }
 }

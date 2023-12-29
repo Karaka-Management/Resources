@@ -37,7 +37,7 @@ class CellFill
     {
         $fillStyle = $fill->getFillType();
 
-        if (is_string($fillStyle) && array_key_exists($fillStyle, self::$fillStyleMap)) {
+        if (\is_string($fillStyle) && \array_key_exists($fillStyle, self::$fillStyleMap)) {
             return self::$fillStyleMap[$fillStyle];
         }
 

@@ -37,7 +37,7 @@ class WorkDay
      */
     public static function date($startDate, $endDays, ...$dateArgs)
     {
-        if (is_array($startDate) || is_array($endDays)) {
+        if (\is_array($startDate) || \is_array($endDays)) {
             return self::evaluateArrayArgumentsSubset(
                 [self::class, __FUNCTION__],
                 2,
@@ -51,13 +51,13 @@ class WorkDay
         try {
             $startDate = Helpers::getDateValue($startDate);
             $endDays = Helpers::validateNumericNull($endDays);
-            $holidayArray = array_map([Helpers::class, 'getDateValue'], Functions::flattenArray($dateArgs));
+            $holidayArray = \array_map([Helpers::class, 'getDateValue'], Functions::flattenArray($dateArgs));
         } catch (Exception $e) {
             return $e->getMessage();
         }
 
-        $startDate = (float) floor($startDate);
-        $endDays = (int) floor($endDays);
+        $startDate = (float) \floor($startDate);
+        $endDays = (int) \floor($endDays);
         //    If endDays is 0, we always return startDate
         if ($endDays == 0) {
             return $startDate;
@@ -112,10 +112,10 @@ class WorkDay
                 $holidayDates[] = $holidayDate;
             }
         }
-        sort($holidayDates, SORT_NUMERIC);
+        \sort($holidayDates, SORT_NUMERIC);
         foreach ($holidayDates as $holidayDate) {
             if (($holidayDate >= $startDate) && ($holidayDate <= $endDate)) {
-                if (!in_array($holidayDate, $holidayCountedArray)) {
+                if (!\in_array($holidayDate, $holidayCountedArray)) {
                     ++$endDate;
                     $holidayCountedArray[] = $holidayDate;
                 }
@@ -173,10 +173,10 @@ class WorkDay
                 $holidayDates[] = $holidayDate;
             }
         }
-        rsort($holidayDates, SORT_NUMERIC);
+        \rsort($holidayDates, SORT_NUMERIC);
         foreach ($holidayDates as $holidayDate) {
             if (($holidayDate <= $startDate) && ($holidayDate >= $endDate)) {
-                if (!in_array($holidayDate, $holidayCountedArray)) {
+                if (!\in_array($holidayDate, $holidayCountedArray)) {
                     --$endDate;
                     $holidayCountedArray[] = $holidayDate;
                 }
@@ -196,6 +196,6 @@ class WorkDay
     {
         $result = Functions::scalar(Week::day($date, $wd));
 
-        return is_int($result) ? $result : -1;
+        return \is_int($result) ? $result : -1;
     }
 }

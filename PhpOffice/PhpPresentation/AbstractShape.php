@@ -153,10 +153,10 @@ abstract class AbstractShape implements ComparableInterface
      */
     public function setContainer(ShapeContainerInterface $pValue = null, $pOverrideOld = false)
     {
-        if (is_null($this->container)) {
+        if (\is_null($this->container)) {
             // Add drawing to ShapeContainerInterface
             $this->container = $pValue;
-            if (!is_null($this->container)) {
+            if (!\is_null($this->container)) {
                 $this->container->getShapeCollection()->append($this);
             }
         } else {
@@ -345,7 +345,7 @@ abstract class AbstractShape implements ComparableInterface
      */
     public function hasHyperlink()
     {
-        return !is_null($this->hyperlink);
+        return !\is_null($this->hyperlink);
     }
 
     /**
@@ -353,7 +353,7 @@ abstract class AbstractShape implements ComparableInterface
      */
     public function getHyperlink(): Hyperlink
     {
-        if (is_null($this->hyperlink)) {
+        if (\is_null($this->hyperlink)) {
             $this->hyperlink = new Hyperlink();
         }
 
@@ -377,7 +377,7 @@ abstract class AbstractShape implements ComparableInterface
      */
     public function getHashCode(): string
     {
-        return md5((is_object($this->container) ? $this->container->getHashCode() : '') . $this->offsetX . $this->offsetY . $this->width . $this->height . $this->rotation . (is_null($this->getFill()) ? '' : $this->getFill()->getHashCode()) . (is_null($this->shadow) ? '' : $this->shadow->getHashCode()) . (is_null($this->hyperlink) ? '' : $this->hyperlink->getHashCode()) . __CLASS__);
+        return \md5((\is_object($this->container) ? $this->container->getHashCode() : '') . $this->offsetX . $this->offsetY . $this->width . $this->height . $this->rotation . (\is_null($this->getFill()) ? '' : $this->getFill()->getHashCode()) . (\is_null($this->shadow) ? '' : $this->shadow->getHashCode()) . (\is_null($this->hyperlink) ? '' : $this->hyperlink->getHashCode()) . __CLASS__);
     }
 
     /**
@@ -412,7 +412,7 @@ abstract class AbstractShape implements ComparableInterface
 
     public function isPlaceholder(): bool
     {
-        return !is_null($this->placeholder);
+        return !\is_null($this->placeholder);
     }
 
     public function getPlaceholder(): ?Placeholder

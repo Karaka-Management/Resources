@@ -30,7 +30,7 @@ class Exponential
      */
     public static function distribution($value, $lambda, $cumulative)
     {
-        if (is_array($value) || is_array($lambda) || is_array($cumulative)) {
+        if (\is_array($value) || \is_array($lambda) || \is_array($cumulative)) {
             return self::evaluateArrayArguments([self::class, __FUNCTION__], $value, $lambda, $cumulative);
         }
 
@@ -47,9 +47,9 @@ class Exponential
         }
 
         if ($cumulative === true) {
-            return 1 - exp(0 - $value * $lambda);
+            return 1 - \exp(0 - $value * $lambda);
         }
 
-        return $lambda * exp(0 - $value * $lambda);
+        return $lambda * \exp(0 - $value * $lambda);
     }
 }

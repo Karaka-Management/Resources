@@ -19,18 +19,18 @@ class MatrixFunctions
     private static function getMatrix($matrixValues): Matrix
     {
         $matrixData = [];
-        if (!is_array($matrixValues)) {
+        if (!\is_array($matrixValues)) {
             $matrixValues = [[$matrixValues]];
         }
 
         $row = 0;
         foreach ($matrixValues as $matrixRow) {
-            if (!is_array($matrixRow)) {
+            if (!\is_array($matrixRow)) {
                 $matrixRow = [$matrixRow];
             }
             $column = 0;
             foreach ($matrixRow as $matrixCell) {
-                if ((is_string($matrixCell)) || ($matrixCell === null)) {
+                if ((\is_string($matrixCell)) || ($matrixCell === null)) {
                     throw new Exception(ExcelError::VALUE());
                 }
                 $matrixData[$row][$column] = $matrixCell;
@@ -71,15 +71,15 @@ class MatrixFunctions
         }
 
         if ($step === 0) {
-            return array_chunk(
-                array_fill(0, $rows * $columns, $start),
-                max($columns, 1)
+            return \array_chunk(
+                \array_fill(0, $rows * $columns, $start),
+                \max($columns, 1)
             );
         }
 
-        return array_chunk(
-            range($start, $start + (($rows * $columns - 1) * $step), $step),
-            max($columns, 1)
+        return \array_chunk(
+            \range($start, $start + (($rows * $columns - 1) * $step), $step),
+            \max($columns, 1)
         );
     }
 

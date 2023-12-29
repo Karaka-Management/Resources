@@ -29,7 +29,7 @@ class MemoryDrawing extends BaseDrawing
     /**
      * Image resource.
      *
-     * @var null|GdImage|resource
+     * @var null|\GdImage|resource
      */
     private $imageResource;
 
@@ -65,7 +65,7 @@ class MemoryDrawing extends BaseDrawing
         // Initialise values
         $this->renderingFunction = self::RENDERING_DEFAULT;
         $this->mimeType = self::MIMETYPE_DEFAULT;
-        $this->uniqueName = md5(mt_rand(0, 9999) . time() . mt_rand(0, 9999));
+        $this->uniqueName = \md5(\mt_rand(0, 9999) . \time() . \mt_rand(0, 9999));
         $this->alwaysNull = null;
 
         // Initialize parent
@@ -75,7 +75,7 @@ class MemoryDrawing extends BaseDrawing
     public function __destruct()
     {
         if ($this->imageResource) {
-            $rslt = @imagedestroy($this->imageResource);
+            $rslt = @\imagedestroy($this->imageResource);
             // "Fix" for Scrutinizer
             $this->imageResource = $rslt ? null : $this->alwaysNull;
         }
@@ -93,43 +93,43 @@ class MemoryDrawing extends BaseDrawing
             return;
         }
 
-        $width = (int) imagesx($this->imageResource);
-        $height = (int) imagesy($this->imageResource);
+        $width = (int) \imagesx($this->imageResource);
+        $height = (int) \imagesy($this->imageResource);
 
-        if (imageistruecolor($this->imageResource)) {
-            $clone = imagecreatetruecolor($width, $height);
+        if (\imageistruecolor($this->imageResource)) {
+            $clone = \imagecreatetruecolor($width, $height);
             if (!$clone) {
                 throw new Exception('Could not clone image resource');
             }
 
-            imagealphablending($clone, false);
-            imagesavealpha($clone, true);
+            \imagealphablending($clone, false);
+            \imagesavealpha($clone, true);
         } else {
-            $clone = imagecreate($width, $height);
+            $clone = \imagecreate($width, $height);
             if (!$clone) {
                 throw new Exception('Could not clone image resource');
             }
 
             // If the image has transparency...
-            $transparent = imagecolortransparent($this->imageResource);
+            $transparent = \imagecolortransparent($this->imageResource);
             if ($transparent >= 0) {
-                $rgb = imagecolorsforindex($this->imageResource, $transparent);
+                $rgb = \imagecolorsforindex($this->imageResource, $transparent);
                 if (empty($rgb)) {
                     throw new Exception('Could not get image colors');
                 }
 
-                imagesavealpha($clone, true);
-                $color = imagecolorallocatealpha($clone, $rgb['red'], $rgb['green'], $rgb['blue'], $rgb['alpha']);
+                \imagesavealpha($clone, true);
+                $color = \imagecolorallocatealpha($clone, $rgb['red'], $rgb['green'], $rgb['blue'], $rgb['alpha']);
                 if ($color === false) {
                     throw new Exception('Could not get image alpha color');
                 }
 
-                imagefill($clone, 0, 0, $color);
+                \imagefill($clone, 0, 0, $color);
             }
         }
 
         //Create the Clone!!
-        imagecopy($clone, $this->imageResource, 0, 0, 0, 0, $width, $height);
+        \imagecopy($clone, $this->imageResource, 0, 0, 0, 0, $width, $height);
 
         $this->imageResource = $clone;
     }
@@ -141,7 +141,7 @@ class MemoryDrawing extends BaseDrawing
      */
     public static function fromStream($imageStream): self
     {
-        $streamValue = stream_get_contents($imageStream);
+        $streamValue = \stream_get_contents($imageStream);
         if ($streamValue === false) {
             throw new Exception('Unable to read data from stream');
         }
@@ -156,7 +156,7 @@ class MemoryDrawing extends BaseDrawing
      */
     public static function fromString(string $imageString): self
     {
-        $gdImage = @imagecreatefromstring($imageString);
+        $gdImage = @\imagecreatefromstring($imageString);
         if ($gdImage === false) {
             throw new Exception('Value cannot be converted to an image');
         }
@@ -192,32 +192,32 @@ class MemoryDrawing extends BaseDrawing
     private static function identifyMimeType(string $imageString): string
     {
         $temporaryFileName = File::temporaryFilename();
-        file_put_contents($temporaryFileName, $imageString);
+        \file_put_contents($temporaryFileName, $imageString);
 
         $mimeType = self::identifyMimeTypeUsingExif($temporaryFileName);
         if ($mimeType !== null) {
-            unlink($temporaryFileName);
+            \unlink($temporaryFileName);
 
             return $mimeType;
         }
 
         $mimeType = self::identifyMimeTypeUsingGd($temporaryFileName);
         if ($mimeType !== null) {
-            unlink($temporaryFileName);
+            \unlink($temporaryFileName);
 
             return $mimeType;
         }
 
-        unlink($temporaryFileName);
+        \unlink($temporaryFileName);
 
         return self::MIMETYPE_DEFAULT;
     }
 
     private static function identifyMimeTypeUsingExif(string $temporaryFileName): ?string
     {
-        if (function_exists('exif_imagetype')) {
-            $imageType = @exif_imagetype($temporaryFileName);
-            $mimeType = ($imageType) ? image_type_to_mime_type($imageType) : null;
+        if (\function_exists('exif_imagetype')) {
+            $imageType = @\exif_imagetype($temporaryFileName);
+            $mimeType = ($imageType) ? \image_type_to_mime_type($imageType) : null;
 
             return self::supportedMimeTypes($mimeType);
         }
@@ -227,9 +227,9 @@ class MemoryDrawing extends BaseDrawing
 
     private static function identifyMimeTypeUsingGd(string $temporaryFileName): ?string
     {
-        if (function_exists('getimagesize')) {
-            $imageSize = @getimagesize($temporaryFileName);
-            if (is_array($imageSize)) {
+        if (\function_exists('getimagesize')) {
+            $imageSize = @\getimagesize($temporaryFileName);
+            if (\is_array($imageSize)) {
                 $mimeType = $imageSize['mime'] ?? null;
 
                 return self::supportedMimeTypes($mimeType);
@@ -241,7 +241,7 @@ class MemoryDrawing extends BaseDrawing
 
     private static function supportedMimeTypes(?string $mimeType = null): ?string
     {
-        if (in_array($mimeType, self::SUPPORTED_MIME_TYPES, true)) {
+        if (\in_array($mimeType, self::SUPPORTED_MIME_TYPES, true)) {
             return $mimeType;
         }
 
@@ -251,7 +251,7 @@ class MemoryDrawing extends BaseDrawing
     /**
      * Get image resource.
      *
-     * @return null|GdImage|resource
+     * @return null|\GdImage|resource
      */
     public function getImageResource()
     {
@@ -261,7 +261,7 @@ class MemoryDrawing extends BaseDrawing
     /**
      * Set image resource.
      *
-     * @param GdImage|resource $value
+     * @param \GdImage|resource $value
      *
      * @return $this
      */
@@ -271,8 +271,8 @@ class MemoryDrawing extends BaseDrawing
 
         if ($this->imageResource !== null) {
             // Get width/height
-            $this->width = (int) imagesx($this->imageResource);
-            $this->height = (int) imagesy($this->imageResource);
+            $this->width = (int) \imagesx($this->imageResource);
+            $this->height = (int) \imagesy($this->imageResource);
         }
 
         return $this;
@@ -331,8 +331,8 @@ class MemoryDrawing extends BaseDrawing
      */
     public function getIndexedFilename(): string
     {
-        $extension = strtolower($this->getMimeType());
-        $extension = explode('/', $extension);
+        $extension = \strtolower($this->getMimeType());
+        $extension = \explode('/', $extension);
         $extension = $extension[1];
 
         return $this->uniqueName . $this->getImageIndex() . '.' . $extension;
@@ -345,7 +345,7 @@ class MemoryDrawing extends BaseDrawing
      */
     public function getHashCode()
     {
-        return md5(
+        return \md5(
             $this->renderingFunction .
             $this->mimeType .
             $this->uniqueName .

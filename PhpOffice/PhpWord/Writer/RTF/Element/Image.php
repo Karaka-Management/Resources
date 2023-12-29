@@ -45,8 +45,8 @@ class Image extends AbstractElement
         $content .= $this->writeOpening();
         $content .= '{\*\shppict {\pict';
         $content .= '\pngblip\picscalex100\picscaley100';
-        $content .= '\picwgoal' . round(Converter::pixelToTwip($style->getWidth()));
-        $content .= '\pichgoal' . round(Converter::pixelToTwip($style->getHeight()));
+        $content .= '\picwgoal' . \round(Converter::pixelToTwip($style->getWidth()));
+        $content .= '\pichgoal' . \round(Converter::pixelToTwip($style->getHeight()));
         $content .= PHP_EOL;
         $content .= $this->element->getImageStringData();
         $content .= '}}';

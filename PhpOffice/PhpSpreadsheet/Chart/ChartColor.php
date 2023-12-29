@@ -32,7 +32,7 @@ class ChartColor
      */
     public function __construct($value = '', ?int $alpha = null, ?string $type = null, ?int $brightness = null)
     {
-        if (is_array($value)) {
+        if (\is_array($value)) {
             $this->setColorPropertiesArray($value);
         } else {
             $this->setColorProperties($value, $alpha, $type, $brightness);
@@ -94,13 +94,13 @@ class ChartColor
     public function setColorProperties(?string $color, $alpha = null, ?string $type = null, $brightness = null): self
     {
         if (empty($type) && !empty($color)) {
-            if (substr($color, 0, 1) === '*') {
+            if (\substr($color, 0, 1) === '*') {
                 $type = 'schemeClr';
-                $color = substr($color, 1);
-            } elseif (substr($color, 0, 1) === '/') {
+                $color = \substr($color, 1);
+            } elseif (\substr($color, 0, 1) === '/') {
                 $type = 'prstClr';
-                $color = substr($color, 1);
-            } elseif (preg_match('/^[0-9A-Fa-f]{6}$/', $color) === 1) {
+                $color = \substr($color, 1);
+            } elseif (\preg_match('/^[0-9A-Fa-f]{6}$/', $color) === 1) {
                 $type = 'srgbClr';
             }
         }
@@ -112,12 +112,12 @@ class ChartColor
         }
         if ($alpha === null) {
             $this->setAlpha(null);
-        } elseif (is_numeric($alpha)) {
+        } elseif (\is_numeric($alpha)) {
             $this->setAlpha((int) $alpha);
         }
         if ($brightness === null) {
             $this->setBrightness(null);
-        } elseif (is_numeric($brightness)) {
+        } elseif (\is_numeric($brightness)) {
             $this->setBrightness((int) $brightness);
         }
 

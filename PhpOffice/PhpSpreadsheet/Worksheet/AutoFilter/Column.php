@@ -128,7 +128,7 @@ class Column
     {
         $this->setEvaluatedFalse();
         // Uppercase coordinate
-        $column = strtoupper($column);
+        $column = \strtoupper($column);
         if ($this->parent !== null) {
             $this->parent->testColumnInRange($column);
         }
@@ -181,10 +181,10 @@ class Column
     public function setFilterType($filterType)
     {
         $this->setEvaluatedFalse();
-        if (!in_array($filterType, self::$filterTypes)) {
+        if (!\in_array($filterType, self::$filterTypes)) {
             throw new PhpSpreadsheetException('Invalid filter type for column AutoFilter.');
         }
-        if ($filterType === self::AUTOFILTER_FILTERTYPE_CUSTOMFILTER && count($this->ruleset) > 2) {
+        if ($filterType === self::AUTOFILTER_FILTERTYPE_CUSTOMFILTER && \count($this->ruleset) > 2) {
             throw new PhpSpreadsheetException('No more than 2 rules are allowed in a Custom Filter');
         }
 
@@ -214,8 +214,8 @@ class Column
     {
         $this->setEvaluatedFalse();
         // Lowercase And/Or
-        $join = strtolower($join);
-        if (!in_array($join, self::$ruleJoins)) {
+        $join = \strtolower($join);
+        if (!\in_array($join, self::$ruleJoins)) {
             throw new PhpSpreadsheetException('Invalid rule connection for column AutoFilter.');
         }
 
@@ -283,7 +283,7 @@ class Column
 
     public function ruleCount(): int
     {
-        return count($this->ruleset);
+        return \count($this->ruleset);
     }
 
     /**
@@ -320,12 +320,12 @@ class Column
     public function createRule()
     {
         $this->setEvaluatedFalse();
-        if ($this->filterType === self::AUTOFILTER_FILTERTYPE_CUSTOMFILTER && count($this->ruleset) >= 2) {
+        if ($this->filterType === self::AUTOFILTER_FILTERTYPE_CUSTOMFILTER && \count($this->ruleset) >= 2) {
             throw new PhpSpreadsheetException('No more than 2 rules are allowed in a Custom Filter');
         }
         $this->ruleset[] = new Column\Rule($this);
 
-        return end($this->ruleset);
+        return \end($this->ruleset);
     }
 
     /**
@@ -356,7 +356,7 @@ class Column
         if (isset($this->ruleset[$index])) {
             unset($this->ruleset[$index]);
             //    If we've just deleted down to a single rule, then reset And/Or joining to Or
-            if (count($this->ruleset) <= 1) {
+            if (\count($this->ruleset) <= 1) {
                 $this->setJoin(self::AUTOFILTER_COLUMN_JOIN_OR);
             }
         }
@@ -383,7 +383,7 @@ class Column
      */
     public function __clone()
     {
-        $vars = get_object_vars($this);
+        $vars = \get_object_vars($this);
         foreach ($vars as $key => $value) {
             if ($key === 'parent') {
                 // Detach from autofilter parent

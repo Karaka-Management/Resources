@@ -9,16 +9,16 @@ use SimpleXMLElement;
 
 class SheetViews extends BaseParserClass
 {
-    /** @var SimpleXMLElement */
+    /** @var \SimpleXMLElement */
     private $sheetViewXml;
 
-    /** @var SimpleXMLElement */
+    /** @var \SimpleXMLElement */
     private $sheetViewAttributes;
 
     /** @var Worksheet */
     private $worksheet;
 
-    public function __construct(SimpleXMLElement $sheetViewXml, Worksheet $workSheet)
+    public function __construct(\SimpleXMLElement $sheetViewXml, Worksheet $workSheet)
     {
         $this->sheetViewXml = $sheetViewXml;
         $this->sheetViewAttributes = Xlsx::testSimpleXml($sheetViewXml->attributes());
@@ -148,7 +148,7 @@ class SheetViews extends BaseParserClass
         $attributes = $this->sheetViewXml->selection->attributes();
         if ($attributes !== null) {
             $sqref = (string) $attributes->sqref;
-            $sqref = explode(' ', $sqref);
+            $sqref = \explode(' ', $sqref);
             $sqref = $sqref[0];
             $this->worksheet->setSelectedCells($sqref);
         }

@@ -85,8 +85,8 @@ class PowerPoint2007 extends AbstractWriter implements WriterInterface
 
         // If $pFilename is php://output or php://stdout, make it a temporary file...
         $originalFilename = $pFilename;
-        if ('php://output' == strtolower($pFilename) || 'php://stdout' == strtolower($pFilename)) {
-            $pFilename = @tempnam('./', 'phppttmp');
+        if ('php://output' == \strtolower($pFilename) || 'php://stdout' == \strtolower($pFilename)) {
+            $pFilename = @\tempnam('./', 'phppttmp');
             if ('' == $pFilename) {
                 $pFilename = $originalFilename;
             }
@@ -98,7 +98,7 @@ class PowerPoint2007 extends AbstractWriter implements WriterInterface
         $oZip = $this->getZipAdapter();
         $oZip->open($pFilename);
 
-        $oDir = new DirectoryIterator(dirname(__FILE__) . DIRECTORY_SEPARATOR . 'PowerPoint2007');
+        $oDir = new \DirectoryIterator(\dirname(__FILE__) . DIRECTORY_SEPARATOR . 'PowerPoint2007');
         $arrayFiles = [];
         foreach ($oDir as $oFile) {
             if (!$oFile->isFile()) {
@@ -106,7 +106,7 @@ class PowerPoint2007 extends AbstractWriter implements WriterInterface
             }
 
             $class = __NAMESPACE__ . '\\PowerPoint2007\\' . $oFile->getBasename('.php');
-            $class = new ReflectionClass($class);
+            $class = new \ReflectionClass($class);
 
             if ($class->isAbstract() || !$class->isSubclassOf(AbstractDecoratorWriter::class)) {
                 continue;
@@ -114,7 +114,7 @@ class PowerPoint2007 extends AbstractWriter implements WriterInterface
             $arrayFiles[$oFile->getBasename('.php')] = $class;
         }
 
-        ksort($arrayFiles);
+        \ksort($arrayFiles);
 
         foreach ($arrayFiles as $o) {
             $oService = $o->newInstance();
@@ -130,10 +130,10 @@ class PowerPoint2007 extends AbstractWriter implements WriterInterface
 
         // If a temporary file was used, copy it to the correct file stream
         if ($originalFilename != $pFilename) {
-            if (false === copy($pFilename, $originalFilename)) {
+            if (false === \copy($pFilename, $originalFilename)) {
                 throw new FileCopyException($pFilename, $originalFilename);
             }
-            if (false === @unlink($pFilename)) {
+            if (false === @\unlink($pFilename)) {
                 throw new FileRemoveException($pFilename);
             }
         }
@@ -163,8 +163,8 @@ class PowerPoint2007 extends AbstractWriter implements WriterInterface
     {
         $this->useDiskCaching = $useDiskCaching;
 
-        if (!is_null($directory)) {
-            if (!is_dir($directory)) {
+        if (!\is_null($directory)) {
+            if (!\is_dir($directory)) {
                 throw new DirectoryNotFoundException($directory);
             }
             $this->diskCachingDir = $directory;

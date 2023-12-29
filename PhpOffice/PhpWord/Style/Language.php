@@ -241,15 +241,15 @@ final class Language extends AbstractStyle
     private function validateLocale($locale)
     {
         if ($locale !== null) {
-            $locale = str_replace('_', '-', $locale);
+            $locale = \str_replace('_', '-', $locale);
         }
 
-        if ($locale !== null && strlen($locale) === 2) {
-            return strtolower($locale) . '-' . strtoupper($locale);
+        if ($locale !== null && \strlen($locale) === 2) {
+            return \strtolower($locale) . '-' . \strtoupper($locale);
         }
 
-        if ($locale !== null && $locale !== 'zxx' && strstr($locale, '-') === false) {
-            throw new InvalidArgumentException($locale . ' is not a valid language code');
+        if ($locale !== null && $locale !== 'zxx' && \strstr($locale, '-') === false) {
+            throw new \InvalidArgumentException($locale . ' is not a valid language code');
         }
 
         return $locale;

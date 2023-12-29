@@ -70,12 +70,12 @@ class Document extends AbstractPart
         $content .= '\info';
         foreach ($properties as $property) {
             $method = 'get' . ($mapping[$property] ?? $property);
-            if (!in_array($property, $dateFields) && Settings::isOutputEscapingEnabled()) {
+            if (!\in_array($property, $dateFields) && Settings::isOutputEscapingEnabled()) {
                 $value = $this->escaper->escape($docProps->$method());
             } else {
                 $value = $docProps->$method();
             }
-            $value = in_array($property, $dateFields) ? $this->getDateValue($value) : $value;
+            $value = \in_array($property, $dateFields) ? $this->getDateValue($value) : $value;
             $content .= "{\\{$property} {$value}}";
         }
         $content .= '}';
@@ -164,9 +164,9 @@ class Document extends AbstractPart
                         $content .= ($type === FOOTER::EVEN) ? 'l' : 'r';
                     }
                     foreach ($header->getElements() as $element) {
-                        $cl = get_class($element);
-                        $cl2 = str_replace('Element', 'Writer\\RTF\\Element', $cl);
-                        if (class_exists($cl2)) {
+                        $cl = \get_class($element);
+                        $cl2 = \str_replace('Element', 'Writer\\RTF\\Element', $cl);
+                        if (\class_exists($cl2)) {
                             $elementWriter = new $cl2($this->getParentWriter(), $element);
                             $content .= $elementWriter->write();
                         }
@@ -184,9 +184,9 @@ class Document extends AbstractPart
                         $content .= ($type === FOOTER::EVEN) ? 'l' : 'r';
                     }
                     foreach ($footer->getElements() as $element) {
-                        $cl = get_class($element);
-                        $cl2 = str_replace('Element', 'Writer\\RTF\\Element', $cl);
-                        if (class_exists($cl2)) {
+                        $cl = \get_class($element);
+                        $cl2 = \str_replace('Element', 'Writer\\RTF\\Element', $cl);
+                        if (\class_exists($cl2)) {
                             $elementWriter = new $cl2($this->getParentWriter(), $element);
                             $content .= $elementWriter->write();
                         }
@@ -225,7 +225,7 @@ class Document extends AbstractPart
         ];
         $result = '';
         foreach ($dateParts as $dateFormat => $controlWord) {
-            $result .= '\\' . $controlWord . date($dateFormat, $value);
+            $result .= '\\' . $controlWord . \date($dateFormat, $value);
         }
 
         return $result;

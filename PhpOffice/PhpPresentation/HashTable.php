@@ -78,7 +78,7 @@ class HashTable
         // Add value
         if (!isset($this->items[$hashCode])) {
             $this->items[$hashCode] = $pSource;
-            $index = count($this->items) - 1;
+            $index = \count($this->items) - 1;
             $this->keyMap[$index] = $hashCode;
             $pSource->setHashIndex($index);
         } else {
@@ -106,7 +106,7 @@ class HashTable
                     $deleteKey = $key;
                 }
             }
-            unset($this->keyMap[count($this->keyMap) - 1]);
+            unset($this->keyMap[\count($this->keyMap) - 1]);
         }
     }
 
@@ -124,7 +124,7 @@ class HashTable
      */
     public function count(): int
     {
-        return count($this->items);
+        return \count($this->items);
     }
 
     /**
@@ -134,7 +134,7 @@ class HashTable
      */
     public function getIndexForHashCode(string $pHashCode = ''): int
     {
-        $index = array_search($pHashCode, $this->keyMap);
+        $index = \array_search($pHashCode, $this->keyMap);
 
         return false === $index ? -1 : $index;
     }

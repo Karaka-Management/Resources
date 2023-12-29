@@ -62,7 +62,7 @@ final class ProofState
         if ($spelling == self::CLEAN || $spelling == self::DIRTY) {
             $this->spelling = $spelling;
         } else {
-            throw new InvalidArgumentException('Invalid value, dirty or clean possible');
+            throw new \InvalidArgumentException('Invalid value, dirty or clean possible');
         }
 
         return $this;
@@ -90,7 +90,7 @@ final class ProofState
         if ($grammar == self::CLEAN || $grammar == self::DIRTY) {
             $this->grammar = $grammar;
         } else {
-            throw new InvalidArgumentException('Invalid value, dirty or clean possible');
+            throw new \InvalidArgumentException('Invalid value, dirty or clean possible');
         }
 
         return $this;

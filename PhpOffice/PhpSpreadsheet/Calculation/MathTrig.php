@@ -1439,7 +1439,7 @@ class MathTrig
         $number = Functions::flattenSingleValue($number);
         if ($number === null) {
             $number = 0;
-        } elseif (is_bool($number)) {
+        } elseif (\is_bool($number)) {
             $number = (int) $number;
         }
     }

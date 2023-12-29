@@ -40,11 +40,11 @@ class Averages extends AggregateBase
             // Is it a numeric value?
             // Strings containing numeric values are only counted if they are string literals (not cell values)
             //    and then only in MS Excel and in Open Office, not in Gnumeric
-            if ((is_string($arg)) && (!is_numeric($arg)) && (!Functions::isCellValue($k))) {
+            if ((\is_string($arg)) && (!\is_numeric($arg)) && (!Functions::isCellValue($k))) {
                 return ExcelError::VALUE();
             }
             if (self::isAcceptedCountable($arg, $k)) {
-                $returnValue += abs($arg - $aMean);
+                $returnValue += \abs($arg - $aMean);
                 ++$aCount;
             }
         }
@@ -79,7 +79,7 @@ class Averages extends AggregateBase
             // Is it a numeric value?
             // Strings containing numeric values are only counted if they are string literals (not cell values)
             //    and then only in MS Excel and in Open Office, not in Gnumeric
-            if ((is_string($arg)) && (!is_numeric($arg)) && (!Functions::isCellValue($k))) {
+            if ((\is_string($arg)) && (!\is_numeric($arg)) && (!Functions::isCellValue($k))) {
                 return ExcelError::VALUE();
             }
             if (self::isAcceptedCountable($arg, $k)) {
@@ -115,9 +115,9 @@ class Averages extends AggregateBase
         $aCount = 0;
         // Loop through arguments
         foreach (Functions::flattenArrayIndexed($args) as $k => $arg) {
-            if (is_numeric($arg)) {
+            if (\is_numeric($arg)) {
                 // do nothing
-            } elseif (is_bool($arg)) {
+            } elseif (\is_bool($arg)) {
                 $arg = (int) $arg;
             } elseif (!Functions::isMatrixValue($k)) {
                 $arg = 0;
@@ -154,14 +154,14 @@ class Averages extends AggregateBase
         $returnValue = ExcelError::NAN();
 
         $aArgs = self::filterArguments($aArgs);
-        $valueCount = count($aArgs);
+        $valueCount = \count($aArgs);
         if ($valueCount > 0) {
-            sort($aArgs, SORT_NUMERIC);
+            \sort($aArgs, SORT_NUMERIC);
             $valueCount = $valueCount / 2;
-            if ($valueCount == floor($valueCount)) {
+            if ($valueCount == \floor($valueCount)) {
                 $returnValue = ($aArgs[$valueCount--] + $aArgs[$valueCount]) / 2;
             } else {
-                $valueCount = floor($valueCount);
+                $valueCount = \floor($valueCount);
                 $returnValue = $aArgs[$valueCount];
             }
         }
@@ -198,11 +198,11 @@ class Averages extends AggregateBase
 
     protected static function filterArguments($args)
     {
-        return array_filter(
+        return \array_filter(
             $args,
             function ($value) {
                 // Is it a numeric value?
-                return  is_numeric($value) && (!is_string($value));
+                return  \is_numeric($value) && (!\is_string($value));
             }
         );
     }

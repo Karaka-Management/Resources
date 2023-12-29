@@ -94,13 +94,13 @@ class IOFactory
      */
     private static function loadClass(string $class, string $type, PhpPresentation $phpPresentation = null)
     {
-        if (!class_exists($class)) {
+        if (!\class_exists($class)) {
             throw new InvalidClassException($class, $type . ': The class doesn\'t exist');
         }
         if (!self::isConcreteClass($class)) {
             throw new InvalidClassException($class, $type . ': The class is an abstract class or an interface');
         }
-        if (is_null($phpPresentation)) {
+        if (\is_null($phpPresentation)) {
             return new $class();
         }
 
@@ -112,7 +112,7 @@ class IOFactory
      */
     private static function isConcreteClass(string $class): bool
     {
-        $reflection = new ReflectionClass($class);
+        $reflection = new \ReflectionClass($class);
 
         return !$reflection->isAbstract() && !$reflection->isInterface();
     }

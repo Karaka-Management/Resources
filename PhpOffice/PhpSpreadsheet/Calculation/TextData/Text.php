@@ -23,13 +23,13 @@ class Text
      */
     public static function length($value = '')
     {
-        if (is_array($value)) {
+        if (\is_array($value)) {
             return self::evaluateSingleArgumentArray([self::class, __FUNCTION__], $value);
         }
 
         $value = Helpers::extractString($value);
 
-        return mb_strlen($value ?? '', 'UTF-8');
+        return \mb_strlen($value ?? '', 'UTF-8');
     }
 
     /**
@@ -48,7 +48,7 @@ class Text
      */
     public static function exact($value1, $value2)
     {
-        if (is_array($value1) || is_array($value2)) {
+        if (\is_array($value1) || \is_array($value2)) {
             return self::evaluateArrayArguments([self::class, __FUNCTION__], $value1, $value2);
         }
 
@@ -70,11 +70,11 @@ class Text
      */
     public static function test($testValue = '')
     {
-        if (is_array($testValue)) {
+        if (\is_array($testValue)) {
             return self::evaluateSingleArgumentArray([self::class, __FUNCTION__], $testValue);
         }
 
-        if (is_string($testValue)) {
+        if (\is_string($testValue)) {
             return $testValue;
         }
 
@@ -112,14 +112,14 @@ class Text
             $delimiter = self::buildDelimiter($rowDelimiter);
             $rows = ($delimiter === '()')
                 ? [$text]
-                : preg_split("/{$delimiter}/{$flags}", $text);
+                : \preg_split("/{$delimiter}/{$flags}", $text);
         } else {
             $rows = [$text];
         }
 
         /** @var array $rows */
         if ($ignoreEmpty === true) {
-            $rows = array_values(array_filter(
+            $rows = \array_values(\array_filter(
                 $rows,
                 function ($row) {
                     return $row !== '';
@@ -129,15 +129,15 @@ class Text
 
         if ($columnDelimiter !== null) {
             $delimiter = self::buildDelimiter($columnDelimiter);
-            array_walk(
+            \array_walk(
                 $rows,
                 function (&$row) use ($delimiter, $flags, $ignoreEmpty): void {
                     $row = ($delimiter === '()')
                         ? [$row]
-                        : preg_split("/{$delimiter}/{$flags}", $row);
+                        : \preg_split("/{$delimiter}/{$flags}", $row);
                     /** @var array $row */
                     if ($ignoreEmpty === true) {
-                        $row = array_values(array_filter(
+                        $row = \array_values(\array_filter(
                             $row,
                             function ($value) {
                                 return $value !== '';
@@ -147,7 +147,7 @@ class Text
                 }
             );
             if ($ignoreEmpty === true) {
-                $rows = array_values(array_filter(
+                $rows = \array_values(\array_filter(
                     $rows,
                     function ($row) {
                         return $row !== [] && $row !== [''];
@@ -164,18 +164,18 @@ class Text
      */
     private static function applyPadding(array $rows, $padding): array
     {
-        $columnCount = array_reduce(
+        $columnCount = \array_reduce(
             $rows,
             function (int $counter, array $row): int {
-                return max($counter, count($row));
+                return \max($counter, \count($row));
             },
             0
         );
 
-        return array_map(
+        return \array_map(
             function (array $row) use ($columnCount, $padding): array {
-                return (count($row) < $columnCount)
-                    ? array_merge($row, array_fill(0, $columnCount - count($row), $padding))
+                return (\count($row) < $columnCount)
+                    ? \array_merge($row, \array_fill(0, $columnCount - \count($row), $padding))
                     : $row;
             },
             $rows
@@ -190,19 +190,19 @@ class Text
     {
         $valueSet = Functions::flattenArray($delimiter);
 
-        if (is_array($delimiter) && count($valueSet) > 1) {
-            $quotedDelimiters = array_map(
+        if (\is_array($delimiter) && \count($valueSet) > 1) {
+            $quotedDelimiters = \array_map(
                 function ($delimiter) {
-                    return preg_quote($delimiter ?? '');
+                    return \preg_quote($delimiter ?? '');
                 },
                 $valueSet
             );
-            $delimiters = implode('|', $quotedDelimiters);
+            $delimiters = \implode('|', $quotedDelimiters);
 
             return '(' . $delimiters . ')';
         }
 
-        return '(' . preg_quote(/** @scrutinizer ignore-type */ Functions::flattenSingleValue($delimiter)) . ')';
+        return '(' . \preg_quote(/** @scrutinizer ignore-type */ Functions::flattenSingleValue($delimiter)) . ')';
     }
 
     private static function matchFlags(bool $matchMode): string
@@ -219,10 +219,10 @@ class Text
                 $value = ($format === 1) ? self::formatValueMode1($cellValue) : self::formatValueMode0($cellValue);
                 $cells[] = $value;
             }
-            $result[] = implode(($format === 1) ? ',' : ', ', $cells);
+            $result[] = \implode(($format === 1) ? ',' : ', ', $cells);
         }
 
-        $result = implode(($format === 1) ? ';' : ', ', $result);
+        $result = \implode(($format === 1) ? ';' : ', ', $result);
 
         return ($format === 1) ? '{' . $result . '}' : $result;
     }
@@ -232,7 +232,7 @@ class Text
      */
     private static function formatValueMode0($cellValue): string
     {
-        if (is_bool($cellValue)) {
+        if (\is_bool($cellValue)) {
             return Calculation::getLocaleBoolean($cellValue ? 'TRUE' : 'FALSE');
         }
 
@@ -244,9 +244,9 @@ class Text
      */
     private static function formatValueMode1($cellValue): string
     {
-        if (is_string($cellValue) && ErrorValue::isError($cellValue) === false) {
+        if (\is_string($cellValue) && ErrorValue::isError($cellValue) === false) {
             return Calculation::FORMULA_STRING_QUOTE . $cellValue . Calculation::FORMULA_STRING_QUOTE;
-        } elseif (is_bool($cellValue)) {
+        } elseif (\is_bool($cellValue)) {
             return Calculation::getLocaleBoolean($cellValue ? 'TRUE' : 'FALSE');
         }
 

@@ -178,7 +178,7 @@ class TextBox extends Image
     {
         $hasInnerMargins = false;
         $margins = $this->getInnerMargin();
-        $numMargins = count($margins);
+        $numMargins = \count($margins);
         for ($i = 0; $i < $numMargins; ++$i) {
             if ($margins[$i] !== null) {
                 $hasInnerMargins = true;

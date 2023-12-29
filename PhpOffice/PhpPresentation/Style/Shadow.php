@@ -232,7 +232,7 @@ class Shadow implements ComparableInterface
      */
     public function getHashCode(): string
     {
-        return md5(($this->visible ? 't' : 'f') . $this->blurRadius . $this->distance . $this->direction . $this->alignment . $this->color->getHashCode() . $this->alpha . __CLASS__);
+        return \md5(($this->visible ? 't' : 'f') . $this->blurRadius . $this->distance . $this->direction . $this->alignment . $this->color->getHashCode() . $this->alpha . __CLASS__);
     }
 
     /**

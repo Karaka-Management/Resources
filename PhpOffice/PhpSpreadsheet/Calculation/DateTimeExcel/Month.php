@@ -35,7 +35,7 @@ class Month
      */
     public static function adjust($dateValue, $adjustmentMonths)
     {
-        if (is_array($dateValue) || is_array($adjustmentMonths)) {
+        if (\is_array($dateValue) || \is_array($adjustmentMonths)) {
             return self::evaluateArrayArguments([self::class, __FUNCTION__], $dateValue, $adjustmentMonths);
         }
 
@@ -45,7 +45,7 @@ class Month
         } catch (Exception $e) {
             return $e->getMessage();
         }
-        $adjustmentMonths = floor($adjustmentMonths);
+        $adjustmentMonths = \floor($adjustmentMonths);
 
         // Execute function
         $PHPDateObject = Helpers::adjustDateByMonths($dateValue, $adjustmentMonths);
@@ -78,7 +78,7 @@ class Month
      */
     public static function lastDay($dateValue, $adjustmentMonths)
     {
-        if (is_array($dateValue) || is_array($adjustmentMonths)) {
+        if (\is_array($dateValue) || \is_array($adjustmentMonths)) {
             return self::evaluateArrayArguments([self::class, __FUNCTION__], $dateValue, $adjustmentMonths);
         }
 
@@ -88,7 +88,7 @@ class Month
         } catch (Exception $e) {
             return $e->getMessage();
         }
-        $adjustmentMonths = floor($adjustmentMonths);
+        $adjustmentMonths = \floor($adjustmentMonths);
 
         // Execute function
         $PHPDateObject = Helpers::adjustDateByMonths($dateValue, $adjustmentMonths + 1);

@@ -128,7 +128,7 @@ interface IReader
      * Loads PhpSpreadsheet from file.
      *
      * @param string $filename The name of the file to load
-     * @param int $flags Flags that can change the behaviour of the Writer:
+     * @param int $flags Flags that can change the behavior of the Writer:
      *            self::LOAD_WITH_CHARTS    Load any charts that are defined (if the Reader supports Charts)
      *            self::READ_DATA_ONLY      Read only data, not style or structure information, from the file
      *            self::SKIP_EMPTY_CELLS    Don't read empty cells (cells that contain a null value,

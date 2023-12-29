@@ -185,7 +185,7 @@ class Content extends AbstractPart
         $styleWriter->write();
 
         $sects = $this->getParentWriter()->getPhpWord()->getSections();
-        $countsects = count($sects);
+        $countsects = \count($sects);
         for ($i = 0; $i < $countsects; ++$i) {
             $iplus1 = $i + 1;
             $style = new Paragraph();
@@ -199,14 +199,14 @@ class Content extends AbstractPart
 
         foreach ($styles as $style) {
             $sty = $style->getStyleName();
-            if (substr($sty, 0, 8) === 'Heading_') {
+            if (\substr($sty, 0, 8) === 'Heading_') {
                 $style = new Paragraph();
-                $style->setStyleName('HD' . substr($sty, 8));
+                $style->setStyleName('HD' . \substr($sty, 8));
                 $style->setAuto();
                 $styleWriter = new ParagraphStyleWriter($xmlWriter, $style);
                 $styleWriter->write();
                 $style = new Paragraph();
-                $style->setStyleName('HE' . substr($sty, 8));
+                $style->setStyleName('HE' . \substr($sty, 8));
                 $style->setAuto();
                 $styleWriter = new ParagraphStyleWriter($xmlWriter, $style);
                 $styleWriter->write();
@@ -215,8 +215,8 @@ class Content extends AbstractPart
 
         foreach ($styles as $style) {
             if ($style->isAuto() === true) {
-                $styleClass = str_replace('\\Style\\', '\\Writer\\ODText\\Style\\', get_class($style));
-                if (class_exists($styleClass)) {
+                $styleClass = \str_replace('\\Style\\', '\\Writer\\ODText\\Style\\', \get_class($style));
+                if (\class_exists($styleClass)) {
                     /** @var \PhpOffice\PhpWord\Writer\ODText\Style\AbstractStyle $styleWriter Type hint */
                     $styleWriter = new $styleClass($xmlWriter, $style);
                     $styleWriter->write();
@@ -282,7 +282,7 @@ class Content extends AbstractPart
             } elseif ($element instanceof Table) {
                 /** @var \PhpOffice\PhpWord\Style\Table $style */
                 $style = $element->getStyle();
-                if (is_string($style)) {
+                if (\is_string($style)) {
                     $style = Style::getStyle($style);
                 }
                 if ($style === null) {
@@ -409,7 +409,7 @@ class Content extends AbstractPart
             if ($element->getTrackChange() != null) {
                 $trackedChanges[] = $element;
             }
-            if (is_callable([$element, 'getElements'])) {
+            if (\is_callable([$element, 'getElements'])) {
                 $this->collectTrackedChanges($element, $trackedChanges);
             }
         }

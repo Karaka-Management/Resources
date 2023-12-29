@@ -61,7 +61,7 @@ class Shape extends AbstractElement
         $xmlWriter->startElement("v:{$type}");
 
         // Element style
-        if (method_exists($this, $method)) {
+        if (\method_exists($this, $method)) {
             $this->$method($xmlWriter, $style);
         }
 
@@ -140,14 +140,14 @@ class Shape extends AbstractElement
         switch ($type) {
             case 'arc':
             case 'line':
-                $points = explode(' ', $value);
-                [$start, $end] = array_pad($points, 2, null);
+                $points = \explode(' ', $value);
+                [$start, $end] = \array_pad($points, 2, null);
                 $points = ['start' => $start, 'end' => $end];
 
                 break;
             case 'curve':
-                $points = explode(' ', $value);
-                [$start, $end, $point1, $point2] = array_pad($points, 4, null);
+                $points = \explode(' ', $value);
+                [$start, $end, $point1, $point2] = \array_pad($points, 4, null);
                 $points = ['start' => $start, 'end' => $end, 'point1' => $point1, 'point2' => $point2];
 
                 break;

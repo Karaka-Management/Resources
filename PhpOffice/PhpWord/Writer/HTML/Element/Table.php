@@ -37,7 +37,7 @@ class Table extends AbstractElement
 
         $content = '';
         $rows = $this->element->getRows();
-        $rowCount = count($rows);
+        $rowCount = \count($rows);
         if ($rowCount > 0) {
             $content .= '<table' . self::getTableStyle($this->element->getStyle()) . '>' . PHP_EOL;
 
@@ -48,16 +48,16 @@ class Table extends AbstractElement
                 $tblHeader = $rowStyle->isTblHeader();
                 $content .= '<tr>' . PHP_EOL;
                 $rowCells = $rows[$i]->getCells();
-                $rowCellCount = count($rowCells);
+                $rowCellCount = \count($rowCells);
                 for ($j = 0; $j < $rowCellCount; ++$j) {
                     $cellStyle = $rowCells[$j]->getStyle();
                     $cellBgColor = $cellStyle->getBgColor();
                     $cellBgColor === 'auto' && $cellBgColor = null; // auto cannot be parsed to hexadecimal number
                     $cellFgColor = null;
                     if ($cellBgColor) {
-                        $red = hexdec(substr($cellBgColor, 0, 2));
-                        $green = hexdec(substr($cellBgColor, 2, 2));
-                        $blue = hexdec(substr($cellBgColor, 4, 2));
+                        $red = \hexdec(\substr($cellBgColor, 0, 2));
+                        $green = \hexdec(\substr($cellBgColor, 2, 2));
+                        $blue = \hexdec(\substr($cellBgColor, 4, 2));
                         $cellFgColor = (($red * 0.299 + $green * 0.587 + $blue * 0.114) > 186) ? null : 'ffffff';
                     }
                     $cellColSpan = $cellStyle->getGridSpan();
@@ -81,7 +81,7 @@ class Table extends AbstractElement
                     // Ignore cells that are merged vertically with previous rows
                     if ($cellVMerge !== 'continue') {
                         $cellTag = $tblHeader ? 'th' : 'td';
-                        $cellColSpanAttr = (is_numeric($cellColSpan) && ($cellColSpan > 1) ? " colspan=\"{$cellColSpan}\"" : '');
+                        $cellColSpanAttr = (\is_numeric($cellColSpan) && ($cellColSpan > 1) ? " colspan=\"{$cellColSpan}\"" : '');
                         $cellRowSpanAttr = ($cellRowSpan > 1 ? " rowspan=\"{$cellRowSpan}\"" : '');
                         $cellBgColorAttr = (null === $cellBgColor ? '' : " bgcolor=\"#{$cellBgColor}\"");
                         $cellFgColorAttr = (null === $cellFgColor ? '' : " color=\"#{$cellFgColor}\"");
@@ -127,7 +127,7 @@ class Table extends AbstractElement
         if ($tableStyle == null) {
             return '';
         }
-        if (is_string($tableStyle)) {
+        if (\is_string($tableStyle)) {
             $style = ' class="' . $tableStyle;
         } else {
             $style = ' style="';

@@ -83,15 +83,15 @@ class NamedExpressions
 
     private function convertAddress(DefinedName $definedName, string $address): string
     {
-        $splitCount = preg_match_all(
+        $splitCount = \preg_match_all(
             '/' . Calculation::CALCULATION_REGEXP_CELLREF_RELATIVE . '/mui',
             $address,
             $splitRanges,
             PREG_OFFSET_CAPTURE
         );
 
-        $lengths = array_map('strlen', array_column($splitRanges[0], 0));
-        $offsets = array_column($splitRanges[0], 1);
+        $lengths = \array_map('strlen', \array_column($splitRanges[0], 0));
+        $offsets = \array_column($splitRanges[0], 1);
 
         $worksheets = $splitRanges[2];
         $columns = $splitRanges[6];
@@ -115,10 +115,10 @@ class NamedExpressions
                     }
                 }
             } else {
-                $worksheet = str_replace("''", "'", trim($worksheet, "'"));
+                $worksheet = \str_replace("''", "'", \trim($worksheet, "'"));
             }
             if (!empty($worksheet)) {
-                $newRange = "'" . str_replace("'", "''", $worksheet) . "'.";
+                $newRange = "'" . \str_replace("'", "''", $worksheet) . "'.";
             }
 
             if (!empty($column)) {
@@ -128,11 +128,11 @@ class NamedExpressions
                 $newRange .= $row;
             }
 
-            $address = substr($address, 0, $offset) . $newRange . substr($address, $offset + $length);
+            $address = \substr($address, 0, $offset) . $newRange . \substr($address, $offset + $length);
         }
 
-        if (substr($address, 0, 1) === '=') {
-            $address = substr($address, 1);
+        if (\substr($address, 0, 1) === '=') {
+            $address = \substr($address, 1);
         }
 
         return $address;

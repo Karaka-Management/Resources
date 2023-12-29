@@ -187,11 +187,11 @@ class Interest
         $iter = 0;
         while (!$close && $iter < self::FINANCIAL_MAX_ITERATIONS) {
             $nextdiff = self::rateNextGuess($rate, $numberOfPeriods, $payment, $presentValue, $futureValue, $type);
-            if (!is_numeric($nextdiff)) {
+            if (!\is_numeric($nextdiff)) {
                 break;
             }
             $rate1 = $rate - $nextdiff;
-            $close = abs($rate1 - $rate) < self::FINANCIAL_PRECISION;
+            $close = \abs($rate1 - $rate) < self::FINANCIAL_PRECISION;
             ++$iter;
             $rate = $rate1;
         }

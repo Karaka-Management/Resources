@@ -38,7 +38,7 @@ class Floor
      */
     public static function floor($number, $significance = null)
     {
-        if (is_array($number) || is_array($significance)) {
+        if (\is_array($number) || \is_array($significance)) {
             return self::evaluateArrayArguments([self::class, __FUNCTION__], $number, $significance);
         }
 
@@ -77,7 +77,7 @@ class Floor
      */
     public static function math($number, $significance = null, $mode = 0)
     {
-        if (is_array($number) || is_array($significance) || is_array($mode)) {
+        if (\is_array($number) || \is_array($significance) || \is_array($mode)) {
             return self::evaluateArrayArguments([self::class, __FUNCTION__], $number, $significance, $mode);
         }
 
@@ -111,7 +111,7 @@ class Floor
      */
     public static function precise($number, $significance = 1)
     {
-        if (is_array($number) || is_array($significance)) {
+        if (\is_array($number) || \is_array($significance)) {
             return self::evaluateArrayArguments([self::class, __FUNCTION__], $number, $significance);
         }
 
@@ -139,7 +139,7 @@ class Floor
             return 0.0;
         }
 
-        return floor($number / abs($significance)) * abs($significance);
+        return \floor($number / \abs($significance)) * \abs($significance);
     }
 
     /**
@@ -156,10 +156,10 @@ class Floor
             return 0.0;
         }
         if (self::floorMathTest($number, $significance, $mode)) {
-            return ceil($number / $significance) * $significance;
+            return \ceil($number / $significance) * $significance;
         }
 
-        return floor($number / $significance) * $significance;
+        return \floor($number / $significance) * $significance;
     }
 
     /**
@@ -184,10 +184,10 @@ class Floor
             return 0.0;
         }
         if (Helpers::returnSign($significance) == 1) {
-            return floor($number / $significance) * $significance;
+            return \floor($number / $significance) * $significance;
         }
         if (Helpers::returnSign($number) == -1 && Helpers::returnSign($significance) == -1) {
-            return floor($number / $significance) * $significance;
+            return \floor($number / $significance) * $significance;
         }
 
         return ExcelError::NAN();

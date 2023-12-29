@@ -206,14 +206,14 @@ class Color extends Supervisor
         if ($colorValue === null || $colorValue === '') {
             return self::COLOR_BLACK;
         }
-        $named = ucfirst(strtolower($colorValue));
-        if (array_key_exists($named, self::NAMED_COLOR_TRANSLATIONS)) {
+        $named = \ucfirst(\strtolower($colorValue));
+        if (\array_key_exists($named, self::NAMED_COLOR_TRANSLATIONS)) {
             return self::NAMED_COLOR_TRANSLATIONS[$named];
         }
-        if (preg_match(self::VALIDATE_COLOR_8, $colorValue) === 1) {
+        if (\preg_match(self::VALIDATE_COLOR_8, $colorValue) === 1) {
             return $colorValue;
         }
-        if (preg_match(self::VALIDATE_COLOR_6, $colorValue) === 1) {
+        if (\preg_match(self::VALIDATE_COLOR_6, $colorValue) === 1) {
             return 'FF' . $colorValue;
         }
 
@@ -266,7 +266,7 @@ class Color extends Supervisor
             return $this->getSharedComponent()->getRGB();
         }
 
-        return substr($this->argb ?? '', 2);
+        return \substr($this->argb ?? '', 2);
     }
 
     /**
@@ -293,12 +293,12 @@ class Color extends Supervisor
      */
     private static function getColourComponent($rgbValue, $offset, $hex = true)
     {
-        $colour = substr($rgbValue, $offset, 2) ?: '';
-        if (preg_match('/^[0-9a-f]{2}$/i', $colour) !== 1) {
+        $colour = \substr($rgbValue, $offset, 2) ?: '';
+        if (\preg_match('/^[0-9a-f]{2}$/i', $colour) !== 1) {
             $colour = '00';
         }
 
-        return ($hex) ? $colour : (int) hexdec($colour);
+        return ($hex) ? $colour : (int) \hexdec($colour);
     }
 
     /**
@@ -312,7 +312,7 @@ class Color extends Supervisor
      */
     public static function getRed($rgbValue, $hex = true)
     {
-        return self::getColourComponent($rgbValue, strlen($rgbValue) - 6, $hex);
+        return self::getColourComponent($rgbValue, \strlen($rgbValue) - 6, $hex);
     }
 
     /**
@@ -326,7 +326,7 @@ class Color extends Supervisor
      */
     public static function getGreen($rgbValue, $hex = true)
     {
-        return self::getColourComponent($rgbValue, strlen($rgbValue) - 4, $hex);
+        return self::getColourComponent($rgbValue, \strlen($rgbValue) - 4, $hex);
     }
 
     /**
@@ -340,7 +340,7 @@ class Color extends Supervisor
      */
     public static function getBlue($rgbValue, $hex = true)
     {
-        return self::getColourComponent($rgbValue, strlen($rgbValue) - 2, $hex);
+        return self::getColourComponent($rgbValue, \strlen($rgbValue) - 2, $hex);
     }
 
     /**
@@ -353,8 +353,8 @@ class Color extends Supervisor
      */
     public static function changeBrightness($hexColourValue, $adjustPercentage)
     {
-        $rgba = (strlen($hexColourValue) === 8);
-        $adjustPercentage = max(-1.0, min(1.0, $adjustPercentage));
+        $rgba = (\strlen($hexColourValue) === 8);
+        $adjustPercentage = \max(-1.0, \min(1.0, $adjustPercentage));
 
         /** @var int $red */
         $red = self::getRed($hexColourValue, false);
@@ -372,10 +372,10 @@ class Color extends Supervisor
             $blue += $blue * $adjustPercentage;
         }
 
-        $rgb = strtoupper(
-            str_pad(dechex((int) $red), 2, '0', 0) .
-            str_pad(dechex((int) $green), 2, '0', 0) .
-            str_pad(dechex((int) $blue), 2, '0', 0)
+        $rgb = \strtoupper(
+            \str_pad(\dechex((int) $red), 2, '0', 0) .
+            \str_pad(\dechex((int) $green), 2, '0', 0) .
+            \str_pad(\dechex((int) $blue), 2, '0', 0)
         );
 
         return (($rgba) ? 'FF' : '') . $rgb;
@@ -417,7 +417,7 @@ class Color extends Supervisor
             return $this->getSharedComponent()->getHashCode();
         }
 
-        return md5(
+        return \md5(
             $this->argb .
             __CLASS__
         );

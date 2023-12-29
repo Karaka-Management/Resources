@@ -61,9 +61,9 @@ class DateValue extends WizardAbstract implements WizardInterface
 
     protected function setExpression(): void
     {
-        $referenceCount = substr_count(self::EXPRESSIONS[$this->operator], '%s');
-        $references = array_fill(0, $referenceCount, $this->referenceCell);
-        $this->expression = sprintf(self::EXPRESSIONS[$this->operator], ...$references);
+        $referenceCount = \substr_count(self::EXPRESSIONS[$this->operator], '%s');
+        $references = \array_fill(0, $referenceCount, $this->referenceCell);
+        $this->expression = \sprintf(self::EXPRESSIONS[$this->operator], ...$references);
     }
 
     public function getConditional(): Conditional

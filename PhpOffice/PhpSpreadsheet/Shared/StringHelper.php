@@ -60,8 +60,8 @@ class StringHelper
     {
         for ($i = 0; $i <= 31; ++$i) {
             if ($i != 9 && $i != 10 && $i != 13) {
-                $find = '_x' . sprintf('%04s', strtoupper(dechex($i))) . '_';
-                $replace = chr($i);
+                $find = '_x' . \sprintf('%04s', \strtoupper(\dechex($i))) . '_';
+                $replace = \chr($i);
                 self::$controlCharacters[$find] = $replace;
             }
         }
@@ -73,39 +73,39 @@ class StringHelper
     private static function buildSYLKCharacters(): void
     {
         self::$SYLKCharacters = [
-            "\x1B 0" => chr(0),
-            "\x1B 1" => chr(1),
-            "\x1B 2" => chr(2),
-            "\x1B 3" => chr(3),
-            "\x1B 4" => chr(4),
-            "\x1B 5" => chr(5),
-            "\x1B 6" => chr(6),
-            "\x1B 7" => chr(7),
-            "\x1B 8" => chr(8),
-            "\x1B 9" => chr(9),
-            "\x1B :" => chr(10),
-            "\x1B ;" => chr(11),
-            "\x1B <" => chr(12),
-            "\x1B =" => chr(13),
-            "\x1B >" => chr(14),
-            "\x1B ?" => chr(15),
-            "\x1B!0" => chr(16),
-            "\x1B!1" => chr(17),
-            "\x1B!2" => chr(18),
-            "\x1B!3" => chr(19),
-            "\x1B!4" => chr(20),
-            "\x1B!5" => chr(21),
-            "\x1B!6" => chr(22),
-            "\x1B!7" => chr(23),
-            "\x1B!8" => chr(24),
-            "\x1B!9" => chr(25),
-            "\x1B!:" => chr(26),
-            "\x1B!;" => chr(27),
-            "\x1B!<" => chr(28),
-            "\x1B!=" => chr(29),
-            "\x1B!>" => chr(30),
-            "\x1B!?" => chr(31),
-            "\x1B'?" => chr(127),
+            "\x1B 0" => \chr(0),
+            "\x1B 1" => \chr(1),
+            "\x1B 2" => \chr(2),
+            "\x1B 3" => \chr(3),
+            "\x1B 4" => \chr(4),
+            "\x1B 5" => \chr(5),
+            "\x1B 6" => \chr(6),
+            "\x1B 7" => \chr(7),
+            "\x1B 8" => \chr(8),
+            "\x1B 9" => \chr(9),
+            "\x1B :" => \chr(10),
+            "\x1B ;" => \chr(11),
+            "\x1B <" => \chr(12),
+            "\x1B =" => \chr(13),
+            "\x1B >" => \chr(14),
+            "\x1B ?" => \chr(15),
+            "\x1B!0" => \chr(16),
+            "\x1B!1" => \chr(17),
+            "\x1B!2" => \chr(18),
+            "\x1B!3" => \chr(19),
+            "\x1B!4" => \chr(20),
+            "\x1B!5" => \chr(21),
+            "\x1B!6" => \chr(22),
+            "\x1B!7" => \chr(23),
+            "\x1B!8" => \chr(24),
+            "\x1B!9" => \chr(25),
+            "\x1B!:" => \chr(26),
+            "\x1B!;" => \chr(27),
+            "\x1B!<" => \chr(28),
+            "\x1B!=" => \chr(29),
+            "\x1B!>" => \chr(30),
+            "\x1B!?" => \chr(31),
+            "\x1B'?" => \chr(127),
             "\x1B(0" => '€', // 128 in CP1252
             "\x1B(2" => '‚', // 130 in CP1252
             "\x1B(3" => 'ƒ', // 131 in CP1252
@@ -247,18 +247,18 @@ class StringHelper
         self::$isIconvEnabled = true;
 
         // Fail if iconv doesn't exist
-        if (!function_exists('iconv')) {
+        if (!\function_exists('iconv')) {
             self::$isIconvEnabled = false;
-        } elseif (!@iconv('UTF-8', 'UTF-16LE', 'x')) {
+        } elseif (!@\iconv('UTF-8', 'UTF-16LE', 'x')) {
             // Sometimes iconv is not working, and e.g. iconv('UTF-8', 'UTF-16LE', 'x') just returns false,
             self::$isIconvEnabled = false;
-        } elseif (defined('PHP_OS') && @stristr(PHP_OS, 'AIX') && defined('ICONV_IMPL') && (@strcasecmp(ICONV_IMPL, 'unknown') == 0) && defined('ICONV_VERSION') && (@strcasecmp(ICONV_VERSION, 'unknown') == 0)) {
+        } elseif (\defined('PHP_OS') && @\stristr(PHP_OS, 'AIX') && \defined('ICONV_IMPL') && (@\strcasecmp(ICONV_IMPL, 'unknown') == 0) && \defined('ICONV_VERSION') && (@\strcasecmp(ICONV_VERSION, 'unknown') == 0)) {
             // CUSTOM: IBM AIX iconv() does not work
             self::$isIconvEnabled = false;
         }
 
         // Deactivate iconv default options if they fail (as seen on IMB i)
-        if (self::$isIconvEnabled && !@iconv('UTF-8', 'UTF-16LE' . self::$iconvOptions, 'x')) {
+        if (self::$isIconvEnabled && !@\iconv('UTF-8', 'UTF-16LE' . self::$iconvOptions, 'x')) {
             self::$iconvOptions = '';
         }
 
@@ -295,7 +295,7 @@ class StringHelper
     {
         self::buildCharacterSets();
 
-        return str_replace(array_keys(self::$controlCharacters), array_values(self::$controlCharacters), $textValue);
+        return \str_replace(\array_keys(self::$controlCharacters), \array_values(self::$controlCharacters), $textValue);
     }
 
     /**
@@ -317,7 +317,7 @@ class StringHelper
     {
         self::buildCharacterSets();
 
-        return str_replace(array_values(self::$controlCharacters), array_keys(self::$controlCharacters), $textValue);
+        return \str_replace(\array_values(self::$controlCharacters), \array_keys(self::$controlCharacters), $textValue);
     }
 
     /**
@@ -325,12 +325,12 @@ class StringHelper
      */
     public static function sanitizeUTF8(string $textValue): string
     {
-        $textValue = str_replace(["\xef\xbf\xbe", "\xef\xbf\xbf"], "\xef\xbf\xbd", $textValue);
-        $subst = mb_substitute_character(); // default is question mark
-        mb_substitute_character(65533); // Unicode substitution character
+        $textValue = \str_replace(["\xef\xbf\xbe", "\xef\xbf\xbf"], "\xef\xbf\xbd", $textValue);
+        $subst = \mb_substitute_character(); // default is question mark
+        \mb_substitute_character(65533); // Unicode substitution character
         // Phpstan does not think this can return false.
-        $returnValue = mb_convert_encoding($textValue, 'UTF-8', 'UTF-8');
-        mb_substitute_character(/** @scrutinizer ignore-type */ $subst);
+        $returnValue = \mb_convert_encoding($textValue, 'UTF-8', 'UTF-8');
+        \mb_substitute_character(/** @scrutinizer ignore-type */ $subst);
 
         return self::returnString($returnValue);
     }
@@ -342,7 +342,7 @@ class StringHelper
      */
     private static function returnString($value): string
     {
-        return is_string($value) ? $value : '';
+        return \is_string($value) ? $value : '';
     }
 
     /**
@@ -361,8 +361,8 @@ class StringHelper
      */
     public static function formatNumber($numericValue): string
     {
-        if (is_float($numericValue)) {
-            return str_replace(',', '.', (string) $numericValue);
+        if (\is_float($numericValue)) {
+            return \str_replace(',', '.', (string) $numericValue);
         }
 
         return (string) $numericValue;
@@ -384,17 +384,17 @@ class StringHelper
         $ln = self::countCharacters($textValue, 'UTF-8');
         // option flags
         if (empty($arrcRuns)) {
-            $data = pack('CC', $ln, 0x0001);
+            $data = \pack('CC', $ln, 0x0001);
             // characters
             $data .= self::convertEncoding($textValue, 'UTF-16LE', 'UTF-8');
         } else {
-            $data = pack('vC', $ln, 0x09);
-            $data .= pack('v', count($arrcRuns));
+            $data = \pack('vC', $ln, 0x09);
+            $data .= \pack('v', \count($arrcRuns));
             // characters
             $data .= self::convertEncoding($textValue, 'UTF-16LE', 'UTF-8');
             foreach ($arrcRuns as $cRun) {
-                $data .= pack('v', $cRun['strlen']);
-                $data .= pack('v', $cRun['fontidx']);
+                $data .= \pack('v', $cRun['strlen']);
+                $data .= \pack('v', $cRun['fontidx']);
             }
         }
 
@@ -418,7 +418,7 @@ class StringHelper
         // characters
         $chars = self::convertEncoding($textValue, 'UTF-16LE', 'UTF-8');
 
-        return pack('vC', $ln, 0x0001) . $chars;
+        return \pack('vC', $ln, 0x0001) . $chars;
     }
 
     /**
@@ -430,13 +430,13 @@ class StringHelper
     public static function convertEncoding(string $textValue, string $to, string $from): string
     {
         if (self::getIsIconvEnabled()) {
-            $result = iconv($from, $to . self::$iconvOptions, $textValue);
+            $result = \iconv($from, $to . self::$iconvOptions, $textValue);
             if (false !== $result) {
                 return $result;
             }
         }
 
-        return self::returnString(mb_convert_encoding($textValue, $to, $from));
+        return self::returnString(\mb_convert_encoding($textValue, $to, $from));
     }
 
     /**
@@ -448,7 +448,7 @@ class StringHelper
      */
     public static function countCharacters(string $textValue, string $encoding = 'UTF-8'): int
     {
-        return mb_strlen($textValue, $encoding);
+        return \mb_strlen($textValue, $encoding);
     }
 
     /**
@@ -460,7 +460,7 @@ class StringHelper
      */
     public static function substring(string $textValue, int $offset, ?int $length = 0): string
     {
-        return mb_substr($textValue, $offset, $length, 'UTF-8');
+        return \mb_substr($textValue, $offset, $length, 'UTF-8');
     }
 
     /**
@@ -470,7 +470,7 @@ class StringHelper
      */
     public static function strToUpper(string $textValue): string
     {
-        return mb_convert_case($textValue, MB_CASE_UPPER, 'UTF-8');
+        return \mb_convert_case($textValue, MB_CASE_UPPER, 'UTF-8');
     }
 
     /**
@@ -480,7 +480,7 @@ class StringHelper
      */
     public static function strToLower(string $textValue): string
     {
-        return mb_convert_case($textValue, MB_CASE_LOWER, 'UTF-8');
+        return \mb_convert_case($textValue, MB_CASE_LOWER, 'UTF-8');
     }
 
     /**
@@ -491,12 +491,12 @@ class StringHelper
      */
     public static function strToTitle(string $textValue): string
     {
-        return mb_convert_case($textValue, MB_CASE_TITLE, 'UTF-8');
+        return \mb_convert_case($textValue, MB_CASE_TITLE, 'UTF-8');
     }
 
     public static function mbIsUpper(string $character): bool
     {
-        return mb_strtolower($character, 'UTF-8') !== $character;
+        return \mb_strtolower($character, 'UTF-8') !== $character;
     }
 
     /**
@@ -506,7 +506,7 @@ class StringHelper
     {
         // Split at all position not after the start: ^
         // and not before the end: $
-        $split = preg_split('/(?<!^)(?!$)/u', $string);
+        $split = \preg_split('/(?<!^)(?!$)/u', $string);
 
         return ($split === false) ? [] : $split;
     }
@@ -522,13 +522,13 @@ class StringHelper
         $characters = self::mbStrSplit($textValue);
         foreach ($characters as &$character) {
             if (self::mbIsUpper($character)) {
-                $character = mb_strtolower($character, 'UTF-8');
+                $character = \mb_strtolower($character, 'UTF-8');
             } else {
-                $character = mb_strtoupper($character, 'UTF-8');
+                $character = \mb_strtoupper($character, 'UTF-8');
             }
         }
 
-        return implode('', $characters);
+        return \implode('', $characters);
     }
 
     /**
@@ -538,7 +538,7 @@ class StringHelper
     public static function getDecimalSeparator(): string
     {
         if (!isset(self::$decimalSeparator)) {
-            $localeconv = localeconv();
+            $localeconv = \localeconv();
             self::$decimalSeparator = ($localeconv['decimal_point'] != '')
                 ? $localeconv['decimal_point'] : $localeconv['mon_decimal_point'];
 
@@ -569,7 +569,7 @@ class StringHelper
     public static function getThousandsSeparator(): string
     {
         if (!isset(self::$thousandsSeparator)) {
-            $localeconv = localeconv();
+            $localeconv = \localeconv();
             self::$thousandsSeparator = ($localeconv['thousands_sep'] != '')
                 ? $localeconv['thousands_sep'] : $localeconv['mon_thousands_sep'];
 
@@ -603,7 +603,7 @@ class StringHelper
             return self::$currencyCode;
         }
         self::$currencyCode = '$';
-        $localeconv = localeconv();
+        $localeconv = \localeconv();
         if (!empty($localeconv['currency_symbol'])) {
             self::$currencyCode = $localeconv['currency_symbol'];
 
@@ -641,12 +641,12 @@ class StringHelper
         self::buildCharacterSets();
 
         // If there is no escape character in the string there is nothing to do
-        if (strpos($textValue, '') === false) {
+        if (\strpos($textValue, '') === false) {
             return $textValue;
         }
 
         foreach (self::$SYLKCharacters as $k => $v) {
-            $textValue = str_replace($k, $v, $textValue);
+            $textValue = \str_replace($k, $v, $textValue);
         }
 
         return $textValue;
@@ -662,11 +662,11 @@ class StringHelper
      */
     public static function testStringAsNumeric($textValue)
     {
-        if (is_numeric($textValue)) {
+        if (\is_numeric($textValue)) {
             return $textValue;
         }
         $v = (float) $textValue;
 
-        return (is_numeric(substr($textValue, 0, strlen((string) $v)))) ? $v : $textValue;
+        return (\is_numeric(\substr($textValue, 0, \strlen((string) $v)))) ? $v : $textValue;
     }
 }

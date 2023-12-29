@@ -110,7 +110,7 @@ abstract class BaseReader implements IReader
             return $this->setLoadAllSheets();
         }
 
-        $this->loadSheetsOnly = is_array($sheetList) ? $sheetList : [$sheetList];
+        $this->loadSheetsOnly = \is_array($sheetList) ? $sheetList : [$sheetList];
 
         return $this;
     }
@@ -185,7 +185,7 @@ abstract class BaseReader implements IReader
             File::assertFile($filename);
 
             // Open file
-            $fileHandle = fopen($filename, 'rb');
+            $fileHandle = \fopen($filename, 'rb');
         }
         if ($fileHandle === false) {
             throw new ReaderException('Could not open file ' . $filename . ' for reading.');

@@ -74,13 +74,13 @@ class Word2007 extends AbstractWriter implements WriterInterface
             'Endnotes' => '',
             'Chart' => '',
         ];
-        foreach (array_keys($this->parts) as $partName) {
+        foreach (\array_keys($this->parts) as $partName) {
             $partClass = static::class . '\\Part\\' . $partName;
-            if (class_exists($partClass)) {
+            if (\class_exists($partClass)) {
                 /** @var \PhpOffice\PhpWord\Writer\Word2007\Part\AbstractPart $part Type hint */
                 $part = new $partClass();
                 $part->setParentWriter($this);
-                $this->writerParts[strtolower($partName)] = $part;
+                $this->writerParts[\strtolower($partName)] = $part;
             }
         }
 
@@ -174,7 +174,7 @@ class Word2007 extends AbstractWriter implements WriterInterface
         $elements = Media::getElements($docPart);
         if (!empty($elements)) {
             foreach ($elements as $file => $media) {
-                if (count($media) > 0) {
+                if (\count($media) > 0) {
                     if (!empty($media)) {
                         $this->addFilesToPackage($zip, $media);
                         $this->registerContentTypes($media);

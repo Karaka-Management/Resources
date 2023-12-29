@@ -158,7 +158,7 @@ class Paper extends AbstractStyle
      */
     public function setSize($size)
     {
-        $this->size = $this->setEnumVal($size, array_keys($this->sizes), $this->size);
+        $this->size = $this->setEnumVal($size, \array_keys($this->sizes), $this->size);
 
         [$width, $height, $unit] = $this->sizes[$this->size];
 

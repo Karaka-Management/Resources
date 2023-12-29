@@ -62,7 +62,7 @@ class Text extends AbstractElement
                     if (!$this->withoutP) {
                         $xmlWriter->writeAttribute('text:style-name', 'Normal');
                     }
-                } elseif (is_string($paragraphStyle)) {
+                } elseif (\is_string($paragraphStyle)) {
                     if (!$this->withoutP) {
                         $xmlWriter->writeAttribute('text:style-name', $paragraphStyle);
                     }
@@ -75,14 +75,14 @@ class Text extends AbstractElement
                     if (!$this->withoutP) {
                         $xmlWriter->writeAttribute('text:style-name', 'Normal');
                     }
-                } elseif (is_string($paragraphStyle)) {
+                } elseif (\is_string($paragraphStyle)) {
                     if (!$this->withoutP) {
                         $xmlWriter->writeAttribute('text:style-name', $paragraphStyle);
                     }
                 }
                 // text:span
                 $xmlWriter->startElement('text:span');
-                if (is_string($fontStyle)) {
+                if (\is_string($fontStyle)) {
                     $xmlWriter->writeAttribute('text:style-name', $fontStyle);
                 }
                 $this->writeChangeInsertion(true, $element->getTrackChange());
@@ -98,14 +98,14 @@ class Text extends AbstractElement
 
     private function replacetabs($text, $xmlWriter): void
     {
-        if (preg_match('/^ +/', $text, $matches)) {
-            $num = strlen($matches[0]);
+        if (\preg_match('/^ +/', $text, $matches)) {
+            $num = \strlen($matches[0]);
             $xmlWriter->startElement('text:s');
             $xmlWriter->writeAttributeIf($num > 1, 'text:c', "$num");
             $xmlWriter->endElement();
-            $text = preg_replace('/^ +/', '', $text);
+            $text = \preg_replace('/^ +/', '', $text);
         }
-        preg_match_all('/([\\s\\S]*?)(\\t|  +| ?$)/', $text, $matches, PREG_SET_ORDER);
+        \preg_match_all('/([\\s\\S]*?)(\\t|  +| ?$)/', $text, $matches, PREG_SET_ORDER);
         foreach ($matches as $match) {
             $this->writeText($match[1]);
             if ($match[2] === '') {
@@ -117,7 +117,7 @@ class Text extends AbstractElement
 
                 break;
             } else {
-                $num = strlen($match[2]);
+                $num = \strlen($match[2]);
                 $xmlWriter->startElement('text:s');
                 $xmlWriter->writeAttributeIf($num > 1, 'text:c', "$num");
                 $xmlWriter->endElement();

@@ -29,7 +29,7 @@ class Helpers
     {
         if ($sheetTitle) {
             $sheetTitle .= '!';
-            if (stripos($value ?? '', $sheetTitle) === 0) {
+            if (\stripos($value ?? '', $sheetTitle) === 0) {
                 $sheetTitle = '';
             }
         }
@@ -43,14 +43,14 @@ class Helpers
         if ($namedRange !== null) {
             $workSheet = $namedRange->getWorkSheet();
             $sheetTitle = ($workSheet === null) ? '' : $workSheet->getTitle();
-            $value = (string) preg_replace('/^=/', '', $namedRange->getValue());
+            $value = (string) \preg_replace('/^=/', '', $namedRange->getValue());
             self::adjustSheetTitle($sheetTitle, $value);
             $cellAddress1 = $sheetTitle . $value;
             $cellAddress = $cellAddress1;
             $a1 = self::CELLADDRESS_USE_A1;
         }
-        if (strpos($cellAddress, ':') !== false) {
-            [$cellAddress1, $cellAddress2] = explode(':', $cellAddress);
+        if (\strpos($cellAddress, ':') !== false) {
+            [$cellAddress1, $cellAddress2] = \explode(':', $cellAddress);
         }
         $cellAddress = self::convertR1C1($cellAddress1, $cellAddress2, $a1, $baseRow, $baseCol);
 
@@ -60,9 +60,9 @@ class Helpers
     public static function extractWorksheet(string $cellAddress, Cell $cell): array
     {
         $sheetName = '';
-        if (strpos($cellAddress, '!') !== false) {
+        if (\strpos($cellAddress, '!') !== false) {
             [$sheetName, $cellAddress] = Worksheet::extractSheetTitle($cellAddress, true);
-            $sheetName = trim($sheetName, "'");
+            $sheetName = \trim($sheetName, "'");
         }
 
         $worksheet = ($sheetName !== '')

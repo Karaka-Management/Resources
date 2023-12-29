@@ -108,11 +108,11 @@ abstract class IOFactory
     public static function identify(string $filename, ?array $readers = null): string
     {
         $reader = self::createReaderForFile($filename, $readers);
-        $className = get_class($reader);
-        $classType = explode('\\', $className);
+        $className = \get_class($reader);
+        $classType = \explode('\\', $className);
         unset($reader);
 
-        return array_pop($classType);
+        return \array_pop($classType);
     }
 
     /**
@@ -130,11 +130,11 @@ abstract class IOFactory
 
         $testReaders = self::$readers;
         if ($readers !== null) {
-            $readers = array_map('strtoupper', $readers);
-            $testReaders = array_filter(
+            $readers = \array_map('strtoupper', $readers);
+            $testReaders = \array_filter(
                 self::$readers,
                 function (string $readerType) use ($readers) {
-                    return in_array(strtoupper($readerType), $readers, true);
+                    return \in_array(\strtoupper($readerType), $readers, true);
                 },
                 ARRAY_FILTER_USE_KEY
             );
@@ -142,7 +142,7 @@ abstract class IOFactory
 
         // First, lucky guess by inspecting file extension
         $guessedReader = self::getReaderTypeFromExtension($filename);
-        if (($guessedReader !== null) && array_key_exists($guessedReader, $testReaders)) {
+        if (($guessedReader !== null) && \array_key_exists($guessedReader, $testReaders)) {
             $reader = self::createReader($guessedReader);
 
             // Let's see if we are lucky
@@ -171,12 +171,12 @@ abstract class IOFactory
      */
     private static function getReaderTypeFromExtension(string $filename): ?string
     {
-        $pathinfo = pathinfo($filename);
+        $pathinfo = \pathinfo($filename);
         if (!isset($pathinfo['extension'])) {
             return null;
         }
 
-        switch (strtolower($pathinfo['extension'])) {
+        switch (\strtolower($pathinfo['extension'])) {
             case 'xlsx': // Excel (OfficeOpenXML) Spreadsheet
             case 'xlsm': // Excel (OfficeOpenXML) Macro Spreadsheet (macros will be discarded)
             case 'xltx': // Excel (OfficeOpenXML) Template
@@ -212,7 +212,7 @@ abstract class IOFactory
      */
     public static function registerWriter(string $writerType, string $writerClass): void
     {
-        if (!is_a($writerClass, IWriter::class, true)) {
+        if (!\is_a($writerClass, IWriter::class, true)) {
             throw new Writer\Exception('Registered writers must implement ' . IWriter::class);
         }
 
@@ -224,7 +224,7 @@ abstract class IOFactory
      */
     public static function registerReader(string $readerType, string $readerClass): void
     {
-        if (!is_a($readerClass, IReader::class, true)) {
+        if (!\is_a($readerClass, IReader::class, true)) {
             throw new Reader\Exception('Registered readers must implement ' . IReader::class);
         }
 

@@ -77,7 +77,7 @@ class ConditionalDataBarExtension
                 $ret[$elmKey] = ['rgb' => $this->{$elmKey}];
             }
         }
-        foreach (array_filter($this->axisColor) as $attrKey => $axisColorAttr) {
+        foreach (\array_filter($this->axisColor) as $attrKey => $axisColorAttr) {
             if (!isset($ret['axisColor'])) {
                 $ret['axisColor'] = [];
             }

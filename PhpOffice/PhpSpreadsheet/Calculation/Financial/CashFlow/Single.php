@@ -71,7 +71,7 @@ class Single
             return ExcelError::NAN();
         }
 
-        return (log($futureValue) - log($presentValue)) / log(1 + $rate);
+        return (\log($futureValue) - \log($presentValue)) / \log(1 + $rate);
     }
 
     /**

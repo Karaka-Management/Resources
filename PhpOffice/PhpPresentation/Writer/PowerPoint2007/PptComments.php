@@ -76,7 +76,7 @@ class PptComments extends AbstractDecoratorWriter
             // p:cmLst > p:cm
             $objWriter->startElement('p:cm');
             $objWriter->writeAttribute('authorId', $oAuthor instanceof Comment\Author ? $oAuthor->getIndex() : 0);
-            $objWriter->writeAttribute('dt', date('Y-m-d\TH:i:s.000000000', $oComment->getDate()));
+            $objWriter->writeAttribute('dt', \date('Y-m-d\TH:i:s.000000000', $oComment->getDate()));
             $objWriter->writeAttribute('idx', $idxComment);
 
             // p:cmLst > p:cm > p:pos

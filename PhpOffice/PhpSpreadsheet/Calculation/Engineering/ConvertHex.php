@@ -40,7 +40,7 @@ class ConvertHex extends ConvertBase
      */
     public static function toBinary($value, $places = null)
     {
-        if (is_array($value) || is_array($places)) {
+        if (\is_array($value) || \is_array($places)) {
             return self::evaluateArrayArguments([self::class, __FUNCTION__], $value, $places);
         }
 
@@ -80,7 +80,7 @@ class ConvertHex extends ConvertBase
      */
     public static function toDecimal($value)
     {
-        if (is_array($value)) {
+        if (\is_array($value)) {
             return self::evaluateSingleArgumentArray([self::class, __FUNCTION__], $value);
         }
 
@@ -91,23 +91,23 @@ class ConvertHex extends ConvertBase
             return $e->getMessage();
         }
 
-        if (strlen($value) > 10) {
+        if (\strlen($value) > 10) {
             return ExcelError::NAN();
         }
 
         $binX = '';
-        foreach (str_split($value) as $char) {
-            $binX .= str_pad(base_convert($char, 16, 2), 4, '0', STR_PAD_LEFT);
+        foreach (\str_split($value) as $char) {
+            $binX .= \str_pad(\base_convert($char, 16, 2), 4, '0', STR_PAD_LEFT);
         }
-        if (strlen($binX) == 40 && $binX[0] == '1') {
+        if (\strlen($binX) == 40 && $binX[0] == '1') {
             for ($i = 0; $i < 40; ++$i) {
                 $binX[$i] = ($binX[$i] == '1' ? '0' : '1');
             }
 
-            return (string) ((bindec($binX) + 1) * -1);
+            return (string) ((\bindec($binX) + 1) * -1);
         }
 
-        return (string) bindec($binX);
+        return (string) \bindec($binX);
     }
 
     /**
@@ -147,7 +147,7 @@ class ConvertHex extends ConvertBase
      */
     public static function toOctal($value, $places = null)
     {
-        if (is_array($value) || is_array($places)) {
+        if (\is_array($value) || \is_array($places)) {
             return self::evaluateArrayArguments([self::class, __FUNCTION__], $value, $places);
         }
 
@@ -166,7 +166,7 @@ class ConvertHex extends ConvertBase
 
     protected static function validateHex(string $value): string
     {
-        if (strlen($value) > preg_match_all('/[0123456789ABCDEF]/', $value)) {
+        if (\strlen($value) > \preg_match_all('/[0123456789ABCDEF]/', $value)) {
             throw new Exception(ExcelError::NAN());
         }
 

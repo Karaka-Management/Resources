@@ -32,7 +32,7 @@ class CellAlignment
     {
         $horizontalAlignment = $alignment->getHorizontal();
 
-        if (is_string($horizontalAlignment) && array_key_exists($horizontalAlignment, self::$horizontalMap)) {
+        if (\is_string($horizontalAlignment) && \array_key_exists($horizontalAlignment, self::$horizontalMap)) {
             return self::$horizontalMap[$horizontalAlignment];
         }
 
@@ -50,7 +50,7 @@ class CellAlignment
     {
         $verticalAlignment = $alignment->getVertical();
 
-        if (is_string($verticalAlignment) && array_key_exists($verticalAlignment, self::$verticalMap)) {
+        if (\is_string($verticalAlignment) && \array_key_exists($verticalAlignment, self::$verticalMap)) {
             return self::$verticalMap[$verticalAlignment];
         }
 

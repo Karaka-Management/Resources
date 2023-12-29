@@ -44,7 +44,7 @@ class Blanks extends WizardAbstract implements WizardInterface
 
     protected function getExpression(): void
     {
-        $this->expression = sprintf(
+        $this->expression = \sprintf(
             self::EXPRESSIONS[$this->inverse ? Wizard::BLANKS : Wizard::NOT_BLANKS],
             $this->referenceCell
         );
@@ -88,7 +88,7 @@ class Blanks extends WizardAbstract implements WizardInterface
      */
     public function __call($methodName, $arguments): self
     {
-        if (!array_key_exists($methodName, self::OPERATORS)) {
+        if (!\array_key_exists($methodName, self::OPERATORS)) {
             throw new Exception('Invalid Operation for Blanks CF Rule Wizard');
         }
 

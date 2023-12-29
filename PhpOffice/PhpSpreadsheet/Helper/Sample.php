@@ -35,7 +35,7 @@ class Sample
      */
     public function getScriptFilename()
     {
-        return basename($_SERVER['SCRIPT_FILENAME'], '.php');
+        return \basename($_SERVER['SCRIPT_FILENAME'], '.php');
     }
 
     /**
@@ -65,7 +65,7 @@ class Sample
      */
     public function getPageHeading()
     {
-        return $this->isIndex() ? '' : '<h1>' . str_replace('_', ' ', $this->getScriptFilename()) . '</h1>';
+        return $this->isIndex() ? '' : '<h1>' . \str_replace('_', ' ', $this->getScriptFilename()) . '</h1>';
     }
 
     /**
@@ -76,28 +76,28 @@ class Sample
     public function getSamples()
     {
         // Populate samples
-        $baseDir = realpath(__DIR__ . '/../../../samples');
+        $baseDir = \realpath(__DIR__ . '/../../../samples');
         if ($baseDir === false) {
             // @codeCoverageIgnoreStart
-            throw new RuntimeException('realpath returned false');
+            throw new \RuntimeException('realpath returned false');
             // @codeCoverageIgnoreEnd
         }
-        $directory = new RecursiveDirectoryIterator($baseDir);
-        $iterator = new RecursiveIteratorIterator($directory);
-        $regex = new RegexIterator($iterator, '/^.+\.php$/', RecursiveRegexIterator::GET_MATCH);
+        $directory = new \RecursiveDirectoryIterator($baseDir);
+        $iterator = new \RecursiveIteratorIterator($directory);
+        $regex = new \RegexIterator($iterator, '/^.+\.php$/', \RecursiveRegexIterator::GET_MATCH);
 
         $files = [];
         foreach ($regex as $file) {
-            $file = str_replace(str_replace('\\', '/', $baseDir) . '/', '', str_replace('\\', '/', $file[0]));
-            if (is_array($file)) {
+            $file = \str_replace(\str_replace('\\', '/', $baseDir) . '/', '', \str_replace('\\', '/', $file[0]));
+            if (\is_array($file)) {
                 // @codeCoverageIgnoreStart
-                throw new RuntimeException('str_replace returned array');
+                throw new \RuntimeException('str_replace returned array');
                 // @codeCoverageIgnoreEnd
             }
-            $info = pathinfo($file);
-            $category = str_replace('_', ' ', $info['dirname'] ?? '');
-            $name = str_replace('_', ' ', (string) preg_replace('/(|\.php)/', '', $info['filename']));
-            if (!in_array($category, ['.', 'boostrap', 'templates'])) {
+            $info = \pathinfo($file);
+            $category = \str_replace('_', ' ', $info['dirname'] ?? '');
+            $name = \str_replace('_', ' ', (string) \preg_replace('/(|\.php)/', '', $info['filename']));
+            if (!\in_array($category, ['.', 'boostrap', 'templates'])) {
                 if (!isset($files[$category])) {
                     $files[$category] = [];
                 }
@@ -106,9 +106,9 @@ class Sample
         }
 
         // Sort everything
-        ksort($files);
+        \ksort($files);
         foreach ($files as &$f) {
-            asort($f);
+            \asort($f);
         }
 
         return $files;
@@ -127,9 +127,9 @@ class Sample
 
         // Write documents
         foreach ($writers as $writerType) {
-            $path = $this->getFilename($filename, mb_strtolower($writerType));
+            $path = $this->getFilename($filename, \mb_strtolower($writerType));
             $writer = IOFactory::createWriter($spreadsheet, $writerType);
-            $callStartTime = microtime(true);
+            $callStartTime = \microtime(true);
             $writer->save($path);
             $this->logWrite($writer, $path, /** @scrutinizer ignore-type */ $callStartTime);
         }
@@ -149,9 +149,9 @@ class Sample
      */
     private function getTemporaryFolder()
     {
-        $tempFolder = sys_get_temp_dir() . '/phpspreadsheet';
+        $tempFolder = \sys_get_temp_dir() . '/phpspreadsheet';
         if (!$this->isDirOrMkdir($tempFolder)) {
-            throw new RuntimeException(sprintf('Directory "%s" was not created', $tempFolder));
+            throw new \RuntimeException(\sprintf('Directory "%s" was not created', $tempFolder));
         }
 
         return $tempFolder;
@@ -167,9 +167,9 @@ class Sample
      */
     public function getFilename($filename, $extension = 'xlsx')
     {
-        $originalExtension = pathinfo($filename, PATHINFO_EXTENSION);
+        $originalExtension = \pathinfo($filename, PATHINFO_EXTENSION);
 
-        return $this->getTemporaryFolder() . '/' . str_replace('.' . /** @scrutinizer ignore-type */ $originalExtension, '.' . $extension, basename($filename));
+        return $this->getTemporaryFolder() . '/' . \str_replace('.' . /** @scrutinizer ignore-type */ $originalExtension, '.' . $extension, \basename($filename));
     }
 
     /**
@@ -181,13 +181,13 @@ class Sample
      */
     public function getTemporaryFilename($extension = 'xlsx')
     {
-        $temporaryFilename = tempnam($this->getTemporaryFolder(), 'phpspreadsheet-');
+        $temporaryFilename = \tempnam($this->getTemporaryFolder(), 'phpspreadsheet-');
         if ($temporaryFilename === false) {
             // @codeCoverageIgnoreStart
-            throw new RuntimeException('tempnam returned false');
+            throw new \RuntimeException('tempnam returned false');
             // @codeCoverageIgnoreEnd
         }
-        unlink($temporaryFilename);
+        \unlink($temporaryFilename);
 
         return $temporaryFilename . '.' . $extension;
     }
@@ -195,15 +195,15 @@ class Sample
     public function log(string $message): void
     {
         $eol = $this->isCli() ? PHP_EOL : '<br />';
-        echo date('H:i:s ') . $message . $eol;
+        echo \date('H:i:s ') . $message . $eol;
     }
 
     public function titles(string $category, string $functionName, ?string $description = null): void
     {
-        $this->log(sprintf('%s Functions:', $category));
+        $this->log(\sprintf('%s Functions:', $category));
         $description === null
-            ? $this->log(sprintf('Function: %s()', rtrim($functionName, '()')))
-            : $this->log(sprintf('Function: %s() - %s.', rtrim($functionName, '()'), rtrim($description, '.')));
+            ? $this->log(\sprintf('Function: %s()', \rtrim($functionName, '()')))
+            : $this->log(\sprintf('Function: %s() - %s.', \rtrim($functionName, '()'), \rtrim($description, '.')));
     }
 
     public function displayGrid(array $matrix): void
@@ -222,7 +222,7 @@ class Sample
             $this->log($worksheet->getCell($descriptionCell)->getValue());
         }
         $this->log($worksheet->getCell($formulaCell)->getValue());
-        $this->log(sprintf('%s() Result is ', $functionName) . $worksheet->getCell($formulaCell)->getCalculatedValue());
+        $this->log(\sprintf('%s() Result is ', $functionName) . $worksheet->getCell($formulaCell)->getCalculatedValue());
     }
 
     /**
@@ -231,7 +231,7 @@ class Sample
     public function logEndingNotes(): void
     {
         // Do not show execution time for index
-        $this->log('Peak memory usage: ' . (memory_get_peak_usage(true) / 1024 / 1024) . 'MB');
+        $this->log('Peak memory usage: ' . (\memory_get_peak_usage(true) / 1024 / 1024) . 'MB');
     }
 
     /**
@@ -242,11 +242,11 @@ class Sample
      */
     public function logWrite(IWriter $writer, $path, $callStartTime): void
     {
-        $callEndTime = microtime(true);
+        $callEndTime = \microtime(true);
         $callTime = $callEndTime - $callStartTime;
-        $reflection = new ReflectionClass($writer);
+        $reflection = new \ReflectionClass($writer);
         $format = $reflection->getShortName();
-        $message = "Write {$format} format to <code>{$path}</code>  in " . sprintf('%.4f', $callTime) . ' seconds';
+        $message = "Write {$format} format to <code>{$path}</code>  in " . \sprintf('%.4f', $callTime) . ' seconds';
 
         $this->log($message);
     }
@@ -260,9 +260,9 @@ class Sample
      */
     public function logRead($format, $path, $callStartTime): void
     {
-        $callEndTime = microtime(true);
+        $callEndTime = \microtime(true);
         $callTime = $callEndTime - $callStartTime;
-        $message = "Read {$format} format from <code>{$path}</code>  in " . sprintf('%.4f', $callTime) . ' seconds';
+        $message = "Read {$format} format from <code>{$path}</code>  in " . \sprintf('%.4f', $callTime) . ' seconds';
 
         $this->log($message);
     }

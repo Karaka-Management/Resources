@@ -49,20 +49,20 @@ class Paragraph extends AbstractStyle
         $pagestart = -1;
         $breakafter = $breakbefore = $breakauto = false;
         if ($style->isAuto()) {
-            if (substr($styleName, 0, 2) === 'PB') {
+            if (\substr($styleName, 0, 2) === 'PB') {
                 $styleAuto = true;
                 $breakafter = true;
-            } elseif (substr($styleName, 0, 2) === 'SB') {
+            } elseif (\substr($styleName, 0, 2) === 'SB') {
                 $styleAuto = true;
-                $mpm = 'Standard' . substr($styleName, 2);
+                $mpm = 'Standard' . \substr($styleName, 2);
                 $psn = $style->getNumLevel();
                 $pagestart = $psn;
-            } elseif (substr($styleName, 0, 2) === 'HD') {
+            } elseif (\substr($styleName, 0, 2) === 'HD') {
                 $styleAuto = true;
-                $psm = 'Heading_' . substr($styleName, 2);
+                $psm = 'Heading_' . \substr($styleName, 2);
                 $stylep = \PhpOffice\PhpWord\Style::getStyle($psm);
                 if ($stylep instanceof \PhpOffice\PhpWord\Style\Font) {
-                    if (method_exists($stylep, 'getParagraph')) {
+                    if (\method_exists($stylep, 'getParagraph')) {
                         $stylep = $stylep->getParagraph();
                     }
                 }
@@ -71,14 +71,14 @@ class Paragraph extends AbstractStyle
                         $breakbefore = true;
                     }
                 }
-            } elseif (substr($styleName, 0, 2) === 'HE') {
+            } elseif (\substr($styleName, 0, 2) === 'HE') {
                 $styleAuto = true;
-                $psm = 'Heading_' . substr($styleName, 2);
+                $psm = 'Heading_' . \substr($styleName, 2);
                 $breakauto = true;
             } else {
                 $styleAuto = true;
                 $psm = 'Normal';
-                if (preg_match('/^P\\d+_(\\w+)$/', $styleName, $matches)) {
+                if (\preg_match('/^P\\d+_(\\w+)$/', $styleName, $matches)) {
                     $psm = $matches[1];
                 }
             }
@@ -118,7 +118,7 @@ class Paragraph extends AbstractStyle
         $xmlWriter->writeAttributeIf($style->hasPageBreakBefore() === true, 'fo:break-before', 'page');
 
         $tabs = $style->getTabs();
-        if ($tabs !== null && count($tabs) > 0) {
+        if ($tabs !== null && \count($tabs) > 0) {
             $xmlWriter->startElement('style:tab-stops');
             foreach ($tabs as $tab) {
                 $xmlWriter->startElement('style:tab-stop');
@@ -144,7 +144,7 @@ class Paragraph extends AbstractStyle
 
         $xmlWriter->endElement(); //style:paragraph-properties
 
-        if ($styleAuto && substr($styleName, 0, 2) === 'SB') {
+        if ($styleAuto && \substr($styleName, 0, 2) === 'SB') {
             $xmlWriter->startElement('style:text-properties');
             $xmlWriter->writeAttribute('text:display', 'none');
             $xmlWriter->endElement();

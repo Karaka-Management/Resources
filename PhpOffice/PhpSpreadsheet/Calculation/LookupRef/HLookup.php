@@ -27,7 +27,7 @@ class HLookup extends LookupBase
      */
     public static function lookup($lookupValue, $lookupArray, $indexNumber, $notExactMatch = true)
     {
-        if (is_array($lookupValue)) {
+        if (\is_array($lookupValue)) {
             return self::evaluateArrayArgumentsIgnore([self::class, __FUNCTION__], 1, $lookupValue, $lookupArray, $indexNumber, $notExactMatch);
         }
 
@@ -41,15 +41,15 @@ class HLookup extends LookupBase
             return $e->getMessage();
         }
 
-        $f = array_keys($lookupArray);
-        $firstRow = reset($f);
-        if ((!is_array($lookupArray[$firstRow])) || ($indexNumber > count($lookupArray))) {
+        $f = \array_keys($lookupArray);
+        $firstRow = \reset($f);
+        if ((!\is_array($lookupArray[$firstRow])) || ($indexNumber > \count($lookupArray))) {
             return ExcelError::REF();
         }
 
         $firstkey = $f[0] - 1;
         $returnColumn = $firstkey + $indexNumber;
-        $firstColumn = array_shift($f) ?? 1;
+        $firstColumn = \array_shift($f) ?? 1;
         $rowNumber = self::hLookupSearch($lookupValue, $lookupArray, $firstColumn, $notExactMatch);
 
         if ($rowNumber !== null) {
@@ -71,8 +71,8 @@ class HLookup extends LookupBase
         $rowNumber = null;
         foreach ($lookupArray[$column] as $rowKey => $rowData) {
             // break if we have passed possible keys
-            $bothNumeric = is_numeric($lookupValue) && is_numeric($rowData);
-            $bothNotNumeric = !is_numeric($lookupValue) && !is_numeric($rowData);
+            $bothNumeric = \is_numeric($lookupValue) && \is_numeric($rowData);
+            $bothNotNumeric = !\is_numeric($lookupValue) && !\is_numeric($rowData);
             $cellDataLower = StringHelper::strToLower((string) $rowData);
 
             if (
@@ -98,12 +98,12 @@ class HLookup extends LookupBase
 
     private static function convertLiteralArray(array $lookupArray): array
     {
-        if (array_key_exists(0, $lookupArray)) {
+        if (\array_key_exists(0, $lookupArray)) {
             $lookupArray2 = [];
             $row = 0;
             foreach ($lookupArray as $arrayVal) {
                 ++$row;
-                if (!is_array($arrayVal)) {
+                if (!\is_array($arrayVal)) {
                     $arrayVal = [$arrayVal];
                 }
                 $arrayVal2 = [];

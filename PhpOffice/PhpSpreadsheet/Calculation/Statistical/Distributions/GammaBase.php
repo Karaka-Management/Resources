@@ -23,7 +23,7 @@ abstract class GammaBase
             return self::incompleteGamma($a, $value / $b) / self::gammaValue($a);
         }
 
-        return (1 / ($b ** $a * self::gammaValue($a))) * $value ** ($a - 1) * exp(0 - ($value / $b));
+        return (1 / ($b ** $a * self::gammaValue($a))) * $value ** ($a - 1) * \exp(0 - ($value / $b));
     }
 
     protected static function calculateInverse(float $probability, float $alpha, float $beta)
@@ -35,7 +35,7 @@ abstract class GammaBase
         $x = $xNew = 1;
         $i = 0;
 
-        while ((abs($dx) > Functions::PRECISION) && (++$i <= self::MAX_ITERATIONS)) {
+        while ((\abs($dx) > Functions::PRECISION) && (++$i <= self::MAX_ITERATIONS)) {
             // Apply Newton-Raphson step
             $result = self::calculateDistribution($x, $alpha, $beta, true);
             $error = $result - $probability;
@@ -87,7 +87,7 @@ abstract class GammaBase
             $summer += ($x ** $n / $divisor);
         }
 
-        return $x ** $a * exp(0 - $x) * $summer;
+        return $x ** $a * \exp(0 - $x) * $summer;
     }
 
     //
@@ -111,14 +111,14 @@ abstract class GammaBase
 
         $y = $x = $value;
         $tmp = $x + 5.5;
-        $tmp -= ($x + 0.5) * log($tmp);
+        $tmp -= ($x + 0.5) * \log($tmp);
 
         $summer = $p0;
         for ($j = 1; $j <= 6; ++$j) {
             $summer += ($p[$j] / ++$y);
         }
 
-        return exp(0 - $tmp + log(self::SQRT2PI * $summer / $x));
+        return \exp(0 - $tmp + \log(self::SQRT2PI * $summer / $x));
     }
 
     private const  LG_D1 = -0.5772156649015328605195174;
@@ -266,7 +266,7 @@ abstract class GammaBase
         $y = $x;
         if ($y > 0.0 && $y <= self::LOG_GAMMA_X_MAX_VALUE) {
             if ($y <= self::EPS) {
-                $res = -log($y);
+                $res = -\log($y);
             } elseif ($y <= 1.5) {
                 $res = self::logGamma1($y);
             } elseif ($y <= 4.0) {
@@ -298,7 +298,7 @@ abstract class GammaBase
         //    EPS .LT. X .LE. 1.5
         // ---------------------
         if ($y < self::PNT68) {
-            $corr = -log($y);
+            $corr = -\log($y);
             $xm1 = $y;
         } else {
             $corr = 0.0;
@@ -370,8 +370,8 @@ abstract class GammaBase
                 $res = $res / $ysq + self::LG_C[$i];
             }
             $res /= $y;
-            $corr = log($y);
-            $res = $res + log(self::SQRT2PI) - 0.5 * $corr;
+            $corr = \log($y);
+            $res = $res + \log(self::SQRT2PI) - 0.5 * $corr;
             $res += $y * ($corr - 1.0);
         }
 

@@ -47,7 +47,7 @@ class ConvertDecimal extends ConvertBase
      */
     public static function toBinary($value, $places = null)
     {
-        if (is_array($value) || is_array($places)) {
+        if (\is_array($value) || \is_array($places)) {
             return self::evaluateArrayArguments([self::class, __FUNCTION__], $value, $places);
         }
 
@@ -59,14 +59,14 @@ class ConvertDecimal extends ConvertBase
             return $e->getMessage();
         }
 
-        $value = (int) floor((float) $value);
+        $value = (int) \floor((float) $value);
         if ($value > self::LARGEST_BINARY_IN_DECIMAL || $value < self::SMALLEST_BINARY_IN_DECIMAL) {
             return ExcelError::NAN();
         }
 
-        $r = decbin($value);
+        $r = \decbin($value);
         // Two's Complement
-        $r = substr($r, -10);
+        $r = \substr($r, -10);
 
         return self::nbrConversionFormat($r, $places);
     }
@@ -104,7 +104,7 @@ class ConvertDecimal extends ConvertBase
      */
     public static function toHex($value, $places = null)
     {
-        if (is_array($value) || is_array($places)) {
+        if (\is_array($value) || \is_array($places)) {
             return self::evaluateArrayArguments([self::class, __FUNCTION__], $value, $places);
         }
 
@@ -116,11 +116,11 @@ class ConvertDecimal extends ConvertBase
             return $e->getMessage();
         }
 
-        $value = floor((float) $value);
+        $value = \floor((float) $value);
         if ($value > self::LARGEST_HEX_IN_DECIMAL || $value < self::SMALLEST_HEX_IN_DECIMAL) {
             return ExcelError::NAN();
         }
-        $r = strtoupper(dechex((int) $value));
+        $r = \strtoupper(\dechex((int) $value));
         $r = self::hex32bit($value, $r);
 
         return self::nbrConversionFormat($r, $places);
@@ -132,12 +132,12 @@ class ConvertDecimal extends ConvertBase
             if ($value >= 2 ** 32) {
                 $quotient = (int) ($value / (2 ** 32));
 
-                return strtoupper(substr('0' . dechex($quotient), -2) . $hexstr);
+                return \strtoupper(\substr('0' . \dechex($quotient), -2) . $hexstr);
             }
             if ($value < -(2 ** 32)) {
-                $quotient = 256 - (int) ceil((-$value) / (2 ** 32));
+                $quotient = 256 - (int) \ceil((-$value) / (2 ** 32));
 
-                return strtoupper(substr('0' . dechex($quotient), -2) . substr("00000000$hexstr", -8));
+                return \strtoupper(\substr('0' . \dechex($quotient), -2) . \substr("00000000$hexstr", -8));
             }
             if ($value < 0) {
                 return "FF$hexstr";
@@ -180,7 +180,7 @@ class ConvertDecimal extends ConvertBase
      */
     public static function toOctal($value, $places = null)
     {
-        if (is_array($value) || is_array($places)) {
+        if (\is_array($value) || \is_array($places)) {
             return self::evaluateArrayArguments([self::class, __FUNCTION__], $value, $places);
         }
 
@@ -192,19 +192,19 @@ class ConvertDecimal extends ConvertBase
             return $e->getMessage();
         }
 
-        $value = (int) floor((float) $value);
+        $value = (int) \floor((float) $value);
         if ($value > self::LARGEST_OCTAL_IN_DECIMAL || $value < self::SMALLEST_OCTAL_IN_DECIMAL) {
             return ExcelError::NAN();
         }
-        $r = decoct($value);
-        $r = substr($r, -10);
+        $r = \decoct($value);
+        $r = \substr($r, -10);
 
         return self::nbrConversionFormat($r, $places);
     }
 
     protected static function validateDecimal(string $value): string
     {
-        if (strlen($value) > preg_match_all('/[-0123456789.]/', $value)) {
+        if (\strlen($value) > \preg_match_all('/[-0123456789.]/', $value)) {
             throw new Exception(ExcelError::VALUE());
         }
 

@@ -39,7 +39,7 @@ class Table extends AbstractElement
             return;
         }
         $rows = $element->getRows();
-        $rowCount = count($rows);
+        $rowCount = \count($rows);
 
         if ($rowCount > 0) {
             $xmlWriter->startElement('table:table');

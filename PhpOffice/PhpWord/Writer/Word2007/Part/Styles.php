@@ -54,16 +54,16 @@ class Styles extends AbstractPart
         $this->writeDefaultStyles($xmlWriter, $styles);
 
         // Write styles
-        if (count($styles) > 0) {
+        if (\count($styles) > 0) {
             foreach ($styles as $styleName => $style) {
                 if ($styleName == 'Normal') {
                     continue;
                 }
 
                 // Get style class and execute if the private method exists
-                $styleClass = substr(get_class($style), strrpos(get_class($style), '\\') + 1);
+                $styleClass = \substr(\get_class($style), \strrpos(\get_class($style), '\\') + 1);
                 $method = "write{$styleClass}Style";
-                if (method_exists($this, $method)) {
+                if (\method_exists($this, $method)) {
                     $this->$method($xmlWriter, $styleName, $style);
                 }
             }
@@ -177,14 +177,14 @@ class Styles extends AbstractPart
 
         // Heading style
         if ($styleType == 'title') {
-            $arrStyle = explode('_', $styleName);
-            if (count($arrStyle) > 1) {
+            $arrStyle = \explode('_', $styleName);
+            if (\count($arrStyle) > 1) {
                 $styleId = 'Heading' . $arrStyle[1];
                 $styleName = 'heading ' . $arrStyle[1];
                 $styleLink = 'Heading' . $arrStyle[1] . 'Char';
             } else {
                 $styleId = $styleName;
-                $styleName = strtolower($styleName);
+                $styleName = \strtolower($styleName);
                 $styleLink = $styleName . 'Char';
             }
             $xmlWriter->writeAttribute('w:styleId', $styleId);

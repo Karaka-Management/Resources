@@ -65,7 +65,7 @@ class Date
      */
     public static function fromYMD($year, $month, $day)
     {
-        if (is_array($year) || is_array($month) || is_array($day)) {
+        if (\is_array($year) || \is_array($month) || \is_array($day)) {
             return self::evaluateArrayArguments([self::class, __FUNCTION__], $year, $month, $day);
         }
 
@@ -94,7 +94,7 @@ class Date
     private static function getYear($year, int $baseYear): int
     {
         $year = ($year !== null) ? StringHelper::testStringAsNumeric((string) $year) : 0;
-        if (!is_numeric($year)) {
+        if (!\is_numeric($year)) {
             throw new Exception(ExcelError::VALUE());
         }
         $year = (int) $year;
@@ -120,12 +120,12 @@ class Date
      */
     private static function getMonth($month): int
     {
-        if (($month !== null) && (!is_numeric($month))) {
+        if (($month !== null) && (!\is_numeric($month))) {
             $month = SharedDateHelper::monthStringToNumber($month);
         }
 
         $month = ($month !== null) ? StringHelper::testStringAsNumeric((string) $month) : 0;
-        if (!is_numeric($month)) {
+        if (!\is_numeric($month)) {
             throw new Exception(ExcelError::VALUE());
         }
 
@@ -139,12 +139,12 @@ class Date
      */
     private static function getDay($day): int
     {
-        if (($day !== null) && (!is_numeric($day))) {
+        if (($day !== null) && (!\is_numeric($day))) {
             $day = SharedDateHelper::dayStringToNumber($day);
         }
 
         $day = ($day !== null) ? StringHelper::testStringAsNumeric((string) $day) : 0;
-        if (!is_numeric($day)) {
+        if (!\is_numeric($day)) {
             throw new Exception(ExcelError::VALUE());
         }
 
@@ -156,11 +156,11 @@ class Date
         if ($month < 1) {
             //    Handle year/month adjustment if month < 1
             --$month;
-            $year += ceil($month / 12) - 1;
-            $month = 13 - abs($month % 12);
+            $year += \ceil($month / 12) - 1;
+            $month = 13 - \abs($month % 12);
         } elseif ($month > 12) {
             //    Handle year/month adjustment if month > 12
-            $year += floor($month / 12);
+            $year += \floor($month / 12);
             $month = ($month % 12);
         }
 

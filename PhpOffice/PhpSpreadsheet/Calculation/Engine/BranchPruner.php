@@ -86,7 +86,7 @@ class BranchPruner
         $this->currentOnlyIf = null;
         $this->currentOnlyIfNot = null;
         $this->previousStoreKey = null;
-        $this->pendingStoreKey = empty($this->storeKeysStack) ? null : end($this->storeKeysStack);
+        $this->pendingStoreKey = empty($this->storeKeysStack) ? null : \end($this->storeKeysStack);
 
         if ($this->branchPruningEnabled) {
             $this->initialiseCondition();
@@ -99,7 +99,7 @@ class BranchPruner
     {
         if (isset($this->conditionMap[$this->pendingStoreKey]) && $this->conditionMap[$this->pendingStoreKey]) {
             $this->currentCondition = $this->pendingStoreKey;
-            $stackDepth = count($this->storeKeysStack);
+            $stackDepth = \count($this->storeKeysStack);
             if ($stackDepth > 1) {
                 // nested if
                 $this->previousStoreKey = $this->storeKeysStack[$stackDepth - 2];
@@ -153,7 +153,7 @@ class BranchPruner
             $this->storeKeysStack[] = $this->pendingStoreKey;
             $this->conditionMap[$this->pendingStoreKey] = true;
             $this->braceDepthMap[$this->pendingStoreKey] = 0;
-        } elseif (!empty($this->pendingStoreKey) && array_key_exists($this->pendingStoreKey, $this->braceDepthMap)) {
+        } elseif (!empty($this->pendingStoreKey) && \array_key_exists($this->pendingStoreKey, $this->braceDepthMap)) {
             // this is not an if but we go deeper
             ++$this->braceDepthMap[$this->pendingStoreKey];
         }
@@ -193,7 +193,7 @@ class BranchPruner
             $this->thenMap[$this->pendingStoreKey] = false;
             $this->elseMap[$this->pendingStoreKey] = false;
             --$this->braceDepthMap[$this->pendingStoreKey];
-            array_pop($this->storeKeysStack);
+            \array_pop($this->storeKeysStack);
             $this->pendingStoreKey = null;
         }
     }

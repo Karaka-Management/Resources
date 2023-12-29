@@ -17,9 +17,11 @@
 
 namespace PhpOffice\Common\Microsoft;
 
+/*
 if (!defined('IDENTIFIER_OLE')) {
     define('IDENTIFIER_OLE', pack('CCCCCCCC', 0xD0, 0xCF, 0x11, 0xE0, 0xA1, 0xB1, 0x1A, 0xE1));
 }
+*/
 
 class OLERead
 {
@@ -29,7 +31,7 @@ class OLERead
     private $data = '';
 
     // OLE identifier
-    public const IDENTIFIER_OLE = IDENTIFIER_OLE;
+    public const IDENTIFIER_OLE = "\xD0\xCF\x11\xE0\xA1\xB1\x1A\xE1";
 
     // Size of a sector = 512 bytes
     public const BIG_BLOCK_SIZE = 0x200;
@@ -105,24 +107,26 @@ class OLERead
      *
      * @throws \Exception
      */
-    public function read(string $sFileName): void
+    public function read(string $sFileName): bool
     {
         // Check if file exists and is readable
-        if (!is_readable($sFileName)) {
-            throw new \Exception('Could not open ' . $sFileName . ' for reading! File does not exist, or it is not readable.');
+        if (!\is_readable($sFileName)) {
+            return false;
+            //throw new \Exception('Could not open ' . $sFileName . ' for reading! File does not exist, or it is not readable.');
         }
 
         // Get the file identifier
         // Don't bother reading the whole file until we know it's a valid OLE file
-        $this->data = file_get_contents($sFileName, false, null, 0, 8);
+        $this->data = \file_get_contents($sFileName, false, null, 0, 8);
 
         // Check OLE identifier
         if ($this->data != self::IDENTIFIER_OLE) {
-            throw new \Exception('The filename ' . $sFileName . ' is not recognised as an OLE file');
+            return false;
+            //throw new \Exception('The filename ' . $sFileName . ' is not recognized as an OLE file');
         }
 
         // Get the file data
-        $this->data = file_get_contents($sFileName);
+        $this->data = \file_get_contents($sFileName);
 
         // Total number of sectors used for the SAT
         $numBigBlkDepotBlks = self::getInt4d($this->data, self::NUM_BIG_BLOCK_DEPOT_BLOCKS_POS);
@@ -155,7 +159,7 @@ class OLERead
 
         for ($j = 0; $j < $numExtensionBlocks; ++$j) {
             $pos = ($extensionBlock + 1) * self::BIG_BLOCK_SIZE;
-            $blocksToRead = min($numBigBlkDepotBlks - $bbdBlocks, self::BIG_BLOCK_SIZE / 4 - 1);
+            $blocksToRead = \min($numBigBlkDepotBlks - $bbdBlocks, self::BIG_BLOCK_SIZE / 4 - 1);
 
             for ($i = $bbdBlocks; $i < $bbdBlocks + $blocksToRead; ++$i) {
                 $bigBlockDepotBlocks[$i] = self::getInt4d($this->data, $pos);
@@ -173,7 +177,7 @@ class OLERead
         for ($i = 0; $i < $numBigBlkDepotBlks; ++$i) {
             $pos = ($bigBlockDepotBlocks[$i] + 1) * self::BIG_BLOCK_SIZE;
 
-            $this->bigBlockChain .= substr($this->data, $pos, 4 * $bbs);
+            $this->bigBlockChain .= \substr($this->data, $pos, 4 * $bbs);
             $pos += 4 * $bbs;
         }
 
@@ -182,7 +186,7 @@ class OLERead
         while ($sbdBlock != -2) {
             $pos = ($sbdBlock + 1) * self::BIG_BLOCK_SIZE;
 
-            $this->smallBlockChain .= substr($this->data, $pos, 4 * $bbs);
+            $this->smallBlockChain .= \substr($this->data, $pos, 4 * $bbs);
             $pos += 4 * $bbs;
 
             $sbdBlock = self::getInt4d($this->bigBlockChain, $sbdBlock * 4);
@@ -193,6 +197,8 @@ class OLERead
         $this->entry = $this->readData($block);
 
         $this->readPropertySets();
+
+        return true;
     }
 
     /**
@@ -211,7 +217,7 @@ class OLERead
 
             while ($block != -2) {
                 $pos = $block * self::SMALL_BLOCK_SIZE;
-                $streamData .= substr($rootdata, $pos, self::SMALL_BLOCK_SIZE);
+                $streamData .= \substr($rootdata, $pos, self::SMALL_BLOCK_SIZE);
 
                 $block = self::getInt4d($this->smallBlockChain, $block * 4);
             }
@@ -232,7 +238,7 @@ class OLERead
 
         while ($block != -2) {
             $pos = ($block + 1) * self::BIG_BLOCK_SIZE;
-            $streamData .= substr($this->data, $pos, self::BIG_BLOCK_SIZE);
+            $streamData .= \substr($this->data, $pos, self::BIG_BLOCK_SIZE);
             $block = self::getInt4d($this->bigBlockChain, $block * 4);
         }
 
@@ -253,7 +259,7 @@ class OLERead
 
         while ($block != -2) {
             $pos = ($block + 1) * self::BIG_BLOCK_SIZE;
-            $data .= substr($this->data, $pos, self::BIG_BLOCK_SIZE);
+            $data .= \substr($this->data, $pos, self::BIG_BLOCK_SIZE);
             $block = self::getInt4d($this->bigBlockChain, $block * 4);
         }
 
@@ -268,16 +274,16 @@ class OLERead
         $offset = 0;
 
         // loop through entires, each entry is 128 bytes
-        $entryLen = strlen($this->entry);
+        $entryLen = \strlen($this->entry);
         while ($offset < $entryLen) {
             // entry data (128 bytes)
-            $data = substr($this->entry, $offset, self::PROPERTY_STORAGE_BLOCK_SIZE);
+            $data = \substr($this->entry, $offset, self::PROPERTY_STORAGE_BLOCK_SIZE);
 
             // size in bytes of name
-            $nameSize = ord($data[self::SIZE_OF_NAME_POS]) | (ord($data[self::SIZE_OF_NAME_POS + 1]) << 8);
+            $nameSize = \ord($data[self::SIZE_OF_NAME_POS]) | (\ord($data[self::SIZE_OF_NAME_POS + 1]) << 8);
 
             // type of entry
-            $type = ord($data[self::TYPE_POS]);
+            $type = \ord($data[self::TYPE_POS]);
 
             // sectorID of first sector or short sector, if this entry refers to a stream (the case with workbook)
             // sectorID of first sector of the short-stream container stream, if this entry is root entry
@@ -285,7 +291,7 @@ class OLERead
 
             $size = self::getInt4d($data, self::SIZE_POS);
 
-            $name = str_replace("\x00", '', substr($data, 0, $nameSize));
+            $name = \str_replace("\x00", '', \substr($data, 0, $nameSize));
             if ($size > 0) {
                 $this->props[] = [
                     'name' => $name,
@@ -295,34 +301,35 @@ class OLERead
                 ];
 
                 // tmp helper to simplify checks
-                $upName = strtoupper($name);
+                $upName = \strtoupper($name);
 
                 switch ($upName) {
                     case 'ROOT ENTRY':
                     case 'R':
-                        $this->rootEntry = count($this->props) - 1;
+                        $this->rootEntry = \count($this->props) - 1;
                         break;
-                    case chr(1) . 'COMPOBJ':
+                    case \chr(1) . 'COMPOBJ':
                         break;
-                    case chr(1) . 'OLE':
+                    case \chr(1) . 'OLE':
                         break;
-                    case chr(5) . 'SUMMARYINFORMATION':
-                        $this->summaryInformation = count($this->props) - 1;
+                    case \chr(5) . 'SUMMARYINFORMATION':
+                        $this->summaryInformation = \count($this->props) - 1;
                         break;
-                    case chr(5) . 'DOCUMENTSUMMARYINFORMATION':
-                        $this->docSummaryInfos = count($this->props) - 1;
+                    case \chr(5) . 'DOCUMENTSUMMARYINFORMATION':
+                        $this->docSummaryInfos = \count($this->props) - 1;
                         break;
                     case 'CURRENT USER':
-                        $this->currentUser = count($this->props) - 1;
+                        $this->currentUser = \count($this->props) - 1;
                         break;
                     case 'PICTURES':
-                        $this->pictures = count($this->props) - 1;
+                        $this->pictures = \count($this->props) - 1;
                         break;
                     case 'POWERPOINT DOCUMENT':
-                        $this->powerpointDocument = count($this->props) - 1;
+                        $this->powerpointDocument = \count($this->props) - 1;
                         break;
                     default:
-                        throw new \Exception('OLE Block Not defined: $upName : ' . $upName . ' - $name : "' . $name . '"');
+                        return;
+                        //throw new \Exception('OLE Block Not defined: $upName : ' . $upName . ' - $name : "' . $name . '"');
                 }
             }
 
@@ -343,14 +350,14 @@ class OLERead
         // FIX: represent numbers correctly on 64-bit system
         // http://sourceforge.net/tracker/index.php?func=detail&aid=1487372&group_id=99160&atid=623334
         // Hacked by Andreas Rehm 2006 to ensure correct result of the <<24 block on 32 and 64bit systems
-        $or24 = ord($data[$pos + 3]);
+        $or24 = \ord($data[$pos + 3]);
         if ($or24 >= 128) {
             // negative number
-            $ord24 = -abs((256 - $or24) << 24);
+            $ord24 = -\abs((256 - $or24) << 24);
         } else {
             $ord24 = ($or24 & 127) << 24;
         }
 
-        return ord($data[$pos]) | (ord($data[$pos + 1]) << 8) | (ord($data[$pos + 2]) << 16) | $ord24;
+        return \ord($data[$pos]) | (\ord($data[$pos + 1]) << 8) | (\ord($data[$pos + 2]) << 16) | $ord24;
     }
 }

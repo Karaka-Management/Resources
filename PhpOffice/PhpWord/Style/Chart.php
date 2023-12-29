@@ -376,7 +376,7 @@ class Chart extends AbstractStyle
      */
     public function setDataLabelOptions($values = []): void
     {
-        foreach (array_keys($this->dataLabelOptions) as $option) {
+        foreach (\array_keys($this->dataLabelOptions) as $option) {
             if (isset($values[$option])) {
                 $this->dataLabelOptions[$option] = $this->setBoolVal(
                     $values[$option],

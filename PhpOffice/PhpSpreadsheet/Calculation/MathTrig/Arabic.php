@@ -30,20 +30,20 @@ class Arabic
      */
     private static function calculateArabic(array $roman, &$sum = 0, $subtract = 0)
     {
-        $numeral = array_shift($roman);
+        $numeral = \array_shift($roman);
         if (!isset(self::ROMAN_LOOKUP[$numeral])) {
             throw new Exception('Invalid character detected');
         }
 
         $arabic = self::ROMAN_LOOKUP[$numeral];
-        if (count($roman) > 0 && isset(self::ROMAN_LOOKUP[$roman[0]]) && $arabic < self::ROMAN_LOOKUP[$roman[0]]) {
+        if (\count($roman) > 0 && isset(self::ROMAN_LOOKUP[$roman[0]]) && $arabic < self::ROMAN_LOOKUP[$roman[0]]) {
             $subtract += $arabic;
         } else {
             $sum += ($arabic - $subtract);
             $subtract = 0;
         }
 
-        if (count($roman) > 0) {
+        if (\count($roman) > 0) {
             self::calculateArabic($roman, $sum, $subtract);
         }
 
@@ -55,12 +55,12 @@ class Arabic
      */
     private static function mollifyScrutinizer($value): array
     {
-        return is_array($value) ? $value : [];
+        return \is_array($value) ? $value : [];
     }
 
     private static function strSplit(string $roman): array
     {
-        $rslt = str_split($roman);
+        $rslt = \str_split($roman);
 
         return self::mollifyScrutinizer($rslt);
     }
@@ -81,12 +81,12 @@ class Arabic
      */
     public static function evaluate($roman)
     {
-        if (is_array($roman)) {
+        if (\is_array($roman)) {
             return self::evaluateSingleArgumentArray([self::class, __FUNCTION__], $roman);
         }
 
         // An empty string should return 0
-        $roman = substr(trim(strtoupper((string) $roman)), 0, 255);
+        $roman = \substr(\trim(\strtoupper((string) $roman)), 0, 255);
         if ($roman === '') {
             return 0;
         }
@@ -94,7 +94,7 @@ class Arabic
         // Convert the roman numeral to an arabic number
         $negativeNumber = $roman[0] === '-';
         if ($negativeNumber) {
-            $roman = substr($roman, 1);
+            $roman = \substr($roman, 1);
         }
 
         try {

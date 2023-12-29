@@ -40,7 +40,7 @@ class Note implements ComparableInterface, ShapeContainerInterface
     /**
      * Collection of shapes.
      *
-     * @var array<int, AbstractShape>|ArrayObject<int, AbstractShape>
+     * @var array<int, AbstractShape>|\ArrayObject<int, AbstractShape>
      */
     private $shapeCollection;
 
@@ -97,16 +97,16 @@ class Note implements ComparableInterface, ShapeContainerInterface
         $this->parent = $pParent;
 
         // Shape collection
-        $this->shapeCollection = new ArrayObject();
+        $this->shapeCollection = new \ArrayObject();
 
         // Set identifier
-        $this->identifier = md5(rand(0, 9999) . time());
+        $this->identifier = \md5(\rand(0, 9999) . \time());
     }
 
     /**
      * Get collection of shapes.
      *
-     * @return array<int, AbstractShape>|ArrayObject<int, AbstractShape>
+     * @return array<int, AbstractShape>|\ArrayObject<int, AbstractShape>
      */
     public function getShapeCollection()
     {
@@ -221,7 +221,7 @@ class Note implements ComparableInterface, ShapeContainerInterface
      */
     public function getHashCode(): string
     {
-        return md5($this->identifier . __CLASS__);
+        return \md5($this->identifier . __CLASS__);
     }
 
     /**

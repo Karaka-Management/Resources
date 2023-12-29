@@ -100,7 +100,7 @@ class Transition
 
     public function setSpeed(?string $speed = self::SPEED_MEDIUM): self
     {
-        if (in_array($speed, [self::SPEED_FAST, self::SPEED_MEDIUM, self::SPEED_SLOW])) {
+        if (\in_array($speed, [self::SPEED_FAST, self::SPEED_MEDIUM, self::SPEED_SLOW])) {
             $this->speed = $speed;
         } else {
             $this->speed = null;

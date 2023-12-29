@@ -51,7 +51,7 @@ class File extends AbstractDrawingAdapter
     public function setPath(string $pValue = '', bool $pVerifyFile = true): self
     {
         if ($pVerifyFile) {
-            if (!file_exists($pValue)) {
+            if (!\file_exists($pValue)) {
                 throw new FileNotFoundException($pValue);
             }
         }
@@ -59,7 +59,7 @@ class File extends AbstractDrawingAdapter
 
         if ($pVerifyFile) {
             if (0 == $this->width && 0 == $this->height) {
-                list($this->width, $this->height) = getimagesize($this->getPath());
+                list($this->width, $this->height) = \getimagesize($this->getPath());
             }
         }
 
@@ -73,7 +73,7 @@ class File extends AbstractDrawingAdapter
 
     public function getExtension(): string
     {
-        return pathinfo($this->getPath(), PATHINFO_EXTENSION);
+        return \pathinfo($this->getPath(), PATHINFO_EXTENSION);
     }
 
     /**
@@ -84,21 +84,21 @@ class File extends AbstractDrawingAdapter
         if (!CommonFile::fileExists($this->getPath())) {
             throw new FileNotFoundException($this->getPath());
         }
-        $image = getimagesizefromstring(CommonFile::fileGetContents($this->getPath()));
+        $image = \getimagesizefromstring(CommonFile::fileGetContents($this->getPath()));
 
-        if (is_array($image)) {
-            return image_type_to_mime_type($image[2]);
+        if (\is_array($image)) {
+            return \image_type_to_mime_type($image[2]);
         }
 
-        return mime_content_type($this->getPath());
+        return \mime_content_type($this->getPath());
     }
 
     public function getIndexedFilename(): string
     {
-        $output = str_replace('.' . $this->getExtension(), '', pathinfo($this->getPath(), PATHINFO_FILENAME));
+        $output = \str_replace('.' . $this->getExtension(), '', \pathinfo($this->getPath(), PATHINFO_FILENAME));
         $output .= $this->getImageIndex();
         $output .= '.' . $this->getExtension();
-        $output = str_replace(' ', '_', $output);
+        $output = \str_replace(' ', '_', $output);
 
         return $output;
     }

@@ -90,10 +90,10 @@ class Conditional
     {
         $result = ExcelError::VALUE();
 
-        if (count($arguments) > 0) {
+        if (\count($arguments) > 0) {
             $targetValue = Functions::flattenSingleValue($arguments[0]);
-            $argc = count($arguments) - 1;
-            $switchCount = floor($argc / 2);
+            $argc = \count($arguments) - 1;
+            $switchCount = \floor($argc / 2);
             $hasDefaultClause = $argc % 2 !== 0;
             $defaultClause = $argc % 2 === 0 ? null : $arguments[$argc];
 
@@ -134,7 +134,7 @@ class Conditional
      */
     public static function IFERROR($testValue = '', $errorpart = '')
     {
-        if (is_array($testValue)) {
+        if (\is_array($testValue)) {
             return self::evaluateArrayArgumentsSubset([self::class, __FUNCTION__], 1, $testValue, $errorpart);
         }
 
@@ -161,7 +161,7 @@ class Conditional
      */
     public static function IFNA($testValue = '', $napart = '')
     {
-        if (is_array($testValue)) {
+        if (\is_array($testValue)) {
             return self::evaluateArrayArgumentsSubset([self::class, __FUNCTION__], 1, $testValue, $napart);
         }
 
@@ -189,7 +189,7 @@ class Conditional
      */
     public static function IFS(...$arguments)
     {
-        $argumentCount = count($arguments);
+        $argumentCount = \count($arguments);
 
         if ($argumentCount % 2 != 0) {
             return ExcelError::NA();

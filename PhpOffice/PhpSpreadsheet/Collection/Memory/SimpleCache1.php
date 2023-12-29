@@ -92,13 +92,13 @@ class SimpleCache1 implements CacheInterface
      */
     public function has($key)
     {
-        return array_key_exists($key, $this->cache);
+        return \array_key_exists($key, $this->cache);
     }
 
     /**
      * @param string                 $key
      * @param mixed                  $value
-     * @param null|DateInterval|int $ttl
+     * @param null|\DateInterval|int $ttl
      *
      * @return bool
      */
@@ -111,7 +111,7 @@ class SimpleCache1 implements CacheInterface
 
     /**
      * @param iterable               $values
-     * @param null|DateInterval|int $ttl
+     * @param null|\DateInterval|int $ttl
      *
      * @return bool
      */

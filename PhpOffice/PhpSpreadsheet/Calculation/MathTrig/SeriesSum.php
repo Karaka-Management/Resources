@@ -24,7 +24,7 @@ class SeriesSum
      */
     public static function evaluate($x, $n, $m, ...$args)
     {
-        if (is_array($x) || is_array($n) || is_array($m)) {
+        if (\is_array($x) || \is_array($n) || \is_array($m)) {
             return self::evaluateArrayArgumentsSubset([self::class, __FUNCTION__], 3, $x, $n, $m, ...$args);
         }
 

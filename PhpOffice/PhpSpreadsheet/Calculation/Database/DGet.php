@@ -40,12 +40,12 @@ class DGet extends DatabaseAbstract
         }
 
         $columnData = self::getFilteredColumn($database, $field, $criteria);
-        if (count($columnData) > 1) {
+        if (\count($columnData) > 1) {
             return ExcelError::NAN();
         }
 
-        $row = array_pop($columnData);
+        $row = \array_pop($columnData);
 
-        return array_pop($row);
+        return \array_pop($row);
     }
 }

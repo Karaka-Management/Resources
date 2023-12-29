@@ -267,7 +267,7 @@ class Paragraph implements ComparableInterface
             $hashElements .= $element->getHashCode();
         }
 
-        return md5($hashElements . $this->font->getHashCode() . __CLASS__);
+        return \md5($hashElements . $this->font->getHashCode() . __CLASS__);
     }
 
     /**
@@ -337,7 +337,7 @@ class Paragraph implements ComparableInterface
      */
     public function setLineSpacingMode(string $lineSpacingMode): self
     {
-        if (in_array($lineSpacingMode, [
+        if (\in_array($lineSpacingMode, [
             self::LINE_SPACING_MODE_PERCENT,
             self::LINE_SPACING_MODE_POINT,
         ])) {

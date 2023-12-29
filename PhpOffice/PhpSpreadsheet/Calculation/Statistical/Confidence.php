@@ -29,7 +29,7 @@ class Confidence
      */
     public static function CONFIDENCE($alpha, $stdDev, $size)
     {
-        if (is_array($alpha) || is_array($stdDev) || is_array($size)) {
+        if (\is_array($alpha) || \is_array($stdDev) || \is_array($size)) {
             return self::evaluateArrayArguments([self::class, __FUNCTION__], $alpha, $stdDev, $size);
         }
 
@@ -47,6 +47,6 @@ class Confidence
         /** @var float */
         $temp = Distributions\StandardNormal::inverse(1 - $alpha / 2);
 
-        return Functions::scalar($temp * $stdDev / sqrt($size));
+        return Functions::scalar($temp * $stdDev / \sqrt($size));
     }
 }

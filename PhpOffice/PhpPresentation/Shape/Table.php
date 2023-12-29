@@ -71,7 +71,7 @@ class Table extends AbstractGraphic implements ComparableInterface
         if (!isset($this->rows[$row])) {
             throw new OutOfBoundsException(
                 0,
-                (count($this->rows) - 1) < 0 ? 0 : count($this->rows) - 1,
+                (\count($this->rows) - 1) < 0 ? 0 : \count($this->rows) - 1,
                 $row
             );
         }
@@ -144,6 +144,6 @@ class Table extends AbstractGraphic implements ComparableInterface
             $hashElements .= $row->getHashCode();
         }
 
-        return md5($hashElements . __CLASS__);
+        return \md5($hashElements . __CLASS__);
     }
 }

@@ -39,6 +39,6 @@ class Area extends AbstractType implements ComparableInterface
             $hash .= $series->getHashCode();
         }
 
-        return md5($hash . __CLASS__);
+        return \md5($hash . __CLASS__);
     }
 }

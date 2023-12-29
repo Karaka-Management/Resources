@@ -39,7 +39,7 @@ class OLEObject extends AbstractElement
 
         $rIdObject = $element->getRelationId() + ($element->isInSection() ? 6 : 0);
         $rIdImage = $element->getImageRelationId() + ($element->isInSection() ? 6 : 0);
-        $shapeId = md5($rIdObject . '_' . $rIdImage);
+        $shapeId = \md5($rIdObject . '_' . $rIdImage);
         $objectId = $element->getRelationId() + 1325353440;
 
         $style = $element->getStyle();

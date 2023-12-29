@@ -50,7 +50,7 @@ class Paragraph extends AbstractStyle
     {
         $xmlWriter = $this->getXmlWriter();
 
-        $isStyleName = $this->isInline && null !== $this->style && is_string($this->style);
+        $isStyleName = $this->isInline && null !== $this->style && \is_string($this->style);
         if ($isStyleName) {
             if (!$this->withoutPPR) {
                 $xmlWriter->startElement('w:pPr');

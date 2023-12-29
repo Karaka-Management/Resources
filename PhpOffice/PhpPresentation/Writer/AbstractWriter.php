@@ -105,31 +105,31 @@ abstract class AbstractWriter
         // Get an array of all master slides
         $aSlideMasters = $this->getPhpPresentation()->getAllMasterSlides();
 
-        $aSlideMasterLayouts = array_map(function ($oSlideMaster) {
+        $aSlideMasterLayouts = \array_map(function ($oSlideMaster) {
             return $oSlideMaster->getAllSlideLayouts();
         }, $aSlideMasters);
 
         // Get an array of all slide layouts
         $aSlideLayouts = [];
-        array_walk_recursive($aSlideMasterLayouts, function ($oSlideLayout) use (&$aSlideLayouts) {
+        \array_walk_recursive($aSlideMasterLayouts, function ($oSlideLayout) use (&$aSlideLayouts) {
             $aSlideLayouts[] = $oSlideLayout;
         });
 
         // Loop through PhpPresentation
-        foreach (array_merge($this->getPhpPresentation()->getAllSlides(), $aSlideMasters, $aSlideLayouts) as $oSlide) {
+        foreach (\array_merge($this->getPhpPresentation()->getAllSlides(), $aSlideMasters, $aSlideLayouts) as $oSlide) {
             $arrayReturn = $this->iterateCollection($oSlide->getShapeCollection()->getIterator());
-            $aDrawings = array_merge($aDrawings, $arrayReturn);
+            $aDrawings = \array_merge($aDrawings, $arrayReturn);
         }
 
         return $aDrawings;
     }
 
     /**
-     * @param ArrayIterator<int, AbstractShape> $oIterator
+     * @param \ArrayIterator<int, AbstractShape> $oIterator
      *
      * @return array<int, AbstractShape>
      */
-    private function iterateCollection(ArrayIterator $oIterator): array
+    private function iterateCollection(\ArrayIterator $oIterator): array
     {
         $arrayReturn = [];
         if ($oIterator->count() <= 0) {
@@ -144,7 +144,7 @@ abstract class AbstractWriter
                 $arrayReturn[] = $oShape;
             } elseif ($oShape instanceof Group) {
                 $arrayGroup = $this->iterateCollection($oShape->getShapeCollection()->getIterator());
-                $arrayReturn = array_merge($arrayReturn, $arrayGroup);
+                $arrayReturn = \array_merge($arrayReturn, $arrayGroup);
             }
             $oIterator->next();
         }

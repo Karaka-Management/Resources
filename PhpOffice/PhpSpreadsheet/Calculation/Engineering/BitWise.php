@@ -22,7 +22,7 @@ class BitWise
      */
     private static function splitNumber($number): array
     {
-        return [(int) floor($number / self::SPLIT_DIVISOR), (int) fmod($number, self::SPLIT_DIVISOR)];
+        return [(int) \floor($number / self::SPLIT_DIVISOR), (int) \fmod($number, self::SPLIT_DIVISOR)];
     }
 
     /**
@@ -44,7 +44,7 @@ class BitWise
      */
     public static function BITAND($number1, $number2)
     {
-        if (is_array($number1) || is_array($number2)) {
+        if (\is_array($number1) || \is_array($number2)) {
             return self::evaluateArrayArguments([self::class, __FUNCTION__], $number1, $number2);
         }
 
@@ -79,7 +79,7 @@ class BitWise
      */
     public static function BITOR($number1, $number2)
     {
-        if (is_array($number1) || is_array($number2)) {
+        if (\is_array($number1) || \is_array($number2)) {
             return self::evaluateArrayArguments([self::class, __FUNCTION__], $number1, $number2);
         }
 
@@ -115,7 +115,7 @@ class BitWise
      */
     public static function BITXOR($number1, $number2)
     {
-        if (is_array($number1) || is_array($number2)) {
+        if (\is_array($number1) || \is_array($number2)) {
             return self::evaluateArrayArguments([self::class, __FUNCTION__], $number1, $number2);
         }
 
@@ -151,7 +151,7 @@ class BitWise
      */
     public static function BITLSHIFT($number, $shiftAmount)
     {
-        if (is_array($number) || is_array($shiftAmount)) {
+        if (\is_array($number) || \is_array($shiftAmount)) {
             return self::evaluateArrayArguments([self::class, __FUNCTION__], $number, $shiftAmount);
         }
 
@@ -162,7 +162,7 @@ class BitWise
             return $e->getMessage();
         }
 
-        $result = floor($number * (2 ** $shiftAmount));
+        $result = \floor($number * (2 ** $shiftAmount));
         if ($result > 2 ** 48 - 1) {
             return ExcelError::NAN();
         }
@@ -189,7 +189,7 @@ class BitWise
      */
     public static function BITRSHIFT($number, $shiftAmount)
     {
-        if (is_array($number) || is_array($shiftAmount)) {
+        if (\is_array($number) || \is_array($shiftAmount)) {
             return self::evaluateArrayArguments([self::class, __FUNCTION__], $number, $shiftAmount);
         }
 
@@ -200,7 +200,7 @@ class BitWise
             return $e->getMessage();
         }
 
-        $result = floor($number / (2 ** $shiftAmount));
+        $result = \floor($number / (2 ** $shiftAmount));
         if ($result > 2 ** 48 - 1) { // possible because shiftAmount can be negative
             return ExcelError::NAN();
         }
@@ -219,14 +219,14 @@ class BitWise
     {
         $value = self::nullFalseTrueToNumber($value);
 
-        if (is_numeric($value)) {
+        if (\is_numeric($value)) {
             $value = (float) $value;
-            if ($value == floor($value)) {
+            if ($value == \floor($value)) {
                 if (($value > 2 ** 48 - 1) || ($value < 0)) {
                     throw new Exception(ExcelError::NAN());
                 }
 
-                return floor($value);
+                return \floor($value);
             }
 
             throw new Exception(ExcelError::NAN());
@@ -246,8 +246,8 @@ class BitWise
     {
         $value = self::nullFalseTrueToNumber($value);
 
-        if (is_numeric($value)) {
-            if (abs($value) > 53) {
+        if (\is_numeric($value)) {
+            if (\abs($value) > 53) {
                 throw new Exception(ExcelError::NAN());
             }
 
@@ -268,7 +268,7 @@ class BitWise
     {
         if ($number === null) {
             $number = 0;
-        } elseif (is_bool($number)) {
+        } elseif (\is_bool($number)) {
             $number = (int) $number;
         }
 

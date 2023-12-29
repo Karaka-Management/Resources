@@ -102,7 +102,7 @@ abstract class AbstractPart
      *
      * @todo Get font style for preserve text
      */
-    protected function readParagraph(XMLReader $xmlReader, DOMElement $domNode, $parent, $docPart = 'document'): void
+    protected function readParagraph(XMLReader $xmlReader, \DOMElement $domNode, $parent, $docPart = 'document'): void
     {
         // Paragraph style
         $paragraphStyle = null;
@@ -136,7 +136,7 @@ abstract class AbstractPart
                     }
                 }
             }
-            $parent->addPreserveText(htmlspecialchars($textContent, ENT_QUOTES, 'UTF-8'), $fontStyle, $paragraphStyle);
+            $parent->addPreserveText(\htmlspecialchars($textContent, ENT_QUOTES, 'UTF-8'), $fontStyle, $paragraphStyle);
         } elseif ($xmlReader->elementExists('w:pPr/w:numPr', $domNode)) {
             // List item
             $numId = $xmlReader->getAttribute('w:val', $domNode, 'w:pPr/w:numPr/w:numId');
@@ -153,7 +153,7 @@ abstract class AbstractPart
             $textContent = null;
             $nodes = $xmlReader->getElements('w:r', $domNode);
             if ($nodes->length === 1) {
-                $textContent = htmlspecialchars($xmlReader->getValue('w:t', $nodes->item(0)), ENT_QUOTES, 'UTF-8');
+                $textContent = \htmlspecialchars($xmlReader->getValue('w:t', $nodes->item(0)), ENT_QUOTES, 'UTF-8');
             } else {
                 $textContent = new TextRun($paragraphStyle);
                 foreach ($nodes as $node) {
@@ -185,13 +185,13 @@ abstract class AbstractPart
      */
     private function getHeadingDepth(?array $paragraphStyle = null)
     {
-        if (is_array($paragraphStyle) && isset($paragraphStyle['styleName'])) {
+        if (\is_array($paragraphStyle) && isset($paragraphStyle['styleName'])) {
             if ('Title' === $paragraphStyle['styleName']) {
                 return 0;
             }
 
             $headingMatches = [];
-            preg_match('/Heading(\d)/', $paragraphStyle['styleName'], $headingMatches);
+            \preg_match('/Heading(\d)/', $paragraphStyle['styleName'], $headingMatches);
             if (!empty($headingMatches)) {
                 return $headingMatches[1];
             }
@@ -209,9 +209,9 @@ abstract class AbstractPart
      *
      * @todo Footnote paragraph style
      */
-    protected function readRun(XMLReader $xmlReader, DOMElement $domNode, $parent, $docPart, $paragraphStyle = null): void
+    protected function readRun(XMLReader $xmlReader, \DOMElement $domNode, $parent, $docPart, $paragraphStyle = null): void
     {
-        if (in_array($domNode->nodeName, ['w:ins', 'w:del', 'w:smartTag', 'w:hyperlink'])) {
+        if (\in_array($domNode->nodeName, ['w:ins', 'w:del', 'w:smartTag', 'w:hyperlink'])) {
             $nodes = $xmlReader->getElements('*', $domNode);
             foreach ($nodes as $node) {
                 $this->readRun($xmlReader, $node, $parent, $docPart, $paragraphStyle);
@@ -232,7 +232,7 @@ abstract class AbstractPart
      * @param mixed $paragraphStyle
      * @param mixed $fontStyle
      */
-    protected function readRunChild(XMLReader $xmlReader, DOMElement $node, AbstractContainer $parent, $docPart, $paragraphStyle = null, $fontStyle = null): void
+    protected function readRunChild(XMLReader $xmlReader, \DOMElement $node, AbstractContainer $parent, $docPart, $paragraphStyle = null, $fontStyle = null): void
     {
         $runParent = $node->parentNode->parentNode;
         if ($node->nodeName == 'w:footnoteReference') {
@@ -296,14 +296,14 @@ abstract class AbstractPart
                 if ($fallbackElements->length) {
                     $fallback = $fallbackElements->item(0);
                     // TextRun
-                    $textContent = htmlspecialchars($fallback->nodeValue, ENT_QUOTES, 'UTF-8');
+                    $textContent = \htmlspecialchars($fallback->nodeValue, ENT_QUOTES, 'UTF-8');
 
                     $parent->addText($textContent, $fontStyle, $paragraphStyle);
                 }
             }
         } elseif ($node->nodeName == 'w:t' || $node->nodeName == 'w:delText') {
             // TextRun
-            $textContent = htmlspecialchars($xmlReader->getValue('.', $node), ENT_QUOTES, 'UTF-8');
+            $textContent = \htmlspecialchars($xmlReader->getValue('.', $node), ENT_QUOTES, 'UTF-8');
 
             if ($runParent->nodeName == 'w:hyperlink') {
                 $rId = $xmlReader->getAttribute('r:id', $runParent);
@@ -316,10 +316,10 @@ abstract class AbstractPart
             } else {
                 /** @var AbstractElement $element */
                 $element = $parent->addText($textContent, $fontStyle, $paragraphStyle);
-                if (in_array($runParent->nodeName, ['w:ins', 'w:del'])) {
+                if (\in_array($runParent->nodeName, ['w:ins', 'w:del'])) {
                     $type = ($runParent->nodeName == 'w:del') ? TrackChange::DELETED : TrackChange::INSERTED;
                     $author = $runParent->getAttribute('w:author');
-                    $date = DateTime::createFromFormat('Y-m-d\TH:i:s\Z', $runParent->getAttribute('w:date'));
+                    $date = \DateTime::createFromFormat('Y-m-d\TH:i:s\Z', $runParent->getAttribute('w:date'));
                     $element->setChangeInfo($type, $author, $date);
                 }
             }
@@ -332,7 +332,7 @@ abstract class AbstractPart
      * @param mixed $parent
      * @param string $docPart
      */
-    protected function readTable(XMLReader $xmlReader, DOMElement $domNode, $parent, $docPart = 'document'): void
+    protected function readTable(XMLReader $xmlReader, \DOMElement $domNode, $parent, $docPart = 'document'): void
     {
         // Table style
         $tblStyle = null;
@@ -387,7 +387,7 @@ abstract class AbstractPart
      *
      * @return null|array
      */
-    protected function readParagraphStyle(XMLReader $xmlReader, DOMElement $domNode)
+    protected function readParagraphStyle(XMLReader $xmlReader, \DOMElement $domNode)
     {
         if (!$xmlReader->elementExists('w:pPr', $domNode)) {
             return null;
@@ -420,7 +420,7 @@ abstract class AbstractPart
      *
      * @return null|array
      */
-    protected function readFontStyle(XMLReader $xmlReader, DOMElement $domNode)
+    protected function readFontStyle(XMLReader $xmlReader, \DOMElement $domNode)
     {
         if (null === $domNode) {
             return null;
@@ -466,11 +466,11 @@ abstract class AbstractPart
      *
      * @todo Capture w:tblStylePr w:type="firstRow"
      */
-    protected function readTableStyle(XMLReader $xmlReader, DOMElement $domNode)
+    protected function readTableStyle(XMLReader $xmlReader, \DOMElement $domNode)
     {
         $style = null;
         $margins = ['top', 'left', 'bottom', 'right'];
-        $borders = array_merge($margins, ['insideH', 'insideV']);
+        $borders = \array_merge($margins, ['insideH', 'insideV']);
 
         if ($xmlReader->elementExists('w:tblPr', $domNode)) {
             if ($xmlReader->elementExists('w:tblPr/w:tblStyle', $domNode)) {
@@ -479,11 +479,11 @@ abstract class AbstractPart
                 $styleNode = $xmlReader->getElement('w:tblPr', $domNode);
                 $styleDefs = [];
                 foreach ($margins as $side) {
-                    $ucfSide = ucfirst($side);
+                    $ucfSide = \ucfirst($side);
                     $styleDefs["cellMargin$ucfSide"] = [self::READ_VALUE, "w:tblCellMar/w:$side", 'w:w'];
                 }
                 foreach ($borders as $side) {
-                    $ucfSide = ucfirst($side);
+                    $ucfSide = \ucfirst($side);
                     $styleDefs["border{$ucfSide}Size"] = [self::READ_VALUE, "w:tblBorders/w:$side", 'w:sz'];
                     $styleDefs["border{$ucfSide}Color"] = [self::READ_VALUE, "w:tblBorders/w:$side", 'w:color'];
                     $styleDefs["border{$ucfSide}Style"] = [self::READ_VALUE, "w:tblBorders/w:$side", 'w:val'];
@@ -513,7 +513,7 @@ abstract class AbstractPart
      *
      * @return array
      */
-    private function readTablePosition(XMLReader $xmlReader, DOMElement $domNode)
+    private function readTablePosition(XMLReader $xmlReader, \DOMElement $domNode)
     {
         $styleDefs = [
             'leftFromText' => [self::READ_VALUE, '.', 'w:leftFromText'],
@@ -536,7 +536,7 @@ abstract class AbstractPart
      *
      * @return TblWidthComplexType
      */
-    private function readTableIndent(XMLReader $xmlReader, DOMElement $domNode)
+    private function readTableIndent(XMLReader $xmlReader, \DOMElement $domNode)
     {
         $styleDefs = [
             'value' => [self::READ_VALUE, '.', 'w:w'],
@@ -552,7 +552,7 @@ abstract class AbstractPart
      *
      * @return array
      */
-    private function readCellStyle(XMLReader $xmlReader, DOMElement $domNode)
+    private function readCellStyle(XMLReader $xmlReader, \DOMElement $domNode)
     {
         $styleDefs = [
             'valign' => [self::READ_VALUE, 'w:vAlign'],
@@ -572,9 +572,9 @@ abstract class AbstractPart
      *
      * @return null|string
      */
-    private function findPossibleElement(XMLReader $xmlReader, ?DOMElement $parentNode = null, $elements = null)
+    private function findPossibleElement(XMLReader $xmlReader, ?\DOMElement $parentNode = null, $elements = null)
     {
-        if (is_array($elements)) {
+        if (\is_array($elements)) {
             //if element is an array, we take the first element that exists in the XML
             foreach ($elements as $possibleElement) {
                 if ($xmlReader->elementExists($possibleElement, $parentNode)) {
@@ -595,10 +595,10 @@ abstract class AbstractPart
      *
      * @return null|string
      */
-    private function findPossibleAttribute(XMLReader $xmlReader, DOMElement $node, $attributes)
+    private function findPossibleAttribute(XMLReader $xmlReader, \DOMElement $node, $attributes)
     {
         //if attribute is an array, we take the first attribute that exists in the XML
-        if (is_array($attributes)) {
+        if (\is_array($attributes)) {
             foreach ($attributes as $possibleAttribute) {
                 if ($xmlReader->getAttribute($possibleAttribute, $node)) {
                     return $possibleAttribute;
@@ -614,19 +614,19 @@ abstract class AbstractPart
     /**
      * Read style definition.
      *
-     * @param DOMElement $parentNode
+     * @param \DOMElement $parentNode
      * @param array $styleDefs
      *
      * @ignoreScrutinizerPatch
      *
      * @return array
      */
-    protected function readStyleDefs(XMLReader $xmlReader, ?DOMElement $parentNode = null, $styleDefs = [])
+    protected function readStyleDefs(XMLReader $xmlReader, ?\DOMElement $parentNode = null, $styleDefs = [])
     {
         $styles = [];
 
         foreach ($styleDefs as $styleProp => $styleVal) {
-            [$method, $element, $attribute, $expected, $default] = array_pad($styleVal, 5, null);
+            [$method, $element, $attribute, $expected, $default] = \array_pad($styleVal, 5, null);
 
             $element = $this->findPossibleElement($xmlReader, $parentNode, $element);
             if ($element === null) {

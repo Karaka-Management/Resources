@@ -62,9 +62,9 @@ class Style
     {
         switch ($fill->getFillType()) {
             case Fill::FILL_SOLID:
-                $this->writer->writeAttribute('fo:background-color', sprintf(
+                $this->writer->writeAttribute('fo:background-color', \sprintf(
                     '#%s',
-                    strtolower($fill->getStartColor()->getRGB())
+                    \strtolower($fill->getStartColor()->getRGB())
                 ));
 
                 break;
@@ -143,7 +143,7 @@ class Style
         }
 
         if ($color = $font->getColor()) {
-            $this->writer->writeAttribute('fo:color', sprintf('#%s', $color->getRGB()));
+            $this->writer->writeAttribute('fo:color', \sprintf('#%s', $color->getRGB()));
         }
 
         if ($family = $font->getName()) {
@@ -151,7 +151,7 @@ class Style
         }
 
         if ($size = $font->getSize()) {
-            $this->writer->writeAttribute('fo:font-size', sprintf('%.1Fpt', $size));
+            $this->writer->writeAttribute('fo:font-size', \sprintf('%.1Fpt', $size));
         }
 
         if ($font->getUnderline() && $font->getUnderline() !== Font::UNDERLINE_NONE) {
@@ -171,7 +171,7 @@ class Style
         $this->writer->startElement('style:table-column-properties');
         $this->writer->writeAttribute(
             'style:column-width',
-            round($columnDimension->getWidth(Dimension::UOM_CENTIMETERS), 3) . 'cm'
+            \round($columnDimension->getWidth(Dimension::UOM_CENTIMETERS), 3) . 'cm'
         );
         $this->writer->writeAttribute('fo:break-before', 'auto');
 
@@ -185,7 +185,7 @@ class Style
         $this->writer->writeAttribute('style:family', 'table-column');
         $this->writer->writeAttribute(
             'style:name',
-            sprintf('%s_%d_%d', self::COLUMN_STYLE_PREFIX, $sheetId, $columnDimension->getColumnNumeric())
+            \sprintf('%s_%d_%d', self::COLUMN_STYLE_PREFIX, $sheetId, $columnDimension->getColumnNumeric())
         );
 
         $this->writeColumnProperties($columnDimension);
@@ -199,7 +199,7 @@ class Style
         $this->writer->startElement('style:table-row-properties');
         $this->writer->writeAttribute(
             'style:row-height',
-            round($rowDimension->getRowHeight(Dimension::UOM_CENTIMETERS), 3) . 'cm'
+            \round($rowDimension->getRowHeight(Dimension::UOM_CENTIMETERS), 3) . 'cm'
         );
         $this->writer->writeAttribute('style:use-optimal-row-height', 'false');
         $this->writer->writeAttribute('fo:break-before', 'auto');
@@ -214,7 +214,7 @@ class Style
         $this->writer->writeAttribute('style:family', 'table-row');
         $this->writer->writeAttribute(
             'style:name',
-            sprintf('%s_%d_%d', self::ROW_STYLE_PREFIX, $sheetId, $rowDimension->getRowIndex())
+            \sprintf('%s_%d_%d', self::ROW_STYLE_PREFIX, $sheetId, $rowDimension->getRowIndex())
         );
 
         $this->writeRowProperties($rowDimension);
@@ -229,7 +229,7 @@ class Style
         $this->writer->writeAttribute('style:family', 'table');
         $this->writer->writeAttribute(
             'style:name',
-            sprintf('%s%d', self::TABLE_STYLE_PREFIX, $sheetId)
+            \sprintf('%s%d', self::TABLE_STYLE_PREFIX, $sheetId)
         );
 
         $this->writer->startElement('style:table-properties');

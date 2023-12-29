@@ -331,7 +331,7 @@ class BaseDrawing implements IComparable
         // Resize proportional?
         if ($this->resizeProportional && $width != 0) {
             $ratio = $this->height / ($this->width != 0 ? $this->width : 1);
-            $this->height = (int) round($ratio * $width);
+            $this->height = (int) \round($ratio * $width);
         }
 
         // Set width
@@ -350,7 +350,7 @@ class BaseDrawing implements IComparable
         // Resize proportional?
         if ($this->resizeProportional && $height != 0) {
             $ratio = $this->width / ($this->height != 0 ? $this->height : 1);
-            $this->width = (int) round($ratio * $height);
+            $this->width = (int) \round($ratio * $height);
         }
 
         // Set height
@@ -376,10 +376,10 @@ class BaseDrawing implements IComparable
         $yratio = $height / ($this->height != 0 ? $this->height : 1);
         if ($this->resizeProportional && !($width == 0 || $height == 0)) {
             if (($xratio * $this->height) < $height) {
-                $this->height = (int) ceil($xratio * $this->height);
+                $this->height = (int) \ceil($xratio * $this->height);
                 $this->width = $width;
             } else {
-                $this->width = (int) ceil($yratio * $this->width);
+                $this->width = (int) \ceil($yratio * $this->width);
                 $this->height = $height;
             }
         } else {
@@ -433,7 +433,7 @@ class BaseDrawing implements IComparable
      */
     public function getHashCode()
     {
-        return md5(
+        return \md5(
             $this->name .
             $this->description .
             (($this->worksheet === null) ? '' : $this->worksheet->getHashCode()) .
@@ -456,11 +456,11 @@ class BaseDrawing implements IComparable
      */
     public function __clone()
     {
-        $vars = get_object_vars($this);
+        $vars = \get_object_vars($this);
         foreach ($vars as $key => $value) {
             if ($key == 'worksheet') {
                 $this->worksheet = null;
-            } elseif (is_object($value)) {
+            } elseif (\is_object($value)) {
                 $this->$key = clone $value;
             } else {
                 $this->$key = $value;
@@ -484,7 +484,7 @@ class BaseDrawing implements IComparable
     protected function setSizesAndType(string $path): void
     {
         if ($this->imageWidth === 0 && $this->imageHeight === 0 && $this->type === IMAGETYPE_UNKNOWN) {
-            $imageData = getimagesize($path);
+            $imageData = \getimagesize($path);
 
             if (!empty($imageData)) {
                 $this->imageWidth = $imageData[0];
@@ -530,6 +530,6 @@ class BaseDrawing implements IComparable
 
     public function validEditAs(): bool
     {
-        return in_array($this->editAs, self::VALID_EDIT_AS, true);
+        return \in_array($this->editAs, self::VALID_EDIT_AS, true);
     }
 }

@@ -117,8 +117,8 @@ class DocumentProperties
         // Initialise values
         $this->creator = 'Unknown Creator';
         $this->lastModifiedBy = $this->creator;
-        $this->created = time();
-        $this->modified = time();
+        $this->created = \time();
+        $this->modified = \time();
         $this->title = 'Untitled Presentation';
         $this->subject = '';
         $this->description = '';
@@ -194,8 +194,8 @@ class DocumentProperties
      */
     public function setCreated($pValue = null)
     {
-        if (is_null($pValue)) {
-            $pValue = time();
+        if (\is_null($pValue)) {
+            $pValue = \time();
         }
         $this->created = $pValue;
 
@@ -221,8 +221,8 @@ class DocumentProperties
      */
     public function setModified($pValue = null)
     {
-        if (is_null($pValue)) {
-            $pValue = time();
+        if (\is_null($pValue)) {
+            $pValue = \time();
         }
         $this->modified = $pValue;
 
@@ -380,7 +380,7 @@ class DocumentProperties
      */
     public function getCustomProperties(): array
     {
-        return array_keys($this->customProperties);
+        return \array_keys($this->customProperties);
     }
 
     /**
@@ -443,18 +443,18 @@ class DocumentProperties
      */
     public function setCustomProperty(string $propertyName, $propertyValue = '', ?string $propertyType = null): self
     {
-        if (!in_array($propertyType, [
+        if (!\in_array($propertyType, [
             self::PROPERTY_TYPE_INTEGER,
             self::PROPERTY_TYPE_FLOAT,
             self::PROPERTY_TYPE_STRING,
             self::PROPERTY_TYPE_DATE,
             self::PROPERTY_TYPE_BOOLEAN,
         ])) {
-            if (is_float($propertyValue)) {
+            if (\is_float($propertyValue)) {
                 $propertyType = self::PROPERTY_TYPE_FLOAT;
-            } elseif (is_int($propertyValue)) {
+            } elseif (\is_int($propertyValue)) {
                 $propertyType = self::PROPERTY_TYPE_INTEGER;
-            } elseif (is_bool($propertyValue)) {
+            } elseif (\is_bool($propertyValue)) {
                 $propertyType = self::PROPERTY_TYPE_BOOLEAN;
             } else {
                 $propertyType = self::PROPERTY_TYPE_STRING;

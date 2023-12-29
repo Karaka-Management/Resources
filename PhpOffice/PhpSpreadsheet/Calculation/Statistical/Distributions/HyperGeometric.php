@@ -33,8 +33,8 @@ class HyperGeometric
     public static function distribution($sampleSuccesses, $sampleNumber, $populationSuccesses, $populationNumber)
     {
         if (
-            is_array($sampleSuccesses) || is_array($sampleNumber) ||
-            is_array($populationSuccesses) || is_array($populationNumber)
+            \is_array($sampleSuccesses) || \is_array($sampleNumber) ||
+            \is_array($populationSuccesses) || \is_array($populationNumber)
         ) {
             return self::evaluateArrayArguments(
                 [self::class, __FUNCTION__],

@@ -69,17 +69,17 @@ abstract class AbstractElement extends HTMLAbstractElement
         $element = $this->element;
 
         // Font style
-        if (method_exists($element, 'getFontStyle')) {
+        if (\method_exists($element, 'getFontStyle')) {
             $this->fontStyle = $element->getFontStyle();
-            if (is_string($this->fontStyle)) {
+            if (\is_string($this->fontStyle)) {
                 $this->fontStyle = Style::getStyle($this->fontStyle);
             }
         }
 
         // Paragraph style
-        if (method_exists($element, 'getParagraphStyle')) {
+        if (\method_exists($element, 'getParagraphStyle')) {
             $this->paragraphStyle = $element->getParagraphStyle();
-            if (is_string($this->paragraphStyle)) {
+            if (\is_string($this->paragraphStyle)) {
                 $this->paragraphStyle = Style::getStyle($this->paragraphStyle);
             }
 
@@ -161,13 +161,13 @@ abstract class AbstractElement extends HTMLAbstractElement
         // Create style writer and set color/name index
         $styleWriter = new FontStyleWriter($this->fontStyle);
         if ($this->fontStyle->getColor() != null) {
-            $colorIndex = array_search($this->fontStyle->getColor(), $parentWriter->getColorTable());
+            $colorIndex = \array_search($this->fontStyle->getColor(), $parentWriter->getColorTable());
             if ($colorIndex !== false) {
                 $styleWriter->setColorIndex($colorIndex + 1);
             }
         }
         if ($this->fontStyle->getName() != null) {
-            $fontIndex = array_search($this->fontStyle->getName(), $parentWriter->getFontTable());
+            $fontIndex = \array_search($this->fontStyle->getName(), $parentWriter->getFontTable());
             if ($fontIndex !== false) {
                 $styleWriter->setNameIndex($fontIndex);
             }

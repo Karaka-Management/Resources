@@ -32,7 +32,7 @@ class Permutations
      */
     public static function PERMUT($numObjs, $numInSet)
     {
-        if (is_array($numObjs) || is_array($numInSet)) {
+        if (\is_array($numObjs) || \is_array($numInSet)) {
             return self::evaluateArrayArguments([self::class, __FUNCTION__], $numObjs, $numInSet);
         }
 
@@ -46,7 +46,7 @@ class Permutations
         if ($numObjs < $numInSet) {
             return ExcelError::NAN();
         }
-        $result = round(MathTrig\Factorial::fact($numObjs) / MathTrig\Factorial::fact($numObjs - $numInSet));
+        $result = \round(MathTrig\Factorial::fact($numObjs) / MathTrig\Factorial::fact($numObjs - $numInSet));
 
         return IntOrFloat::evaluate($result);
     }
@@ -68,7 +68,7 @@ class Permutations
      */
     public static function PERMUTATIONA($numObjs, $numInSet)
     {
-        if (is_array($numObjs) || is_array($numInSet)) {
+        if (\is_array($numObjs) || \is_array($numInSet)) {
             return self::evaluateArrayArguments([self::class, __FUNCTION__], $numObjs, $numInSet);
         }
 

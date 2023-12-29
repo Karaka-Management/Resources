@@ -15,7 +15,7 @@ class Helpers
      */
     public static function verySmallDenominator(float $numerator, float $denominator)
     {
-        return (abs($denominator) < 1.0E-12) ? ExcelError::DIV0() : ($numerator / $denominator);
+        return (\abs($denominator) < 1.0E-12) ? ExcelError::DIV0() : ($numerator / $denominator);
     }
 
     /**
@@ -31,10 +31,10 @@ class Helpers
         if ($number === null) {
             return 0;
         }
-        if (is_bool($number)) {
+        if (\is_bool($number)) {
             return (int) $number;
         }
-        if (is_numeric($number)) {
+        if (\is_numeric($number)) {
             return 0 + $number;
         }
 
@@ -55,7 +55,7 @@ class Helpers
         if ($number === null && $substitute !== null) {
             return $substitute;
         }
-        if (is_numeric($number)) {
+        if (\is_numeric($number)) {
             return 0 + $number;
         }
 
@@ -113,7 +113,7 @@ class Helpers
     {
         $significance = 2 * self::returnSign($number);
 
-        return $significance ? (ceil($number / $significance) * $significance) : 0;
+        return $significance ? (\ceil($number / $significance) * $significance) : 0;
     }
 
     /**
@@ -125,6 +125,6 @@ class Helpers
      */
     public static function numberOrNan($result)
     {
-        return is_nan($result) ? ExcelError::NAN() : $result;
+        return \is_nan($result) ? ExcelError::NAN() : $result;
     }
 }

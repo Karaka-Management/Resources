@@ -36,8 +36,8 @@ class Text
     {
         for ($i = 0; $i <= 19; ++$i) {
             if ($i != 9 && $i != 10 && $i != 13) {
-                $find = '_x' . sprintf('%04s', strtoupper(dechex($i))) . '_';
-                $replace = chr($i);
+                $find = '_x' . \sprintf('%04s', \strtoupper(\dechex($i))) . '_';
+                $replace = \chr($i);
                 self::$controlCharacters[$find] = $replace;
             }
         }
@@ -64,7 +64,7 @@ class Text
             self::buildControlCharacters();
         }
 
-        return str_replace(array_values(self::$controlCharacters), array_keys(self::$controlCharacters), $value);
+        return \str_replace(\array_values(self::$controlCharacters), \array_keys(self::$controlCharacters), $value);
     }
 
     /**
@@ -77,7 +77,7 @@ class Text
      */
     public static function numberFormat($number, $decimals)
     {
-        return number_format($number, $decimals, '.', '');
+        return \number_format($number, $decimals, '.', '');
     }
 
     /**
@@ -92,16 +92,16 @@ class Text
     public static function chr($dec)
     {
         if ($dec <= 0x7F) {
-            return chr($dec);
+            return \chr($dec);
         }
         if ($dec <= 0x7FF) {
-            return chr(($dec >> 6) + 192) . chr(($dec & 63) + 128);
+            return \chr(($dec >> 6) + 192) . \chr(($dec & 63) + 128);
         }
         if ($dec <= 0xFFFF) {
-            return chr(($dec >> 12) + 224) . chr((($dec >> 6) & 63) + 128) . chr(($dec & 63) + 128);
+            return \chr(($dec >> 12) + 224) . \chr((($dec >> 6) & 63) + 128) . \chr(($dec & 63) + 128);
         }
         if ($dec <= 0x1FFFFF) {
-            return chr(($dec >> 18) + 240) . chr((($dec >> 12) & 63) + 128) . chr((($dec >> 6) & 63) + 128) . chr(($dec & 63) + 128);
+            return \chr(($dec >> 18) + 240) . \chr((($dec >> 12) & 63) + 128) . \chr((($dec >> 6) & 63) + 128) . \chr(($dec & 63) + 128);
         }
 
         return '';
@@ -120,7 +120,7 @@ class Text
             self::buildControlCharacters();
         }
 
-        return str_replace(array_keys(self::$controlCharacters), array_values(self::$controlCharacters), $value);
+        return \str_replace(\array_keys(self::$controlCharacters), \array_values(self::$controlCharacters), $value);
     }
 
     /**
@@ -132,7 +132,7 @@ class Text
      */
     public static function isUTF8($value = '')
     {
-        return is_string($value) && ($value === '' || preg_match('/^./su', $value) == 1);
+        return \is_string($value) && ($value === '' || \preg_match('/^./su', $value) == 1);
     }
 
     /**
@@ -145,7 +145,7 @@ class Text
     public static function toUTF8($value = '')
     {
         if (null !== $value && !self::isUTF8($value)) {
-            $value = utf8_encode($value);
+            $value = \utf8_encode($value);
         }
 
         return $value;
@@ -184,16 +184,16 @@ class Text
         $lookingFor = 1;
 
         // Gets unicode for each character
-        for ($i = 0; $i < strlen($text); ++$i) {
-            $thisValue = ord($text[$i]);
+        for ($i = 0; $i < \strlen($text); ++$i) {
+            $thisValue = \ord($text[$i]);
             if ($thisValue < 128) {
                 $unicode[] = $thisValue;
             } else {
-                if (count($values) == 0) {
+                if (\count($values) == 0) {
                     $lookingFor = $thisValue < 224 ? 2 : 3;
                 }
                 $values[] = $thisValue;
-                if (count($values) == $lookingFor) {
+                if (\count($values) == $lookingFor) {
                     if ($lookingFor == 3) {
                         $number = (($values[0] % 16) * 4096) + (($values[1] % 64) * 64) + ($values[2] % 64);
                     } else {
@@ -225,7 +225,7 @@ class Text
 
         foreach ($unicode as $value) {
             if ($value != 65279) {
-                $entities .= $value > 127 ? '\uc0{\u' . $value . '}' : chr($value);
+                $entities .= $value > 127 ? '\uc0{\u' . $value . '}' : \chr($value);
             }
         }
 
@@ -242,8 +242,8 @@ class Text
     public static function removeUnderscorePrefix($value)
     {
         if (null !== $value) {
-            if (substr($value, 0, 1) == '_') {
-                $value = substr($value, 1);
+            if (\substr($value, 0, 1) == '_') {
+                $value = \substr($value, 1);
             }
         }
 

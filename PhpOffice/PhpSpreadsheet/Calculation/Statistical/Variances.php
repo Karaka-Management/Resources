@@ -32,7 +32,7 @@ class Variances extends VarianceBase
             $arg = self::datatypeAdjustmentBooleans($arg);
 
             // Is it a numeric value?
-            if ((is_numeric($arg)) && (!is_string($arg))) {
+            if ((\is_numeric($arg)) && (!\is_string($arg))) {
                 $summerA += ($arg * $arg);
                 $summerB += $arg;
                 ++$aCount;
@@ -71,12 +71,12 @@ class Variances extends VarianceBase
         $aArgs = Functions::flattenArrayIndexed($args);
         $aCount = 0;
         foreach ($aArgs as $k => $arg) {
-            if ((is_string($arg)) && (Functions::isValue($k))) {
+            if ((\is_string($arg)) && (Functions::isValue($k))) {
                 return ExcelError::VALUE();
-            } elseif ((is_string($arg)) && (!Functions::isMatrixValue($k))) {
+            } elseif ((\is_string($arg)) && (!Functions::isMatrixValue($k))) {
             } else {
                 // Is it a numeric value?
-                if ((is_numeric($arg)) || (is_bool($arg)) || ((is_string($arg) && ($arg != '')))) {
+                if ((\is_numeric($arg)) || (\is_bool($arg)) || ((\is_string($arg) && ($arg != '')))) {
                     $arg = self::datatypeAdjustmentAllowStrings($arg);
                     $summerA += ($arg * $arg);
                     $summerB += $arg;
@@ -121,7 +121,7 @@ class Variances extends VarianceBase
             $arg = self::datatypeAdjustmentBooleans($arg);
 
             // Is it a numeric value?
-            if ((is_numeric($arg)) && (!is_string($arg))) {
+            if ((\is_numeric($arg)) && (!\is_string($arg))) {
                 $summerA += ($arg * $arg);
                 $summerB += $arg;
                 ++$aCount;
@@ -160,12 +160,12 @@ class Variances extends VarianceBase
         $aArgs = Functions::flattenArrayIndexed($args);
         $aCount = 0;
         foreach ($aArgs as $k => $arg) {
-            if ((is_string($arg)) && (Functions::isValue($k))) {
+            if ((\is_string($arg)) && (Functions::isValue($k))) {
                 return ExcelError::VALUE();
-            } elseif ((is_string($arg)) && (!Functions::isMatrixValue($k))) {
+            } elseif ((\is_string($arg)) && (!Functions::isMatrixValue($k))) {
             } else {
                 // Is it a numeric value?
-                if ((is_numeric($arg)) || (is_bool($arg)) || ((is_string($arg) && ($arg != '')))) {
+                if ((\is_numeric($arg)) || (\is_bool($arg)) || ((\is_string($arg) && ($arg != '')))) {
                     $arg = self::datatypeAdjustmentAllowStrings($arg);
                     $summerA += ($arg * $arg);
                     $summerB += $arg;

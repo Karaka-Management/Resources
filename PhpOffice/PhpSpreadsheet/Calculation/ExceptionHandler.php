@@ -11,7 +11,7 @@ class ExceptionHandler
     {
         /** @var callable */
         $callable = [Exception::class, 'errorHandlerCallback'];
-        set_error_handler($callable, E_ALL);
+        \set_error_handler($callable, E_ALL);
     }
 
     /**
@@ -19,6 +19,6 @@ class ExceptionHandler
      */
     public function __destruct()
     {
-        restore_error_handler();
+        \restore_error_handler();
     }
 }

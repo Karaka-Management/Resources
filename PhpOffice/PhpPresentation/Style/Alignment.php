@@ -212,7 +212,7 @@ class Alignment implements ComparableInterface
      */
     public function setIndent(float $pValue = 0): self
     {
-        if ($pValue > 0 && !in_array($this->getHorizontal(), $this->supportedStyles)) {
+        if ($pValue > 0 && !\in_array($this->getHorizontal(), $this->supportedStyles)) {
             $pValue = 0; // indent not supported
         }
 
@@ -234,7 +234,7 @@ class Alignment implements ComparableInterface
      */
     public function setMarginLeft(float $pValue = 0): self
     {
-        if ($pValue > 0 && !in_array($this->getHorizontal(), $this->supportedStyles)) {
+        if ($pValue > 0 && !\in_array($this->getHorizontal(), $this->supportedStyles)) {
             $pValue = 0; // margin left not supported
         }
 
@@ -256,7 +256,7 @@ class Alignment implements ComparableInterface
      */
     public function setMarginRight(float $pValue = 0): self
     {
-        if ($pValue > 0 && !in_array($this->getHorizontal(), $this->supportedStyles)) {
+        if ($pValue > 0 && !\in_array($this->getHorizontal(), $this->supportedStyles)) {
             $pValue = 0; // margin right not supported
         }
 
@@ -343,7 +343,7 @@ class Alignment implements ComparableInterface
      */
     public function getHashCode(): string
     {
-        return md5(
+        return \md5(
             $this->horizontal
             . $this->vertical
             . $this->level

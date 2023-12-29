@@ -31,7 +31,7 @@ class Weibull
      */
     public static function distribution($value, $alpha, $beta, $cumulative)
     {
-        if (is_array($value) || is_array($alpha) || is_array($beta) || is_array($cumulative)) {
+        if (\is_array($value) || \is_array($alpha) || \is_array($beta) || \is_array($cumulative)) {
             return self::evaluateArrayArguments([self::class, __FUNCTION__], $value, $alpha, $beta, $cumulative);
         }
 
@@ -49,9 +49,9 @@ class Weibull
         }
 
         if ($cumulative) {
-            return 1 - exp(0 - ($value / $beta) ** $alpha);
+            return 1 - \exp(0 - ($value / $beta) ** $alpha);
         }
 
-        return ($alpha / $beta ** $alpha) * $value ** ($alpha - 1) * exp(0 - ($value / $beta) ** $alpha);
+        return ($alpha / $beta ** $alpha) * $value ** ($alpha - 1) * \exp(0 - ($value / $beta) ** $alpha);
     }
 }

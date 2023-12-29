@@ -25,12 +25,12 @@ class AutoFilter extends WriterPart
             $range = $range[0];
             //    Strip any worksheet ref
             [$ws, $range[0]] = ActualWorksheet::extractSheetTitle($range[0], true);
-            $range = implode(':', $range);
+            $range = \implode(':', $range);
 
-            $objWriter->writeAttribute('ref', str_replace('$', '', $range));
+            $objWriter->writeAttribute('ref', \str_replace('$', '', $range));
 
             $columns = $worksheet->getAutoFilter()->getColumns();
-            if (count($columns) > 0) {
+            if (\count($columns) > 0) {
                 foreach ($columns as $columnID => $column) {
                     $colId = $worksheet->getAutoFilter()->getColumnOffset($columnID);
                     self::writeAutoFilterColumn($objWriter, $column, $colId);
@@ -46,7 +46,7 @@ class AutoFilter extends WriterPart
     public static function writeAutoFilterColumn(XMLWriter $objWriter, Column $column, int $colId): void
     {
         $rules = $column->getRules();
-        if (count($rules) > 0) {
+        if (\count($rules) > 0) {
             $objWriter->startElement('filterColumn');
             $objWriter->writeAttribute('colId', "$colId");
 
@@ -91,7 +91,7 @@ class AutoFilter extends WriterPart
         } elseif ($rule->getRuleType() === Rule::AUTOFILTER_RULETYPE_TOPTENFILTER) {
             //    Top 10 Filter Rule
             $ruleValue = $rule->getValue();
-            if (!is_array($ruleValue)) {
+            if (!\is_array($ruleValue)) {
                 $objWriter->writeAttribute('val', "$ruleValue");
             }
             $objWriter->writeAttribute('percent', (($rule->getOperator() === Rule::AUTOFILTER_COLUMN_RULE_TOPTEN_PERCENT) ? '1' : '0'));
@@ -106,7 +106,7 @@ class AutoFilter extends WriterPart
             if ($rule->getRuleType() === Rule::AUTOFILTER_RULETYPE_DATEGROUP) {
                 // Date Group filters
                 $ruleValue = $rule->getValue();
-                if (is_array($ruleValue)) {
+                if (\is_array($ruleValue)) {
                     foreach ($ruleValue as $key => $value) {
                         $objWriter->writeAttribute($key, "$value");
                     }
@@ -114,7 +114,7 @@ class AutoFilter extends WriterPart
                 $objWriter->writeAttribute('dateTimeGrouping', $rule->getGrouping());
             } else {
                 $ruleValue = $rule->getValue();
-                if (!is_array($ruleValue)) {
+                if (!\is_array($ruleValue)) {
                     $objWriter->writeAttribute('val', "$ruleValue");
                 }
             }

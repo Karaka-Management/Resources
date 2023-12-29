@@ -10,11 +10,11 @@ use stdClass;
 class PageSettings
 {
     /**
-     * @var stdClass
+     * @var \stdClass
      */
     private $printSettings;
 
-    public function __construct(SimpleXMLElement $xmlX, array $namespaces)
+    public function __construct(\SimpleXMLElement $xmlX, array $namespaces)
     {
         $printSettings = $this->pageSetup($xmlX, $namespaces, $this->getPrintDefaults());
         $this->printSettings = $this->printSetup($xmlX, $printSettings);
@@ -38,7 +38,7 @@ class PageSettings
             ->setFooter($this->printSettings->footerMargin);
     }
 
-    private function getPrintDefaults(): stdClass
+    private function getPrintDefaults(): \stdClass
     {
         return (object) [
             'paperSize' => 9,
@@ -56,7 +56,7 @@ class PageSettings
         ];
     }
 
-    private function pageSetup(SimpleXMLElement $xmlX, array $namespaces, stdClass $printDefaults): stdClass
+    private function pageSetup(\SimpleXMLElement $xmlX, array $namespaces, \stdClass $printDefaults): \stdClass
     {
         if (isset($xmlX->WorksheetOptions->PageSetup)) {
             foreach ($xmlX->WorksheetOptions->PageSetup as $pageSetupData) {
@@ -92,7 +92,7 @@ class PageSettings
         return $printDefaults;
     }
 
-    private function printSetup(SimpleXMLElement $xmlX, stdClass $printDefaults): stdClass
+    private function printSetup(\SimpleXMLElement $xmlX, \stdClass $printDefaults): \stdClass
     {
         if (isset($xmlX->WorksheetOptions->Print)) {
             foreach ($xmlX->WorksheetOptions->Print as $printData) {
@@ -118,14 +118,14 @@ class PageSettings
         return $printDefaults;
     }
 
-    private function setLayout(stdClass $printDefaults, SimpleXMLElement $pageSetupAttributes): void
+    private function setLayout(\stdClass $printDefaults, \SimpleXMLElement $pageSetupAttributes): void
     {
-        $printDefaults->orientation = (string) strtolower($pageSetupAttributes->Orientation ?? '') ?: PageSetup::ORIENTATION_PORTRAIT;
+        $printDefaults->orientation = (string) \strtolower($pageSetupAttributes->Orientation ?? '') ?: PageSetup::ORIENTATION_PORTRAIT;
         $printDefaults->horizontalCentered = (bool) $pageSetupAttributes->CenterHorizontal ?: false;
         $printDefaults->verticalCentered = (bool) $pageSetupAttributes->CenterVertical ?: false;
     }
 
-    private function setMargins(stdClass $printDefaults, SimpleXMLElement $pageSetupAttributes): void
+    private function setMargins(\stdClass $printDefaults, \SimpleXMLElement $pageSetupAttributes): void
     {
         $printDefaults->leftMargin = (float) $pageSetupAttributes->Left ?: 1.0;
         $printDefaults->rightMargin = (float) $pageSetupAttributes->Right ?: 1.0;

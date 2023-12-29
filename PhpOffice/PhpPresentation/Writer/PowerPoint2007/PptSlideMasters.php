@@ -44,7 +44,7 @@ class PptSlideMasters extends AbstractSlide
             // Add background image slide
             $oBkgImage = $oMasterSlide->getBackground();
             if ($oBkgImage instanceof Image) {
-                $this->oZip->addFromString('ppt/media/' . $oBkgImage->getIndexedFilename($oMasterSlide->getRelsIndex()), file_get_contents($oBkgImage->getPath()));
+                $this->oZip->addFromString('ppt/media/' . $oBkgImage->getIndexedFilename($oMasterSlide->getRelsIndex()), \file_get_contents($oBkgImage->getPath()));
             }
         }
 
@@ -237,7 +237,7 @@ class PptSlideMasters extends AbstractSlide
         $objWriter->endElement();
         // p:sldMaster\p:txStyles\
 
-        if (!is_null($pSlide->getTransition())) {
+        if (!\is_null($pSlide->getTransition())) {
             $this->writeSlideTransition($objWriter, $pSlide->getTransition());
         }
 

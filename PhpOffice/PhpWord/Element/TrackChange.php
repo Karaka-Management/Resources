@@ -52,7 +52,7 @@ class TrackChange extends AbstractContainer
     /**
      * Date.
      *
-     * @var DateTime
+     * @var \DateTime
      */
     private $date;
 
@@ -61,14 +61,14 @@ class TrackChange extends AbstractContainer
      *
      * @param string $changeType
      * @param string $author
-     * @param null|bool|DateTime|int $date
+     * @param null|bool|\DateTime|int $date
      */
     public function __construct($changeType = null, $author = null, $date = null)
     {
         $this->changeType = $changeType;
         $this->author = $author;
         if ($date !== null && $date !== false) {
-            $this->date = ($date instanceof DateTime) ? $date : new DateTime('@' . $date);
+            $this->date = ($date instanceof \DateTime) ? $date : new \DateTime('@' . $date);
         }
     }
 
@@ -85,7 +85,7 @@ class TrackChange extends AbstractContainer
     /**
      * Get TrackChange Date.
      *
-     * @return DateTime
+     * @return \DateTime
      */
     public function getDate()
     {

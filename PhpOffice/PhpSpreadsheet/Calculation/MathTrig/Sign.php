@@ -23,7 +23,7 @@ class Sign
      */
     public static function evaluate($number)
     {
-        if (is_array($number)) {
+        if (\is_array($number)) {
             return self::evaluateSingleArgumentArray([self::class, __FUNCTION__], $number);
         }
 

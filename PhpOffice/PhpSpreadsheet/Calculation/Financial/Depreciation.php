@@ -60,7 +60,7 @@ class Depreciation
 
         //    Set Fixed Depreciation Rate
         $fixedDepreciationRate = 1 - ($salvage / $cost) ** (1 / $life);
-        $fixedDepreciationRate = round($fixedDepreciationRate, 3);
+        $fixedDepreciationRate = \round($fixedDepreciationRate, 3);
 
         //    Loop through each period calculating the depreciation
         // TODO Handle period value between 0 and 1 (e.g. 0.5)
@@ -129,7 +129,7 @@ class Depreciation
         $previousDepreciation = 0;
         $depreciation = 0;
         for ($per = 1; $per <= $period; ++$per) {
-            $depreciation = min(
+            $depreciation = \min(
                 ($cost - $previousDepreciation) * ($factor / $life),
                 ($cost - $salvage - $previousDepreciation)
             );

@@ -20,7 +20,7 @@ class Hyperlinks
         $this->worksheet = $workSheet;
     }
 
-    public function readHyperlinks(SimpleXMLElement $relsWorksheet): void
+    public function readHyperlinks(\SimpleXMLElement $relsWorksheet): void
     {
         foreach ($relsWorksheet->children(Namespaces::RELATIONSHIPS)->Relationship as $elementx) {
             $element = Xlsx::getAttributes($elementx);
@@ -30,7 +30,7 @@ class Hyperlinks
         }
     }
 
-    public function setHyperlinks(SimpleXMLElement $worksheetXml): void
+    public function setHyperlinks(\SimpleXMLElement $worksheetXml): void
     {
         foreach ($worksheetXml->children(Namespaces::MAIN)->hyperlink as $hyperlink) {
             if ($hyperlink !== null) {
@@ -39,7 +39,7 @@ class Hyperlinks
         }
     }
 
-    private function setHyperlink(SimpleXMLElement $hyperlink, Worksheet $worksheet): void
+    private function setHyperlink(\SimpleXMLElement $hyperlink, Worksheet $worksheet): void
     {
         // Link url
         $linkRel = Xlsx::getAttributes($hyperlink, Namespaces::SCHEMA_OFFICE_DOCUMENT);

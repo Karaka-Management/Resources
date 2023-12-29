@@ -72,7 +72,7 @@ class TextStyle
 
     private function checkLvl(?int $lvl): bool
     {
-        if (is_null($lvl) || $lvl > 9) {
+        if (\is_null($lvl) || $lvl > 9) {
             return false;
         }
 

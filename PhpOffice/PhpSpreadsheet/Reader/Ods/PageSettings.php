@@ -45,14 +45,14 @@ class PageSettings
      */
     private $masterPrintStylesCrossReference = [];
 
-    public function __construct(DOMDocument $styleDom)
+    public function __construct(\DOMDocument $styleDom)
     {
         $this->setDomNameSpaces($styleDom);
         $this->readPageSettingStyles($styleDom);
         $this->readStyleMasterLookup($styleDom);
     }
 
-    private function setDomNameSpaces(DOMDocument $styleDom): void
+    private function setDomNameSpaces(\DOMDocument $styleDom): void
     {
         $this->officeNs = $styleDom->lookupNamespaceUri('office');
         $this->stylesNs = $styleDom->lookupNamespaceUri('style');
@@ -60,7 +60,7 @@ class PageSettings
         $this->tableNs = $styleDom->lookupNamespaceUri('table');
     }
 
-    private function readPageSettingStyles(DOMDocument $styleDom): void
+    private function readPageSettingStyles(\DOMDocument $styleDom): void
     {
         $styles = $styleDom->getElementsByTagNameNS($this->officeNs, 'automatic-styles')
             ->item(0)
@@ -102,7 +102,7 @@ class PageSettings
         }
     }
 
-    private function readStyleMasterLookup(DOMDocument $styleDom): void
+    private function readStyleMasterLookup(\DOMDocument $styleDom): void
     {
         $styleMasterLookup = $styleDom->getElementsByTagNameNS($this->officeNs, 'master-styles')
             ->item(0)
@@ -115,7 +115,7 @@ class PageSettings
         }
     }
 
-    public function readStyleCrossReferences(DOMDocument $contentDom): void
+    public function readStyleCrossReferences(\DOMDocument $contentDom): void
     {
         $styleXReferences = $contentDom->getElementsByTagNameNS($this->officeNs, 'automatic-styles')
             ->item(0)
@@ -140,7 +140,7 @@ class PageSettings
 
     public function setVisibilityForWorksheet(Worksheet $worksheet, string $styleName): void
     {
-        if (!array_key_exists($styleName, $this->tableStylesCrossReference)) {
+        if (!\array_key_exists($styleName, $this->tableStylesCrossReference)) {
             return;
         }
 
@@ -153,17 +153,17 @@ class PageSettings
 
     public function setPrintSettingsForWorksheet(Worksheet $worksheet, string $styleName): void
     {
-        if (!array_key_exists($styleName, $this->masterStylesCrossReference)) {
+        if (!\array_key_exists($styleName, $this->masterStylesCrossReference)) {
             return;
         }
         $masterStyleName = $this->masterStylesCrossReference[$styleName];
 
-        if (!array_key_exists($masterStyleName, $this->masterPrintStylesCrossReference)) {
+        if (!\array_key_exists($masterStyleName, $this->masterPrintStylesCrossReference)) {
             return;
         }
         $printSettingsIndex = $this->masterPrintStylesCrossReference[$masterStyleName];
 
-        if (!array_key_exists($printSettingsIndex, $this->pageLayoutStyles)) {
+        if (!\array_key_exists($printSettingsIndex, $this->pageLayoutStyles)) {
             return;
         }
         $printSettings = $this->pageLayoutStyles[$printSettingsIndex];
@@ -171,7 +171,7 @@ class PageSettings
         $worksheet->getPageSetup()
             ->setOrientation($printSettings->orientation ?? PageSetup::ORIENTATION_DEFAULT)
             ->setPageOrder($printSettings->printOrder === 'ltr' ? PageSetup::PAGEORDER_OVER_THEN_DOWN : PageSetup::PAGEORDER_DOWN_THEN_OVER)
-            ->setScale((int) trim($printSettings->scale, '%'))
+            ->setScale((int) \trim($printSettings->scale, '%'))
             ->setHorizontalCentered($printSettings->horizontalCentered)
             ->setVerticalCentered($printSettings->verticalCentered);
 

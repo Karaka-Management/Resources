@@ -62,7 +62,7 @@ abstract class WizardAbstract
 
     protected function setReferenceCellForExpressions(string $conditionalRange): void
     {
-        $conditionalRange = Coordinate::splitRange(str_replace('$', '', strtoupper($conditionalRange)));
+        $conditionalRange = Coordinate::splitRange(\str_replace('$', '', \strtoupper($conditionalRange)));
         [$this->referenceCell] = $conditionalRange[0];
 
         [$this->referenceColumn, $this->referenceRow] = Coordinate::indexesFromString($this->referenceCell);
@@ -92,12 +92,12 @@ abstract class WizardAbstract
     {
         if (
             $operandValueType === Wizard::VALUE_TYPE_LITERAL &&
-            substr($operand, 0, 1) === '"' &&
-            substr($operand, -1) === '"'
+            \substr($operand, 0, 1) === '"' &&
+            \substr($operand, -1) === '"'
         ) {
-            $operand = str_replace('""', '"', substr($operand, 1, -1));
-        } elseif ($operandValueType === Wizard::VALUE_TYPE_FORMULA && substr($operand, 0, 1) === '=') {
-            $operand = substr($operand, 1);
+            $operand = \str_replace('""', '"', \substr($operand, 1, -1));
+        } elseif ($operandValueType === Wizard::VALUE_TYPE_FORMULA && \substr($operand, 0, 1) === '=') {
+            $operand = \substr($operand, 1);
         }
 
         return $operand;
@@ -109,13 +109,13 @@ abstract class WizardAbstract
         $column = $matches[6];
         $row = $matches[7];
 
-        if (strpos($column, '$') === false) {
+        if (\strpos($column, '$') === false) {
             $column = Coordinate::columnIndexFromString($column);
             $column -= $referenceColumn - 1;
             $column = Coordinate::stringFromColumnIndex($column);
         }
 
-        if (strpos($row, '$') === false) {
+        if (\strpos($row, '$') === false) {
             $row -= $referenceRow - 1;
         }
 
@@ -124,17 +124,17 @@ abstract class WizardAbstract
 
     public static function reverseAdjustCellRef(string $condition, string $cellRange): string
     {
-        $conditionalRange = Coordinate::splitRange(str_replace('$', '', strtoupper($cellRange)));
+        $conditionalRange = Coordinate::splitRange(\str_replace('$', '', \strtoupper($cellRange)));
         [$referenceCell] = $conditionalRange[0];
         [$referenceColumnIndex, $referenceRow] = Coordinate::indexesFromString($referenceCell);
 
-        $splitCondition = explode(Calculation::FORMULA_STRING_QUOTE, $condition);
+        $splitCondition = \explode(Calculation::FORMULA_STRING_QUOTE, $condition);
         $i = false;
         foreach ($splitCondition as &$value) {
             //    Only count/replace in alternating array entries (ie. not in quoted strings)
             $i = $i === false;
             if ($i) {
-                $value = (string) preg_replace_callback(
+                $value = (string) \preg_replace_callback(
                     '/' . Calculation::CALCULATION_REGEXP_CELLREF_RELATIVE . '/i',
                     function ($matches) use ($referenceColumnIndex, $referenceRow) {
                         return self::reverseCellAdjustment($matches, $referenceColumnIndex, $referenceRow);
@@ -146,7 +146,7 @@ abstract class WizardAbstract
         unset($value);
 
         //    Then rebuild the condition string to return it
-        return implode(Calculation::FORMULA_STRING_QUOTE, $splitCondition);
+        return \implode(Calculation::FORMULA_STRING_QUOTE, $splitCondition);
     }
 
     protected function conditionCellAdjustment(array $matches): string
@@ -155,13 +155,13 @@ abstract class WizardAbstract
         $column = $matches[6];
         $row = $matches[7];
 
-        if (strpos($column, '$') === false) {
+        if (\strpos($column, '$') === false) {
             $column = Coordinate::columnIndexFromString($column);
             $column += $this->referenceColumn - 1;
             $column = Coordinate::stringFromColumnIndex($column);
         }
 
-        if (strpos($row, '$') === false) {
+        if (\strpos($row, '$') === false) {
             $row += $this->referenceRow - 1;
         }
 
@@ -170,13 +170,13 @@ abstract class WizardAbstract
 
     protected function cellConditionCheck(string $condition): string
     {
-        $splitCondition = explode(Calculation::FORMULA_STRING_QUOTE, $condition);
+        $splitCondition = \explode(Calculation::FORMULA_STRING_QUOTE, $condition);
         $i = false;
         foreach ($splitCondition as &$value) {
             //    Only count/replace in alternating array entries (ie. not in quoted strings)
             $i = $i === false;
             if ($i) {
-                $value = (string) preg_replace_callback(
+                $value = (string) \preg_replace_callback(
                     '/' . Calculation::CALCULATION_REGEXP_CELLREF_RELATIVE . '/i',
                     [$this, 'conditionCellAdjustment'],
                     $value
@@ -186,12 +186,12 @@ abstract class WizardAbstract
         unset($value);
 
         //    Then rebuild the condition string to return it
-        return implode(Calculation::FORMULA_STRING_QUOTE, $splitCondition);
+        return \implode(Calculation::FORMULA_STRING_QUOTE, $splitCondition);
     }
 
     protected function adjustConditionsForCellReferences(array $conditions): array
     {
-        return array_map(
+        return \array_map(
             [$this, 'cellConditionCheck'],
             $conditions
         );

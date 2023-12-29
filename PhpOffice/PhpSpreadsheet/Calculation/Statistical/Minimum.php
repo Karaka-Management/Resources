@@ -33,7 +33,7 @@ class Minimum extends MaxMinBase
                 break;
             }
             // Is it a numeric value?
-            if ((is_numeric($arg)) && (!is_string($arg))) {
+            if ((\is_numeric($arg)) && (!\is_string($arg))) {
                 if (($returnValue === null) || ($arg < $returnValue)) {
                     $returnValue = $arg;
                 }
@@ -72,7 +72,7 @@ class Minimum extends MaxMinBase
                 break;
             }
             // Is it a numeric value?
-            if ((is_numeric($arg)) || (is_bool($arg)) || ((is_string($arg) && ($arg != '')))) {
+            if ((\is_numeric($arg)) || (\is_bool($arg)) || ((\is_string($arg) && ($arg != '')))) {
                 $arg = self::datatypeAdjustmentAllowStrings($arg);
                 if (($returnValue === null) || ($arg < $returnValue)) {
                     $returnValue = $arg;

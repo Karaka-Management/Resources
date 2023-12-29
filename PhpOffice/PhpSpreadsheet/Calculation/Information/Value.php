@@ -26,7 +26,7 @@ class Value
      */
     public static function isBlank($value = null)
     {
-        if (is_array($value)) {
+        if (\is_array($value)) {
             return self::evaluateSingleArgumentArray([self::class, __FUNCTION__], $value);
         }
 
@@ -47,7 +47,7 @@ class Value
         }
 
         $cellValue = Functions::trimTrailingRange($value);
-        if (preg_match('/^' . Calculation::CALCULATION_REGEXP_CELLREF . '$/ui', $cellValue) === 1) {
+        if (\preg_match('/^' . Calculation::CALCULATION_REGEXP_CELLREF . '$/ui', $cellValue) === 1) {
             [$worksheet, $cellValue] = Worksheet::extractSheetTitle($cellValue, true);
             if (!empty($worksheet) && $cell->getWorksheet()->getParent()->getSheetByName($worksheet) === null) {
                 return false;
@@ -77,17 +77,17 @@ class Value
      */
     public static function isEven($value = null)
     {
-        if (is_array($value)) {
+        if (\is_array($value)) {
             return self::evaluateSingleArgumentArray([self::class, __FUNCTION__], $value);
         }
 
         if ($value === null) {
             return ExcelError::NAME();
-        } elseif ((is_bool($value)) || ((is_string($value)) && (!is_numeric($value)))) {
+        } elseif ((\is_bool($value)) || ((\is_string($value)) && (!\is_numeric($value)))) {
             return ExcelError::VALUE();
         }
 
-        return ((int) fmod($value, 2)) === 0;
+        return ((int) \fmod($value, 2)) === 0;
     }
 
     /**
@@ -102,17 +102,17 @@ class Value
      */
     public static function isOdd($value = null)
     {
-        if (is_array($value)) {
+        if (\is_array($value)) {
             return self::evaluateSingleArgumentArray([self::class, __FUNCTION__], $value);
         }
 
         if ($value === null) {
             return ExcelError::NAME();
-        } elseif ((is_bool($value)) || ((is_string($value)) && (!is_numeric($value)))) {
+        } elseif ((\is_bool($value)) || ((\is_string($value)) && (!\is_numeric($value)))) {
             return ExcelError::VALUE();
         }
 
-        return ((int) fmod($value, 2)) !== 0;
+        return ((int) \fmod($value, 2)) !== 0;
     }
 
     /**
@@ -127,15 +127,15 @@ class Value
      */
     public static function isNumber($value = null)
     {
-        if (is_array($value)) {
+        if (\is_array($value)) {
             return self::evaluateSingleArgumentArray([self::class, __FUNCTION__], $value);
         }
 
-        if (is_string($value)) {
+        if (\is_string($value)) {
             return false;
         }
 
-        return is_numeric($value);
+        return \is_numeric($value);
     }
 
     /**
@@ -150,11 +150,11 @@ class Value
      */
     public static function isLogical($value = null)
     {
-        if (is_array($value)) {
+        if (\is_array($value)) {
             return self::evaluateSingleArgumentArray([self::class, __FUNCTION__], $value);
         }
 
-        return is_bool($value);
+        return \is_bool($value);
     }
 
     /**
@@ -169,11 +169,11 @@ class Value
      */
     public static function isText($value = null)
     {
-        if (is_array($value)) {
+        if (\is_array($value)) {
             return self::evaluateSingleArgumentArray([self::class, __FUNCTION__], $value);
         }
 
-        return is_string($value) && !ErrorValue::isError($value);
+        return \is_string($value) && !ErrorValue::isError($value);
     }
 
     /**
@@ -188,7 +188,7 @@ class Value
      */
     public static function isNonText($value = null)
     {
-        if (is_array($value)) {
+        if (\is_array($value)) {
             return self::evaluateSingleArgumentArray([self::class, __FUNCTION__], $value);
         }
 
@@ -211,20 +211,20 @@ class Value
 
         $fullCellReference = Functions::expandDefinedName((string) $cellReference, $cell);
 
-        if (strpos($cellReference, '!') !== false) {
+        if (\strpos($cellReference, '!') !== false) {
             $cellReference = Functions::trimSheetFromCellReference($cellReference);
             $cellReferences = Coordinate::extractAllCellReferencesInRange($cellReference);
-            if (count($cellReferences) > 1) {
+            if (\count($cellReferences) > 1) {
                 return self::evaluateArrayArgumentsSubset([self::class, __FUNCTION__], 1, $cellReferences, $cell);
             }
         }
 
         $fullCellReference = Functions::trimTrailingRange($fullCellReference);
 
-        preg_match('/^' . Calculation::CALCULATION_REGEXP_CELLREF . '$/i', $fullCellReference, $matches);
+        \preg_match('/^' . Calculation::CALCULATION_REGEXP_CELLREF . '$/i', $fullCellReference, $matches);
 
         $fullCellReference = $matches[6] . $matches[7];
-        $worksheetName = str_replace("''", "'", trim($matches[2], "'"));
+        $worksheetName = \str_replace("''", "'", \trim($matches[2], "'"));
 
         $worksheet = (!empty($worksheetName))
             ? $cell->getWorksheet()->getParent()->getSheetByName($worksheetName)
@@ -251,11 +251,11 @@ class Value
      */
     public static function asNumber($value = null)
     {
-        while (is_array($value)) {
-            $value = array_shift($value);
+        while (\is_array($value)) {
+            $value = \array_shift($value);
         }
 
-        switch (gettype($value)) {
+        switch (\gettype($value)) {
             case 'double':
             case 'float':
             case 'integer':
@@ -264,7 +264,7 @@ class Value
                 return (int) $value;
             case 'string':
                 //    Errors
-                if ((strlen($value) > 0) && ($value[0] == '#')) {
+                if ((\strlen($value) > 0) && ($value[0] == '#')) {
                     return $value;
                 }
 
@@ -292,9 +292,9 @@ class Value
     public static function type($value = null)
     {
         $value = Functions::flattenArrayIndexed($value);
-        if (is_array($value) && (count($value) > 1)) {
-            end($value);
-            $a = key($value);
+        if (\is_array($value) && (\count($value) > 1)) {
+            \end($value);
+            $a = \key($value);
             //    Range of cells is an error
             if (Functions::isCellValue($a)) {
                 return 16;
@@ -308,15 +308,15 @@ class Value
         }
 
         $value = Functions::flattenSingleValue($value);
-        if (($value === null) || (is_float($value)) || (is_int($value))) {
+        if (($value === null) || (\is_float($value)) || (\is_int($value))) {
             return 1;
-        } elseif (is_bool($value)) {
+        } elseif (\is_bool($value)) {
             return 4;
-        } elseif (is_array($value)) {
+        } elseif (\is_array($value)) {
             return 64;
-        } elseif (is_string($value)) {
+        } elseif (\is_string($value)) {
             //    Errors
-            if ((strlen($value) > 0) && ($value[0] == '#')) {
+            if ((\strlen($value) > 0) && ($value[0] == '#')) {
                 return 16;
             }
 

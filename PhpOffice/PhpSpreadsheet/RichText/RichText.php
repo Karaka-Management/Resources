@@ -145,7 +145,7 @@ class RichText implements IComparable
             $hashElements .= $element->getHashCode();
         }
 
-        return md5(
+        return \md5(
             $hashElements .
             __CLASS__
         );
@@ -156,13 +156,13 @@ class RichText implements IComparable
      */
     public function __clone()
     {
-        $vars = get_object_vars($this);
+        $vars = \get_object_vars($this);
         foreach ($vars as $key => $value) {
-            $newValue = is_object($value) ? (clone $value) : $value;
-            if (is_array($value)) {
+            $newValue = \is_object($value) ? (clone $value) : $value;
+            if (\is_array($value)) {
                 $newValue = [];
                 foreach ($value as $key2 => $value2) {
-                    $newValue[$key2] = is_object($value2) ? (clone $value2) : $value2;
+                    $newValue[$key2] = \is_object($value2) ? (clone $value2) : $value2;
                 }
             }
             $this->$key = $newValue;

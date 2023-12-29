@@ -15,11 +15,11 @@ class TableReader
     private $worksheet;
 
     /**
-     * @var SimpleXMLElement
+     * @var \SimpleXMLElement
      */
     private $tableXml;
 
-    public function __construct(Worksheet $workSheet, SimpleXMLElement $tableXml)
+    public function __construct(Worksheet $workSheet, \SimpleXMLElement $tableXml)
     {
         $this->worksheet = $workSheet;
         $this->tableXml = $tableXml;
@@ -31,8 +31,8 @@ class TableReader
     public function load(): void
     {
         // Remove all "$" in the table range
-        $tableRange = (string) preg_replace('/\$/', '', $this->tableXml['ref'] ?? '');
-        if (strpos($tableRange, ':') !== false) {
+        $tableRange = (string) \preg_replace('/\$/', '', $this->tableXml['ref'] ?? '');
+        if (\strpos($tableRange, ':') !== false) {
             $this->readTable($tableRange, $this->tableXml);
         }
     }
@@ -40,7 +40,7 @@ class TableReader
     /**
      * Read Table from xml.
      */
-    private function readTable(string $tableRange, SimpleXMLElement $tableXml): void
+    private function readTable(string $tableRange, \SimpleXMLElement $tableXml): void
     {
         $table = new Table($tableRange);
         $table->setName((string) $tableXml['displayName']);
@@ -58,7 +58,7 @@ class TableReader
     /**
      * Reads TableAutoFilter from xml.
      */
-    private function readTableAutoFilter(Table $table, SimpleXMLElement $autoFilterXml): void
+    private function readTableAutoFilter(Table $table, \SimpleXMLElement $autoFilterXml): void
     {
         if ($autoFilterXml->filterColumn === null) {
             $table->setAllowFilter(false);
@@ -75,7 +75,7 @@ class TableReader
     /**
      * Reads TableColumns from xml.
      */
-    private function readTableColumns(Table $table, SimpleXMLElement $tableColumnsXml): void
+    private function readTableColumns(Table $table, \SimpleXMLElement $tableColumnsXml): void
     {
         $offset = 0;
         foreach ($tableColumnsXml->tableColumn as $tableColumn) {
@@ -100,7 +100,7 @@ class TableReader
     /**
      * Reads TableStyle from xml.
      */
-    private function readTableStyle(Table $table, SimpleXMLElement $tableStyleInfoXml): void
+    private function readTableStyle(Table $table, \SimpleXMLElement $tableStyleInfoXml): void
     {
         $tableStyle = new TableStyle();
         $tableStyle->setTheme((string) $tableStyleInfoXml['name']);

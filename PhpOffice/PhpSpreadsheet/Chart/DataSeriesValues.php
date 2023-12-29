@@ -117,7 +117,7 @@ class DataSeriesValues extends Properties
         if ($fillColor !== null) {
             $this->setFillColor($fillColor);
         }
-        if (is_numeric($pointSize)) {
+        if (\is_numeric($pointSize)) {
             $this->pointSize = (int) $pointSize;
         }
     }
@@ -146,7 +146,7 @@ class DataSeriesValues extends Properties
      */
     public function setDataType($dataType)
     {
-        if (!in_array($dataType, self::DATA_TYPE_VALUES)) {
+        if (!\in_array($dataType, self::DATA_TYPE_VALUES)) {
             throw new Exception('Invalid datatype for chart data series values');
         }
         $this->dataType = $dataType;
@@ -279,12 +279,12 @@ class DataSeriesValues extends Properties
     private function stringToChartColor(string $fillString): ChartColor
     {
         $value = $type = '';
-        if (substr($fillString, 0, 1) === '*') {
+        if (\substr($fillString, 0, 1) === '*') {
             $type = 'schemeClr';
-            $value = substr($fillString, 1);
-        } elseif (substr($fillString, 0, 1) === '/') {
+            $value = \substr($fillString, 1);
+        } elseif (\substr($fillString, 0, 1) === '/') {
             $type = 'prstClr';
-            $value = substr($fillString, 1);
+            $value = \substr($fillString, 1);
         } elseif ($fillString !== '') {
             $type = 'srgbClr';
             $value = $fillString;
@@ -321,7 +321,7 @@ class DataSeriesValues extends Properties
         if ($this->fillColor === null) {
             return '';
         }
-        if (is_array($this->fillColor)) {
+        if (\is_array($this->fillColor)) {
             $array = [];
             foreach ($this->fillColor as $chartColor) {
                 $array[] = $this->chartColorToString($chartColor);
@@ -342,7 +342,7 @@ class DataSeriesValues extends Properties
      */
     public function setFillColor($color)
     {
-        if (is_array($color)) {
+        if (\is_array($color)) {
             $this->fillColor = [];
             foreach ($color as $fillString) {
                 if ($fillString instanceof ChartColor) {
@@ -369,8 +369,8 @@ class DataSeriesValues extends Properties
      */
     private function validateColor($color)
     {
-        if (!preg_match('/^[a-f0-9]{6}$/i', $color)) {
-            throw new Exception(sprintf('Invalid hex color for chart series (color: "%s")', $color));
+        if (!\preg_match('/^[a-f0-9]{6}$/i', $color)) {
+            throw new Exception(\sprintf('Invalid hex color for chart series (color: "%s")', $color));
         }
 
         return true;
@@ -408,7 +408,7 @@ class DataSeriesValues extends Properties
     public function isMultiLevelSeries()
     {
         if (!empty($this->dataValues)) {
-            return is_array(array_values($this->dataValues)[0]);
+            return \is_array(\array_values($this->dataValues)[0]);
         }
 
         return null;
@@ -423,7 +423,7 @@ class DataSeriesValues extends Properties
     {
         $levelCount = 0;
         foreach ($this->dataValues as $dataValueSet) {
-            $levelCount = max($levelCount, count($dataValueSet));
+            $levelCount = \max($levelCount, \count($dataValueSet));
         }
 
         return $levelCount;
@@ -446,7 +446,7 @@ class DataSeriesValues extends Properties
      */
     public function getDataValue()
     {
-        $count = count($this->dataValues);
+        $count = \count($this->dataValues);
         if ($count == 0) {
             return null;
         } elseif ($count == 1) {
@@ -466,7 +466,7 @@ class DataSeriesValues extends Properties
     public function setDataValues($dataValues)
     {
         $this->dataValues = Functions::flattenArray($dataValues);
-        $this->pointCount = count($dataValues);
+        $this->pointCount = \count($dataValues);
 
         return $this;
     }
@@ -485,18 +485,18 @@ class DataSeriesValues extends Properties
             if ($flatten) {
                 $this->dataValues = Functions::flattenArray($newDataValues);
                 foreach ($this->dataValues as &$dataValue) {
-                    if (is_string($dataValue) && !empty($dataValue) && $dataValue[0] == '#') {
+                    if (\is_string($dataValue) && !empty($dataValue) && $dataValue[0] == '#') {
                         $dataValue = 0.0;
                     }
                 }
                 unset($dataValue);
             } else {
                 [$worksheet, $cellRange] = Worksheet::extractSheetTitle($this->dataSource, true);
-                $dimensions = Coordinate::rangeDimension(str_replace('$', '', $cellRange));
+                $dimensions = Coordinate::rangeDimension(\str_replace('$', '', $cellRange));
                 if (($dimensions[0] == 1) || ($dimensions[1] == 1)) {
                     $this->dataValues = Functions::flattenArray($newDataValues);
                 } else {
-                    $newArray = array_values(array_shift(/** @scrutinizer ignore-type */ $newDataValues));
+                    $newArray = \array_values(\array_shift(/** @scrutinizer ignore-type */ $newDataValues));
                     foreach ($newArray as $i => $newDataSet) {
                         $newArray[$i] = [$newDataSet];
                     }
@@ -504,13 +504,13 @@ class DataSeriesValues extends Properties
                     foreach ($newDataValues as $newDataSet) {
                         $i = 0;
                         foreach ($newDataSet as $newDataVal) {
-                            array_unshift($newArray[$i++], $newDataVal);
+                            \array_unshift($newArray[$i++], $newDataVal);
                         }
                     }
                     $this->dataValues = $newArray;
                 }
             }
-            $this->pointCount = count($this->dataValues);
+            $this->pointCount = \count($this->dataValues);
         }
     }
 

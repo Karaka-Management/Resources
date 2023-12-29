@@ -44,15 +44,15 @@ class Container extends AbstractElement
         if (!$container instanceof ContainerElement) {
             return '';
         }
-        $containerClass = substr(get_class($container), strrpos(get_class($container), '\\') + 1);
-        $withoutP = in_array($containerClass, ['TextRun', 'Footnote', 'Endnote']) ? true : false;
+        $containerClass = \substr(\get_class($container), \strrpos(\get_class($container), '\\') + 1);
+        $withoutP = \in_array($containerClass, ['TextRun', 'Footnote', 'Endnote']) ? true : false;
         $content = '';
 
         $elements = $container->getElements();
         foreach ($elements as $element) {
-            $elementClass = get_class($element);
-            $writerClass = str_replace('PhpOffice\\PhpWord\\Element', $this->namespace, $elementClass);
-            if (class_exists($writerClass)) {
+            $elementClass = \get_class($element);
+            $writerClass = \str_replace('PhpOffice\\PhpWord\\Element', $this->namespace, $elementClass);
+            if (\class_exists($writerClass)) {
                 /** @var \PhpOffice\PhpWord\Writer\HTML\Element\AbstractElement $writer Type hint */
                 $writer = new $writerClass($this->parentWriter, $element, $withoutP);
                 $content .= $writer->write();

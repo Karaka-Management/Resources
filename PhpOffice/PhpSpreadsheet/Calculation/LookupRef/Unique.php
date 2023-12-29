@@ -20,7 +20,7 @@ class Unique
      */
     public static function unique($lookupVector, $byColumn = false, $exactlyOnce = false)
     {
-        if (!is_array($lookupVector)) {
+        if (!\is_array($lookupVector)) {
             // Scalars are always returned "as is"
             return $lookupVector;
         }
@@ -40,10 +40,10 @@ class Unique
     {
         // When not $byColumn, we count whole rows or values, not individual values
         //      so implode each row into a single string value
-        array_walk(
+        \array_walk(
             $lookupVector,
             function (array &$value): void {
-                $value = implode(chr(0x00), $value);
+                $value = \implode(\chr(0x00), $value);
             }
         );
 
@@ -53,21 +53,21 @@ class Unique
             $result = self::exactlyOnceFilter($result);
         }
 
-        if (count($result) === 0) {
+        if (\count($result) === 0) {
             return ExcelError::CALC();
         }
 
-        $result = array_keys($result);
+        $result = \array_keys($result);
 
         // restore rows from their strings
-        array_walk(
+        \array_walk(
             $result,
             function (string &$value): void {
-                $value = explode(chr(0x00), $value);
+                $value = \explode(\chr(0x00), $value);
             }
         );
 
-        return (count($result) === 1) ? array_pop($result) : $result;
+        return (\count($result) === 1) ? \array_pop($result) : $result;
     }
 
     /**
@@ -77,12 +77,12 @@ class Unique
     {
         $flattenedLookupVector = Functions::flattenArray($lookupVector);
 
-        if (count($lookupVector, COUNT_RECURSIVE) > count($flattenedLookupVector, COUNT_RECURSIVE) + 1) {
+        if (\count($lookupVector, COUNT_RECURSIVE) > \count($flattenedLookupVector, COUNT_RECURSIVE) + 1) {
             // We're looking at a full column check (multiple rows)
             $transpose = Matrix::transpose($lookupVector);
             $result = self::uniqueByRow($transpose, $exactlyOnce);
 
-            return (is_array($result)) ? Matrix::transpose($result) : $result;
+            return (\is_array($result)) ? Matrix::transpose($result) : $result;
         }
 
         $result = self::countValuesCaseInsensitive($flattenedLookupVector);
@@ -91,19 +91,19 @@ class Unique
             $result = self::exactlyOnceFilter($result);
         }
 
-        if (count($result) === 0) {
+        if (\count($result) === 0) {
             return ExcelError::CALC();
         }
 
-        $result = array_keys($result);
+        $result = \array_keys($result);
 
         return $result;
     }
 
     private static function countValuesCaseInsensitive(array $caseSensitiveLookupValues): array
     {
-        $caseInsensitiveCounts = array_count_values(
-            array_map(
+        $caseInsensitiveCounts = \array_count_values(
+            \array_map(
                 function (string $value) {
                     return StringHelper::strToUpper($value);
                 },
@@ -113,7 +113,7 @@ class Unique
 
         $caseSensitiveCounts = [];
         foreach ($caseInsensitiveCounts as $caseInsensitiveKey => $count) {
-            if (is_numeric($caseInsensitiveKey)) {
+            if (\is_numeric($caseInsensitiveKey)) {
                 $caseSensitiveCounts[$caseInsensitiveKey] = $count;
             } else {
                 foreach ($caseSensitiveLookupValues as $caseSensitiveValue) {
@@ -131,7 +131,7 @@ class Unique
 
     private static function exactlyOnceFilter(array $values): array
     {
-        return array_filter(
+        return \array_filter(
             $values,
             function ($value) {
                 return $value === 1;

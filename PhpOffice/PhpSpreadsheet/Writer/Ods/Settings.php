@@ -97,7 +97,7 @@ class Settings extends WriterPart
     private function writeSelectedCells(XMLWriter $objWriter, Worksheet $worksheet): void
     {
         $selected = $worksheet->getSelectedCells();
-        if (preg_match('/^([a-z]+)([0-9]+)/i', $selected, $matches) === 1) {
+        if (\preg_match('/^([a-z]+)([0-9]+)/i', $selected, $matches) === 1) {
             $colSel = Coordinate::columnIndexFromString($matches[1]) - 1;
             $rowSel = (int) $matches[2] - 1;
             $objWriter->startElement('config:config-item');

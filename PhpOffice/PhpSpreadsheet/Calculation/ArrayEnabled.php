@@ -65,10 +65,10 @@ trait ArrayEnabled
      */
     protected static function evaluateArrayArgumentsSubset(callable $method, int $limit, ...$arguments): array
     {
-        self::initialiseHelper(array_slice($arguments, 0, $limit));
-        $trailingArguments = array_slice($arguments, $limit);
+        self::initialiseHelper(\array_slice($arguments, 0, $limit));
+        $trailingArguments = \array_slice($arguments, $limit);
         $arguments = self::$arrayArgumentHelper->arguments();
-        $arguments = array_merge($arguments, $trailingArguments);
+        $arguments = \array_merge($arguments, $trailingArguments);
 
         return ArrayArgumentProcessor::processArguments(self::$arrayArgumentHelper, $method, ...$arguments);
     }
@@ -92,18 +92,18 @@ trait ArrayEnabled
      */
     protected static function evaluateArrayArgumentsSubsetFrom(callable $method, int $start, ...$arguments): array
     {
-        $arrayArgumentsSubset = array_combine(
-            range($start, count($arguments) - $start),
-            array_slice($arguments, $start)
+        $arrayArgumentsSubset = \array_combine(
+            \range($start, \count($arguments) - $start),
+            \array_slice($arguments, $start)
         );
         if (self::testFalse($arrayArgumentsSubset)) {
             return ['#VALUE!'];
         }
 
         self::initialiseHelper($arrayArgumentsSubset);
-        $leadingArguments = array_slice($arguments, 0, $start);
+        $leadingArguments = \array_slice($arguments, 0, $start);
         $arguments = self::$arrayArgumentHelper->arguments();
-        $arguments = array_merge($leadingArguments, $arguments);
+        $arguments = \array_merge($leadingArguments, $arguments);
 
         return ArrayArgumentProcessor::processArguments(self::$arrayArgumentHelper, $method, ...$arguments);
     }
@@ -119,14 +119,14 @@ trait ArrayEnabled
      */
     protected static function evaluateArrayArgumentsIgnore(callable $method, int $ignore, ...$arguments): array
     {
-        $leadingArguments = array_slice($arguments, 0, $ignore);
-        $ignoreArgument = array_slice($arguments, $ignore, 1);
-        $trailingArguments = array_slice($arguments, $ignore + 1);
+        $leadingArguments = \array_slice($arguments, 0, $ignore);
+        $ignoreArgument = \array_slice($arguments, $ignore, 1);
+        $trailingArguments = \array_slice($arguments, $ignore + 1);
 
-        self::initialiseHelper(array_merge($leadingArguments, [[null]], $trailingArguments));
+        self::initialiseHelper(\array_merge($leadingArguments, [[null]], $trailingArguments));
         $arguments = self::$arrayArgumentHelper->arguments();
 
-        array_splice($arguments, $ignore, 1, $ignoreArgument);
+        \array_splice($arguments, $ignore, 1, $ignoreArgument);
 
         return ArrayArgumentProcessor::processArguments(self::$arrayArgumentHelper, $method, ...$arguments);
     }

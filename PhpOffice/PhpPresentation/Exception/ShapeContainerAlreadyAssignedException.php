@@ -24,7 +24,7 @@ class ShapeContainerAlreadyAssignedException extends PhpPresentationException
 {
     public function __construct(string $class)
     {
-        parent::__construct(sprintf(
+        parent::__construct(\sprintf(
             'The shape %s has already a container assigned',
             $class
         ));

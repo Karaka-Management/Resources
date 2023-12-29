@@ -133,8 +133,8 @@ class Cell implements ComparableInterface
      */
     public function setActiveParagraph($index = 0): Paragraph
     {
-        if ($index >= count($this->richTextParagraphs)) {
-            throw new OutOfBoundsException(0, count($this->richTextParagraphs), $index);
+        if ($index >= \count($this->richTextParagraphs)) {
+            throw new OutOfBoundsException(0, \count($this->richTextParagraphs), $index);
         }
 
         $this->activeParagraph = $index;
@@ -151,8 +151,8 @@ class Cell implements ComparableInterface
      */
     public function getParagraph(int $index = 0): Paragraph
     {
-        if ($index >= count($this->richTextParagraphs)) {
-            throw new OutOfBoundsException(0, count($this->richTextParagraphs), $index);
+        if ($index >= \count($this->richTextParagraphs)) {
+            throw new OutOfBoundsException(0, \count($this->richTextParagraphs), $index);
         }
 
         return $this->richTextParagraphs[$index];
@@ -164,7 +164,7 @@ class Cell implements ComparableInterface
     public function createParagraph(): Paragraph
     {
         $this->richTextParagraphs[] = new Paragraph();
-        $totalRichTextParagraphs = count($this->richTextParagraphs);
+        $totalRichTextParagraphs = \count($this->richTextParagraphs);
         $this->activeParagraph = $totalRichTextParagraphs - 1;
 
         if ($totalRichTextParagraphs > 1) {
@@ -277,7 +277,7 @@ class Cell implements ComparableInterface
     public function setParagraphs(array $paragraphs = []): self
     {
         $this->richTextParagraphs = $paragraphs;
-        $this->activeParagraph = count($this->richTextParagraphs) - 1;
+        $this->activeParagraph = \count($this->richTextParagraphs) - 1;
 
         return $this;
     }
@@ -384,7 +384,7 @@ class Cell implements ComparableInterface
             $hashElements .= $element->getHashCode();
         }
 
-        return md5($hashElements . $this->fill->getHashCode() . $this->borders->getHashCode() . $this->width . __CLASS__);
+        return \md5($hashElements . $this->fill->getHashCode() . $this->borders->getHashCode() . $this->width . __CLASS__);
     }
 
     /**

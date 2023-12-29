@@ -106,21 +106,21 @@ class Worksheet implements IComparable
     /**
      * Collection of drawings.
      *
-     * @var ArrayObject<int, BaseDrawing>
+     * @var \ArrayObject<int, BaseDrawing>
      */
     private $drawingCollection;
 
     /**
      * Collection of Chart objects.
      *
-     * @var ArrayObject<int, Chart>
+     * @var \ArrayObject<int, Chart>
      */
     private $chartCollection;
 
     /**
      * Collection of Table objects.
      *
-     * @var ArrayObject<int, Table>
+     * @var \ArrayObject<int, Table>
      */
     private $tableCollection;
 
@@ -372,9 +372,9 @@ class Worksheet implements IComparable
         // Set sheet view
         $this->sheetView = new SheetView();
         // Drawing collection
-        $this->drawingCollection = new ArrayObject();
+        $this->drawingCollection = new \ArrayObject();
         // Chart collection
-        $this->chartCollection = new ArrayObject();
+        $this->chartCollection = new \ArrayObject();
         // Protection
         $this->protection = new Protection();
         // Default row dimension
@@ -384,7 +384,7 @@ class Worksheet implements IComparable
         // AutoFilter
         $this->autoFilter = new AutoFilter('', $this);
         // Table collection
-        $this->tableCollection = new ArrayObject();
+        $this->tableCollection = new \ArrayObject();
     }
 
     /**
@@ -449,7 +449,7 @@ class Worksheet implements IComparable
         }
         // Some of the printable ASCII characters are invalid:  * : / \ ? [ ] and  first and last characters cannot be a "'"
         if (
-            (str_replace(self::$invalidCharacters, '', $sheetCodeName) !== $sheetCodeName) ||
+            (\str_replace(self::$invalidCharacters, '', $sheetCodeName) !== $sheetCodeName) ||
             (Shared\StringHelper::substring($sheetCodeName, -1, 1) == '\'') ||
             (Shared\StringHelper::substring($sheetCodeName, 0, 1) == '\'')
         ) {
@@ -474,7 +474,7 @@ class Worksheet implements IComparable
     private static function checkSheetTitle($sheetTitle)
     {
         // Some of the printable ASCII characters are invalid:  * : / \ ? [ ]
-        if (str_replace(self::$invalidCharacters, '', $sheetTitle) !== $sheetTitle) {
+        if (\str_replace(self::$invalidCharacters, '', $sheetTitle) !== $sheetTitle) {
             throw new Exception('Invalid character found in sheet title');
         }
 
@@ -549,7 +549,7 @@ class Worksheet implements IComparable
     /**
      * Get collection of drawings.
      *
-     * @return ArrayObject<int, BaseDrawing>
+     * @return \ArrayObject<int, BaseDrawing>
      */
     public function getDrawingCollection()
     {
@@ -559,7 +559,7 @@ class Worksheet implements IComparable
     /**
      * Get collection of charts.
      *
-     * @return ArrayObject<int, Chart>
+     * @return \ArrayObject<int, Chart>
      */
     public function getChartCollection()
     {
@@ -581,7 +581,7 @@ class Worksheet implements IComparable
         } else {
             // Insert the chart at the requested index
             // @phpstan-ignore-next-line
-            array_splice(/** @scrutinizer ignore-type */ $this->chartCollection, $chartIndex, 0, [$chart]);
+            \array_splice(/** @scrutinizer ignore-type */ $this->chartCollection, $chartIndex, 0, [$chart]);
         }
 
         return $chart;
@@ -594,7 +594,7 @@ class Worksheet implements IComparable
      */
     public function getChartCount()
     {
-        return count($this->chartCollection);
+        return \count($this->chartCollection);
     }
 
     /**
@@ -606,7 +606,7 @@ class Worksheet implements IComparable
      */
     public function getChartByIndex($index)
     {
-        $chartCount = count($this->chartCollection);
+        $chartCount = \count($this->chartCollection);
         if ($chartCount == 0) {
             return false;
         }
@@ -644,7 +644,7 @@ class Worksheet implements IComparable
      */
     public function getChartByName($chartName)
     {
-        $chartCount = count($this->chartCollection);
+        $chartCount = \count($this->chartCollection);
         if ($chartCount == 0) {
             return false;
         }
@@ -787,7 +787,7 @@ class Worksheet implements IComparable
                         );
 
                         if ($cellValue !== null && $cellValue !== '') {
-                            $autoSizes[$this->cellCollection->getCurrentColumn()] = max(
+                            $autoSizes[$this->cellCollection->getCurrentColumn()] = \max(
                                 (float) $autoSizes[$this->cellCollection->getCurrentColumn()],
                                 (float) Shared\Font::calculateColumnWidth(
                                     $this->getParent()->getCellXfByIndex($cell->getXfIndex())->getFont(),
@@ -1271,18 +1271,18 @@ class Worksheet implements IComparable
         $finalCoordinate = null;
 
         // Worksheet reference?
-        if (strpos($coordinate, '!') !== false) {
+        if (\strpos($coordinate, '!') !== false) {
             $worksheetReference = self::extractSheetTitle($coordinate, true);
 
             $sheet = $this->parent->getSheetByName($worksheetReference[0]);
-            $finalCoordinate = strtoupper($worksheetReference[1]);
+            $finalCoordinate = \strtoupper($worksheetReference[1]);
 
             if ($sheet === null) {
                 throw new Exception('Sheet not found for name: ' . $worksheetReference[0]);
             }
         } elseif (
-            !preg_match('/^' . Calculation::CALCULATION_REGEXP_CELLREF . '$/i', $coordinate) &&
-            preg_match('/^' . Calculation::CALCULATION_REGEXP_DEFINEDNAME . '$/iu', $coordinate)
+            !\preg_match('/^' . Calculation::CALCULATION_REGEXP_CELLREF . '$/i', $coordinate) &&
+            \preg_match('/^' . Calculation::CALCULATION_REGEXP_DEFINEDNAME . '$/iu', $coordinate)
         ) {
             // Named range?
             $namedRange = $this->validateNamedRange($coordinate, true);
@@ -1293,19 +1293,19 @@ class Worksheet implements IComparable
                 }
 
                 /** @phpstan-ignore-next-line */
-                $cellCoordinate = ltrim(substr($namedRange->getValue(), strrpos($namedRange->getValue(), '!')), '!');
-                $finalCoordinate = str_replace('$', '', $cellCoordinate);
+                $cellCoordinate = \ltrim(\substr($namedRange->getValue(), \strrpos($namedRange->getValue(), '!')), '!');
+                $finalCoordinate = \str_replace('$', '', $cellCoordinate);
             }
         }
 
         if ($sheet === null || $finalCoordinate === null) {
             $sheet = $this;
-            $finalCoordinate = strtoupper($coordinate);
+            $finalCoordinate = \strtoupper($coordinate);
         }
 
         if (Coordinate::coordinateIsRange($finalCoordinate)) {
             throw new Exception('Cell coordinate string can not be a range of cells.');
-        } elseif (strpos($finalCoordinate, '$') !== false) {
+        } elseif (\strpos($finalCoordinate, '$') !== false) {
             throw new Exception('Cell coordinate must not be absolute.');
         }
 
@@ -1442,7 +1442,7 @@ class Worksheet implements IComparable
         if (!isset($this->rowDimensions[$row])) {
             $this->rowDimensions[$row] = new RowDimension($row);
 
-            $this->cachedHighestRow = max($this->cachedHighestRow, $row);
+            $this->cachedHighestRow = \max($this->cachedHighestRow, $row);
         }
 
         return $this->rowDimensions[$row];
@@ -1461,7 +1461,7 @@ class Worksheet implements IComparable
     public function getColumnDimension(string $column): ColumnDimension
     {
         // Uppercase coordinate
-        $column = strtoupper($column);
+        $column = \strtoupper($column);
 
         // Fetch dimensions
         if (!isset($this->columnDimensions[$column])) {
@@ -1560,13 +1560,13 @@ class Worksheet implements IComparable
      */
     public function getConditionalStyles(string $coordinate): array
     {
-        $coordinate = strtoupper($coordinate);
-        if (strpos($coordinate, ':') !== false) {
+        $coordinate = \strtoupper($coordinate);
+        if (\strpos($coordinate, ':') !== false) {
             return $this->conditionalStylesCollection[$coordinate] ?? [];
         }
 
         $cell = $this->getCell($coordinate);
-        foreach (array_keys($this->conditionalStylesCollection) as $conditionalRange) {
+        foreach (\array_keys($this->conditionalStylesCollection) as $conditionalRange) {
             if ($cell->isInRange($conditionalRange)) {
                 return $this->conditionalStylesCollection[$conditionalRange];
             }
@@ -1577,9 +1577,9 @@ class Worksheet implements IComparable
 
     public function getConditionalRange(string $coordinate): ?string
     {
-        $coordinate = strtoupper($coordinate);
+        $coordinate = \strtoupper($coordinate);
         $cell = $this->getCell($coordinate);
-        foreach (array_keys($this->conditionalStylesCollection) as $conditionalRange) {
+        foreach (\array_keys($this->conditionalStylesCollection) as $conditionalRange) {
             if ($cell->isInRange($conditionalRange)) {
                 return $conditionalRange;
             }
@@ -1599,13 +1599,13 @@ class Worksheet implements IComparable
      */
     public function conditionalStylesExists($coordinate): bool
     {
-        $coordinate = strtoupper($coordinate);
-        if (strpos($coordinate, ':') !== false) {
+        $coordinate = \strtoupper($coordinate);
+        if (\strpos($coordinate, ':') !== false) {
             return isset($this->conditionalStylesCollection[$coordinate]);
         }
 
         $cell = $this->getCell($coordinate);
-        foreach (array_keys($this->conditionalStylesCollection) as $conditionalRange) {
+        foreach (\array_keys($this->conditionalStylesCollection) as $conditionalRange) {
             if ($cell->isInRange($conditionalRange)) {
                 return true;
             }
@@ -1623,7 +1623,7 @@ class Worksheet implements IComparable
      */
     public function removeConditionalStyles($coordinate)
     {
-        unset($this->conditionalStylesCollection[strtoupper($coordinate)]);
+        unset($this->conditionalStylesCollection[\strtoupper($coordinate)]);
 
         return $this;
     }
@@ -1648,7 +1648,7 @@ class Worksheet implements IComparable
      */
     public function setConditionalStyles($coordinate, $styles)
     {
-        $this->conditionalStylesCollection[strtoupper($coordinate)] = $styles;
+        $this->conditionalStylesCollection[\strtoupper($coordinate)] = $styles;
 
         return $this;
     }
@@ -1793,7 +1793,7 @@ class Worksheet implements IComparable
      * @param AddressRange|array<int>|string $range A simple string containing a Cell range like 'A1:E10'
      *              or passing in an array of [$fromColumnIndex, $fromRow, $toColumnIndex, $toRow] (e.g. [3, 5, 6, 8]),
      *              or an AddressRange.
-     * @param string $behaviour How the merged cells should behave.
+     * @param string $behavior How the merged cells should behave.
      *               Possible values are:
      *                   MERGE_CELL_CONTENT_EMPTY - Empty the content of the hidden cells
      *                   MERGE_CELL_CONTENT_HIDE - Keep the content of the hidden cells
@@ -1801,15 +1801,15 @@ class Worksheet implements IComparable
      *
      * @return $this
      */
-    public function mergeCells($range, $behaviour = self::MERGE_CELL_CONTENT_EMPTY)
+    public function mergeCells($range, $behavior = self::MERGE_CELL_CONTENT_EMPTY)
     {
         $range = Functions::trimSheetFromCellReference(Validations::validateCellRange($range));
 
-        if (strpos($range, ':') === false) {
+        if (\strpos($range, ':') === false) {
             $range .= ":{$range}";
         }
 
-        if (preg_match('/^([A-Z]+)(\\d+):([A-Z]+)(\\d+)$/', $range, $matches) !== 1) {
+        if (\preg_match('/^([A-Z]+)(\\d+):([A-Z]+)(\\d+)$/', $range, $matches) !== 1) {
             throw new Exception('Merge must be on a valid range of cells.');
         }
 
@@ -1833,21 +1833,21 @@ class Worksheet implements IComparable
             $this->getCell($upperLeft)->setValueExplicit(null, DataType::TYPE_NULL);
         }
 
-        if ($behaviour !== self::MERGE_CELL_CONTENT_HIDE) {
+        if ($behavior !== self::MERGE_CELL_CONTENT_HIDE) {
             // Blank out the rest of the cells in the range (if they exist)
             if ($numberRows > $numberColumns) {
-                $this->clearMergeCellsByColumn($firstColumn, $lastColumn, $firstRow, $lastRow, $upperLeft, $behaviour);
+                $this->clearMergeCellsByColumn($firstColumn, $lastColumn, $firstRow, $lastRow, $upperLeft, $behavior);
             } else {
-                $this->clearMergeCellsByRow($firstColumn, $lastColumnIndex, $firstRow, $lastRow, $upperLeft, $behaviour);
+                $this->clearMergeCellsByRow($firstColumn, $lastColumnIndex, $firstRow, $lastRow, $upperLeft, $behavior);
             }
         }
 
         return $this;
     }
 
-    private function clearMergeCellsByColumn(string $firstColumn, string $lastColumn, int $firstRow, int $lastRow, string $upperLeft, string $behaviour): void
+    private function clearMergeCellsByColumn(string $firstColumn, string $lastColumn, int $firstRow, int $lastRow, string $upperLeft, string $behavior): void
     {
-        $leftCellValue = ($behaviour === self::MERGE_CELL_CONTENT_MERGE)
+        $leftCellValue = ($behavior === self::MERGE_CELL_CONTENT_MERGE)
             ? [$this->getCell($upperLeft)->getFormattedValue()]
             : [];
 
@@ -1860,19 +1860,19 @@ class Worksheet implements IComparable
                     if ($row > $lastRow) {
                         break;
                     }
-                    $leftCellValue = $this->mergeCellBehaviour($cell, $upperLeft, $behaviour, $leftCellValue);
+                    $leftCellValue = $this->mergeCellBehaviour($cell, $upperLeft, $behavior, $leftCellValue);
                 }
             }
         }
 
-        if ($behaviour === self::MERGE_CELL_CONTENT_MERGE) {
-            $this->getCell($upperLeft)->setValueExplicit(implode(' ', $leftCellValue), DataType::TYPE_STRING);
+        if ($behavior === self::MERGE_CELL_CONTENT_MERGE) {
+            $this->getCell($upperLeft)->setValueExplicit(\implode(' ', $leftCellValue), DataType::TYPE_STRING);
         }
     }
 
-    private function clearMergeCellsByRow(string $firstColumn, int $lastColumnIndex, int $firstRow, int $lastRow, string $upperLeft, string $behaviour): void
+    private function clearMergeCellsByRow(string $firstColumn, int $lastColumnIndex, int $firstRow, int $lastRow, string $upperLeft, string $behavior): void
     {
-        $leftCellValue = ($behaviour === self::MERGE_CELL_CONTENT_MERGE)
+        $leftCellValue = ($behavior === self::MERGE_CELL_CONTENT_MERGE)
             ? [$this->getCell($upperLeft)->getFormattedValue()]
             : [];
 
@@ -1886,21 +1886,21 @@ class Worksheet implements IComparable
                     if ($columnIndex > $lastColumnIndex) {
                         break;
                     }
-                    $leftCellValue = $this->mergeCellBehaviour($cell, $upperLeft, $behaviour, $leftCellValue);
+                    $leftCellValue = $this->mergeCellBehaviour($cell, $upperLeft, $behavior, $leftCellValue);
                 }
             }
         }
 
-        if ($behaviour === self::MERGE_CELL_CONTENT_MERGE) {
-            $this->getCell($upperLeft)->setValueExplicit(implode(' ', $leftCellValue), DataType::TYPE_STRING);
+        if ($behavior === self::MERGE_CELL_CONTENT_MERGE) {
+            $this->getCell($upperLeft)->setValueExplicit(\implode(' ', $leftCellValue), DataType::TYPE_STRING);
         }
     }
 
-    public function mergeCellBehaviour(Cell $cell, string $upperLeft, string $behaviour, array $leftCellValue): array
+    public function mergeCellBehaviour(Cell $cell, string $upperLeft, string $behavior, array $leftCellValue): array
     {
         if ($cell->getCoordinate() !== $upperLeft) {
             Calculation::getInstance($cell->getWorksheet()->getParent())->flushInstance();
-            if ($behaviour === self::MERGE_CELL_CONTENT_MERGE) {
+            if ($behavior === self::MERGE_CELL_CONTENT_MERGE) {
                 $cellValue = $cell->getFormattedValue();
                 if ($cellValue !== '') {
                     $leftCellValue[] = $cellValue;
@@ -1925,7 +1925,7 @@ class Worksheet implements IComparable
      * @param int $row1 Numeric row coordinate of the first cell
      * @param int $columnIndex2 Numeric column coordinate of the last cell
      * @param int $row2 Numeric row coordinate of the last cell
-     * @param string $behaviour How the merged cells should behave.
+     * @param string $behavior How the merged cells should behave.
      *               Possible values are:
      *                   MERGE_CELL_CONTENT_EMPTY - Empty the content of the hidden cells
      *                   MERGE_CELL_CONTENT_HIDE - Keep the content of the hidden cells
@@ -1933,14 +1933,14 @@ class Worksheet implements IComparable
      *
      * @return $this
      */
-    public function mergeCellsByColumnAndRow($columnIndex1, $row1, $columnIndex2, $row2, $behaviour = self::MERGE_CELL_CONTENT_EMPTY)
+    public function mergeCellsByColumnAndRow($columnIndex1, $row1, $columnIndex2, $row2, $behavior = self::MERGE_CELL_CONTENT_EMPTY)
     {
         $cellRange = new CellRange(
             CellAddress::fromColumnAndRow($columnIndex1, $row1),
             CellAddress::fromColumnAndRow($columnIndex2, $row2)
         );
 
-        return $this->mergeCells($cellRange, $behaviour);
+        return $this->mergeCells($cellRange, $behavior);
     }
 
     /**
@@ -1956,7 +1956,7 @@ class Worksheet implements IComparable
     {
         $range = Functions::trimSheetFromCellReference(Validations::validateCellRange($range));
 
-        if (strpos($range, ':') !== false) {
+        if (\strpos($range, ':') !== false) {
             if (isset($this->mergeCells[$range])) {
                 unset($this->mergeCells[$range]);
             } else {
@@ -2151,7 +2151,7 @@ class Worksheet implements IComparable
      */
     public function setAutoFilter($autoFilterOrRange)
     {
-        if (is_object($autoFilterOrRange) && ($autoFilterOrRange instanceof AutoFilter)) {
+        if (\is_object($autoFilterOrRange) && ($autoFilterOrRange instanceof AutoFilter)) {
             $this->autoFilter = $autoFilterOrRange;
         } else {
             $cellRange = Functions::trimSheetFromCellReference(Validations::validateCellRange($autoFilterOrRange));
@@ -2201,7 +2201,7 @@ class Worksheet implements IComparable
     /**
      * Get collection of Tables.
      *
-     * @return ArrayObject<int, Table>
+     * @return \ArrayObject<int, Table>
      */
     public function getTableCollection()
     {
@@ -2289,7 +2289,7 @@ class Worksheet implements IComparable
      */
     public function removeTableCollection(): self
     {
-        $this->tableCollection = new ArrayObject();
+        $this->tableCollection = new \ArrayObject();
 
         return $this;
     }
@@ -2420,7 +2420,7 @@ class Worksheet implements IComparable
      */
     public function insertNewColumnBefore($before, $numberOfColumns = 1)
     {
-        if (!is_numeric($before)) {
+        if (!\is_numeric($before)) {
             $objReferenceHelper = ReferenceHelper::getInstance();
             $objReferenceHelper->insertNewBefore($before . '1', $numberOfColumns, 0, $this);
         } else {
@@ -2513,7 +2513,7 @@ class Worksheet implements IComparable
      */
     public function removeColumn($column, $numberOfColumns = 1)
     {
-        if (is_numeric($column)) {
+        if (\is_numeric($column)) {
             throw new Exception('Column references should not be numeric.');
         }
 
@@ -2535,7 +2535,7 @@ class Worksheet implements IComparable
 
         $maxPossibleColumnsToBeRemoved = $highestColumnIndex - $pColumnIndex + 1;
 
-        for ($c = 0, $n = min($maxPossibleColumnsToBeRemoved, $numberOfColumns); $c < $n; ++$c) {
+        for ($c = 0, $n = \min($maxPossibleColumnsToBeRemoved, $numberOfColumns); $c < $n; ++$c) {
             $this->getCellCollection()->removeColumn($highestColumn);
             $highestColumn = Coordinate::stringFromColumnIndex(Coordinate::columnIndexFromString($highestColumn) - 1);
         }
@@ -2730,7 +2730,7 @@ class Worksheet implements IComparable
 
         if (Coordinate::coordinateIsRange($cellAddress)) {
             throw new Exception('Cell coordinate string can not be a range of cells.');
-        } elseif (strpos($cellAddress, '$') !== false) {
+        } elseif (\strpos($cellAddress, '$') !== false) {
             throw new Exception('Cell coordinate string must not be absolute.');
         } elseif ($cellAddress == '') {
             throw new Exception('Cell coordinate can not be zero-length string.');
@@ -2755,7 +2755,7 @@ class Worksheet implements IComparable
 
         if (Coordinate::coordinateIsRange($cellAddress)) {
             throw new Exception('Cell coordinate string can not be a range of cells.');
-        } elseif (strpos($cellAddress, '$') !== false) {
+        } elseif (\strpos($cellAddress, '$') !== false) {
             throw new Exception('Cell coordinate string must not be absolute.');
         } elseif ($cellAddress == '') {
             throw new Exception('Cell coordinate can not be zero-length string.');
@@ -2832,7 +2832,7 @@ class Worksheet implements IComparable
      */
     public function setSelectedCells($coordinate)
     {
-        if (is_string($coordinate)) {
+        if (\is_string($coordinate)) {
             $coordinate = Validations::definedNameToCoordinate($coordinate, $this);
         }
         $coordinate = Validations::validateCellOrCellRange($coordinate);
@@ -2903,7 +2903,7 @@ class Worksheet implements IComparable
     public function fromArray(array $source, $nullValue = null, $startCell = 'A1', $strictNullComparison = false)
     {
         //    Convert a 1-D array to 2-D (for ease of looping)
-        if (!is_array(end($source))) {
+        if (!\is_array(\end($source))) {
             $source = [$source];
         }
 
@@ -3052,8 +3052,8 @@ class Worksheet implements IComparable
         $namedRange = $this->validateNamedRange($definedName);
         $workSheet = $namedRange->getWorksheet();
         /** @phpstan-ignore-next-line */
-        $cellRange = ltrim(substr($namedRange->getValue(), strrpos($namedRange->getValue(), '!')), '!');
-        $cellRange = str_replace('$', '', $cellRange);
+        $cellRange = \ltrim(\substr($namedRange->getValue(), \strrpos($namedRange->getValue(), '!')), '!');
+        $cellRange = \str_replace('$', '', $cellRange);
 
         return $workSheet->rangeToArray($cellRange, $nullValue, $calculateFormulas, $formatData, $returnCellRef);
     }
@@ -3125,12 +3125,12 @@ class Worksheet implements IComparable
 
         // Loop through column dimensions
         foreach ($this->columnDimensions as $dimension) {
-            $highestColumn = max($highestColumn, Coordinate::columnIndexFromString($dimension->getColumnIndex()));
+            $highestColumn = \max($highestColumn, Coordinate::columnIndexFromString($dimension->getColumnIndex()));
         }
 
         // Loop through row dimensions
         foreach ($this->rowDimensions as $dimension) {
-            $highestRow = max($highestRow, $dimension->getRowIndex());
+            $highestRow = \max($highestRow, $dimension->getRowIndex());
         }
 
         // Cache values
@@ -3153,7 +3153,7 @@ class Worksheet implements IComparable
     public function getHashCode()
     {
         if ($this->dirty) {
-            $this->hash = md5($this->title . $this->autoFilter . ($this->protection->isProtectionEnabled() ? 't' : 'f') . __CLASS__);
+            $this->hash = \md5($this->title . $this->autoFilter . ($this->protection->isProtectionEnabled() ? 't' : 'f') . __CLASS__);
             $this->dirty = false;
         }
 
@@ -3182,15 +3182,15 @@ class Worksheet implements IComparable
         }
 
         // Sheet title included?
-        if (($sep = strrpos($range, '!')) === false) {
+        if (($sep = \strrpos($range, '!')) === false) {
             return $returnRange ? ['', $range] : '';
         }
 
         if ($returnRange) {
-            return [substr($range, 0, $sep), substr($range, $sep + 1)];
+            return [\substr($range, 0, $sep), \substr($range, $sep + 1)];
         }
 
-        return substr($range, $sep + 1);
+        return \substr($range, $sep + 1);
     }
 
     /**
@@ -3326,7 +3326,7 @@ class Worksheet implements IComparable
         $maxRow = $this->getHighestRow();
         $maxCol = Coordinate::columnIndexFromString($maxCol);
 
-        $rangeBlocks = explode(' ', $range);
+        $rangeBlocks = \explode(' ', $range);
         foreach ($rangeBlocks as &$rangeSet) {
             $rangeBoundaries = Coordinate::getRangeBoundaries($rangeSet);
 
@@ -3346,7 +3346,7 @@ class Worksheet implements IComparable
         }
         unset($rangeSet);
 
-        return implode(' ', $rangeBlocks);
+        return \implode(' ', $rangeBlocks);
     }
 
     /**
@@ -3466,15 +3466,15 @@ class Worksheet implements IComparable
                 continue;
             }
 
-            if (is_object($val) || (is_array($val))) {
+            if (\is_object($val) || (\is_array($val))) {
                 if ($key == 'cellCollection') {
                     $newCollection = $this->cellCollection->cloneCellCollection($this);
                     $this->cellCollection = $newCollection;
                 } elseif ($key == 'drawingCollection') {
                     $currentCollection = $this->drawingCollection;
-                    $this->drawingCollection = new ArrayObject();
+                    $this->drawingCollection = new \ArrayObject();
                     foreach ($currentCollection as $item) {
-                        if (is_object($item)) {
+                        if (\is_object($item)) {
                             $newDrawing = clone $item;
                             $newDrawing->setWorksheet($this);
                         }
@@ -3484,7 +3484,7 @@ class Worksheet implements IComparable
                     $this->autoFilter = $newAutoFilter;
                     $this->autoFilter->setParent($this);
                 } else {
-                    $this->{$key} = unserialize(serialize($val));
+                    $this->{$key} = \unserialize(\serialize($val));
                 }
             }
         }
@@ -3508,7 +3508,7 @@ class Worksheet implements IComparable
         }
 
         if ($validate) {
-            $codeName = str_replace(' ', '_', $codeName); //Excel does this automatically without flinching, we are doing the same
+            $codeName = \str_replace(' ', '_', $codeName); //Excel does this automatically without flinching, we are doing the same
 
             // Syntax check
             // throw an exception if not valid
@@ -3570,6 +3570,6 @@ class Worksheet implements IComparable
 
     public static function nameRequiresQuotes(string $sheetName): bool
     {
-        return preg_match(self::SHEET_NAME_REQUIRES_NO_QUOTES, $sheetName) !== 1;
+        return \preg_match(self::SHEET_NAME_REQUIRES_NO_QUOTES, $sheetName) !== 1;
     }
 }

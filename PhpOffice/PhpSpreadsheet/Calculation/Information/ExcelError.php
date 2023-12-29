@@ -46,7 +46,7 @@ class ExcelError
      */
     public static function throwError($value): string
     {
-        return in_array($value, self::ERROR_CODES, true) ? $value : self::ERROR_CODES['value'];
+        return \in_array($value, self::ERROR_CODES, true) ? $value : self::ERROR_CODES['value'];
     }
 
     /**
@@ -58,7 +58,7 @@ class ExcelError
      */
     public static function type($value = '')
     {
-        if (is_array($value)) {
+        if (\is_array($value)) {
             return self::evaluateSingleArgumentArray([self::class, __FUNCTION__], $value);
         }
 

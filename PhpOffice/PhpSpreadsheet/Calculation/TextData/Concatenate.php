@@ -58,7 +58,7 @@ class Concatenate
      */
     public static function TEXTJOIN($delimiter = '', $ignoreEmpty = true, ...$args)
     {
-        if (is_array($delimiter) || is_array($ignoreEmpty)) {
+        if (\is_array($delimiter) || \is_array($ignoreEmpty)) {
             return self::evaluateArrayArgumentsSubset(
                 [self::class, __FUNCTION__],
                 2,
@@ -73,7 +73,7 @@ class Concatenate
         $aArgs = Functions::flattenArray($args);
         $returnValue = self::evaluateTextJoinArray($ignoreEmpty, $aArgs);
 
-        $returnValue ??= implode($delimiter, $aArgs);
+        $returnValue ??= \implode($delimiter, $aArgs);
         if (StringHelper::countCharacters($returnValue) > DataType::MAX_STRING_LENGTH) {
             $returnValue = ExcelError::CALC();
         }
@@ -89,9 +89,9 @@ class Concatenate
                 return $value;
             }
 
-            if ($ignoreEmpty === true && ((is_string($arg) && trim($arg) === '') || $arg === null)) {
+            if ($ignoreEmpty === true && ((\is_string($arg) && \trim($arg) === '') || $arg === null)) {
                 unset($aArgs[$key]);
-            } elseif (is_bool($arg)) {
+            } elseif (\is_bool($arg)) {
                 $arg = Helpers::convertBooleanValue($arg);
             }
         }
@@ -115,18 +115,18 @@ class Concatenate
      */
     public static function builtinREPT($stringValue, $repeatCount)
     {
-        if (is_array($stringValue) || is_array($repeatCount)) {
+        if (\is_array($stringValue) || \is_array($repeatCount)) {
             return self::evaluateArrayArguments([self::class, __FUNCTION__], $stringValue, $repeatCount);
         }
 
         $stringValue = Helpers::extractString($stringValue);
 
-        if (!is_numeric($repeatCount) || $repeatCount < 0) {
+        if (!\is_numeric($repeatCount) || $repeatCount < 0) {
             $returnValue = ExcelError::VALUE();
         } elseif (ErrorValue::isError($stringValue)) {
             $returnValue = $stringValue;
         } else {
-            $returnValue = str_repeat($stringValue, (int) $repeatCount);
+            $returnValue = \str_repeat($stringValue, (int) $repeatCount);
             if (StringHelper::countCharacters($returnValue) > DataType::MAX_STRING_LENGTH) {
                 $returnValue = ExcelError::VALUE(); // note VALUE not CALC
             }

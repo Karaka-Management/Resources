@@ -62,18 +62,18 @@ class Title extends AbstractElement
      */
     public function __construct($text, $depth = 1)
     {
-        if (is_string($text)) {
+        if (\is_string($text)) {
             $this->text = SharedText::toUTF8($text);
         } elseif ($text instanceof TextRun) {
             $this->text = $text;
         } else {
-            throw new InvalidArgumentException('Invalid text, should be a string or a TextRun');
+            throw new \InvalidArgumentException('Invalid text, should be a string or a TextRun');
         }
 
         $this->depth = $depth;
         $styleName = $depth === 0 ? 'Title' : "Heading_{$this->depth}";
-        if (array_key_exists($styleName, Style::getStyles())) {
-            $this->style = str_replace('_', '', $styleName);
+        if (\array_key_exists($styleName, Style::getStyles())) {
+            $this->style = \str_replace('_', '', $styleName);
         }
     }
 

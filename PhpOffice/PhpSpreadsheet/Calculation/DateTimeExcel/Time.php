@@ -45,7 +45,7 @@ class Time
      */
     public static function fromHMS($hour, $minute, $second)
     {
-        if (is_array($hour) || is_array($minute) || is_array($second)) {
+        if (\is_array($hour) || \is_array($minute) || \is_array($second)) {
             return self::evaluateArrayArguments([self::class, __FUNCTION__], $hour, $minute, $second);
         }
 
@@ -79,7 +79,7 @@ class Time
         }
         // RETURNDATE_PHP_DATETIME_OBJECT
         // Hour has already been normalized (0-23) above
-        $phpDateObject = new DateTime('1900-01-01 ' . $hour . ':' . $minute . ':' . $second);
+        $phpDateObject = new \DateTime('1900-01-01 ' . $hour . ':' . $minute . ':' . $second);
 
         return $phpDateObject;
     }
@@ -87,13 +87,13 @@ class Time
     private static function adjustSecond(int &$second, int &$minute): void
     {
         if ($second < 0) {
-            $minute += floor($second / 60);
-            $second = 60 - abs($second % 60);
+            $minute += \floor($second / 60);
+            $second = 60 - \abs($second % 60);
             if ($second == 60) {
                 $second = 0;
             }
         } elseif ($second >= 60) {
-            $minute += floor($second / 60);
+            $minute += \floor($second / 60);
             $second = $second % 60;
         }
     }
@@ -101,13 +101,13 @@ class Time
     private static function adjustMinute(int &$minute, int &$hour): void
     {
         if ($minute < 0) {
-            $hour += floor($minute / 60);
-            $minute = 60 - abs($minute % 60);
+            $hour += \floor($minute / 60);
+            $minute = 60 - \abs($minute % 60);
             if ($minute == 60) {
                 $minute = 0;
             }
         } elseif ($minute >= 60) {
-            $hour += floor($minute / 60);
+            $hour += \floor($minute / 60);
             $minute = $minute % 60;
         }
     }
@@ -118,10 +118,10 @@ class Time
     private static function toIntWithNullBool($value): int
     {
         $value = $value ?? 0;
-        if (is_bool($value)) {
+        if (\is_bool($value)) {
             $value = (int) $value;
         }
-        if (!is_numeric($value)) {
+        if (!\is_numeric($value)) {
             throw new Exception(ExcelError::VALUE());
         }
 

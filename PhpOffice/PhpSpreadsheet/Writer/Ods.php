@@ -157,7 +157,7 @@ class Ods extends BaseWriter
     private function createZip()
     {
         // Try opening the ZIP file
-        if (!is_resource($this->fileHandle)) {
+        if (!\is_resource($this->fileHandle)) {
             throw new WriterException('Could not open resource for writing.');
         }
 

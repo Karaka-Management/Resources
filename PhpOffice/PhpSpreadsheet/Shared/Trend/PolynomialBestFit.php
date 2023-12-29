@@ -109,7 +109,7 @@ class PolynomialBestFit extends BestFit
             $coefficients = [];
             // Scrutinizer is correct - $this->slope is float, not array.
             foreach ($this->slope as $coefficient) {
-                $coefficients[] = round($coefficient, $dp);
+                $coefficients[] = \round($coefficient, $dp);
             }
 
             // @phpstan-ignore-next-line
@@ -123,7 +123,7 @@ class PolynomialBestFit extends BestFit
     {
         // Phpstan and Scrutinizer are both correct - getSlope returns float, not array.
         // @phpstan-ignore-next-line
-        return array_merge([$this->getIntersect($dp)], $this->getSlope($dp));
+        return \array_merge([$this->getIntersect($dp)], $this->getSlope($dp));
     }
 
     /**
@@ -136,8 +136,8 @@ class PolynomialBestFit extends BestFit
     private function polynomialRegression($order, $yValues, $xValues): void
     {
         // calculate sums
-        $x_sum = array_sum($xValues);
-        $y_sum = array_sum($yValues);
+        $x_sum = \array_sum($xValues);
+        $y_sum = \array_sum($yValues);
         $xx_sum = $xy_sum = $yy_sum = 0;
         for ($i = 0; $i < $this->valueCount; ++$i) {
             $xy_sum += $xValues[$i] * $yValues[$i];
@@ -169,13 +169,13 @@ class PolynomialBestFit extends BestFit
         $coefficients = [];
         for ($i = 0; $i < $C->rows; ++$i) {
             $r = $C->getValue($i + 1, 1); // row and column are origin-1
-            if (abs($r) <= 10 ** (-9)) {
+            if (\abs($r) <= 10 ** (-9)) {
                 $r = 0;
             }
             $coefficients[] = $r;
         }
 
-        $this->intersect = array_shift($coefficients);
+        $this->intersect = \array_shift($coefficients);
         $this->slope = $coefficients;
 
         $this->calculateGoodnessOfFit($x_sum, $y_sum, $xx_sum, $yy_sum, $xy_sum, 0, 0, 0);

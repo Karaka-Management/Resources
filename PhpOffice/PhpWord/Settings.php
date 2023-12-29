@@ -189,7 +189,7 @@ class Settings
      */
     public static function setZipClass($zipClass)
     {
-        if (in_array($zipClass, [self::PCLZIP, self::ZIPARCHIVE, self::OLD_LIB])) {
+        if (\in_array($zipClass, [self::PCLZIP, self::ZIPARCHIVE, self::OLD_LIB])) {
             self::$zipClass = $zipClass;
 
             return true;
@@ -235,7 +235,7 @@ class Settings
     public static function setPdfRendererName($libraryName)
     {
         $pdfRenderers = [self::PDF_RENDERER_DOMPDF, self::PDF_RENDERER_TCPDF, self::PDF_RENDERER_MPDF];
-        if (!in_array($libraryName, $pdfRenderers)) {
+        if (!\in_array($libraryName, $pdfRenderers)) {
             return false;
         }
         self::$pdfRendererName = $libraryName;
@@ -262,7 +262,7 @@ class Settings
      */
     public static function setPdfRendererPath($libraryBaseDir)
     {
-        if (!$libraryBaseDir || false === file_exists($libraryBaseDir) || false === is_readable($libraryBaseDir)) {
+        if (!$libraryBaseDir || false === \file_exists($libraryBaseDir) || false === \is_readable($libraryBaseDir)) {
             return false;
         }
         self::$pdfRendererPath = $libraryBaseDir;
@@ -291,7 +291,7 @@ class Settings
     {
         $units = [self::UNIT_TWIP, self::UNIT_CM, self::UNIT_MM, self::UNIT_INCH,
             self::UNIT_POINT, self::UNIT_PICA, ];
-        if (!in_array($value, $units)) {
+        if (!\in_array($value, $units)) {
             return false;
         }
         self::$measurementUnit = $value;
@@ -323,7 +323,7 @@ class Settings
         if (!empty(self::$tempDir)) {
             $tempDir = self::$tempDir;
         } else {
-            $tempDir = sys_get_temp_dir();
+            $tempDir = \sys_get_temp_dir();
         }
 
         return $tempDir;
@@ -368,7 +368,7 @@ class Settings
      */
     public static function setDefaultFontName($value)
     {
-        if (is_string($value) && trim($value) !== '') {
+        if (\is_string($value) && \trim($value) !== '') {
             self::$defaultFontName = $value;
 
             return true;
@@ -424,8 +424,8 @@ class Settings
             $files = ["{$configPath}phpword.ini", "{$configPath}phpword.ini.dist"];
         }
         foreach ($files as $file) {
-            if (file_exists($file)) {
-                $configFile = realpath($file);
+            if (\file_exists($file)) {
+                $configFile = \realpath($file);
 
                 break;
             }
@@ -434,7 +434,7 @@ class Settings
         // Parse config file
         $config = [];
         if ($configFile !== null) {
-            $config = @parse_ini_file($configFile);
+            $config = @\parse_ini_file($configFile);
             if ($config === false) {
                 return [];
             }
@@ -444,7 +444,7 @@ class Settings
         $appliedConfig = [];
         foreach ($config as $key => $value) {
             $method = "set{$key}";
-            if (method_exists(__CLASS__, $method)) {
+            if (\method_exists(__CLASS__, $method)) {
                 self::$method($value);
                 $appliedConfig[$key] = $value;
             }
@@ -472,7 +472,7 @@ class Settings
      */
     public static function setDefaultPaper($value)
     {
-        if (is_string($value) && trim($value) !== '') {
+        if (\is_string($value) && \trim($value) !== '') {
             self::$defaultPaper = $value;
 
             return true;

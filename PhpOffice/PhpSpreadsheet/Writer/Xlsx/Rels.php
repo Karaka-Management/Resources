@@ -74,7 +74,7 @@ class Rels extends WriterPart
                 $objWriter,
                 5,
                 Namespaces::EXTENSIBILITY,
-                is_string($target) ? $target : ''
+                \is_string($target) ? $target : ''
             );
         }
 
@@ -199,16 +199,16 @@ class Rels extends WriterPart
             $charts = [];
         }
 
-        if (($worksheet->getDrawingCollection()->count() > 0) || (count($charts) > 0) || $drawingOriginalIds) {
+        if (($worksheet->getDrawingCollection()->count() > 0) || (\count($charts) > 0) || $drawingOriginalIds) {
             $rId = 1;
 
             // Use original $relPath to get original $rId.
             // Take first. In future can be overwritten.
             // (! synchronize with \PhpOffice\PhpSpreadsheet\Writer\Xlsx\Worksheet::writeDrawings)
-            reset($drawingOriginalIds);
-            $relPath = key($drawingOriginalIds);
+            \reset($drawingOriginalIds);
+            $relPath = \key($drawingOriginalIds);
             if (isset($drawingOriginalIds[$relPath])) {
-                $rId = (int) (substr($drawingOriginalIds[$relPath], 3));
+                $rId = (int) (\substr($drawingOriginalIds[$relPath], 3));
             }
 
             // Generate new $relPath to write drawing relationship
@@ -239,7 +239,7 @@ class Rels extends WriterPart
 
         // Write comments relationship?
         $i = 1;
-        if (count($worksheet->getComments()) > 0 || isset($unparsedLoadedData['sheets'][$worksheet->getCodeName()]['legacyDrawing'])) {
+        if (\count($worksheet->getComments()) > 0 || isset($unparsedLoadedData['sheets'][$worksheet->getCodeName()]['legacyDrawing'])) {
             $this->writeRelationship(
                 $objWriter,
                 '_comments_vml' . $i,
@@ -248,7 +248,7 @@ class Rels extends WriterPart
             );
         }
 
-        if (count($worksheet->getComments()) > 0) {
+        if (\count($worksheet->getComments()) > 0) {
             $this->writeRelationship(
                 $objWriter,
                 '_comments' . $i,
@@ -270,7 +270,7 @@ class Rels extends WriterPart
 
         // Write header/footer relationship?
         $i = 1;
-        if (count($worksheet->getHeaderFooter()->getImages()) > 0) {
+        if (\count($worksheet->getHeaderFooter()->getImages()) > 0) {
             $this->writeRelationship(
                 $objWriter,
                 '_headerfooter_vml' . $i,
@@ -296,7 +296,7 @@ class Rels extends WriterPart
         }
 
         foreach ($unparsedLoadedData['sheets'][$worksheet->getCodeName()][$relationship] as $rId => $value) {
-            if (substr($rId, 0, 17) !== '_headerfooter_vml') {
+            if (\substr($rId, 0, 17) !== '_headerfooter_vml') {
                 $this->writeRelationship(
                     $objWriter,
                     $rId,

@@ -31,7 +31,7 @@ class ChiSquared
      */
     public static function distributionRightTail($value, $degrees)
     {
-        if (is_array($value) || is_array($degrees)) {
+        if (\is_array($value) || \is_array($degrees)) {
             return self::evaluateArrayArguments([self::class, __FUNCTION__], $value, $degrees);
         }
 
@@ -74,7 +74,7 @@ class ChiSquared
      */
     public static function distributionLeftTail($value, $degrees, $cumulative)
     {
-        if (is_array($value) || is_array($degrees) || is_array($cumulative)) {
+        if (\is_array($value) || \is_array($degrees) || \is_array($cumulative)) {
             return self::evaluateArrayArguments([self::class, __FUNCTION__], $value, $degrees, $cumulative);
         }
 
@@ -101,7 +101,7 @@ class ChiSquared
             return 1 - self::distributionRightTail($value, $degrees);
         }
 
-        return ($value ** (($degrees / 2) - 1) * exp(-$value / 2)) /
+        return ($value ** (($degrees / 2) - 1) * \exp(-$value / 2)) /
             ((2 ** ($degrees / 2)) * Gamma::gammaValue($degrees / 2));
     }
 
@@ -121,7 +121,7 @@ class ChiSquared
      */
     public static function inverseRightTail($probability, $degrees)
     {
-        if (is_array($probability) || is_array($degrees)) {
+        if (\is_array($probability) || \is_array($degrees)) {
             return self::evaluateArrayArguments([self::class, __FUNCTION__], $probability, $degrees);
         }
 
@@ -162,7 +162,7 @@ class ChiSquared
      */
     public static function inverseLeftTail($probability, $degrees)
     {
-        if (is_array($probability) || is_array($degrees)) {
+        if (\is_array($probability) || \is_array($degrees)) {
             return self::evaluateArrayArguments([self::class, __FUNCTION__], $probability, $degrees);
         }
 
@@ -194,13 +194,13 @@ class ChiSquared
      */
     public static function test($actual, $expected)
     {
-        $rows = count($actual);
+        $rows = \count($actual);
         $actual = Functions::flattenArray($actual);
         $expected = Functions::flattenArray($expected);
-        $columns = count($actual) / $rows;
+        $columns = \count($actual) / $rows;
 
-        $countActuals = count($actual);
-        $countExpected = count($expected);
+        $countActuals = \count($actual);
+        $countExpected = \count($expected);
         if ($countActuals !== $countExpected || $countActuals === 1) {
             return ExcelError::NAN();
         }
@@ -237,7 +237,7 @@ class ChiSquared
     {
         // bracket the root
         $min = 0;
-        $sd = sqrt(2.0 * $degrees);
+        $sd = \sqrt(2.0 * $degrees);
         $max = 2 * $sd;
         $s = -1;
 
@@ -296,7 +296,7 @@ class ChiSquared
             }
         }
 
-        return $sum * exp(-$x + $a * log($x) - $gln);
+        return $sum * \exp(-$x + $a * \log($x) - $gln);
     }
 
     // Return the incomplete gamma function Q(n/2,x) evaluated by
@@ -317,21 +317,21 @@ class ChiSquared
             $an = -$i * ($i - $a);
             $b += 2;
             $d = $an * $d + $b;
-            if (abs($d) < $fpmin) {
+            if (\abs($d) < $fpmin) {
                 $d = $fpmin;
             }
             $c = $b + $an / $c;
-            if (abs($c) < $fpmin) {
+            if (\abs($c) < $fpmin) {
                 $c = $fpmin;
             }
             $d = 1 / $d;
             $del = $d * $c;
             $h = $h * $del;
-            if (abs($del - 1) < self::EPS) {
+            if (\abs($del - 1) < self::EPS) {
                 break;
             }
         }
 
-        return $h * exp(-$x + $a * log($x) - $gln);
+        return $h * \exp(-$x + $a * \log($x) - $gln);
     }
 }

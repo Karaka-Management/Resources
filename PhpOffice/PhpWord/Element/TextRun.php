@@ -65,7 +65,7 @@ class TextRun extends AbstractContainer
      */
     public function setParagraphStyle($style = null)
     {
-        if (is_array($style)) {
+        if (\is_array($style)) {
             $this->paragraphStyle = new Paragraph();
             $this->paragraphStyle->setStyleByArray($style);
         } elseif ($style instanceof Paragraph) {

@@ -46,7 +46,7 @@ class Table extends AbstractElement
 
         $content = '';
         $rows = $element->getRows();
-        $rowCount = count($rows);
+        $rowCount = \count($rows);
 
         if ($rowCount > 0) {
             $content .= '\pard' . PHP_EOL;

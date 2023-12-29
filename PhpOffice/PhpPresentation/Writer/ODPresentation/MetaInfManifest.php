@@ -93,12 +93,12 @@ class MetaInfManifest extends AbstractDecoratorWriter
         foreach ($this->getPresentation()->getAllSlides() as $numSlide => $oSlide) {
             $oBkgImage = $oSlide->getBackground();
             if ($oBkgImage instanceof Image) {
-                $arrayImage = getimagesize($oBkgImage->getPath());
-                $mimeType = image_type_to_mime_type($arrayImage[2]);
+                $arrayImage = \getimagesize($oBkgImage->getPath());
+                $mimeType = \image_type_to_mime_type($arrayImage[2]);
 
                 $objWriter->startElement('manifest:file-entry');
                 $objWriter->writeAttribute('manifest:media-type', $mimeType);
-                $objWriter->writeAttribute('manifest:full-path', 'Pictures/' . str_replace(' ', '_', $oBkgImage->getIndexedFilename((string) $numSlide)));
+                $objWriter->writeAttribute('manifest:full-path', 'Pictures/' . \str_replace(' ', '_', $oBkgImage->getIndexedFilename((string) $numSlide)));
                 $objWriter->endElement();
             }
         }
@@ -107,9 +107,9 @@ class MetaInfManifest extends AbstractDecoratorWriter
             $pathThumbnail = $this->getPresentation()->getPresentationProperties()->getThumbnailPath();
             // Size : 128x128 pixel
             // PNG : 8bit, non-interlaced with full alpha transparency
-            $gdImage = imagecreatefromstring(file_get_contents($pathThumbnail));
+            $gdImage = \imagecreatefromstring(\file_get_contents($pathThumbnail));
             if ($gdImage) {
-                imagedestroy($gdImage);
+                \imagedestroy($gdImage);
                 $objWriter->startElement('manifest:file-entry');
                 $objWriter->writeAttribute('manifest:media-type', 'image/png');
                 $objWriter->writeAttribute('manifest:full-path', 'Thumbnails/thumbnail.png');

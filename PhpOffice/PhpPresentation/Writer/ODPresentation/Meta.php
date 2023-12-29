@@ -56,7 +56,7 @@ class Meta extends AbstractDecoratorWriter
         // dc:creator
         $objWriter->writeElement('dc:creator', $this->getPresentation()->getDocumentProperties()->getLastModifiedBy());
         // dc:date
-        $objWriter->writeElement('dc:date', gmdate('Y-m-d\TH:i:s.000', $this->getPresentation()->getDocumentProperties()->getModified()));
+        $objWriter->writeElement('dc:date', \gmdate('Y-m-d\TH:i:s.000', $this->getPresentation()->getDocumentProperties()->getModified()));
         // dc:description
         $objWriter->writeElement('dc:description', $this->getPresentation()->getDocumentProperties()->getDescription());
         // dc:subject
@@ -64,7 +64,7 @@ class Meta extends AbstractDecoratorWriter
         // dc:title
         $objWriter->writeElement('dc:title', $this->getPresentation()->getDocumentProperties()->getTitle());
         // meta:creation-date
-        $objWriter->writeElement('meta:creation-date', gmdate('Y-m-d\TH:i:s.000', $this->getPresentation()->getDocumentProperties()->getCreated()));
+        $objWriter->writeElement('meta:creation-date', \gmdate('Y-m-d\TH:i:s.000', $this->getPresentation()->getDocumentProperties()->getCreated()));
         // meta:initial-creator
         $objWriter->writeElement('meta:initial-creator', $this->getPresentation()->getDocumentProperties()->getCreator());
         // meta:keyword
@@ -90,7 +90,7 @@ class Meta extends AbstractDecoratorWriter
                     break;
                 case DocumentProperties::PROPERTY_TYPE_DATE:
                     $objWriter->writeAttribute('meta:value-type', 'date');
-                    $objWriter->writeRaw(date(DATE_W3C, (int) $propertyValue));
+                    $objWriter->writeRaw(\date(DATE_W3C, (int) $propertyValue));
                     break;
                 case DocumentProperties::PROPERTY_TYPE_STRING:
                 case DocumentProperties::PROPERTY_TYPE_UNKNOWN:

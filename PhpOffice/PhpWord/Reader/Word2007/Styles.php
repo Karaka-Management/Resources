@@ -39,13 +39,13 @@ class Styles extends AbstractPart
         $fontDefaults = $xmlReader->getElement('w:docDefaults/w:rPrDefault');
         if ($fontDefaults !== null) {
             $fontDefaultStyle = $this->readFontStyle($xmlReader, $fontDefaults);
-            if (array_key_exists('name', $fontDefaultStyle)) {
+            if (\array_key_exists('name', $fontDefaultStyle)) {
                 $phpWord->setDefaultFontName($fontDefaultStyle['name']);
             }
-            if (array_key_exists('size', $fontDefaultStyle)) {
+            if (\array_key_exists('size', $fontDefaultStyle)) {
                 $phpWord->setDefaultFontSize($fontDefaultStyle['size']);
             }
-            if (array_key_exists('lang', $fontDefaultStyle)) {
+            if (\array_key_exists('lang', $fontDefaultStyle)) {
                 $phpWord->getSettings()->setThemeFontLang(new Language($fontDefaultStyle['lang']));
             }
         }
@@ -67,7 +67,7 @@ class Styles extends AbstractPart
                     $name = $xmlReader->getAttribute('w:styleId', $node);
                 }
                 $headingMatches = [];
-                preg_match('/Heading\s*(\d)/i', $name, $headingMatches);
+                \preg_match('/Heading\s*(\d)/i', $name, $headingMatches);
                 // $default = ($xmlReader->getAttribute('w:default', $node) == 1);
                 switch ($type) {
                     case 'paragraph':
@@ -77,7 +77,7 @@ class Styles extends AbstractPart
                             $phpWord->addTitleStyle($headingMatches[1], $fontStyle, $paragraphStyle);
                         } else {
                             if (empty($fontStyle)) {
-                                if (is_array($paragraphStyle)) {
+                                if (\is_array($paragraphStyle)) {
                                     $phpWord->addParagraphStyle($name, $paragraphStyle);
                                 }
                             } else {

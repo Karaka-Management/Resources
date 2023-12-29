@@ -232,7 +232,7 @@ class Axis implements ComparableInterface
      */
     public function setMinBounds(int $minBounds = null): self
     {
-        $this->minBounds = is_null($minBounds) ? null : $minBounds;
+        $this->minBounds = \is_null($minBounds) ? null : $minBounds;
 
         return $this;
     }
@@ -252,7 +252,7 @@ class Axis implements ComparableInterface
      */
     public function setMaxBounds(int $maxBounds = null): self
     {
-        $this->maxBounds = is_null($maxBounds) ? null : $maxBounds;
+        $this->maxBounds = \is_null($maxBounds) ? null : $maxBounds;
 
         return $this;
     }
@@ -454,7 +454,7 @@ class Axis implements ComparableInterface
      */
     public function getHashCode(): string
     {
-        return md5($this->title . $this->formatCode . __CLASS__);
+        return \md5($this->title . $this->formatCode . __CLASS__);
     }
 
     /**
@@ -533,7 +533,7 @@ class Axis implements ComparableInterface
      */
     public function setTickLabelPosition(string $value = self::TICK_LABEL_POSITION_NEXT_TO): self
     {
-        if (in_array($value, [
+        if (\in_array($value, [
             self::TICK_LABEL_POSITION_HIGH,
             self::TICK_LABEL_POSITION_LOW,
             self::TICK_LABEL_POSITION_NEXT_TO,

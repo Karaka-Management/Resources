@@ -37,25 +37,25 @@ class Css
 
     public function process(): void
     {
-        $cssContent = str_replace(["\r", "\n"], '', $this->cssContent);
-        preg_match_all('/(.+?)\s?\{\s?(.+?)\s?\}/', $cssContent, $cssExtracted);
+        $cssContent = \str_replace(["\r", "\n"], '', $this->cssContent);
+        \preg_match_all('/(.+?)\s?\{\s?(.+?)\s?\}/', $cssContent, $cssExtracted);
         // Check the number of extracted
-        if (count($cssExtracted) != 3) {
+        if (\count($cssExtracted) != 3) {
             return;
         }
         // Check if there are x selectors and x rules
-        if (count($cssExtracted[1]) != count($cssExtracted[2])) {
+        if (\count($cssExtracted[1]) != \count($cssExtracted[2])) {
             return;
         }
 
         foreach ($cssExtracted[1] as $key => $selector) {
-            $rules = trim($cssExtracted[2][$key]);
-            $rules = explode(';', $rules);
+            $rules = \trim($cssExtracted[2][$key]);
+            $rules = \explode(';', $rules);
             foreach ($rules as $rule) {
                 if (empty($rule)) {
                     continue;
                 }
-                [$key, $value] = explode(':', trim($rule));
+                [$key, $value] = \explode(':', \trim($rule));
                 $this->styles[$this->sanitize($selector)][$this->sanitize($key)] = $this->sanitize($value);
             }
         }
@@ -75,6 +75,6 @@ class Css
 
     private function sanitize(string $value): string
     {
-        return addslashes(trim($value));
+        return \addslashes(\trim($value));
     }
 }

@@ -191,8 +191,8 @@ class Periodic
                 return ExcelError::NAN();
             }
 
-            return log(($payment * (1 + $rate * $type) / $rate - $futureValue) /
-                    ($presentValue + $payment * (1 + $rate * $type) / $rate)) / log(1 + $rate);
+            return \log(($payment * (1 + $rate * $type) / $rate - $futureValue) /
+                    ($presentValue + $payment * (1 + $rate * $type) / $rate)) / \log(1 + $rate);
         }
 
         return (-$presentValue - $futureValue) / $payment;

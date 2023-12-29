@@ -12,7 +12,7 @@ class EngineeringValidations
      */
     public static function validateFloat($value): float
     {
-        if (!is_numeric($value)) {
+        if (!\is_numeric($value)) {
             throw new Exception(ExcelError::VALUE());
         }
 
@@ -24,10 +24,10 @@ class EngineeringValidations
      */
     public static function validateInt($value): int
     {
-        if (!is_numeric($value)) {
+        if (!\is_numeric($value)) {
             throw new Exception(ExcelError::VALUE());
         }
 
-        return (int) floor((float) $value);
+        return (int) \floor((float) $value);
     }
 }

@@ -28,7 +28,7 @@ class Factorial
      */
     public static function fact($factVal)
     {
-        if (is_array($factVal)) {
+        if (\is_array($factVal)) {
             return self::evaluateSingleArgumentArray([self::class, __FUNCTION__], $factVal);
         }
 
@@ -39,7 +39,7 @@ class Factorial
             return $e->getMessage();
         }
 
-        $factLoop = floor($factVal);
+        $factLoop = \floor($factVal);
         if ($factVal > $factLoop) {
             if (Functions::getCompatibilityMode() == Functions::COMPATIBILITY_GNUMERIC) {
                 return Statistical\Distributions\Gamma::gammaValue($factVal + 1);
@@ -70,7 +70,7 @@ class Factorial
      */
     public static function factDouble($factVal)
     {
-        if (is_array($factVal)) {
+        if (\is_array($factVal)) {
             return self::evaluateSingleArgumentArray([self::class, __FUNCTION__], $factVal);
         }
 
@@ -81,7 +81,7 @@ class Factorial
             return $e->getMessage();
         }
 
-        $factLoop = floor($factVal);
+        $factLoop = \floor($factVal);
         $factorial = 1;
         while ($factLoop > 1) {
             $factorial *= $factLoop;

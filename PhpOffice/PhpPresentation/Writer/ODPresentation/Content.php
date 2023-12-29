@@ -170,7 +170,7 @@ class Content extends AbstractDecoratorWriter
         if (!empty($this->arrStyleBullet)) {
             foreach ($this->arrStyleBullet as $key => $item) {
                 $oStyle = $item['oStyle'];
-                $arrLevel = explode(';', $item['level']);
+                $arrLevel = \explode(';', $item['level']);
                 // style:style
                 $objWriter->startElement('text:list-style');
                 $objWriter->writeAttribute('style:name', 'L_' . $key);
@@ -179,7 +179,7 @@ class Content extends AbstractDecoratorWriter
                         $oAlign = $item['oAlign_' . $level];
                         // text:list-level-style-bullet
                         $objWriter->startElement('text:list-level-style-bullet');
-                        $objWriter->writeAttribute('text:level', intval($level) + 1);
+                        $objWriter->writeAttribute('text:level', \intval($level) + 1);
                         $objWriter->writeAttribute('text:bullet-char', $oStyle->getBulletChar());
                         // style:list-level-properties
                         $objWriter->startElement('style:list-level-properties');
@@ -318,7 +318,7 @@ class Content extends AbstractDecoratorWriter
             $pSlide = $this->getPresentation()->getSlide($i);
             $objWriter->startElement('draw:page');
             $name = $pSlide->getName();
-            if (!is_null($name)) {
+            if (!\is_null($name)) {
                 $objWriter->writeAttribute('draw:name', $name);
             }
             $objWriter->writeAttribute('draw:master-page-name', 'Standard');
@@ -638,13 +638,13 @@ class Content extends AbstractDecoratorWriter
          */
         // officeooo:annotation
         $objWriter->startElement('officeooo:annotation');
-        $objWriter->writeAttribute('svg:x', number_format(CommonDrawing::pixelsToCentimeters((int) $oShape->getOffsetX()), 2, '.', '') . 'cm');
-        $objWriter->writeAttribute('svg:y', number_format(CommonDrawing::pixelsToCentimeters((int) $oShape->getOffsetY()), 2, '.', '') . 'cm');
+        $objWriter->writeAttribute('svg:x', \number_format(CommonDrawing::pixelsToCentimeters((int) $oShape->getOffsetX()), 2, '.', '') . 'cm');
+        $objWriter->writeAttribute('svg:y', \number_format(CommonDrawing::pixelsToCentimeters((int) $oShape->getOffsetY()), 2, '.', '') . 'cm');
 
         if ($oShape->getAuthor() instanceof Comment\Author) {
             $objWriter->writeElement('dc:creator', $oShape->getAuthor()->getName());
         }
-        $objWriter->writeElement('dc:date', date('Y-m-d\TH:i:s', $oShape->getDate()));
+        $objWriter->writeElement('dc:date', \date('Y-m-d\TH:i:s', $oShape->getDate()));
         $objWriter->writeElement('text:p', $oShape->getText());
 
         // ## officeooo:annotation
@@ -681,7 +681,7 @@ class Content extends AbstractDecoratorWriter
 
         $arrayRows = $shape->getRows();
         if (!empty($arrayRows)) {
-            $firstRow = reset($arrayRows);
+            $firstRow = \reset($arrayRows);
             $arrayCells = $firstRow->getCells();
             // table:table
             $objWriter->startElement('table:table');
@@ -862,11 +862,11 @@ class Content extends AbstractDecoratorWriter
         $objWriter->startElement('style:graphic-properties');
         $objWriter->writeAttribute('style:mirror', 'none');
         $this->writeStylePartShadow($objWriter, $shape->getShadow());
-        if (is_bool($shape->hasAutoShrinkVertical())) {
-            $objWriter->writeAttribute('draw:auto-grow-height', var_export($shape->hasAutoShrinkVertical(), true));
+        if (\is_bool($shape->hasAutoShrinkVertical())) {
+            $objWriter->writeAttribute('draw:auto-grow-height', \var_export($shape->hasAutoShrinkVertical(), true));
         }
-        if (is_bool($shape->hasAutoShrinkHorizontal())) {
-            $objWriter->writeAttribute('draw:auto-grow-width', var_export($shape->hasAutoShrinkHorizontal(), true));
+        if (\is_bool($shape->hasAutoShrinkHorizontal())) {
+            $objWriter->writeAttribute('draw:auto-grow-width', \var_export($shape->hasAutoShrinkHorizontal(), true));
         }
         // Fill
         switch ($shape->getFill()->getFillType()) {
@@ -890,7 +890,7 @@ class Content extends AbstractDecoratorWriter
             $objWriter->writeAttribute('draw:stroke', 'none');
         } else {
             $objWriter->writeAttribute('svg:stroke-color', '#' . $shape->getBorder()->getColor()->getRGB());
-            $objWriter->writeAttribute('svg:stroke-width', number_format(CommonDrawing::pointsToCentimeters($shape->getBorder()->getLineWidth()), 3, '.', '') . 'cm');
+            $objWriter->writeAttribute('svg:stroke-width', \number_format(CommonDrawing::pointsToCentimeters($shape->getBorder()->getLineWidth()), 3, '.', '') . 'cm');
             switch ($shape->getBorder()->getDashStyle()) {
                 case Border::DASH_SOLID:
                     $objWriter->writeAttribute('draw:stroke', 'solid');
@@ -936,7 +936,7 @@ class Content extends AbstractDecoratorWriter
                 $this->arrStyleBullet[$bulletStyleHashCode]['oStyle'] = $paragraph->getBulletStyle();
                 $this->arrStyleBullet[$bulletStyleHashCode]['level'] = '';
             }
-            if (false === strpos($this->arrStyleBullet[$bulletStyleHashCode]['level'], ';' . $paragraph->getAlignment()->getLevel())) {
+            if (false === \strpos($this->arrStyleBullet[$bulletStyleHashCode]['level'], ';' . $paragraph->getAlignment()->getLevel())) {
                 $this->arrStyleBullet[$bulletStyleHashCode]['level'] .= ';' . $paragraph->getAlignment()->getLevel();
                 $this->arrStyleBullet[$bulletStyleHashCode]['oAlign_' . $paragraph->getAlignment()->getLevel()] = $paragraph->getAlignment();
             }
@@ -1129,7 +1129,7 @@ class Content extends AbstractDecoratorWriter
     protected function writeSlideNote(XMLWriter $objWriter, Note $note): void
     {
         $shapesNote = $note->getShapeCollection();
-        if (count($shapesNote) > 0) {
+        if (\count($shapesNote) > 0) {
             $objWriter->startElement('presentation:notes');
 
             foreach ($shapesNote as $shape) {
@@ -1157,8 +1157,8 @@ class Content extends AbstractDecoratorWriter
         // style:style/style:drawing-page-properties
         $objWriter->startElement('style:drawing-page-properties');
         $objWriter->writeAttributeIf(!$slide->isVisible(), 'presentation:visibility', 'hidden');
-        if (!is_null($oTransition = $slide->getTransition())) {
-            $objWriter->writeAttribute('presentation:duration', 'PT' . number_format($oTransition->getAdvanceTimeTrigger() / 1000, 6, '.', '') . 'S');
+        if (!\is_null($oTransition = $slide->getTransition())) {
+            $objWriter->writeAttribute('presentation:duration', 'PT' . \number_format($oTransition->getAdvanceTimeTrigger() / 1000, 6, '.', '') . 'S');
             $objWriter->writeAttributeIf($oTransition->hasManualTrigger(), 'presentation:transition-type', 'manual');
             $objWriter->writeAttributeIf($oTransition->hasTimeTrigger(), 'presentation:transition-type', 'automatic');
             switch ($oTransition->getSpeed()) {

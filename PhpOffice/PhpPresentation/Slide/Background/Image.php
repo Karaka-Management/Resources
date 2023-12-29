@@ -70,13 +70,13 @@ class Image extends AbstractBackground
     public function setPath(string $pValue = '', bool $pVerifyFile = true)
     {
         if ($pVerifyFile) {
-            if (!file_exists($pValue)) {
+            if (!\file_exists($pValue)) {
                 throw new FileNotFoundException($pValue);
             }
 
             if (0 == $this->width && 0 == $this->height) {
                 // Get width/height
-                list($this->width, $this->height) = getimagesize($pValue);
+                list($this->width, $this->height) = \getimagesize($pValue);
             }
         }
         $this->path = $pValue;
@@ -91,7 +91,7 @@ class Image extends AbstractBackground
      */
     public function getFilename(): string
     {
-        return $this->path ? basename($this->path) : '';
+        return $this->path ? \basename($this->path) : '';
     }
 
     /**
@@ -101,9 +101,9 @@ class Image extends AbstractBackground
      */
     public function getExtension(): string
     {
-        $exploded = explode('.', $this->getFilename());
+        $exploded = \explode('.', $this->getFilename());
 
-        return $exploded[count($exploded) - 1];
+        return $exploded[\count($exploded) - 1];
     }
 
     /**

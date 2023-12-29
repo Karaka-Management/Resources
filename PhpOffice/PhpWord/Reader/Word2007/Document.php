@@ -69,10 +69,10 @@ class Document extends AbstractPart
     {
         $readMethods = ['w:p' => 'readParagraph', 'w:tbl' => 'readTable'];
 
-        if (is_array($settings) && isset($settings['hf'])) {
+        if (\is_array($settings) && isset($settings['hf'])) {
             foreach ($settings['hf'] as $rId => $hfSetting) {
                 if (isset($this->rels['document'][$rId])) {
-                    [$hfType, $xmlFile, $docPart] = array_values($this->rels['document'][$rId]);
+                    [$hfType, $xmlFile, $docPart] = \array_values($this->rels['document'][$rId]);
                     $addMethod = "add{$hfType}";
                     $hfObject = $section->$addMethod($hfSetting['type']);
 
@@ -100,7 +100,7 @@ class Document extends AbstractPart
      *
      * @return array
      */
-    private function readSectionStyle(XMLReader $xmlReader, DOMElement $domNode)
+    private function readSectionStyle(XMLReader $xmlReader, \DOMElement $domNode)
     {
         $styleDefs = [
             'breakType' => [self::READ_VALUE, 'w:type'],
@@ -127,7 +127,7 @@ class Document extends AbstractPart
             if ($node->nodeName == 'w:headerReference' || $node->nodeName == 'w:footerReference') {
                 $id = $xmlReader->getAttribute('r:id', $node);
                 $styles['hf'][$id] = [
-                    'method' => str_replace('w:', '', str_replace('Reference', '', $node->nodeName)),
+                    'method' => \str_replace('w:', '', \str_replace('Reference', '', $node->nodeName)),
                     'type' => $xmlReader->getAttribute('w:type', $node),
                 ];
             }
@@ -141,7 +141,7 @@ class Document extends AbstractPart
      *
      * @todo <w:lastRenderedPageBreak>
      */
-    private function readWPNode(XMLReader $xmlReader, DOMElement $node, Section &$section): void
+    private function readWPNode(XMLReader $xmlReader, \DOMElement $node, Section &$section): void
     {
         // Page break
         if ($xmlReader->getAttribute('w:type', $node, 'w:r/w:br') == 'page') {
@@ -164,7 +164,7 @@ class Document extends AbstractPart
     /**
      * Read w:sectPr node.
      */
-    private function readWSectPrNode(XMLReader $xmlReader, DOMElement $node, Section &$section): void
+    private function readWSectPrNode(XMLReader $xmlReader, \DOMElement $node, Section &$section): void
     {
         $style = $this->readSectionStyle($xmlReader, $node);
         $section->setStyle($style);

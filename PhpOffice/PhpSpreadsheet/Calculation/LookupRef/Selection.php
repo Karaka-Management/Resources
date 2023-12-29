@@ -26,23 +26,23 @@ class Selection
      */
     public static function choose($chosenEntry, ...$chooseArgs)
     {
-        if (is_array($chosenEntry)) {
+        if (\is_array($chosenEntry)) {
             return self::evaluateArrayArgumentsSubset([self::class, __FUNCTION__], 1, $chosenEntry, ...$chooseArgs);
         }
 
-        $entryCount = count($chooseArgs) - 1;
+        $entryCount = \count($chooseArgs) - 1;
 
-        if (is_numeric($chosenEntry)) {
+        if (\is_numeric($chosenEntry)) {
             --$chosenEntry;
         } else {
             return ExcelError::VALUE();
         }
-        $chosenEntry = floor($chosenEntry);
+        $chosenEntry = \floor($chosenEntry);
         if (($chosenEntry < 0) || ($chosenEntry > $entryCount)) {
             return ExcelError::VALUE();
         }
 
-        if (is_array($chooseArgs[$chosenEntry])) {
+        if (\is_array($chooseArgs[$chosenEntry])) {
             return Functions::flattenArray($chooseArgs[$chosenEntry]);
         }
 

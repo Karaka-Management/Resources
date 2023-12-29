@@ -626,7 +626,7 @@ class Html
         $this->initialise();
 
         //    Create a new DOM object
-        $dom = new DOMDocument();
+        $dom = new \DOMDocument();
         //    Load the HTML file into the DOM object
         //  Note the use of error suppression, because typically this will be an html fragment, so not fully valid markup
         $prefix = '<?xml encoding="UTF-8">';
@@ -650,10 +650,10 @@ class Html
             $text = $element->getText();
             // Trim any leading spaces on the first run
             if ($key == 0) {
-                $text = ltrim($text);
+                $text = \ltrim($text);
             }
             // Trim any spaces immediately after a line break
-            $text = (string) preg_replace('/\n */mu', "\n", $text);
+            $text = (string) \preg_replace('/\n */mu', "\n", $text);
             $element->setText($text);
         }
     }
@@ -661,7 +661,7 @@ class Html
     private function buildTextRun(): void
     {
         $text = $this->stringData;
-        if (trim($text) === '') {
+        if (\trim($text) === '') {
             return;
         }
 
@@ -701,12 +701,12 @@ class Html
 
     private function rgbToColour(string $rgbValue): string
     {
-        preg_match_all('/\d+/', $rgbValue, $values);
+        \preg_match_all('/\d+/', $rgbValue, $values);
         foreach ($values[0] as &$value) {
-            $value = str_pad(dechex($value), 2, '0', STR_PAD_LEFT);
+            $value = \str_pad(\dechex($value), 2, '0', STR_PAD_LEFT);
         }
 
-        return implode('', $values[0]);
+        return \implode('', $values[0]);
     }
 
     public static function colourNameLookup(string $colorName): string
@@ -714,19 +714,19 @@ class Html
         return self::COLOUR_MAP[$colorName] ?? '';
     }
 
-    private function startFontTag(DOMElement $tag): void
+    private function startFontTag(\DOMElement $tag): void
     {
         $attrs = $tag->attributes;
         if ($attrs !== null) {
             foreach ($attrs as $attribute) {
-                $attributeName = strtolower($attribute->name);
+                $attributeName = \strtolower($attribute->name);
                 $attributeValue = $attribute->value;
 
                 if ($attributeName == 'color') {
-                    if (preg_match('/rgb\s*\(/', $attributeValue)) {
+                    if (\preg_match('/rgb\s*\(/', $attributeValue)) {
                         $this->$attributeName = $this->rgbToColour($attributeValue);
-                    } elseif (strpos(trim($attributeValue), '#') === 0) {
-                        $this->$attributeName = ltrim($attributeValue, '#');
+                    } elseif (\strpos(\trim($attributeValue), '#') === 0) {
+                        $this->$attributeName = \ltrim($attributeValue, '#');
                     } else {
                         $this->$attributeName = static::colourNameLookup($attributeValue);
                     }
@@ -807,12 +807,12 @@ class Html
         $this->stringData .= "\n";
     }
 
-    private function parseTextNode(DOMText $textNode): void
+    private function parseTextNode(\DOMText $textNode): void
     {
-        $domText = (string) preg_replace(
+        $domText = (string) \preg_replace(
             '/\s+/u',
             ' ',
-            str_replace(["\r", "\n"], ' ', $textNode->nodeValue ?? '')
+            \str_replace(["\r", "\n"], ' ', $textNode->nodeValue ?? '')
         );
         $this->stringData .= $domText;
         $this->buildTextRun();
@@ -821,36 +821,36 @@ class Html
     /**
      * @param string $callbackTag
      */
-    private function handleCallback(DOMElement $element, $callbackTag, array $callbacks): void
+    private function handleCallback(\DOMElement $element, $callbackTag, array $callbacks): void
     {
         if (isset($callbacks[$callbackTag])) {
             $elementHandler = $callbacks[$callbackTag];
-            if (method_exists($this, $elementHandler)) {
+            if (\method_exists($this, $elementHandler)) {
                 /** @phpstan-ignore-next-line */
-                call_user_func([$this, $elementHandler], $element);
+                \call_user_func([$this, $elementHandler], $element);
             }
         }
     }
 
-    private function parseElementNode(DOMElement $element): void
+    private function parseElementNode(\DOMElement $element): void
     {
-        $callbackTag = strtolower($element->nodeName);
+        $callbackTag = \strtolower($element->nodeName);
         $this->stack[] = $callbackTag;
 
         $this->handleCallback($element, $callbackTag, self::START_TAG_CALLBACKS);
 
         $this->parseElements($element);
-        array_pop($this->stack);
+        \array_pop($this->stack);
 
         $this->handleCallback($element, $callbackTag, self::END_TAG_CALLBACKS);
     }
 
-    private function parseElements(DOMNode $element): void
+    private function parseElements(\DOMNode $element): void
     {
         foreach ($element->childNodes as $child) {
-            if ($child instanceof DOMText) {
+            if ($child instanceof \DOMText) {
                 $this->parseTextNode($child);
-            } elseif ($child instanceof DOMElement) {
+            } elseif ($child instanceof \DOMElement) {
                 $this->parseElementNode($child);
             }
         }

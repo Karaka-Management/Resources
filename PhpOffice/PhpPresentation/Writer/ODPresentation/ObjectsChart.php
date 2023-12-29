@@ -342,7 +342,7 @@ class ObjectsChart extends AbstractDecoratorWriter
         // style:graphic-properties
         $this->xmlContent->startElement('style:graphic-properties');
         $this->xmlContent->writeAttribute('draw:stroke', $axis->getOutline()->getFill()->getFillType());
-        $this->xmlContent->writeAttribute('svg:stroke-width', number_format(CommonDrawing::pointsToCentimeters($axis->getOutline()->getWidth()), 3, '.', '') . 'cm');
+        $this->xmlContent->writeAttribute('svg:stroke-width', \number_format(CommonDrawing::pointsToCentimeters($axis->getOutline()->getWidth()), 3, '.', '') . 'cm');
         $this->xmlContent->writeAttribute('svg:stroke-color', '#' . $axis->getOutline()->getFill()->getStartColor()->getRGB());
         $this->xmlContent->endElement();
         // style:style > style:text-properties
@@ -391,7 +391,7 @@ class ObjectsChart extends AbstractDecoratorWriter
         $this->xmlContent->writeAttribute('style:family', 'chart');
         // style:style > style:graphic-properties
         $this->xmlContent->startElement('style:graphic-properties');
-        $this->xmlContent->writeAttribute('svg:stroke-width', number_format(CommonDrawing::pointsToCentimeters($oGridlines->getOutline()->getWidth()), 2, '.', '') . 'cm');
+        $this->xmlContent->writeAttribute('svg:stroke-width', \number_format(CommonDrawing::pointsToCentimeters($oGridlines->getOutline()->getWidth()), 2, '.', '') . 'cm');
         $this->xmlContent->writeAttribute('svg:stroke-color', '#' . $oGridlines->getOutline()->getFill()->getStartColor()->getRGB());
         $this->xmlContent->endElement();
         // ##style:style
@@ -617,7 +617,7 @@ class ObjectsChart extends AbstractDecoratorWriter
     {
         $chartType = $chart->getPlotArea()->getType();
 
-        $numRange = count($series->getValues());
+        $numRange = \count($series->getValues());
         // chart:series
         $this->xmlContent->startElement('chart:series');
         $this->xmlContent->writeAttribute('chart:values-cell-range-address', 'table-local.$' . $this->rangeCol . '$2:.$' . $this->rangeCol . '$' . ($numRange + 1));
@@ -662,7 +662,7 @@ class ObjectsChart extends AbstractDecoratorWriter
             // > chart:data-point
             $this->xmlContent->endElement();
         } elseif ($chartType instanceof AbstractTypePie) {
-            $count = count($series->getDataPointFills());
+            $count = \count($series->getDataPointFills());
             for ($inc = 0; $inc < $count; ++$inc) {
                 // chart:data-point
                 $this->xmlContent->startElement('chart:data-point');
@@ -730,7 +730,7 @@ class ObjectsChart extends AbstractDecoratorWriter
                         break;
                 }
                 $this->xmlContent->writeAttribute('chart:symbol-name', $symbolName);
-                $symbolSize = number_format(CommonDrawing::pointsToCentimeters($oMarker->getSize()), 2, '.', '');
+                $symbolSize = \number_format(CommonDrawing::pointsToCentimeters($oMarker->getSize()), 2, '.', '');
                 $this->xmlContent->writeAttribute('chart:symbol-width', $symbolSize . 'cm');
                 $this->xmlContent->writeAttribute('chart:symbol-height', $symbolSize . 'cm');
             }
@@ -760,7 +760,7 @@ class ObjectsChart extends AbstractDecoratorWriter
             if ($oOutline instanceof Outline) {
                 $outlineWidth = $oOutline->getWidth();
                 if (!empty($outlineWidth)) {
-                    $outlineWidth = number_format(CommonDrawing::pointsToCentimeters($outlineWidth), 3, '.', '');
+                    $outlineWidth = \number_format(CommonDrawing::pointsToCentimeters($outlineWidth), 3, '.', '');
                 }
                 $outlineColor = $oOutline->getFill()->getStartColor()->getRGB();
             }
@@ -819,8 +819,8 @@ class ObjectsChart extends AbstractDecoratorWriter
         // table:table-column
         $this->xmlContent->startElement('table:table-column');
         if (!empty($this->arrayData)) {
-            $rowFirst = reset($this->arrayData);
-            $this->xmlContent->writeAttribute('table:number-columns-repeated', count($rowFirst) - 1);
+            $rowFirst = \reset($this->arrayData);
+            $this->xmlContent->writeAttribute('table:number-columns-repeated', \count($rowFirst) - 1);
         }
         // > table:table-column
         $this->xmlContent->endElement();
@@ -842,7 +842,7 @@ class ObjectsChart extends AbstractDecoratorWriter
             $this->xmlContent->startElement('table:table-cell');
             $this->xmlContent->endElement();
         } else {
-            $rowFirst = reset($this->arrayData);
+            $rowFirst = \reset($this->arrayData);
             foreach ($rowFirst as $key => $cell) {
                 // table:table-cell
                 $this->xmlContent->startElement('table:table-cell');
@@ -880,13 +880,13 @@ class ObjectsChart extends AbstractDecoratorWriter
                     // table:table-cell
                     $this->xmlContent->startElement('table:table-cell');
 
-                    $cellValueTypeFloat = is_null($cell) ? true : is_numeric($cell);
+                    $cellValueTypeFloat = \is_null($cell) ? true : \is_numeric($cell);
                     $this->xmlContent->writeAttributeIf(!$cellValueTypeFloat, 'office:value-type', 'string');
                     $this->xmlContent->writeAttributeIf($cellValueTypeFloat, 'office:value-type', 'float');
-                    $this->xmlContent->writeAttributeIf($cellValueTypeFloat, 'office:value', is_null($cell) ? 'NaN' : $cell);
+                    $this->xmlContent->writeAttributeIf($cellValueTypeFloat, 'office:value', \is_null($cell) ? 'NaN' : $cell);
                     // text:p
                     $this->xmlContent->startElement('text:p');
-                    $this->xmlContent->text(is_null($cell) ? 'NaN' : (string) $cell);
+                    $this->xmlContent->text(\is_null($cell) ? 'NaN' : (string) $cell);
                     $this->xmlContent->endElement();
                     // > table:table-cell
                     $this->xmlContent->endElement();

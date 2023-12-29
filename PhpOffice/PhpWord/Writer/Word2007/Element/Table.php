@@ -46,7 +46,7 @@ class Table extends AbstractElement
         }
 
         $rows = $element->getRows();
-        $rowCount = count($rows);
+        $rowCount = \count($rows);
 
         if ($rowCount > 0) {
             $xmlWriter->startElement('w:tbl');

@@ -30,7 +30,7 @@ class Group extends AbstractShape implements ShapeContainerInterface
     /**
      * Collection of shapes.
      *
-     * @var array<int, AbstractShape>|ArrayObject<int, AbstractShape>
+     * @var array<int, AbstractShape>|\ArrayObject<int, AbstractShape>
      */
     private $shapeCollection;
 
@@ -53,13 +53,13 @@ class Group extends AbstractShape implements ShapeContainerInterface
         parent::__construct();
 
         // Shape collection
-        $this->shapeCollection = new ArrayObject();
+        $this->shapeCollection = new \ArrayObject();
     }
 
     /**
      * Get collection of shapes.
      *
-     * @return array<int, AbstractShape>|ArrayObject<int, AbstractShape>
+     * @return array<int, AbstractShape>|\ArrayObject<int, AbstractShape>
      */
     public function getShapeCollection()
     {

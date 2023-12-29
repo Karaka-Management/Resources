@@ -41,7 +41,7 @@ class NonPeriodic
 
         // create an initial range, with a root somewhere between 0 and guess
         $guess = Functions::flattenSingleValue($guess) ?? self::DEFAULT_GUESS;
-        if (!is_numeric($guess)) {
+        if (!\is_numeric($guess)) {
             return ExcelError::VALUE();
         }
         $guess = ($guess + 0.0) ?: self::DEFAULT_GUESS;
@@ -51,10 +51,10 @@ class NonPeriodic
         $f2 = self::xnpvOrdered($x2, $values, $dates, false);
         $found = false;
         for ($i = 0; $i < self::FINANCIAL_MAX_ITERATIONS; ++$i) {
-            if (!is_numeric($f1)) {
+            if (!\is_numeric($f1)) {
                 return $f1;
             }
-            if (!is_numeric($f2)) {
+            if (!\is_numeric($f2)) {
                 return $f2;
             }
             $f1 = (float) $f1;
@@ -63,7 +63,7 @@ class NonPeriodic
                 $found = true;
 
                 break;
-            } elseif (abs($f1) < abs($f2)) {
+            } elseif (\abs($f1) < \abs($f2)) {
                 $x1 += 1.6 * ($x1 - $x2);
                 $f1 = self::xnpvOrdered($x1, $values, $dates, false);
             } else {
@@ -81,7 +81,7 @@ class NonPeriodic
         for ($i = 0; $i < self::FINANCIAL_MAX_ITERATIONS; ++$i) {
             $f1 = self::xnpvOrdered($x1, $values, $dates, false, true);
             $f2 = self::xnpvOrdered($x2, $values, $dates, false, true);
-            if (!is_numeric($f1) || !is_numeric($f2)) {
+            if (!\is_numeric($f1) || !\is_numeric($f2)) {
                 break;
             }
             if ($f1 * $f2 <= 0) {
@@ -139,16 +139,16 @@ class NonPeriodic
     {
         $values = Functions::flattenArray($values);
         $dates = Functions::flattenArray($dates);
-        $valuesIsArray = count($values) > 1;
-        $datesIsArray = count($dates) > 1;
+        $valuesIsArray = \count($values) > 1;
+        $datesIsArray = \count($dates) > 1;
         if (!$valuesIsArray && !$datesIsArray) {
             return ExcelError::NA();
         }
-        if (count($values) != count($dates)) {
+        if (\count($values) != \count($dates)) {
             return ExcelError::NAN();
         }
 
-        $datesCount = count($dates);
+        $datesCount = \count($dates);
         for ($i = 0; $i < $datesCount; ++$i) {
             try {
                 $dates[$i] = DateTimeExcel\Helpers::getDateValue($dates[$i]);
@@ -162,12 +162,12 @@ class NonPeriodic
 
     private static function xirrPart2(array &$values): string
     {
-        $valCount = count($values);
+        $valCount = \count($values);
         $foundpos = false;
         $foundneg = false;
         for ($i = 0; $i < $valCount; ++$i) {
             $fld = $values[$i];
-            if (!is_numeric($fld)) {
+            if (!\is_numeric($fld)) {
                 return ExcelError::VALUE();
             } elseif ($fld > 0) {
                 $foundpos = true;
@@ -204,7 +204,7 @@ class NonPeriodic
             if ($f_mid <= 0.0) {
                 $rtb = $x_mid;
             }
-            if ((abs($f_mid) < self::FINANCIAL_PRECISION) || (abs($dx) < self::FINANCIAL_PRECISION)) {
+            if ((\abs($f_mid) < self::FINANCIAL_PRECISION) || (\abs($dx) < self::FINANCIAL_PRECISION)) {
                 $rslt = $x_mid;
 
                 break;
@@ -224,12 +224,12 @@ class NonPeriodic
             $rslt = ExcelError::NAN();
             $f1 = self::xnpvOrdered($x1, $values, $dates, false, true);
             $f2 = self::xnpvOrdered($x2, $values, $dates, false, true);
-            if (!is_numeric($f1) || !is_numeric($f2)) {
+            if (!\is_numeric($f1) || !\is_numeric($f2)) {
                 break;
             }
             $f1 = (float) $f1;
             $f2 = (float) $f2;
-            if (abs($f1) < self::FINANCIAL_PRECISION && abs($f2) < self::FINANCIAL_PRECISION) {
+            if (\abs($f1) < self::FINANCIAL_PRECISION && \abs($f2) < self::FINANCIAL_PRECISION) {
                 break;
             }
             if ($f1 * $f2 > 0) {
@@ -237,7 +237,7 @@ class NonPeriodic
             }
             $rslt = ($x1 + $x2) / 2;
             $f3 = self::xnpvOrdered($rslt, $values, $dates, false, true);
-            if (!is_float($f3)) {
+            if (!\is_float($f3)) {
                 break;
             }
             if ($f3 * $f1 < 0) {
@@ -245,7 +245,7 @@ class NonPeriodic
             } else {
                 $x1 = $rslt;
             }
-            if (abs($f3) < self::FINANCIAL_PRECISION) {
+            if (\abs($f3) < self::FINANCIAL_PRECISION) {
                 break;
             }
         }
@@ -265,7 +265,7 @@ class NonPeriodic
         $rate = Functions::flattenSingleValue($rate);
         $values = Functions::flattenArray($values);
         $dates = Functions::flattenArray($dates);
-        $valCount = count($values);
+        $valCount = \count($values);
 
         try {
             self::validateXnpv($rate, $values, $dates);
@@ -279,7 +279,7 @@ class NonPeriodic
 
         $xnpv = 0.0;
         for ($i = 0; $i < $valCount; ++$i) {
-            if (!is_numeric($values[$i])) {
+            if (!\is_numeric($values[$i])) {
                 return ExcelError::VALUE();
             }
 
@@ -293,17 +293,17 @@ class NonPeriodic
             } else {
                 $dif = DateTimeExcel\Difference::interval($date0, $datei, 'd');
             }
-            if (!is_numeric($dif)) {
+            if (!\is_numeric($dif)) {
                 return $dif;
             }
             if ($rate <= -1.0) {
-                $xnpv += -abs($values[$i]) / (-1 - $rate) ** ($dif / 365);
+                $xnpv += -\abs($values[$i]) / (-1 - $rate) ** ($dif / 365);
             } else {
                 $xnpv += $values[$i] / (1 + $rate) ** ($dif / 365);
             }
         }
 
-        return is_finite($xnpv) ? $xnpv : ExcelError::VALUE();
+        return \is_finite($xnpv) ? $xnpv : ExcelError::VALUE();
     }
 
     /**
@@ -311,14 +311,14 @@ class NonPeriodic
      */
     private static function validateXnpv($rate, array $values, array $dates): void
     {
-        if (!is_numeric($rate)) {
+        if (!\is_numeric($rate)) {
             throw new Exception(ExcelError::VALUE());
         }
-        $valCount = count($values);
-        if ($valCount != count($dates)) {
+        $valCount = \count($values);
+        if ($valCount != \count($dates)) {
             throw new Exception(ExcelError::NAN());
         }
-        if ($valCount > 1 && ((min($values) > 0) || (max($values) < 0))) {
+        if ($valCount > 1 && ((\min($values) > 0) || (\max($values) < 0))) {
             throw new Exception(ExcelError::NAN());
         }
     }

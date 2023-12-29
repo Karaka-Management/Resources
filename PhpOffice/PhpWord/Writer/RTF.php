@@ -45,11 +45,11 @@ class RTF extends AbstractWriter implements WriterInterface
         $this->parts = ['Header', 'Document'];
         foreach ($this->parts as $partName) {
             $partClass = static::class . '\\Part\\' . $partName;
-            if (class_exists($partClass)) {
+            if (\class_exists($partClass)) {
                 /** @var \PhpOffice\PhpWord\Writer\RTF\Part\AbstractPart $part Type hint */
                 $part = new $partClass();
                 $part->setParentWriter($this);
-                $this->writerParts[strtolower($partName)] = $part;
+                $this->writerParts[\strtolower($partName)] = $part;
             }
         }
     }

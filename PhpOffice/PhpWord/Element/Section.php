@@ -79,7 +79,7 @@ class Section extends AbstractContainer
      */
     public function setStyle($style = null): void
     {
-        if (null !== $style && is_array($style)) {
+        if (null !== $style && \is_array($style)) {
             $this->style->setStyleByArray($style);
         }
     }
@@ -198,13 +198,13 @@ class Section extends AbstractContainer
      */
     private function addHeaderFooter($type = Header::AUTO, $header = true)
     {
-        $containerClass = substr(static::class, 0, strrpos(static::class, '\\')) . '\\' .
+        $containerClass = \substr(static::class, 0, \strrpos(static::class, '\\')) . '\\' .
             ($header ? 'Header' : 'Footer');
         $collectionArray = $header ? 'headers' : 'footers';
         $collection = &$this->$collectionArray;
 
-        if (in_array($type, [Header::AUTO, Header::FIRST, Header::EVEN])) {
-            $index = count($collection);
+        if (\in_array($type, [Header::AUTO, Header::FIRST, Header::EVEN])) {
+            $index = \count($collection);
             /** @var \PhpOffice\PhpWord\Element\AbstractContainer $container Type hint */
             $container = new $containerClass($this->sectionId, ++$index, $type);
             $container->setPhpWord($this->phpWord);
@@ -214,6 +214,6 @@ class Section extends AbstractContainer
             return $container;
         }
 
-        throw new Exception('Invalid header/footer type.');
+        throw new \Exception('Invalid header/footer type.');
     }
 }

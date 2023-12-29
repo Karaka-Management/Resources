@@ -77,7 +77,7 @@ class DocPropsCustom extends AbstractDecoratorWriter
                     break;
                 case DocumentProperties::PROPERTY_TYPE_DATE:
                     $objWriter->startElement('vt:filetime');
-                    $objWriter->writeRaw(date(DATE_W3C, (int) $propertyValue));
+                    $objWriter->writeRaw(\date(DATE_W3C, (int) $propertyValue));
                     $objWriter->endElement();
                     break;
                 default:

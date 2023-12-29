@@ -29,7 +29,7 @@ class LogNormal
      */
     public static function cumulative($value, $mean, $stdDev)
     {
-        if (is_array($value) || is_array($mean) || is_array($stdDev)) {
+        if (\is_array($value) || \is_array($mean) || \is_array($stdDev)) {
             return self::evaluateArrayArguments([self::class, __FUNCTION__], $value, $mean, $stdDev);
         }
 
@@ -45,7 +45,7 @@ class LogNormal
             return ExcelError::NAN();
         }
 
-        return StandardNormal::cumulative((log($value) - $mean) / $stdDev);
+        return StandardNormal::cumulative((\log($value) - $mean) / $stdDev);
     }
 
     /**
@@ -69,7 +69,7 @@ class LogNormal
      */
     public static function distribution($value, $mean, $stdDev, $cumulative = false)
     {
-        if (is_array($value) || is_array($mean) || is_array($stdDev) || is_array($cumulative)) {
+        if (\is_array($value) || \is_array($mean) || \is_array($stdDev) || \is_array($cumulative)) {
             return self::evaluateArrayArguments([self::class, __FUNCTION__], $value, $mean, $stdDev, $cumulative);
         }
 
@@ -87,11 +87,11 @@ class LogNormal
         }
 
         if ($cumulative === true) {
-            return StandardNormal::distribution((log($value) - $mean) / $stdDev, true);
+            return StandardNormal::distribution((\log($value) - $mean) / $stdDev, true);
         }
 
-        return (1 / (sqrt(2 * M_PI) * $stdDev * $value)) *
-            exp(0 - ((log($value) - $mean) ** 2 / (2 * $stdDev ** 2)));
+        return (1 / (\sqrt(2 * M_PI) * $stdDev * $value)) *
+            \exp(0 - ((\log($value) - $mean) ** 2 / (2 * $stdDev ** 2)));
     }
 
     /**
@@ -116,7 +116,7 @@ class LogNormal
      */
     public static function inverse($probability, $mean, $stdDev)
     {
-        if (is_array($probability) || is_array($mean) || is_array($stdDev)) {
+        if (\is_array($probability) || \is_array($mean) || \is_array($stdDev)) {
             return self::evaluateArrayArguments([self::class, __FUNCTION__], $probability, $mean, $stdDev);
         }
 
@@ -134,6 +134,6 @@ class LogNormal
         /** @var float */
         $inverse = StandardNormal::inverse($probability);
 
-        return exp($mean + $stdDev * $inverse);
+        return \exp($mean + $stdDev * $inverse);
     }
 }

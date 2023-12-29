@@ -31,7 +31,7 @@ class InvalidFileFormatException extends PhpPresentationException
             $error = '(' . $error . ')';
         }
 
-        parent::__construct(sprintf(
+        parent::__construct(\sprintf(
             'The file %s is not in the format supported by %s%s%s',
             $path,
             $class,

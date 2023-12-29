@@ -34,7 +34,7 @@ class CellReferenceHelper
 
     public function __construct(string $beforeCellAddress = 'A1', int $numberOfColumns = 0, int $numberOfRows = 0)
     {
-        $this->beforeCellAddress = str_replace('$', '', $beforeCellAddress);
+        $this->beforeCellAddress = \str_replace('$', '', $beforeCellAddress);
         $this->numberOfColumns = $numberOfColumns;
         $this->numberOfRows = $numberOfRows;
 
@@ -64,8 +64,8 @@ class CellReferenceHelper
 
         // Get coordinate of $cellReference
         [$newColumn, $newRow] = Coordinate::coordinateFromString($cellReference);
-        $newColumnIndex = (int) Coordinate::columnIndexFromString(str_replace('$', '', $newColumn));
-        $newRowIndex = (int) str_replace('$', '', $newRow);
+        $newColumnIndex = (int) Coordinate::columnIndexFromString(\str_replace('$', '', $newColumn));
+        $newRowIndex = (int) \str_replace('$', '', $newRow);
 
         $absoluteColumn = $newColumn[0] === '$' ? '$' : '';
         $absoluteRow = $newRow[0] === '$' ? '$' : '';
@@ -116,7 +116,7 @@ class CellReferenceHelper
 
     protected function updateColumnReference(int $newColumnIndex, string $absoluteColumn): string
     {
-        $newColumn = Coordinate::stringFromColumnIndex(min($newColumnIndex + $this->numberOfColumns, AddressRange::MAX_COLUMN_INT));
+        $newColumn = Coordinate::stringFromColumnIndex(\min($newColumnIndex + $this->numberOfColumns, AddressRange::MAX_COLUMN_INT));
 
         return $absoluteColumn . $newColumn;
     }

@@ -38,17 +38,17 @@ class TimeValue
      */
     public static function fromString($timeValue)
     {
-        if (is_array($timeValue)) {
+        if (\is_array($timeValue)) {
             return self::evaluateSingleArgumentArray([self::class, __FUNCTION__], $timeValue);
         }
 
-        $timeValue = trim($timeValue ?? '', '"');
-        $timeValue = str_replace(['/', '.'], '-', $timeValue);
+        $timeValue = \trim($timeValue ?? '', '"');
+        $timeValue = \str_replace(['/', '.'], '-', $timeValue);
 
-        $arraySplit = preg_split('/[\/:\-\s]/', $timeValue) ?: [];
-        if ((count($arraySplit) == 2 || count($arraySplit) == 3) && $arraySplit[0] > 24) {
+        $arraySplit = \preg_split('/[\/:\-\s]/', $timeValue) ?: [];
+        if ((\count($arraySplit) == 2 || \count($arraySplit) == 3) && $arraySplit[0] > 24) {
             $arraySplit[0] = ($arraySplit[0] % 24);
-            $timeValue = implode(':', $arraySplit);
+            $timeValue = \implode(':', $arraySplit);
         }
 
         $PHPDateArray = Helpers::dateParse($timeValue);
@@ -69,7 +69,7 @@ class TimeValue
             } elseif ($retType === Functions::RETURNDATE_UNIX_TIMESTAMP) {
                 $retValue = (int) SharedDateHelper::excelToTimestamp($excelDateValue + 25569) - 3600;
             } else {
-                $retValue = new DateTime('1900-01-01 ' . $PHPDateArray['hour'] . ':' . $PHPDateArray['minute'] . ':' . $PHPDateArray['second']);
+                $retValue = new \DateTime('1900-01-01 ' . $PHPDateArray['hour'] . ':' . $PHPDateArray['minute'] . ':' . $PHPDateArray['second']);
             }
         }
 

@@ -37,7 +37,7 @@ class TextBox extends Frame
         }
 
         $xmlWriter = $this->getXmlWriter();
-        $margins = implode(', ', $style->getInnerMargin());
+        $margins = \implode(', ', $style->getInnerMargin());
 
         $xmlWriter->writeAttribute('inset', $margins);
     }

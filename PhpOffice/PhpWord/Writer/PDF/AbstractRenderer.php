@@ -83,7 +83,7 @@ abstract class AbstractRenderer extends HTML
         parent::__construct($phpWord);
         if ($this->includeFile != null) {
             $includeFile = Settings::getPdfRendererPath() . '/' . $this->includeFile;
-            if (file_exists($includeFile)) {
+            if (\file_exists($includeFile)) {
                 /** @noinspection PhpIncludeInspection Dynamic includes */
                 require_once $includeFile;
             } else {
@@ -180,7 +180,7 @@ abstract class AbstractRenderer extends HTML
      */
     protected function prepareForSave($filename = null)
     {
-        $fileHandle = fopen($filename, 'wb');
+        $fileHandle = \fopen($filename, 'wb');
         // @codeCoverageIgnoreStart
         // Can't find any test case. Uncomment when found.
         if ($fileHandle === false) {
@@ -199,6 +199,6 @@ abstract class AbstractRenderer extends HTML
      */
     protected function restoreStateAfterSave($fileHandle): void
     {
-        fclose($fileHandle);
+        \fclose($fileHandle);
     }
 }

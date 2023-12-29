@@ -18,7 +18,7 @@ abstract class AggregateBase
      */
     protected static function testAcceptedBoolean($arg, $k)
     {
-        if (!is_bool($arg)) {
+        if (!\is_bool($arg)) {
             return $arg;
         }
         if (Functions::getCompatibilityMode() === Functions::COMPATIBILITY_GNUMERIC) {
@@ -52,10 +52,10 @@ abstract class AggregateBase
         if ($countNull && $arg === null && !Functions::isCellValue($k) && Functions::getCompatibilityMode() !== Functions::COMPATIBILITY_GNUMERIC) {
             return true;
         }
-        if (!is_numeric($arg)) {
+        if (!\is_numeric($arg)) {
             return false;
         }
-        if (!is_string($arg)) {
+        if (!\is_string($arg)) {
             return true;
         }
         if (!Functions::isCellValue($k) && Functions::getCompatibilityMode() === Functions::COMPATIBILITY_OPENOFFICE) {

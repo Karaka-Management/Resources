@@ -96,11 +96,11 @@ class StandardNormal
      */
     public static function gauss($value)
     {
-        if (is_array($value)) {
+        if (\is_array($value)) {
             return self::evaluateSingleArgumentArray([self::class, __FUNCTION__], $value);
         }
 
-        if (!is_numeric($value)) {
+        if (!\is_numeric($value)) {
             return ExcelError::VALUE();
         }
         /** @var float */
@@ -130,13 +130,13 @@ class StandardNormal
      */
     public static function zTest($dataSet, $m0, $sigma = null)
     {
-        if (is_array($m0) || is_array($sigma)) {
+        if (\is_array($m0) || \is_array($sigma)) {
             return self::evaluateArrayArgumentsSubsetFrom([self::class, __FUNCTION__], 1, $dataSet, $m0, $sigma);
         }
 
         $dataSet = Functions::flattenArrayIndexed($dataSet);
 
-        if (!is_numeric($m0) || ($sigma !== null && !is_numeric($sigma))) {
+        if (!\is_numeric($m0) || ($sigma !== null && !\is_numeric($sigma))) {
             return ExcelError::VALUE();
         }
 
@@ -144,8 +144,8 @@ class StandardNormal
             /** @var float */
             $sigma = StandardDeviations::STDEV($dataSet);
         }
-        $n = count($dataSet);
+        $n = \count($dataSet);
 
-        return 1 - self::cumulative((Averages::average($dataSet) - $m0) / ($sigma / sqrt($n)));
+        return 1 - self::cumulative((Averages::average($dataSet) - $m0) / ($sigma / \sqrt($n)));
     }
 }

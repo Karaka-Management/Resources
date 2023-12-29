@@ -109,12 +109,12 @@ class Csv extends BaseWriter
 
         if ($this->useBOM) {
             // Write the UTF-8 BOM code if required
-            fwrite($this->fileHandle, "\xEF\xBB\xBF");
+            \fwrite($this->fileHandle, "\xEF\xBB\xBF");
         }
 
         if ($this->includeSeparatorLine) {
             // Write the separator line if required
-            fwrite($this->fileHandle, 'sep=' . $this->getDelimiter() . $this->lineEnding);
+            \fwrite($this->fileHandle, 'sep=' . $this->getDelimiter() . $this->lineEnding);
         }
 
         //    Identify the range that we need to extract from the worksheet
@@ -273,7 +273,7 @@ class Csv extends BaseWriter
      */
     private static function elementToString($element): string
     {
-        if (is_bool($element)) {
+        if (\is_bool($element)) {
             return $element ? 'TRUE' : 'FALSE';
         }
 
@@ -304,10 +304,10 @@ class Csv extends BaseWriter
             if ($enclosure) {
                 // If enclosure is not required, use enclosure only if
                 // element contains newline, delimiter, or enclosure.
-                if (!$this->enclosureRequired && strpbrk($element, "$delimiter$enclosure\n") === false) {
+                if (!$this->enclosureRequired && \strpbrk($element, "$delimiter$enclosure\n") === false) {
                     $enclosure = '';
                 } else {
-                    $element = str_replace($enclosure, $enclosure . $enclosure, $element);
+                    $element = \str_replace($enclosure, $enclosure . $enclosure, $element);
                 }
             }
             // Add enclosed string
@@ -319,8 +319,8 @@ class Csv extends BaseWriter
 
         // Write to file
         if ($this->outputEncoding != '') {
-            $line = mb_convert_encoding($line, $this->outputEncoding);
+            $line = \mb_convert_encoding($line, $this->outputEncoding);
         }
-        fwrite($fileHandle, /** @scrutinizer ignore-type */ $line);
+        \fwrite($fileHandle, /** @scrutinizer ignore-type */ $line);
     }
 }

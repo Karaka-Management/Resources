@@ -24,7 +24,7 @@ class FileRemoveException extends PhpPresentationException
 {
     public function __construct(string $path)
     {
-        parent::__construct(sprintf(
+        parent::__construct(\sprintf(
             'The file %s can\'t be removed',
             $path
         ));

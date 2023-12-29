@@ -45,8 +45,8 @@ class Container extends AbstractElement
         if (!$container instanceof ContainerElement) {
             return;
         }
-        $containerClass = substr(get_class($container), strrpos(get_class($container), '\\') + 1);
-        $withoutP = in_array($containerClass, ['TextRun', 'Footnote', 'Endnote', 'ListItemRun']);
+        $containerClass = \substr(\get_class($container), \strrpos(\get_class($container), '\\') + 1);
+        $withoutP = \in_array($containerClass, ['TextRun', 'Footnote', 'Endnote', 'ListItemRun']);
         $xmlWriter = $this->getXmlWriter();
 
         // Loop through elements
@@ -77,10 +77,10 @@ class Container extends AbstractElement
      */
     private function writeElement(XMLWriter $xmlWriter, Element $element, $withoutP)
     {
-        $elementClass = substr(get_class($element), strrpos(get_class($element), '\\') + 1);
+        $elementClass = \substr(\get_class($element), \strrpos(\get_class($element), '\\') + 1);
         $writerClass = $this->namespace . '\\' . $elementClass;
 
-        if (class_exists($writerClass)) {
+        if (\class_exists($writerClass)) {
             /** @var \PhpOffice\PhpWord\Writer\Word2007\Element\AbstractElement $writer Type hint */
             $writer = new $writerClass($xmlWriter, $element, $withoutP);
             $writer->write();

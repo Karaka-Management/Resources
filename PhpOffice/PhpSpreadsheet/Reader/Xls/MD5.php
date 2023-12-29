@@ -59,10 +59,10 @@ class MD5
         $s = '';
         foreach (['a', 'b', 'c', 'd'] as $i) {
             $v = $this->{$i};
-            $s .= chr($v & 0xff);
-            $s .= chr(($v >> 8) & 0xff);
-            $s .= chr(($v >> 16) & 0xff);
-            $s .= chr(($v >> 24) & 0xff);
+            $s .= \chr($v & 0xff);
+            $s .= \chr(($v >> 8) & 0xff);
+            $s .= \chr(($v >> 16) & 0xff);
+            $s .= \chr(($v >> 24) & 0xff);
         }
 
         return $s;
@@ -76,7 +76,7 @@ class MD5
     public function add(string $data): void
     {
         // @phpstan-ignore-next-line
-        $words = array_values(unpack('V16', $data));
+        $words = \array_values(\unpack('V16', $data));
 
         $A = $this->a;
         $B = $this->b;
@@ -190,7 +190,7 @@ class MD5
     private static function step(callable $func, int &$A, int $B, int $C, int $D, int $M, int $s, $t): void
     {
         $t = self::signedInt($t);
-        $A = (int) ($A + call_user_func($func, $B, $C, $D) + $M + $t) & self::$allOneBits;
+        $A = (int) ($A + \call_user_func($func, $B, $C, $D) + $M + $t) & self::$allOneBits;
         $A = self::rotate($A, $s);
         $A = (int) ($B + $A) & self::$allOneBits;
     }
@@ -198,13 +198,13 @@ class MD5
     /** @param float|int $result may be float on 32-bit system */
     private static function signedInt($result): int
     {
-        return is_int($result) ? $result : (int) (PHP_INT_MIN + $result - 1 - PHP_INT_MAX);
+        return \is_int($result) ? $result : (int) (PHP_INT_MIN + $result - 1 - PHP_INT_MAX);
     }
 
     private static function rotate(int $decimal, int $bits): int
     {
-        $binary = str_pad(decbin($decimal), 32, '0', STR_PAD_LEFT);
+        $binary = \str_pad(\decbin($decimal), 32, '0', STR_PAD_LEFT);
 
-        return self::signedInt(bindec(substr($binary, $bits) . substr($binary, 0, $bits)));
+        return self::signedInt(\bindec(\substr($binary, $bits) . \substr($binary, 0, $bits)));
     }
 }

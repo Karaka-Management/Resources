@@ -24,10 +24,10 @@ class Helpers
      */
     public static function extractString($value, bool $throwIfError = false): string
     {
-        if (is_bool($value)) {
+        if (\is_bool($value)) {
             return self::convertBooleanValue($value);
         }
-        if ($throwIfError && is_string($value) && ErrorValue::isError($value)) {
+        if ($throwIfError && \is_string($value) && ErrorValue::isError($value)) {
             throw new CalcExp($value);
         }
 
@@ -43,10 +43,10 @@ class Helpers
             // usually 0, but sometimes 1 for Gnumeric
             $value = (Functions::getCompatibilityMode() === Functions::COMPATIBILITY_GNUMERIC) ? $gnumericNull : 0;
         }
-        if (is_bool($value) && ($ooBoolOk || Functions::getCompatibilityMode() !== Functions::COMPATIBILITY_OPENOFFICE)) {
+        if (\is_bool($value) && ($ooBoolOk || Functions::getCompatibilityMode() !== Functions::COMPATIBILITY_OPENOFFICE)) {
             $value = (int) $value;
         }
-        if (!is_numeric($value)) {
+        if (!\is_numeric($value)) {
             throw new CalcExp(ExcelError::VALUE());
         }
         $value = (int) $value;
@@ -65,10 +65,10 @@ class Helpers
         if ($value === null) {
             $value = 0.0;
         }
-        if (is_bool($value)) {
+        if (\is_bool($value)) {
             $value = (float) $value;
         }
-        if (!is_numeric($value)) {
+        if (!\is_numeric($value)) {
             throw new CalcExp(ExcelError::VALUE());
         }
 
@@ -82,7 +82,7 @@ class Helpers
     {
         if ($value === null) {
             $value = 0;
-        } elseif (is_bool($value)) {
+        } elseif (\is_bool($value)) {
             $value = (int) $value;
         }
 

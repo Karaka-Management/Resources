@@ -132,7 +132,7 @@ class DataSeries
         $this->plotType = $plotType;
         $this->plotGrouping = $plotGrouping;
         $this->plotOrder = $plotOrder;
-        $keys = array_keys($plotValues);
+        $keys = \array_keys($plotValues);
         $this->plotValues = $plotValues;
         if (!isset($plotLabel[$keys[0]])) {
             $plotLabel[$keys[0]] = new DataSeriesValues();
@@ -254,8 +254,8 @@ class DataSeries
      */
     public function getPlotLabelByIndex($index)
     {
-        $keys = array_keys($this->plotLabel);
-        if (in_array($index, $keys)) {
+        $keys = \array_keys($this->plotLabel);
+        if (\in_array($index, $keys)) {
             return $this->plotLabel[$index];
         }
 
@@ -281,8 +281,8 @@ class DataSeries
      */
     public function getPlotCategoryByIndex($index)
     {
-        $keys = array_keys($this->plotCategory);
-        if (in_array($index, $keys)) {
+        $keys = \array_keys($this->plotCategory);
+        if (\in_array($index, $keys)) {
             return $this->plotCategory[$index];
         } elseif (isset($keys[$index])) {
             return $this->plotCategory[$keys[$index]];
@@ -334,8 +334,8 @@ class DataSeries
      */
     public function getPlotValuesByIndex($index)
     {
-        $keys = array_keys($this->plotValues);
-        if (in_array($index, $keys)) {
+        $keys = \array_keys($this->plotValues);
+        if (\in_array($index, $keys)) {
             return $this->plotValues[$index];
         }
 
@@ -371,7 +371,7 @@ class DataSeries
      */
     public function getPlotSeriesCount()
     {
-        return count($this->plotValues);
+        return \count($this->plotValues);
     }
 
     /**

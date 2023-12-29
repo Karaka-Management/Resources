@@ -33,12 +33,12 @@ class ArrayArgumentHelper
 
     public function initialise(array $arguments): void
     {
-        $keys = array_keys($arguments);
-        $this->indexStart = (int) array_shift($keys);
+        $keys = \array_keys($arguments);
+        $this->indexStart = (int) \array_shift($keys);
         $this->rows = $this->rows($arguments);
         $this->columns = $this->columns($arguments);
 
-        $this->argumentCount = count($arguments);
+        $this->argumentCount = \count($arguments);
         $this->arguments = $this->flattenSingleCellArrays($arguments, $this->rows, $this->columns);
 
         $this->rows = $this->rows($arguments);
@@ -77,7 +77,7 @@ class ArrayArgumentHelper
     {
         $rowVectors = $this->getRowVectors();
 
-        return count($rowVectors) === 1 ? array_pop($rowVectors) : null;
+        return \count($rowVectors) === 1 ? \array_pop($rowVectors) : null;
     }
 
     private function getRowVectors(): array
@@ -96,7 +96,7 @@ class ArrayArgumentHelper
     {
         $columnVectors = $this->getColumnVectors();
 
-        return count($columnVectors) === 1 ? array_pop($columnVectors) : null;
+        return \count($columnVectors) === 1 ? \array_pop($columnVectors) : null;
     }
 
     private function getColumnVectors(): array
@@ -151,9 +151,9 @@ class ArrayArgumentHelper
 
     private function rows(array $arguments): array
     {
-        return array_map(
+        return \array_map(
             function ($argument) {
-                return is_countable($argument) ? count($argument) : 1;
+                return \is_countable($argument) ? \count($argument) : 1;
             },
             $arguments
         );
@@ -161,10 +161,10 @@ class ArrayArgumentHelper
 
     private function columns(array $arguments): array
     {
-        return array_map(
+        return \array_map(
             function ($argument) {
-                return is_array($argument) && is_array($argument[array_keys($argument)[0]])
-                    ? count($argument[array_keys($argument)[0]])
+                return \is_array($argument) && \is_array($argument[\array_keys($argument)[0]])
+                    ? \count($argument[\array_keys($argument)[0]])
                     : 1;
             },
             $arguments
@@ -174,7 +174,7 @@ class ArrayArgumentHelper
     public function arrayArguments(): int
     {
         $count = 0;
-        foreach (array_keys($this->arguments) as $argument) {
+        foreach (\array_keys($this->arguments) as $argument) {
             if ($this->rows[$argument] > 1 || $this->columns[$argument] > 1) {
                 ++$count;
             }
@@ -187,8 +187,8 @@ class ArrayArgumentHelper
     {
         foreach ($arguments as $index => $argument) {
             if ($rows[$index] === 1 && $columns[$index] === 1) {
-                while (is_array($argument)) {
-                    $argument = array_pop($argument);
+                while (\is_array($argument)) {
+                    $argument = \array_pop($argument);
                 }
                 $arguments[$index] = $argument;
             }
@@ -199,7 +199,7 @@ class ArrayArgumentHelper
 
     private function filterArray(array $array): array
     {
-        return array_filter(
+        return \array_filter(
             $array,
             function ($value) {
                 return $value > 1;

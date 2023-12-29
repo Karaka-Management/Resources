@@ -523,11 +523,11 @@ class Paragraph extends Border
      */
     public function setLineHeight($lineHeight)
     {
-        if (is_string($lineHeight)) {
-            $lineHeight = (float) (preg_replace('/[^0-9\.\,]/', '', $lineHeight));
+        if (\is_string($lineHeight)) {
+            $lineHeight = (float) (\preg_replace('/[^0-9\.\,]/', '', $lineHeight));
         }
 
-        if ((!is_int($lineHeight) && !is_float($lineHeight)) || !$lineHeight) {
+        if ((!\is_int($lineHeight) && !\is_float($lineHeight)) || !$lineHeight) {
             throw new InvalidStyleException('Line height must be a valid number');
         }
 
@@ -701,7 +701,7 @@ class Paragraph extends Border
      */
     public function setTabs($value = null)
     {
-        if (is_array($value)) {
+        if (\is_array($value)) {
             $this->tabs = $value;
         }
 

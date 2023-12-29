@@ -13,7 +13,7 @@ class LookupRefValidations
      */
     public static function validateInt($value): int
     {
-        if (!is_numeric($value)) {
+        if (!\is_numeric($value)) {
             if (ErrorValue::isError($value)) {
                 throw new Exception($value);
             }
@@ -21,7 +21,7 @@ class LookupRefValidations
             throw new Exception(ExcelError::VALUE());
         }
 
-        return (int) floor((float) $value);
+        return (int) \floor((float) $value);
     }
 
     /**

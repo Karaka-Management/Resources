@@ -218,7 +218,7 @@ abstract class AbstractElement
             $mediaPart .= $this->docPartId;
         }
 
-        return strtolower($mediaPart);
+        return \strtolower($mediaPart);
     }
 
     /**
@@ -256,7 +256,7 @@ abstract class AbstractElement
      */
     public function setElementId(): void
     {
-        $this->elementId = substr(md5(mt_rand()), 0, 6);
+        $this->elementId = \substr(\md5(\mt_rand()), 0, 6);
     }
 
     /**
@@ -305,7 +305,7 @@ abstract class AbstractElement
     public function setCommentRangeStart(Comment $value): void
     {
         if ($this instanceof Comment) {
-            throw new InvalidArgumentException('Cannot set a Comment on a Comment');
+            throw new \InvalidArgumentException('Cannot set a Comment on a Comment');
         }
         $this->commentRangeStart = $value;
         $this->commentRangeStart->setStartElement($this);
@@ -327,7 +327,7 @@ abstract class AbstractElement
     public function setCommentRangeEnd(Comment $value): void
     {
         if ($this instanceof Comment) {
-            throw new InvalidArgumentException('Cannot set a Comment on a Comment');
+            throw new \InvalidArgumentException('Cannot set a Comment on a Comment');
         }
         $this->commentRangeEnd = $value;
         $this->commentRangeEnd->setEndElement($this);
@@ -352,7 +352,7 @@ abstract class AbstractElement
      */
     public function setParentContainer(self $container): void
     {
-        $this->parentContainer = substr(get_class($container), strrpos(get_class($container), '\\') + 1);
+        $this->parentContainer = \substr(\get_class($container), \strrpos(\get_class($container), '\\') + 1);
         $this->parent = $container;
 
         // Set nested level
@@ -385,7 +385,7 @@ abstract class AbstractElement
             return;
         }
 
-        $elementName = substr(static::class, strrpos(static::class, '\\') + 1);
+        $elementName = \substr(static::class, \strrpos(static::class, '\\') + 1);
         if ($elementName == 'OLEObject') {
             $elementName = 'Object';
         }
@@ -395,7 +395,7 @@ abstract class AbstractElement
         if ($this instanceof Image) {
             $image = $this;
         }
-        $rId = Media::addElement($mediaPart, strtolower($elementName), $source, $image);
+        $rId = Media::addElement($mediaPart, \strtolower($elementName), $source, $image);
         $this->setRelationId($rId);
 
         if ($this instanceof OLEObject) {
@@ -411,7 +411,7 @@ abstract class AbstractElement
     private function setCollectionRelation(): void
     {
         if ($this->collectionRelation === true && $this->phpWord instanceof PhpWord) {
-            $elementName = substr(static::class, strrpos(static::class, '\\') + 1);
+            $elementName = \substr(static::class, \strrpos(static::class, '\\') + 1);
             $addMethod = "add{$elementName}";
             $rId = $this->phpWord->$addMethod($this);
             $this->setRelationId($rId);
@@ -439,7 +439,7 @@ abstract class AbstractElement
      */
     protected function setNewStyle($styleObject, $styleValue = null, $returnObject = false)
     {
-        if (null !== $styleValue && is_array($styleValue)) {
+        if (null !== $styleValue && \is_array($styleValue)) {
             $styleObject->setStyleByArray($styleValue);
             $style = $styleObject;
         } else {
@@ -472,7 +472,7 @@ abstract class AbstractElement
      *
      * @param string $type INSERTED|DELETED
      * @param string $author
-     * @param null|DateTime|int $date allways in UTC
+     * @param null|\DateTime|int $date allways in UTC
      */
     public function setChangeInfo($type, $author, $date = null): void
     {
@@ -492,9 +492,9 @@ abstract class AbstractElement
      */
     protected function setEnumVal($value = null, $enum = [], $default = null)
     {
-        if ($value !== null && trim($value) != '' && !empty($enum) && !in_array($value, $enum)) {
-            throw new InvalidArgumentException("Invalid style value: {$value}");
-        } elseif ($value === null || trim($value) == '') {
+        if ($value !== null && \trim($value) != '' && !empty($enum) && !\in_array($value, $enum)) {
+            throw new \InvalidArgumentException("Invalid style value: {$value}");
+        } elseif ($value === null || \trim($value) == '') {
             $value = $default;
         }
 

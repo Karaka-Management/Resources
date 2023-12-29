@@ -64,7 +64,7 @@ class DataType
         $textValue = StringHelper::substring((string) $textValue, 0, self::MAX_STRING_LENGTH);
 
         // we require that newline is represented as "\n" in core, not as "\r\n" or "\r"
-        $textValue = str_replace(["\r\n", "\r"], "\n", $textValue);
+        $textValue = \str_replace(["\r\n", "\r"], "\n", $textValue);
 
         return $textValue;
     }

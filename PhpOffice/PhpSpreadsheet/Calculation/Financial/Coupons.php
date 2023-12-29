@@ -66,13 +66,13 @@ class Coupons
         }
 
         $daysPerYear = Helpers::daysPerYear(Functions::scalar(DateTimeExcel\DateParts::year($settlement)), $basis);
-        if (is_string($daysPerYear)) {
+        if (\is_string($daysPerYear)) {
             return ExcelError::VALUE();
         }
         $prev = self::couponFirstPeriodDate($settlement, $maturity, $frequency, self::PERIOD_DATE_PREVIOUS);
 
         if ($basis === FinancialConstants::BASIS_DAYS_PER_YEAR_ACTUAL) {
-            return abs((float) DateTimeExcel\Days::between($prev, $settlement));
+            return \abs((float) DateTimeExcel\Days::between($prev, $settlement));
         }
 
         return (float) DateTimeExcel\YearFrac::fraction($prev, $settlement, $basis) * $daysPerYear;
@@ -327,7 +327,7 @@ class Coupons
             FinancialConstants::BASIS_DAYS_PER_YEAR_NASD
         );
 
-        return (int) ceil((float) $yearsBetweenSettlementAndMaturity * $frequency);
+        return (int) \ceil((float) $yearsBetweenSettlementAndMaturity * $frequency);
     }
 
     /**
@@ -385,12 +385,12 @@ class Coupons
         return self::couponFirstPeriodDate($settlement, $maturity, $frequency, self::PERIOD_DATE_PREVIOUS);
     }
 
-    private static function monthsDiff(DateTime $result, int $months, string $plusOrMinus, int $day, bool $lastDayFlag): void
+    private static function monthsDiff(\DateTime $result, int $months, string $plusOrMinus, int $day, bool $lastDayFlag): void
     {
         $result->setDate((int) $result->format('Y'), (int) $result->format('m'), 1);
         $result->modify("$plusOrMinus $months months");
         $daysInMonth = (int) $result->format('t');
-        $result->setDate((int) $result->format('Y'), (int) $result->format('m'), $lastDayFlag ? $daysInMonth : min($day, $daysInMonth));
+        $result->setDate((int) $result->format('Y'), (int) $result->format('m'), $lastDayFlag ? $daysInMonth : \min($day, $daysInMonth));
     }
 
     private static function couponFirstPeriodDate(float $settlement, float $maturity, int $frequency, bool $next): float

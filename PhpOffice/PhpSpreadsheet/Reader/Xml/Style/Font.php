@@ -36,7 +36,7 @@ class Font extends StyleBase
         return $style;
     }
 
-    public function parseStyle(SimpleXMLElement $styleAttributes): array
+    public function parseStyle(\SimpleXMLElement $styleAttributes): array
     {
         $style = [];
 
@@ -52,7 +52,7 @@ class Font extends StyleBase
 
                     break;
                 case 'Color':
-                    $style['font']['color']['rgb'] = substr($styleAttributeValue, 1);
+                    $style['font']['color']['rgb'] = \substr($styleAttributeValue, 1);
 
                     break;
                 case 'Bold':

@@ -102,15 +102,15 @@ class DateFormatter
     private static function tryInterval(bool &$seekingBracket, string &$block, $value, string $format): void
     {
         if ($seekingBracket) {
-            if (false !== strpos($block, $format)) {
-                $hours = (string) (int) round(
+            if (false !== \strpos($block, $format)) {
+                $hours = (string) (int) \round(
                     self::INTERVAL_MULTIPLIER[$format] * $value,
                     self::INTERVAL_ROUND_PRECISION[$format]
                 );
-                if (strlen($hours) === 1 && in_array($format, self::INTERVAL_LEADING_ZERO, true)) {
+                if (\strlen($hours) === 1 && \in_array($format, self::INTERVAL_LEADING_ZERO, true)) {
                     $hours = "0$hours";
                 }
-                $block = str_replace($format, $hours, $block);
+                $block = \str_replace($format, $hours, $block);
                 $seekingBracket = false;
             }
         }
@@ -123,21 +123,21 @@ class DateFormatter
         // general syntax: [$<Currency string>-<language info>]
         // language info is in hexadecimal
         // strip off chinese part like [DBNum1][$-804]
-        $format = (string) preg_replace('/^(\[DBNum\d\])*(\[\$[^\]]*\])/i', '', $format);
+        $format = (string) \preg_replace('/^(\[DBNum\d\])*(\[\$[^\]]*\])/i', '', $format);
 
         // OpenOffice.org uses upper-case number formats, e.g. 'YYYY', convert to lower-case;
         //    but we don't want to change any quoted strings
         /** @var callable */
         $callable = [self::class, 'setLowercaseCallback'];
-        $format = (string) preg_replace_callback('/(?:^|")([^"]*)(?:$|")/', $callable, $format);
+        $format = (string) \preg_replace_callback('/(?:^|")([^"]*)(?:$|")/', $callable, $format);
 
         // Only process the non-quoted blocks for date format characters
 
-        $blocks = explode('"', $format);
+        $blocks = \explode('"', $format);
         foreach ($blocks as $key => &$block) {
             if ($key % 2 == 0) {
-                $block = strtr($block, self::DATE_FORMAT_REPLACEMENTS);
-                if (!strpos($block, 'A')) {
+                $block = \strtr($block, self::DATE_FORMAT_REPLACEMENTS);
+                if (!\strpos($block, 'A')) {
                     // 24-hour time format
                     // when [h]:mm format, the [h] should replace to the hours of the value * 24
                     $seekingBracket = true;
@@ -147,19 +147,19 @@ class DateFormatter
                     self::tryInterval($seekingBracket, $block, $value, '[m]');
                     self::tryInterval($seekingBracket, $block, $value, '[s]');
                     self::tryInterval($seekingBracket, $block, $value, '[ss]');
-                    $block = strtr($block, self::DATE_FORMAT_REPLACEMENTS24);
+                    $block = \strtr($block, self::DATE_FORMAT_REPLACEMENTS24);
                 } else {
                     // 12-hour time format
-                    $block = strtr($block, self::DATE_FORMAT_REPLACEMENTS12);
+                    $block = \strtr($block, self::DATE_FORMAT_REPLACEMENTS12);
                 }
             }
         }
-        $format = implode('"', $blocks);
+        $format = \implode('"', $blocks);
 
         // escape any quoted characters so that DateTime format() will render them correctly
         /** @var callable */
         $callback = [self::class, 'escapeQuotesCallback'];
-        $format = (string) preg_replace_callback('/"(.*)"/U', $callback, $format);
+        $format = (string) \preg_replace_callback('/"(.*)"/U', $callback, $format);
 
         $dateObj = Date::excelToDateTimeObject($value);
         // If the colon preceding minute had been quoted, as happens in
@@ -172,11 +172,11 @@ class DateFormatter
 
     private static function setLowercaseCallback(array $matches): string
     {
-        return mb_strtolower($matches[0]);
+        return \mb_strtolower($matches[0]);
     }
 
     private static function escapeQuotesCallback(array $matches): string
     {
-        return '\\' . implode('\\', /** @scrutinizer ignore-type */ str_split($matches[1]));
+        return '\\' . \implode('\\', /** @scrutinizer ignore-type */ \str_split($matches[1]));
     }
 }

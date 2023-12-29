@@ -72,7 +72,7 @@ class ZipFile extends AbstractDrawingAdapter
 
     public function getExtension(): string
     {
-        return pathinfo($this->getZipFileIn(), PATHINFO_EXTENSION);
+        return \pathinfo($this->getZipFileIn(), PATHINFO_EXTENSION);
     }
 
     /**
@@ -85,39 +85,39 @@ class ZipFile extends AbstractDrawingAdapter
         }
         $oArchive = new \ZipArchive();
         $oArchive->open($this->getZipFileOut());
-        if (!function_exists('getimagesizefromstring')) {
-            $uri = 'data://application/octet-stream;base64,' . base64_encode($oArchive->getFromName($this->getZipFileIn()));
-            $image = getimagesize($uri);
+        if (!\function_exists('getimagesizefromstring')) {
+            $uri = 'data://application/octet-stream;base64,' . \base64_encode($oArchive->getFromName($this->getZipFileIn()));
+            $image = \getimagesize($uri);
         } else {
-            $image = getimagesizefromstring($oArchive->getFromName($this->getZipFileIn()));
+            $image = \getimagesizefromstring($oArchive->getFromName($this->getZipFileIn()));
         }
 
-        return image_type_to_mime_type($image[2]);
+        return \image_type_to_mime_type($image[2]);
     }
 
     public function getIndexedFilename(): string
     {
-        $output = pathinfo($this->getZipFileIn(), PATHINFO_FILENAME);
-        $output = str_replace('.' . $this->getExtension(), '', $output);
+        $output = \pathinfo($this->getZipFileIn(), PATHINFO_FILENAME);
+        $output = \str_replace('.' . $this->getExtension(), '', $output);
         $output .= $this->getImageIndex();
         $output .= '.' . $this->getExtension();
-        $output = str_replace(' ', '_', $output);
+        $output = \str_replace(' ', '_', $output);
 
         return $output;
     }
 
     protected function getZipFileOut(): string
     {
-        $path = str_replace('zip://', '', $this->getPath());
-        $path = explode('#', $path);
+        $path = \str_replace('zip://', '', $this->getPath());
+        $path = \explode('#', $path);
 
         return empty($path[0]) ? '' : $path[0];
     }
 
     protected function getZipFileIn(): string
     {
-        $path = str_replace('zip://', '', $this->getPath());
-        $path = explode('#', $path);
+        $path = \str_replace('zip://', '', $this->getPath());
+        $path = \explode('#', $path);
 
         return empty($path[1]) ? '' : $path[1];
     }

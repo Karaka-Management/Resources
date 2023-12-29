@@ -267,7 +267,7 @@ class Cell
 
                 break;
             case DataType::TYPE_NUMERIC:
-                if (is_string($value) && !is_numeric($value)) {
+                if (\is_string($value) && !\is_numeric($value)) {
                     throw new Exception('Invalid numeric value for datatype Numeric');
                 }
                 $this->value = 0 + $value;
@@ -339,7 +339,7 @@ class Cell
      */
     private function convertDateTimeInt($result)
     {
-        if (is_int($result)) {
+        if (\is_int($result)) {
             if (self::$calculateDateTimeType === self::CALCULATE_TIME_FLOAT) {
                 if (SharedDate::isDateTime($this, $result, false)) {
                     $result = (float) $result;
@@ -374,15 +374,15 @@ class Cell
                 $this->getWorksheet()->setSelectedCells($selected);
                 $this->getWorksheet()->getParent()->setActiveSheetIndex($index);
                 //    We don't yet handle array returns
-                if (is_array($result)) {
-                    while (is_array($result)) {
-                        $result = array_shift($result);
+                if (\is_array($result)) {
+                    while (\is_array($result)) {
+                        $result = \array_shift($result);
                     }
                 }
             } catch (Exception $ex) {
                 if (($ex->getMessage() === 'Unable to access External Workbook') && ($this->calculatedValue !== null)) {
                     return $this->calculatedValue; // Fallback for calculations referencing external files.
-                } elseif (preg_match('/[Uu]ndefined (name|offset: 2|array key 2)/', $ex->getMessage()) === 1) {
+                } elseif (\preg_match('/[Uu]ndefined (name|offset: 2|array key 2)/', $ex->getMessage()) === 1) {
                     return ExcelError::NAME();
                 }
 
@@ -411,7 +411,7 @@ class Cell
     public function setCalculatedValue($originalValue): self
     {
         if ($originalValue !== null) {
-            $this->calculatedValue = (is_numeric($originalValue)) ? (float) $originalValue : $originalValue;
+            $this->calculatedValue = (\is_numeric($originalValue)) ? (float) $originalValue : $originalValue;
         }
 
         return $this->updateInCollection();
@@ -729,9 +729,9 @@ class Cell
      */
     public function __clone()
     {
-        $vars = get_object_vars($this);
+        $vars = \get_object_vars($this);
         foreach ($vars as $propertyName => $propertyValue) {
-            if ((is_object($propertyValue)) && ($propertyName !== 'parent')) {
+            if ((\is_object($propertyValue)) && ($propertyName !== 'parent')) {
                 $this->$propertyName = clone $propertyValue;
             } else {
                 $this->$propertyName = $propertyValue;

@@ -146,14 +146,14 @@ class Document
         $this->phpWord = $phpWord;
         $this->section = $phpWord->addSection();
         $this->textrun = $this->section->addTextRun();
-        $this->length = strlen($this->rtf);
+        $this->length = \strlen($this->rtf);
 
         $this->flags['paragraph'] = true; // Set paragraph flag from the beginning
 
         // Walk each characters
         while ($this->offset < $this->length) {
             $char = $this->rtf[$this->offset];
-            $ascii = ord($char);
+            $ascii = \ord($char);
 
             if (isset($markers[$ascii])) { // Marker found: {, }, \, LF, or CR
                 $markerFunction = $markers[$ascii];
@@ -162,7 +162,7 @@ class Document
                 if (false === $this->isControl) { // Non control word: Push character
                     $this->pushText($char);
                 } else {
-                    if (preg_match('/^[a-zA-Z0-9-]?$/', $char)) { // No delimiter: Buffer control
+                    if (\preg_match('/^[a-zA-Z0-9-]?$/', $char)) { // No delimiter: Buffer control
                         $this->control .= $char;
                         $this->isFirst = false;
                     } else { // Delimiter found: Parse buffered control
@@ -187,7 +187,7 @@ class Document
     private function markOpening(): void
     {
         $this->flush(true);
-        array_push($this->groups, $this->flags);
+        \array_push($this->groups, $this->flags);
     }
 
     /**
@@ -196,7 +196,7 @@ class Document
     private function markClosing(): void
     {
         $this->flush(true);
-        $this->flags = array_pop($this->groups);
+        $this->flags = \array_pop($this->groups);
     }
 
     /**
@@ -245,7 +245,7 @@ class Document
      */
     private function flushControl($isControl = false): void
     {
-        if (1 === preg_match('/^([A-Za-z]+)(-?[0-9]*) ?$/', $this->control, $match)) {
+        if (1 === \preg_match('/^([A-Za-z]+)(-?[0-9]*) ?$/', $this->control, $match)) {
             [, $control, $parameter] = $match;
             $this->parseControl($control, $parameter);
         }
@@ -338,9 +338,9 @@ class Document
 
         if (isset($controls[$control])) {
             [$function] = $controls[$control];
-            if (method_exists($this, $function)) {
+            if (\method_exists($this, $function)) {
                 $directives = $controls[$control];
-                array_shift($directives); // remove the function variable; we won't need it
+                \array_shift($directives); // remove the function variable; we won't need it
                 $this->$function($directives);
             }
         }

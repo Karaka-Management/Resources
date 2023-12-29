@@ -38,7 +38,7 @@ class SheetView
     /**
      * ShowZeros.
      *
-     * If true, "null" values from a calculation will be shown as "0". This is the default Excel behaviour and can be changed
+     * If true, "null" values from a calculation will be shown as "0". This is the default Excel behavior and can be changed
      * with the advanced worksheet option "Show a zero in cells that have zero value"
      *
      * @var bool
@@ -167,7 +167,7 @@ class SheetView
         if ($sheetViewType === null) {
             $sheetViewType = self::SHEETVIEW_NORMAL;
         }
-        if (in_array($sheetViewType, self::SHEET_VIEW_TYPES)) {
+        if (\in_array($sheetViewType, self::SHEET_VIEW_TYPES)) {
             $this->sheetviewType = $sheetViewType;
         } else {
             throw new PhpSpreadsheetException('Invalid sheetview layout type.');
@@ -181,9 +181,9 @@ class SheetView
      */
     public function __clone()
     {
-        $vars = get_object_vars($this);
+        $vars = \get_object_vars($this);
         foreach ($vars as $key => $value) {
-            if (is_object($value)) {
+            if (\is_object($value)) {
                 $this->$key = clone $value;
             } else {
                 $this->$key = $value;

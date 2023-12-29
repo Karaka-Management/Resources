@@ -194,7 +194,7 @@ class Border implements ComparableInterface
      */
     public function getHashCode(): string
     {
-        return md5(
+        return \md5(
             $this->lineStyle
             . $this->lineWidth
             . $this->dashStyle

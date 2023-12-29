@@ -48,7 +48,7 @@ class Table extends AbstractStyle
         $xmlWriter->endElement(); // style:style
 
         $cellWidths = $style->getColumnWidths();
-        $countCellWidths = $cellWidths === null ? 0 : count($cellWidths);
+        $countCellWidths = $cellWidths === null ? 0 : \count($cellWidths);
 
         for ($i = 0; $i < $countCellWidths; ++$i) {
             $width = $cellWidths[$i];
@@ -56,7 +56,7 @@ class Table extends AbstractStyle
             $xmlWriter->writeAttribute('style:name', $style->getStyleName() . '.' . $i);
             $xmlWriter->writeAttribute('style:family', 'table-column');
             $xmlWriter->startElement('style:table-column-properties');
-            $xmlWriter->writeAttribute('style:column-width', number_format($width * 0.0017638889, 2, '.', '') . 'cm');
+            $xmlWriter->writeAttribute('style:column-width', \number_format($width * 0.0017638889, 2, '.', '') . 'cm');
             $xmlWriter->endElement(); // style:table-column-properties
             $xmlWriter->endElement(); // style:style
         }

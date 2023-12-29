@@ -43,7 +43,7 @@ class PptSlideLayouts extends AbstractSlide
                 // Add background image slide
                 $oBkgImage = $oSlideLayout->getBackground();
                 if ($oBkgImage instanceof Image) {
-                    $this->oZip->addFromString('ppt/media/' . $oBkgImage->getIndexedFilename($oSlideLayout->getRelsIndex()), file_get_contents($oBkgImage->getPath()));
+                    $this->oZip->addFromString('ppt/media/' . $oBkgImage->getIndexedFilename($oSlideLayout->getRelsIndex()), \file_get_contents($oBkgImage->getPath()));
                 }
             }
         }
@@ -166,7 +166,7 @@ class PptSlideLayouts extends AbstractSlide
 
         // p:sldLayout\p:clrMapOvr
         $objWriter->startElement('p:clrMapOvr');
-        $arrayDiff = array_diff_assoc(ColorMap::$mappingDefault, $pSlideLayout->colorMap->getMapping());
+        $arrayDiff = \array_diff_assoc(ColorMap::$mappingDefault, $pSlideLayout->colorMap->getMapping());
         if (!empty($arrayDiff)) {
             // p:sldLayout\p:clrMapOvr\a:overrideClrMapping
             $objWriter->startElement('a:overrideClrMapping');
@@ -181,7 +181,7 @@ class PptSlideLayouts extends AbstractSlide
         // p:sldLayout\p:clrMapOvr\
         $objWriter->endElement();
 
-        if (!is_null($pSlideLayout->getTransition())) {
+        if (!\is_null($pSlideLayout->getTransition())) {
             $this->writeSlideTransition($objWriter, $pSlideLayout->getTransition());
         }
 

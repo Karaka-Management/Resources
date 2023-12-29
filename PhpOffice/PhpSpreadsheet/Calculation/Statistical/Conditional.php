@@ -32,7 +32,7 @@ class Conditional
      */
     public static function AVERAGEIF($range, $condition, $averageRange = [])
     {
-        if (!is_array($range) || !is_array($averageRange) || array_key_exists(0, $range) || array_key_exists(0, $averageRange)) {
+        if (!\is_array($range) || !\is_array($averageRange) || \array_key_exists(0, $range) || \array_key_exists(0, $averageRange)) {
             throw new CalcException('Must specify range of cells, not any kind of literal');
         }
         $database = self::databaseFromRangeAndValue($range, $averageRange);
@@ -57,11 +57,11 @@ class Conditional
     {
         if (empty($args)) {
             return 0.0;
-        } elseif (count($args) === 3) {
+        } elseif (\count($args) === 3) {
             return self::AVERAGEIF($args[1], $args[2], $args[0]);
         }
         foreach ($args as $arg) {
-            if (is_array($arg) && array_key_exists(0, $arg)) {
+            if (\is_array($arg) && \array_key_exists(0, $arg)) {
                 throw new CalcException('Must specify range of cells, not any kind of literal');
             }
         }
@@ -88,15 +88,15 @@ class Conditional
     public static function COUNTIF($range, $condition)
     {
         // Filter out any empty values that shouldn't be included in a COUNT
-        $range = array_filter(
+        $range = \array_filter(
             Functions::flattenArray($range),
             function ($value) {
                 return $value !== null && $value !== '';
             }
         );
 
-        $range = array_merge([[self::CONDITION_COLUMN_NAME]], array_chunk($range, 1));
-        $condition = array_merge([[self::CONDITION_COLUMN_NAME]], [[$condition]]);
+        $range = \array_merge([[self::CONDITION_COLUMN_NAME]], \array_chunk($range, 1));
+        $condition = \array_merge([[self::CONDITION_COLUMN_NAME]], [[$condition]]);
 
         return DCount::evaluate($range, null, $condition, false);
     }
@@ -117,7 +117,7 @@ class Conditional
     {
         if (empty($args)) {
             return 0;
-        } elseif (count($args) === 2) {
+        } elseif (\count($args) === 2) {
             return self::COUNTIF(...$args);
         }
 
@@ -213,7 +213,7 @@ class Conditional
     {
         if (empty($args)) {
             return 0.0;
-        } elseif (count($args) === 3) {
+        } elseif (\count($args) === 3) {
             return self::SUMIF($args[1], $args[2], $args[0]);
         }
 
@@ -228,15 +228,15 @@ class Conditional
         $conditions = self::buildConditions(1, ...$args);
 
         // Scrutinizer thinks first parameter of array_map can't be null. It is wrong.
-        return array_map(/** @scrutinizer ignore-type */ null, ...$conditions);
+        return \array_map(/** @scrutinizer ignore-type */ null, ...$conditions);
     }
 
     private static function buildConditionSetForValueRange(...$args): array
     {
         $conditions = self::buildConditions(2, ...$args);
 
-        if (count($conditions) === 1) {
-            return array_map(
+        if (\count($conditions) === 1) {
+            return \array_map(
                 function ($value) {
                     return [$value];
                 },
@@ -244,7 +244,7 @@ class Conditional
             );
         }
 
-        return array_map(/** @scrutinizer ignore-type */ null, ...$conditions);
+        return \array_map(/** @scrutinizer ignore-type */ null, ...$conditions);
     }
 
     private static function buildConditions(int $startOffset, ...$args): array
@@ -252,9 +252,9 @@ class Conditional
         $conditions = [];
 
         $pairCount = 1;
-        $argumentCount = count($args);
+        $argumentCount = \count($args);
         for ($argument = $startOffset; $argument < $argumentCount; $argument += 2) {
-            $conditions[] = array_merge([sprintf(self::CONDITIONAL_COLUMN_NAME, $pairCount)], [$args[$argument]]);
+            $conditions[] = \array_merge([\sprintf(self::CONDITIONAL_COLUMN_NAME, $pairCount)], [$args[$argument]]);
             ++$pairCount;
         }
 
@@ -271,7 +271,7 @@ class Conditional
     private static function buildDatabaseWithValueRange(...$args): array
     {
         $database = [];
-        $database[] = array_merge(
+        $database[] = \array_merge(
             [self::VALUE_COLUMN_NAME],
             Functions::flattenArray($args[0])
         );
@@ -282,16 +282,16 @@ class Conditional
     private static function buildDataSet(int $startOffset, array $database, ...$args): array
     {
         $pairCount = 1;
-        $argumentCount = count($args);
+        $argumentCount = \count($args);
         for ($argument = $startOffset; $argument < $argumentCount; $argument += 2) {
-            $database[] = array_merge(
-                [sprintf(self::CONDITIONAL_COLUMN_NAME, $pairCount)],
+            $database[] = \array_merge(
+                [\sprintf(self::CONDITIONAL_COLUMN_NAME, $pairCount)],
                 Functions::flattenArray($args[$argument])
             );
             ++$pairCount;
         }
 
-        return array_map(/** @scrutinizer ignore-type */ null, ...$database);
+        return \array_map(/** @scrutinizer ignore-type */ null, ...$database);
     }
 
     private static function databaseFromRangeAndValue(array $range, array $valueRange = []): array
@@ -303,7 +303,7 @@ class Conditional
             $valueRange = $range;
         }
 
-        $database = array_map(/** @scrutinizer ignore-type */ null, array_merge([self::CONDITION_COLUMN_NAME], $range), array_merge([self::VALUE_COLUMN_NAME], $valueRange));
+        $database = \array_map(/** @scrutinizer ignore-type */ null, \array_merge([self::CONDITION_COLUMN_NAME], $range), \array_merge([self::VALUE_COLUMN_NAME], $valueRange));
 
         return $database;
     }

@@ -134,7 +134,7 @@ class Cells
      */
     public function getCoordinates()
     {
-        return array_keys($this->index);
+        return \array_keys($this->index);
     }
 
     /**
@@ -144,9 +144,9 @@ class Cells
      */
     public function getSortedCoordinates()
     {
-        asort($this->index);
+        \asort($this->index);
 
-        return array_keys($this->index);
+        return \array_keys($this->index);
     }
 
     /**
@@ -166,7 +166,7 @@ class Cells
     {
         $column = 0;
         $row = '';
-        sscanf($this->currentCoordinate ?? '', '%[A-Z]%d', $column, $row);
+        \sscanf($this->currentCoordinate ?? '', '%[A-Z]%d', $column, $row);
 
         return (string) $column;
     }
@@ -178,7 +178,7 @@ class Cells
     {
         $column = 0;
         $row = '';
-        sscanf($this->currentCoordinate ?? '', '%[A-Z]%d', $column, $row);
+        \sscanf($this->currentCoordinate ?? '', '%[A-Z]%d', $column, $row);
 
         return (int) $row;
     }
@@ -193,7 +193,7 @@ class Cells
         // Lookup highest column and highest row
         $maxRow = $maxColumn = 1;
         foreach ($this->index as $coordinate) {
-            $row = (int) floor($coordinate / self::MAX_COLUMN_ID) + 1;
+            $row = (int) \floor($coordinate / self::MAX_COLUMN_ID) + 1;
             $maxRow = ($maxRow > $row) ? $maxRow : $row;
             $column = $coordinate % self::MAX_COLUMN_ID;
             $maxColumn = ($maxColumn > $column) ? $maxColumn : $column;
@@ -258,7 +258,7 @@ class Cells
             if ($coordinate % self::MAX_COLUMN_ID !== $columnIndex) {
                 continue;
             }
-            $row = (int) floor($coordinate / self::MAX_COLUMN_ID) + 1;
+            $row = (int) \floor($coordinate / self::MAX_COLUMN_ID) + 1;
             $maxRow = ($maxRow > $row) ? $maxRow : $row;
         }
 
@@ -275,8 +275,8 @@ class Cells
         $cacheType = Settings::getCache();
 
         return ($cacheType instanceof Memory\SimpleCache1 || $cacheType instanceof Memory\SimpleCache3)
-            ? random_bytes(7) . ':'
-            : uniqid('phpspreadsheet.', true) . '.';
+            ? \random_bytes(7) . ':'
+            : \uniqid('phpspreadsheet.', true) . '.';
     }
 
     /**
@@ -323,7 +323,7 @@ class Cells
         $fromRow = --$row * self::MAX_COLUMN_ID;
         foreach ($this->index as $coordinate) {
             if ($coordinate >= $fromRow && $coordinate < $toRow) {
-                $row = (int) floor($coordinate / self::MAX_COLUMN_ID) + 1;
+                $row = (int) \floor($coordinate / self::MAX_COLUMN_ID) + 1;
                 $column = Coordinate::stringFromColumnIndex($coordinate % self::MAX_COLUMN_ID);
                 $this->delete("{$column}{$row}");
             }
@@ -342,7 +342,7 @@ class Cells
         $columnIndex = Coordinate::columnIndexFromString($column);
         foreach ($this->index as $coordinate) {
             if ($coordinate % self::MAX_COLUMN_ID === $columnIndex) {
-                $row = (int) floor($coordinate / self::MAX_COLUMN_ID) + 1;
+                $row = (int) \floor($coordinate / self::MAX_COLUMN_ID) + 1;
                 $column = Coordinate::stringFromColumnIndex($coordinate % self::MAX_COLUMN_ID);
                 $this->delete("{$column}{$row}");
             }
@@ -391,7 +391,7 @@ class Cells
         }
         $column = 0;
         $row = '';
-        sscanf($cellCoordinate, '%[A-Z]%d', $column, $row);
+        \sscanf($cellCoordinate, '%[A-Z]%d', $column, $row);
         $this->index[$cellCoordinate] = (--$row * self::MAX_COLUMN_ID) + Coordinate::columnIndexFromString((string) $column);
 
         $this->currentCoordinate = $cellCoordinate;
@@ -467,7 +467,7 @@ class Cells
     /**
      * Returns all known cache keys.
      *
-     * @return Generator|string[]
+     * @return \Generator|string[]
      */
     private function getAllCacheKeys()
     {

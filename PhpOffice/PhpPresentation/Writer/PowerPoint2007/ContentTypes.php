@@ -67,7 +67,7 @@ class ContentTypes extends AbstractDecoratorWriter
 
         // Slide masters
         $sldLayoutNr = 0;
-        $sldLayoutId = time() + 689016272; // requires minimum value of 2 147 483 648
+        $sldLayoutId = \time() + 689016272; // requires minimum value of 2 147 483 648
         foreach ($this->oPresentation->getAllMasterSlides() as $idx => $oSlideMaster) {
             $oSlideMaster->setRelsIndex((string) ($idx + 1));
             $this->writeOverrideContentType($objWriter, '/ppt/slideMasters/slideMaster' . $oSlideMaster->getRelsIndex() . '.xml', 'application/vnd.openxmlformats-officedocument.presentationml.slideMaster+xml');
@@ -129,7 +129,7 @@ class ContentTypes extends AbstractDecoratorWriter
                     'application/vnd.openxmlformats-officedocument.drawingml.chart+xml'
                 );
             } elseif ($shapeIndex instanceof AbstractDrawingAdapter) {
-                $extension = strtolower($shapeIndex->getExtension());
+                $extension = \strtolower($shapeIndex->getExtension());
                 $mimeType = $shapeIndex->getMimeType();
 
                 if (!isset($aMediaContentTypes[$extension])) {

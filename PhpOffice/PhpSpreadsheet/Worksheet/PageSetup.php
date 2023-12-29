@@ -630,7 +630,7 @@ class PageSetup
      * Get print area.
      *
      * @param int $index Identifier for a specific print area range if several ranges have been set
-     *                            Default behaviour, or a index value of 0, will return all ranges as a comma-separated string
+     *                            Default behavior, or a index value of 0, will return all ranges as a comma-separated string
      *                            Otherwise, the specific range identified by the value of $index will be returned
      *                            Print areas are numbered from 1
      *
@@ -641,7 +641,7 @@ class PageSetup
         if ($index == 0) {
             return $this->printArea;
         }
-        $printAreas = explode(',', (string) $this->printArea);
+        $printAreas = \explode(',', (string) $this->printArea);
         if (isset($printAreas[$index - 1])) {
             return $printAreas[$index - 1];
         }
@@ -653,7 +653,7 @@ class PageSetup
      * Is print area set?
      *
      * @param int $index Identifier for a specific print area range if several ranges have been set
-     *                            Default behaviour, or an index value of 0, will identify whether any print range is set
+     *                            Default behavior, or an index value of 0, will identify whether any print range is set
      *                            Otherwise, existence of the range identified by the value of $index will be returned
      *                            Print areas are numbered from 1
      *
@@ -664,7 +664,7 @@ class PageSetup
         if ($index == 0) {
             return $this->printArea !== null;
         }
-        $printAreas = explode(',', (string) $this->printArea);
+        $printAreas = \explode(',', (string) $this->printArea);
 
         return isset($printAreas[$index - 1]);
     }
@@ -673,7 +673,7 @@ class PageSetup
      * Clear a print area.
      *
      * @param int $index Identifier for a specific print area range if several ranges have been set
-     *                            Default behaviour, or an index value of 0, will clear all print ranges that are set
+     *                            Default behavior, or an index value of 0, will clear all print ranges that are set
      *                            Otherwise, the range identified by the value of $index will be removed from the series
      *                            Print areas are numbered from 1
      *
@@ -684,10 +684,10 @@ class PageSetup
         if ($index == 0) {
             $this->printArea = null;
         } else {
-            $printAreas = explode(',', (string) $this->printArea);
+            $printAreas = \explode(',', (string) $this->printArea);
             if (isset($printAreas[$index - 1])) {
                 unset($printAreas[$index - 1]);
-                $this->printArea = implode(',', $printAreas);
+                $this->printArea = \implode(',', $printAreas);
             }
         }
 
@@ -709,21 +709,21 @@ class PageSetup
      *                                list.
      *                            Print areas are numbered from 1
      * @param string $method Determines the method used when setting multiple print areas
-     *                            Default behaviour, or the "O" method, overwrites existing print area
+     *                            Default behavior, or the "O" method, overwrites existing print area
      *                            The "I" method, inserts the new print area before any specified index, or at the end of the list
      *
      * @return $this
      */
     public function setPrintArea($value, $index = 0, $method = self::SETPRINTRANGE_OVERWRITE)
     {
-        if (strpos($value, '!') !== false) {
+        if (\strpos($value, '!') !== false) {
             throw new PhpSpreadsheetException('Cell coordinate must not specify a worksheet.');
-        } elseif (strpos($value, ':') === false) {
+        } elseif (\strpos($value, ':') === false) {
             throw new PhpSpreadsheetException('Cell coordinate must be a range of cells.');
-        } elseif (strpos($value, '$') !== false) {
+        } elseif (\strpos($value, '$') !== false) {
             throw new PhpSpreadsheetException('Cell coordinate must not be absolute.');
         }
-        $value = strtoupper($value);
+        $value = \strtoupper($value);
         if (!$this->printArea) {
             $index = 0;
         }
@@ -732,29 +732,29 @@ class PageSetup
             if ($index == 0) {
                 $this->printArea = $value;
             } else {
-                $printAreas = explode(',', (string) $this->printArea);
+                $printAreas = \explode(',', (string) $this->printArea);
                 if ($index < 0) {
-                    $index = count($printAreas) - abs($index) + 1;
+                    $index = \count($printAreas) - \abs($index) + 1;
                 }
-                if (($index <= 0) || ($index > count($printAreas))) {
+                if (($index <= 0) || ($index > \count($printAreas))) {
                     throw new PhpSpreadsheetException('Invalid index for setting print range.');
                 }
                 $printAreas[$index - 1] = $value;
-                $this->printArea = implode(',', $printAreas);
+                $this->printArea = \implode(',', $printAreas);
             }
         } elseif ($method == self::SETPRINTRANGE_INSERT) {
             if ($index == 0) {
                 $this->printArea = $this->printArea ? ($this->printArea . ',' . $value) : $value;
             } else {
-                $printAreas = explode(',', (string) $this->printArea);
+                $printAreas = \explode(',', (string) $this->printArea);
                 if ($index < 0) {
-                    $index = (int) abs($index) - 1;
+                    $index = (int) \abs($index) - 1;
                 }
-                if ($index > count($printAreas)) {
+                if ($index > \count($printAreas)) {
                     throw new PhpSpreadsheetException('Invalid index for setting print range.');
                 }
-                $printAreas = array_merge(array_slice($printAreas, 0, $index), [$value], array_slice($printAreas, $index));
-                $this->printArea = implode(',', $printAreas);
+                $printAreas = \array_merge(\array_slice($printAreas, 0, $index), [$value], \array_slice($printAreas, $index));
+                $this->printArea = \implode(',', $printAreas);
             }
         } else {
             throw new PhpSpreadsheetException('Invalid method for setting print range.');
@@ -799,7 +799,7 @@ class PageSetup
      *                                    list.
      *                                Print areas are numbered from 1
      * @param string $method Determines the method used when setting multiple print areas
-     *                                Default behaviour, or the "O" method, overwrites existing print area
+     *                                Default behavior, or the "O" method, overwrites existing print area
      *                                The "I" method, inserts the new print area before any specified index, or at the end of the list
      *
      * @return $this
@@ -891,9 +891,9 @@ class PageSetup
      */
     public function __clone()
     {
-        $vars = get_object_vars($this);
+        $vars = \get_object_vars($this);
         foreach ($vars as $key => $value) {
-            if (is_object($value)) {
+            if (\is_object($value)) {
                 $this->$key = clone $value;
             } else {
                 $this->$key = $value;

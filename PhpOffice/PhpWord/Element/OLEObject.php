@@ -69,17 +69,17 @@ class OLEObject extends AbstractElement
     public function __construct($source, $style = null)
     {
         $supportedTypes = ['xls', 'doc', 'ppt', 'xlsx', 'docx', 'pptx'];
-        $pathInfo = pathinfo($source);
+        $pathInfo = \pathinfo($source);
 
-        if (file_exists($source) && in_array($pathInfo['extension'], $supportedTypes)) {
+        if (\file_exists($source) && \in_array($pathInfo['extension'], $supportedTypes)) {
             $ext = $pathInfo['extension'];
-            if (strlen($ext) == 4 && strtolower(substr($ext, -1)) == 'x') {
-                $ext = substr($ext, 0, -1);
+            if (\strlen($ext) == 4 && \strtolower(\substr($ext, -1)) == 'x') {
+                $ext = \substr($ext, 0, -1);
             }
 
             $this->source = $source;
             $this->style = $this->setNewStyle(new ImageStyle(), $style, true);
-            $this->icon = realpath(__DIR__ . "/../resources/{$ext}.png");
+            $this->icon = \realpath(__DIR__ . "/../resources/{$ext}.png");
 
             return;
         }

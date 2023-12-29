@@ -34,7 +34,7 @@ class ExcelMatch
      */
     public static function MATCH($lookupValue, $lookupArray, $matchType = self::MATCHTYPE_LARGEST_VALUE)
     {
-        if (is_array($lookupValue)) {
+        if (\is_array($lookupValue)) {
             return self::evaluateArrayArgumentsIgnore([self::class, __FUNCTION__], 1, $lookupValue, $lookupArray, $matchType);
         }
 
@@ -46,11 +46,11 @@ class ExcelMatch
             $matchType = self::validateMatchType($matchType);
             self::validateLookupArray($lookupArray);
 
-            $keySet = array_keys($lookupArray);
+            $keySet = \array_keys($lookupArray);
             if ($matchType == self::MATCHTYPE_LARGEST_VALUE) {
                 // If match_type is 1 the list has to be processed from last to first
-                $lookupArray = array_reverse($lookupArray);
-                $keySet = array_reverse($keySet);
+                $lookupArray = \array_reverse($lookupArray);
+                $keySet = \array_reverse($keySet);
             }
 
             $lookupArray = self::prepareLookupArray($lookupArray, $matchType);
@@ -59,7 +59,7 @@ class ExcelMatch
         }
 
         // MATCH() is not case sensitive, so we convert lookup value to be lower cased if it's a string type.
-        if (is_string($lookupValue)) {
+        if (\is_string($lookupValue)) {
             $lookupValue = StringHelper::strToLower($lookupValue);
         }
 
@@ -93,7 +93,7 @@ class ExcelMatch
      */
     private static function matchFirstValue(array $lookupArray, $lookupValue)
     {
-        if (is_string($lookupValue)) {
+        if (\is_string($lookupValue)) {
             $valueIsString = true;
             $wildcard = WildcardMatch::wildcard($lookupValue);
         } else {
@@ -101,11 +101,11 @@ class ExcelMatch
             $wildcard = '';
         }
 
-        $valueIsNumeric = is_int($lookupValue) || is_float($lookupValue);
+        $valueIsNumeric = \is_int($lookupValue) || \is_float($lookupValue);
         foreach ($lookupArray as $i => $lookupArrayValue) {
             if (
                 $valueIsString
-                && is_string($lookupArrayValue)
+                && \is_string($lookupArrayValue)
             ) {
                 if (WildcardMatch::compare($lookupArrayValue, $wildcard)) {
                     return $i; // wildcard match
@@ -116,7 +116,7 @@ class ExcelMatch
                 }
                 if (
                     $valueIsNumeric
-                    && (is_float($lookupArrayValue) || is_int($lookupArrayValue))
+                    && (\is_float($lookupArrayValue) || \is_int($lookupArrayValue))
                     && $lookupArrayValue == $lookupValue
                 ) {
                     return $i; // exact match
@@ -134,11 +134,11 @@ class ExcelMatch
      */
     private static function matchLargestValue(array $lookupArray, $lookupValue, array $keySet)
     {
-        if (is_string($lookupValue)) {
+        if (\is_string($lookupValue)) {
             if (Functions::getCompatibilityMode() === Functions::COMPATIBILITY_OPENOFFICE) {
                 $wildcard = WildcardMatch::wildcard($lookupValue);
-                foreach (array_reverse($lookupArray) as $i => $lookupArrayValue) {
-                    if (is_string($lookupArrayValue) && WildcardMatch::compare($lookupArrayValue, $wildcard)) {
+                foreach (\array_reverse($lookupArray) as $i => $lookupArrayValue) {
+                    if (\is_string($lookupArrayValue) && WildcardMatch::compare($lookupArrayValue, $wildcard)) {
                         return $i;
                     }
                 }
@@ -150,16 +150,16 @@ class ExcelMatch
                 }
             }
         }
-        $valueIsNumeric = is_int($lookupValue) || is_float($lookupValue);
+        $valueIsNumeric = \is_int($lookupValue) || \is_float($lookupValue);
         foreach ($lookupArray as $i => $lookupArrayValue) {
-            if ($valueIsNumeric && (is_int($lookupArrayValue) || is_float($lookupArrayValue))) {
+            if ($valueIsNumeric && (\is_int($lookupArrayValue) || \is_float($lookupArrayValue))) {
                 if ($lookupArrayValue <= $lookupValue) {
-                    return array_search($i, $keySet);
+                    return \array_search($i, $keySet);
                 }
             }
-            $typeMatch = gettype($lookupValue) === gettype($lookupArrayValue);
+            $typeMatch = \gettype($lookupValue) === \gettype($lookupArrayValue);
             if ($typeMatch && ($lookupArrayValue <= $lookupValue)) {
-                return array_search($i, $keySet);
+                return \array_search($i, $keySet);
             }
         }
 
@@ -174,24 +174,24 @@ class ExcelMatch
     private static function matchSmallestValue(array $lookupArray, $lookupValue)
     {
         $valueKey = null;
-        if (is_string($lookupValue)) {
+        if (\is_string($lookupValue)) {
             if (Functions::getCompatibilityMode() === Functions::COMPATIBILITY_OPENOFFICE) {
                 $wildcard = WildcardMatch::wildcard($lookupValue);
                 foreach ($lookupArray as $i => $lookupArrayValue) {
-                    if (is_string($lookupArrayValue) && WildcardMatch::compare($lookupArrayValue, $wildcard)) {
+                    if (\is_string($lookupArrayValue) && WildcardMatch::compare($lookupArrayValue, $wildcard)) {
                         return $i;
                     }
                 }
             }
         }
 
-        $valueIsNumeric = is_int($lookupValue) || is_float($lookupValue);
+        $valueIsNumeric = \is_int($lookupValue) || \is_float($lookupValue);
         // The basic algorithm is:
         // Iterate and keep the highest match until the next element is smaller than the searched value.
         // Return immediately if perfect match is found
         foreach ($lookupArray as $i => $lookupArrayValue) {
-            $typeMatch = gettype($lookupValue) === gettype($lookupArrayValue);
-            $bothNumeric = $valueIsNumeric && (is_int($lookupArrayValue) || is_float($lookupArrayValue));
+            $typeMatch = \gettype($lookupValue) === \gettype($lookupArrayValue);
+            $bothNumeric = $valueIsNumeric && (\is_int($lookupArrayValue) || \is_float($lookupArrayValue));
 
             if ($lookupArrayValue === $lookupValue) {
                 // Another "special" case. If a perfect match is found,
@@ -218,7 +218,7 @@ class ExcelMatch
     private static function validateLookupValue($lookupValue): void
     {
         // Lookup_value type has to be number, text, or logical values
-        if ((!is_numeric($lookupValue)) && (!is_string($lookupValue)) && (!is_bool($lookupValue))) {
+        if ((!\is_numeric($lookupValue)) && (!\is_string($lookupValue)) && (!\is_bool($lookupValue))) {
             throw new Exception(ExcelError::NA());
         }
     }
@@ -232,7 +232,7 @@ class ExcelMatch
         // However Excel accepts other numeric values,
         //  including numeric strings and floats.
         //  It seems to just be interested in the sign.
-        if (!is_numeric($matchType)) {
+        if (!\is_numeric($matchType)) {
             throw new Exception(ExcelError::Value());
         }
         if ($matchType > 0) {
@@ -248,7 +248,7 @@ class ExcelMatch
     private static function validateLookupArray(array $lookupArray): void
     {
         // Lookup_array should not be empty
-        $lookupArraySize = count($lookupArray);
+        $lookupArraySize = \count($lookupArray);
         if ($lookupArraySize <= 0) {
             throw new Exception(ExcelError::NA());
         }
@@ -262,11 +262,11 @@ class ExcelMatch
         // Lookup_array should contain only number, text, or logical values, or empty (null) cells
         foreach ($lookupArray as $i => $value) {
             //    check the type of the value
-            if ((!is_numeric($value)) && (!is_string($value)) && (!is_bool($value)) && ($value !== null)) {
+            if ((!\is_numeric($value)) && (!\is_string($value)) && (!\is_bool($value)) && ($value !== null)) {
                 throw new Exception(ExcelError::NA());
             }
             // Convert strings to lowercase for case-insensitive testing
-            if (is_string($value)) {
+            if (\is_string($value)) {
                 $lookupArray[$i] = StringHelper::strToLower($value);
             }
             if (

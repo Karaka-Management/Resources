@@ -203,7 +203,7 @@ class Image extends AbstractElement
      */
     public function getMediaId()
     {
-        return md5($this->source);
+        return \md5($this->source);
     }
 
     /**
@@ -336,8 +336,8 @@ class Image extends AbstractElement
         // Get actual source from archive image or other source
         // Return null if not found
         if ($this->sourceType == self::SOURCE_ARCHIVE) {
-            $source = substr($source, 6);
-            [$zipFilename, $imageFilename] = explode('#', $source);
+            $source = \substr($source, 6);
+            [$zipFilename, $imageFilename] = \explode('#', $source);
 
             $zip = new ZipArchive();
             if ($zip->open($zipFilename) !== false) {
@@ -361,35 +361,35 @@ class Image extends AbstractElement
 
         // Read image binary data and convert to hex/base64 string
         if ($this->sourceType == self::SOURCE_GD) {
-            $imageResource = call_user_func($this->imageCreateFunc, $actualSource);
+            $imageResource = \call_user_func($this->imageCreateFunc, $actualSource);
             if ($this->imageType === 'image/png') {
                 // PNG images need to preserve alpha channel information
-                imagesavealpha($imageResource, true);
+                \imagesavealpha($imageResource, true);
             }
-            ob_start();
-            call_user_func($this->imageFunc, $imageResource);
-            $imageBinary = ob_get_contents();
-            ob_end_clean();
+            \ob_start();
+            \call_user_func($this->imageFunc, $imageResource);
+            $imageBinary = \ob_get_contents();
+            \ob_end_clean();
         } elseif ($this->sourceType == self::SOURCE_STRING) {
             $imageBinary = $this->source;
         } else {
-            $fileHandle = fopen($actualSource, 'rb', false);
+            $fileHandle = \fopen($actualSource, 'rb', false);
             if ($fileHandle !== false) {
-                $imageBinary = fread($fileHandle, filesize($actualSource));
-                fclose($fileHandle);
+                $imageBinary = \fread($fileHandle, \filesize($actualSource));
+                \fclose($fileHandle);
             }
         }
         if ($imageBinary !== null) {
             if ($base64) {
-                $imageData = chunk_split(base64_encode($imageBinary));
+                $imageData = \chunk_split(\base64_encode($imageBinary));
             } else {
-                $imageData = chunk_split(bin2hex($imageBinary));
+                $imageData = \chunk_split(\bin2hex($imageBinary));
             }
         }
 
         // Delete temporary file if necessary
         if ($isTemp === true) {
-            @unlink($actualSource);
+            @\unlink($actualSource);
         }
 
         return $imageData;
@@ -406,26 +406,26 @@ class Image extends AbstractElement
         if ($this->sourceType == self::SOURCE_ARCHIVE) {
             $imageData = $this->getArchiveImageSize($this->source);
         } elseif ($this->sourceType == self::SOURCE_STRING) {
-            $imageData = @getimagesizefromstring($this->source);
+            $imageData = @\getimagesizefromstring($this->source);
         } else {
-            $imageData = @getimagesize($this->source);
+            $imageData = @\getimagesize($this->source);
         }
-        if (!is_array($imageData)) {
-            throw new InvalidImageException(sprintf('Invalid image: %s', $this->source));
+        if (!\is_array($imageData)) {
+            throw new InvalidImageException(\sprintf('Invalid image: %s', $this->source));
         }
         [$actualWidth, $actualHeight, $imageType] = $imageData;
 
         // Check image type support
         $supportedTypes = [IMAGETYPE_JPEG, IMAGETYPE_GIF, IMAGETYPE_PNG];
         if ($this->sourceType != self::SOURCE_GD && $this->sourceType != self::SOURCE_STRING) {
-            $supportedTypes = array_merge($supportedTypes, [IMAGETYPE_BMP, IMAGETYPE_TIFF_II, IMAGETYPE_TIFF_MM]);
+            $supportedTypes = \array_merge($supportedTypes, [IMAGETYPE_BMP, IMAGETYPE_TIFF_II, IMAGETYPE_TIFF_MM]);
         }
-        if (!in_array($imageType, $supportedTypes)) {
+        if (!\in_array($imageType, $supportedTypes)) {
             throw new UnsupportedImageTypeException();
         }
 
         // Define image functions
-        $this->imageType = image_type_to_mime_type($imageType);
+        $this->imageType = \image_type_to_mime_type($imageType);
         $this->setFunctions();
         $this->setProportionalSize($actualWidth, $actualHeight);
     }
@@ -435,22 +435,22 @@ class Image extends AbstractElement
      */
     private function setSourceType(): void
     {
-        if (stripos(strrev($this->source), strrev('.php')) === 0) {
+        if (\stripos(\strrev($this->source), \strrev('.php')) === 0) {
             $this->memoryImage = true;
             $this->sourceType = self::SOURCE_GD;
-        } elseif (strpos($this->source, 'zip://') !== false) {
+        } elseif (\strpos($this->source, 'zip://') !== false) {
             $this->memoryImage = false;
             $this->sourceType = self::SOURCE_ARCHIVE;
-        } elseif (filter_var($this->source, FILTER_VALIDATE_URL) !== false) {
+        } elseif (\filter_var($this->source, FILTER_VALIDATE_URL) !== false) {
             $this->memoryImage = true;
-            if (strpos($this->source, 'https') === 0) {
-                $fileContent = file_get_contents($this->source);
+            if (\strpos($this->source, 'https') === 0) {
+                $fileContent = \file_get_contents($this->source);
                 $this->source = $fileContent;
                 $this->sourceType = self::SOURCE_STRING;
             } else {
                 $this->sourceType = self::SOURCE_GD;
             }
-        } elseif ((strpos($this->source, chr(0)) === false) && @file_exists($this->source)) {
+        } elseif ((\strpos($this->source, \chr(0)) === false) && @\file_exists($this->source)) {
             $this->memoryImage = false;
             $this->sourceType = self::SOURCE_LOCAL;
         } else {
@@ -471,10 +471,10 @@ class Image extends AbstractElement
     private function getArchiveImageSize($source)
     {
         $imageData = null;
-        $source = substr($source, 6);
-        [$zipFilename, $imageFilename] = explode('#', $source);
+        $source = \substr($source, 6);
+        [$zipFilename, $imageFilename] = \explode('#', $source);
 
-        $tempFilename = tempnam(Settings::getTempDir(), 'PHPWordImage');
+        $tempFilename = \tempnam(Settings::getTempDir(), 'PHPWordImage');
         if (false === $tempFilename) {
             throw new CreateTemporaryFileException(); // @codeCoverageIgnore
         }
@@ -484,9 +484,9 @@ class Image extends AbstractElement
             if ($zip->locateName($imageFilename) !== false) {
                 $imageContent = $zip->getFromName($imageFilename);
                 if ($imageContent !== false) {
-                    file_put_contents($tempFilename, $imageContent);
-                    $imageData = getimagesize($tempFilename);
-                    unlink($tempFilename);
+                    \file_put_contents($tempFilename, $imageContent);
+                    $imageData = \getimagesize($tempFilename);
+                    \unlink($tempFilename);
                 }
             }
             $zip->close();

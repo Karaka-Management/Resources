@@ -166,15 +166,15 @@ class Properties
     private static function intOrFloatTimestamp($timestamp)
     {
         if ($timestamp === null) {
-            $timestamp = (float) (new DateTime())->format('U');
-        } elseif (is_string($timestamp)) {
-            if (is_numeric($timestamp)) {
+            $timestamp = (float) (new \DateTime())->format('U');
+        } elseif (\is_string($timestamp)) {
+            if (\is_numeric($timestamp)) {
                 $timestamp = (float) $timestamp;
             } else {
-                $timestamp = (string) preg_replace('/[.][0-9]*$/', '', $timestamp);
-                $timestamp = (string) preg_replace('/^(\\d{4})- (\\d)/', '$1-0$2', $timestamp);
-                $timestamp = (string) preg_replace('/^(\\d{4}-\\d{2})- (\\d)/', '$1-0$2', $timestamp);
-                $timestamp = (float) (new DateTime($timestamp))->format('U');
+                $timestamp = (string) \preg_replace('/[.][0-9]*$/', '', $timestamp);
+                $timestamp = (string) \preg_replace('/^(\\d{4})- (\\d)/', '$1-0$2', $timestamp);
+                $timestamp = (string) \preg_replace('/^(\\d{4}-\\d{2})- (\\d)/', '$1-0$2', $timestamp);
+                $timestamp = (float) (new \DateTime($timestamp))->format('U');
             }
         }
 
@@ -376,7 +376,7 @@ class Properties
      */
     public function getCustomProperties(): array
     {
-        return array_keys($this->customProperties);
+        return \array_keys($this->customProperties);
     }
 
     /**
@@ -384,7 +384,7 @@ class Properties
      */
     public function isCustomPropertySet(string $propertyName): bool
     {
-        return array_key_exists($propertyName, $this->customProperties);
+        return \array_key_exists($propertyName, $this->customProperties);
     }
 
     /**
@@ -416,13 +416,13 @@ class Properties
      */
     private function identifyPropertyType($propertyValue): string
     {
-        if (is_float($propertyValue)) {
+        if (\is_float($propertyValue)) {
             return self::PROPERTY_TYPE_FLOAT;
         }
-        if (is_int($propertyValue)) {
+        if (\is_int($propertyValue)) {
             return self::PROPERTY_TYPE_INTEGER;
         }
-        if (is_bool($propertyValue)) {
+        if (\is_bool($propertyValue)) {
             return self::PROPERTY_TYPE_BOOLEAN;
         }
 
@@ -444,11 +444,11 @@ class Properties
      */
     public function setCustomProperty(string $propertyName, $propertyValue = '', $propertyType = null): self
     {
-        if (($propertyType === null) || (!in_array($propertyType, self::VALID_PROPERTY_TYPE_LIST))) {
+        if (($propertyType === null) || (!\in_array($propertyType, self::VALID_PROPERTY_TYPE_LIST))) {
             $propertyType = $this->identifyPropertyType($propertyValue);
         }
 
-        if (!is_object($propertyValue)) {
+        if (!\is_object($propertyValue)) {
             $this->customProperties[$propertyName] = [
                 'value' => self::convertProperty($propertyValue, $propertyType),
                 'type' => $propertyType,
@@ -518,13 +518,13 @@ class Properties
             case self::PROPERTY_TYPE_INTEGER:
                 $intValue = (int) $propertyValue;
 
-                return ($type[0] === 'u') ? abs($intValue) : $intValue;
+                return ($type[0] === 'u') ? \abs($intValue) : $intValue;
             case self::PROPERTY_TYPE_FLOAT:
                 return (float) $propertyValue;
             case self::PROPERTY_TYPE_DATE:
                 return self::intOrFloatTimestamp($propertyValue);
             case self::PROPERTY_TYPE_BOOLEAN:
-                return is_bool($propertyValue) ? $propertyValue : ($propertyValue === 'true');
+                return \is_bool($propertyValue) ? $propertyValue : ($propertyValue === 'true');
             default: // includes string
                 return $propertyValue;
         }

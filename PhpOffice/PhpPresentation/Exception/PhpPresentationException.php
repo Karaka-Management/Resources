@@ -22,6 +22,6 @@ namespace PhpOffice\PhpPresentation\Exception;
 
 use Exception;
 
-class PhpPresentationException extends Exception
+class PhpPresentationException extends \Exception
 {
 }

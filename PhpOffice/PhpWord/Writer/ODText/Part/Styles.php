@@ -82,9 +82,9 @@ class Styles extends AbstractPart
         $xmlWriter->endElement(); // style:paragraph-properties
 
         $language = $this->getParentWriter()->getPhpWord()->getSettings()->getThemeFontLang();
-        $latinLang = $language != null && is_string($language->getLatin()) ? explode('-', $language->getLatin()) : ['fr', 'FR'];
-        $asianLang = $language != null && is_string($language->getEastAsia()) ? explode('-', $language->getEastAsia()) : ['zh', 'CN'];
-        $complexLang = $language != null && is_string($language->getBidirectional()) ? explode('-', $language->getBidirectional()) : ['hi', 'IN'];
+        $latinLang = $language != null && \is_string($language->getLatin()) ? \explode('-', $language->getLatin()) : ['fr', 'FR'];
+        $asianLang = $language != null && \is_string($language->getEastAsia()) ? \explode('-', $language->getEastAsia()) : ['zh', 'CN'];
+        $complexLang = $language != null && \is_string($language->getBidirectional()) ? \explode('-', $language->getBidirectional()) : ['hi', 'IN'];
         if ($this->getParentWriter()->getPhpWord()->getSettings()->hasHideGrammaticalErrors()) {
             $latinLang = $asianLang = $complexLang = ['zxx', 'none'];
         }
@@ -119,11 +119,11 @@ class Styles extends AbstractPart
     private function writeNamed(XMLWriter $xmlWriter): void
     {
         $styles = Style::getStyles();
-        if (count($styles) > 0) {
+        if (\count($styles) > 0) {
             foreach ($styles as $style) {
                 if ($style->isAuto() === false) {
-                    $styleClass = str_replace('\\Style\\', '\\Writer\\ODText\\Style\\', get_class($style));
-                    if (class_exists($styleClass)) {
+                    $styleClass = \str_replace('\\Style\\', '\\Writer\\ODText\\Style\\', \get_class($style));
+                    if (\class_exists($styleClass)) {
                         /** @var \PhpOffice\PhpWord\Writer\ODText\Style\AbstractStyle $styleWriter Type hint */
                         $styleWriter = new $styleClass($xmlWriter, $style);
                         $styleWriter->write();
@@ -145,7 +145,7 @@ class Styles extends AbstractPart
         $ins = (string) ($twips * $factor / Converter::INCH_TO_TWIP) . 'in';
         $cms = (string) ($twips * $factor * Converter::INCH_TO_CM / Converter::INCH_TO_TWIP) . 'cm';
 
-        return (strlen($ins) < strlen($cms)) ? $ins : $cms;
+        return (\strlen($ins) < \strlen($cms)) ? $ins : $cms;
     }
 
     /**
@@ -154,7 +154,7 @@ class Styles extends AbstractPart
     private function writePageLayout(XMLWriter $xmlWriter): void
     {
         $sections = $this->getParentWriter()->getPhpWord()->getSections();
-        $countsects = count($sections);
+        $countsects = \count($sections);
         for ($i = 0; $i < $countsects; ++$i) {
             $this->writePageLayoutIndiv($xmlWriter, $sections[$i], $i + 1);
         }
@@ -169,12 +169,12 @@ class Styles extends AbstractPart
     private function writePageLayoutIndiv(XMLWriter $xmlWriter, $section, $sectionNbr): void
     {
         $sty = $section->getStyle();
-        if (count($section->getHeaders()) > 0) {
+        if (\count($section->getHeaders()) > 0) {
             $topfactor = 0.5;
         } else {
             $topfactor = 1.0;
         }
-        if (count($section->getFooters()) > 0) {
+        if (\count($section->getFooters()) > 0) {
             $botfactor = 0.5;
         } else {
             $botfactor = 1.0;
@@ -253,7 +253,7 @@ class Styles extends AbstractPart
         $xmlWriter->startElement('office:master-styles');
 
         $sections = $this->getParentWriter()->getPhpWord()->getSections();
-        $countsects = count($sections);
+        $countsects = \count($sections);
         for ($i = 0; $i < $countsects; ++$i) {
             $iplus1 = $i + 1;
             $xmlWriter->startElement('style:master-page');
@@ -265,9 +265,9 @@ class Styles extends AbstractPart
             foreach ($sections[$i]->getHeaders() as $hdr) {
                 $xmlWriter->startElement('style:header');
                 foreach ($hdr->getElements() as $elem) {
-                    $cl1 = get_class($elem);
-                    $cl2 = str_replace('\\Element\\', '\\Writer\\ODText\\Element\\', $cl1);
-                    if (class_exists($cl2)) {
+                    $cl1 = \get_class($elem);
+                    $cl2 = \str_replace('\\Element\\', '\\Writer\\ODText\\Element\\', $cl1);
+                    if (\class_exists($cl2)) {
                         $wtr = new $cl2($xmlWriter, $elem);
                         $wtr->write();
                     }
@@ -279,9 +279,9 @@ class Styles extends AbstractPart
             foreach ($sections[$i]->getFooters() as $hdr) {
                 $xmlWriter->startElement('style:footer');
                 foreach ($hdr->getElements() as $elem) {
-                    $cl1 = get_class($elem);
-                    $cl2 = str_replace('\\Element\\', '\\Writer\\ODText\\Element\\', $cl1);
-                    if (class_exists($cl2)) {
+                    $cl1 = \get_class($elem);
+                    $cl2 = \str_replace('\\Element\\', '\\Writer\\ODText\\Element\\', $cl1);
+                    if (\class_exists($cl2)) {
                         $wtr = new $cl2($xmlWriter, $elem);
                         $wtr->write();
                     }

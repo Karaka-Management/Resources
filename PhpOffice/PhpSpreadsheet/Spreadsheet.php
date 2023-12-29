@@ -12,7 +12,7 @@ use PhpOffice\PhpSpreadsheet\Worksheet\Iterator;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx as XlsxWriter;
 
-class Spreadsheet implements JsonSerializable
+class Spreadsheet implements \JsonSerializable
 {
     // Allowable values for workbook window visilbity
     const VISIBILITY_VISIBLE = 'visible';
@@ -309,7 +309,7 @@ class Spreadsheet implements JsonSerializable
     public function getRibbonXMLData($what = 'all') //we need some constants here...
     {
         $returnData = null;
-        $what = strtolower($what);
+        $what = \strtolower($what);
         switch ($what) {
             case 'all':
                 $returnData = $this->ribbonXMLData;
@@ -317,7 +317,7 @@ class Spreadsheet implements JsonSerializable
                 break;
             case 'target':
             case 'data':
-                if (is_array($this->ribbonXMLData)) {
+                if (\is_array($this->ribbonXMLData)) {
                     $returnData = $this->ribbonXMLData[$what];
                 }
 
@@ -375,9 +375,9 @@ class Spreadsheet implements JsonSerializable
      */
     private function getExtensionOnly($path)
     {
-        $extension = pathinfo($path, PATHINFO_EXTENSION);
+        $extension = \pathinfo($path, PATHINFO_EXTENSION);
 
-        return substr(/** @scrutinizer ignore-type */$extension, 0);
+        return \substr(/** @scrutinizer ignore-type */$extension, 0);
     }
 
     /**
@@ -390,24 +390,24 @@ class Spreadsheet implements JsonSerializable
     public function getRibbonBinObjects($what = 'all')
     {
         $ReturnData = null;
-        $what = strtolower($what);
+        $what = \strtolower($what);
         switch ($what) {
             case 'all':
                 return $this->ribbonBinObjects;
             case 'names':
             case 'data':
-                if (is_array($this->ribbonBinObjects) && isset($this->ribbonBinObjects[$what])) {
+                if (\is_array($this->ribbonBinObjects) && isset($this->ribbonBinObjects[$what])) {
                     $ReturnData = $this->ribbonBinObjects[$what];
                 }
 
                 break;
             case 'types':
                 if (
-                    is_array($this->ribbonBinObjects) &&
-                    isset($this->ribbonBinObjects['data']) && is_array($this->ribbonBinObjects['data'])
+                    \is_array($this->ribbonBinObjects) &&
+                    isset($this->ribbonBinObjects['data']) && \is_array($this->ribbonBinObjects['data'])
                 ) {
-                    $tmpTypes = array_keys($this->ribbonBinObjects['data']);
-                    $ReturnData = array_unique(array_map([$this, 'getExtensionOnly'], $tmpTypes));
+                    $tmpTypes = \array_keys($this->ribbonBinObjects['data']);
+                    $ReturnData = \array_unique(\array_map([$this, 'getExtensionOnly'], $tmpTypes));
                 } else {
                     $ReturnData = []; // the caller want an array... not null if empty
                 }
@@ -459,7 +459,7 @@ class Spreadsheet implements JsonSerializable
      */
     public function getSheetByCodeName($codeName)
     {
-        $worksheetCount = count($this->workSheetCollection);
+        $worksheetCount = \count($this->workSheetCollection);
         for ($i = 0; $i < $worksheetCount; ++$i) {
             if ($this->workSheetCollection[$i]->getCodeName() == $codeName) {
                 return $this->workSheetCollection[$i];
@@ -474,7 +474,7 @@ class Spreadsheet implements JsonSerializable
      */
     public function __construct()
     {
-        $this->uniqueID = uniqid('', true);
+        $this->uniqueID = \uniqid('', true);
         $this->calculationEngine = new Calculation($this);
 
         // Initialise worksheet collection and add one worksheet
@@ -630,7 +630,7 @@ class Spreadsheet implements JsonSerializable
             $this->workSheetCollection[] = $worksheet;
         } else {
             // Insert the sheet at the requested index
-            array_splice(
+            \array_splice(
                 $this->workSheetCollection,
                 $sheetIndex,
                 0,
@@ -657,13 +657,13 @@ class Spreadsheet implements JsonSerializable
      */
     public function removeSheetByIndex($sheetIndex): void
     {
-        $numSheets = count($this->workSheetCollection);
+        $numSheets = \count($this->workSheetCollection);
         if ($sheetIndex > $numSheets - 1) {
             throw new Exception(
                 "You tried to remove a sheet by the out of bounds index: {$sheetIndex}. The actual number of sheets is {$numSheets}."
             );
         }
-        array_splice($this->workSheetCollection, $sheetIndex, 1);
+        \array_splice($this->workSheetCollection, $sheetIndex, 1);
 
         // Adjust active sheet index if necessary
         if (
@@ -713,9 +713,9 @@ class Spreadsheet implements JsonSerializable
      */
     public function getSheetByName($worksheetName)
     {
-        $worksheetCount = count($this->workSheetCollection);
+        $worksheetCount = \count($this->workSheetCollection);
         for ($i = 0; $i < $worksheetCount; ++$i) {
-            if ($this->workSheetCollection[$i]->getTitle() === trim($worksheetName, "'")) {
+            if ($this->workSheetCollection[$i]->getTitle() === \trim($worksheetName, "'")) {
                 return $this->workSheetCollection[$i];
             }
         }
@@ -763,12 +763,12 @@ class Spreadsheet implements JsonSerializable
     public function setIndexByName($worksheetName, $newIndexPosition)
     {
         $oldIndex = $this->getIndex($this->getSheetByNameOrThrow($worksheetName));
-        $worksheet = array_splice(
+        $worksheet = \array_splice(
             $this->workSheetCollection,
             $oldIndex,
             1
         );
-        array_splice(
+        \array_splice(
             $this->workSheetCollection,
             $newIndexPosition,
             0,
@@ -785,7 +785,7 @@ class Spreadsheet implements JsonSerializable
      */
     public function getSheetCount()
     {
-        return count($this->workSheetCollection);
+        return \count($this->workSheetCollection);
     }
 
     /**
@@ -807,7 +807,7 @@ class Spreadsheet implements JsonSerializable
      */
     public function setActiveSheetIndex($worksheetIndex)
     {
-        $numSheets = count($this->workSheetCollection);
+        $numSheets = \count($this->workSheetCollection);
 
         if ($worksheetIndex > $numSheets - 1) {
             throw new Exception(
@@ -868,7 +868,7 @@ class Spreadsheet implements JsonSerializable
         }
 
         // count how many cellXfs there are in this workbook currently, we will need this below
-        $countCellXfs = count($this->cellXfCollection);
+        $countCellXfs = \count($this->cellXfCollection);
 
         // copy all the shared cellXfs from the external workbook and append them to the current
         foreach ($worksheet->getParent()->getCellXfCollection() as $cellXf) {
@@ -907,7 +907,7 @@ class Spreadsheet implements JsonSerializable
      */
     public function getNamedRanges(): array
     {
-        return array_filter(
+        return \array_filter(
             $this->definedNames,
             function (DefinedName $definedName) {
                 return $definedName->isFormula() === self::DEFINED_NAME_IS_RANGE;
@@ -922,7 +922,7 @@ class Spreadsheet implements JsonSerializable
      */
     public function getNamedFormulae(): array
     {
-        return array_filter(
+        return \array_filter(
             $this->definedNames,
             function (DefinedName $definedName) {
                 return $definedName->isFormula() === self::DEFINED_NAME_IS_FORMULA;
@@ -1143,7 +1143,7 @@ class Spreadsheet implements JsonSerializable
         $reader = new XlsxReader();
         $reader->setIncludeCharts(true);
         $reloadedSpreadsheet = $reader->load($filename);
-        unlink($filename);
+        \unlink($filename);
 
         return $reloadedSpreadsheet;
     }
@@ -1202,7 +1202,7 @@ class Spreadsheet implements JsonSerializable
      */
     public function cellXfExists(Style $cellStyleIndex)
     {
-        return in_array($cellStyleIndex, $this->cellXfCollection, true);
+        return \in_array($cellStyleIndex, $this->cellXfCollection, true);
     }
 
     /**
@@ -1225,7 +1225,7 @@ class Spreadsheet implements JsonSerializable
     public function addCellXf(Style $style): void
     {
         $this->cellXfCollection[] = $style;
-        $style->setIndex(count($this->cellXfCollection) - 1);
+        $style->setIndex(\count($this->cellXfCollection) - 1);
     }
 
     /**
@@ -1235,12 +1235,12 @@ class Spreadsheet implements JsonSerializable
      */
     public function removeCellXfByIndex($cellStyleIndex): void
     {
-        if ($cellStyleIndex > count($this->cellXfCollection) - 1) {
+        if ($cellStyleIndex > \count($this->cellXfCollection) - 1) {
             throw new Exception('CellXf index is out of bounds.');
         }
 
         // first remove the cellXf
-        array_splice($this->cellXfCollection, $cellStyleIndex, 1);
+        \array_splice($this->cellXfCollection, $cellStyleIndex, 1);
 
         // then update cellXf indexes for cells
         foreach ($this->workSheetCollection as $worksheet) {
@@ -1314,7 +1314,7 @@ class Spreadsheet implements JsonSerializable
     public function addCellStyleXf(Style $style): void
     {
         $this->cellStyleXfCollection[] = $style;
-        $style->setIndex(count($this->cellStyleXfCollection) - 1);
+        $style->setIndex(\count($this->cellStyleXfCollection) - 1);
     }
 
     /**
@@ -1324,10 +1324,10 @@ class Spreadsheet implements JsonSerializable
      */
     public function removeCellStyleXfByIndex($cellStyleIndex): void
     {
-        if ($cellStyleIndex > count($this->cellStyleXfCollection) - 1) {
+        if ($cellStyleIndex > \count($this->cellStyleXfCollection) - 1) {
             throw new Exception('CellStyleXf index is out of bounds.');
         }
-        array_splice($this->cellStyleXfCollection, $cellStyleIndex, 1);
+        \array_splice($this->cellStyleXfCollection, $cellStyleIndex, 1);
     }
 
     /**
@@ -1374,7 +1374,7 @@ class Spreadsheet implements JsonSerializable
             }
             $map[$index] = $countNeededCellXfs - 1;
         }
-        $this->cellXfCollection = array_values($this->cellXfCollection);
+        $this->cellXfCollection = \array_values($this->cellXfCollection);
 
         // update the index for all cellXfs
         foreach ($this->cellXfCollection as $i => $cellXf) {
@@ -1581,7 +1581,7 @@ class Spreadsheet implements JsonSerializable
             $visibility = self::VISIBILITY_VISIBLE;
         }
 
-        if (in_array($visibility, self::WORKBOOK_VIEW_VISIBILITY_VALUES)) {
+        if (\in_array($visibility, self::WORKBOOK_VIEW_VISIBILITY_VALUES)) {
             $this->visibility = $visibility;
         } else {
             throw new Exception('Invalid visibility value.');

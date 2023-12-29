@@ -337,7 +337,7 @@ class Settings
      */
     public function setZoom($zoom): void
     {
-        if (is_numeric($zoom)) {
+        if (\is_numeric($zoom)) {
             // zoom is a percentage
             $this->zoom = $zoom;
         } else {

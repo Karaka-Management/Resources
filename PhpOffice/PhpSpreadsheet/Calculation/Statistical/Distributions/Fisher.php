@@ -26,7 +26,7 @@ class Fisher
      */
     public static function distribution($value)
     {
-        if (is_array($value)) {
+        if (\is_array($value)) {
             return self::evaluateSingleArgumentArray([self::class, __FUNCTION__], $value);
         }
 
@@ -40,7 +40,7 @@ class Fisher
             return ExcelError::NAN();
         }
 
-        return 0.5 * log((1 + $value) / (1 - $value));
+        return 0.5 * \log((1 + $value) / (1 - $value));
     }
 
     /**
@@ -59,7 +59,7 @@ class Fisher
      */
     public static function inverse($probability)
     {
-        if (is_array($probability)) {
+        if (\is_array($probability)) {
             return self::evaluateSingleArgumentArray([self::class, __FUNCTION__], $probability);
         }
 
@@ -69,6 +69,6 @@ class Fisher
             return $e->getMessage();
         }
 
-        return (exp(2 * $probability) - 1) / (exp(2 * $probability) + 1);
+        return (\exp(2 * $probability) - 1) / (\exp(2 * $probability) + 1);
     }
 }

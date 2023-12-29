@@ -63,13 +63,13 @@ class Dimension
      */
     private static function stanBugFixed($value): array
     {
-        return is_array($value) ? $value : [null, null];
+        return \is_array($value) ? $value : [null, null];
     }
 
     public function __construct(string $dimension)
     {
-        [$size, $unit] = self::stanBugFixed(sscanf($dimension, '%[1234567890.]%s'));
-        $unit = strtolower(trim($unit ?? ''));
+        [$size, $unit] = self::stanBugFixed(\sscanf($dimension, '%[1234567890.]%s'));
+        $unit = \strtolower(\trim($unit ?? ''));
         $size = (float) $size;
 
         // If a UoM is specified, then convert the size to pixels for internal storage
@@ -78,7 +78,7 @@ class Dimension
             $this->unit = self::UOM_PIXELS;
         } elseif (isset(self::RELATIVE_UNITS[$unit])) {
             $size *= self::RELATIVE_UNITS[$unit];
-            $size = round($size, 4);
+            $size = \round($size, 4);
         }
 
         $this->size = $size;
@@ -88,7 +88,7 @@ class Dimension
     {
         return (float) ($this->unit === null)
             ? $this->size
-            : round(Drawing::pixelsToCellDimension((int) $this->size, new Font(false)), 4);
+            : \round(Drawing::pixelsToCellDimension((int) $this->size, new Font(false)), 4);
     }
 
     public function height(): float
@@ -100,8 +100,8 @@ class Dimension
 
     public function toUnit(string $unitOfMeasure): float
     {
-        $unitOfMeasure = strtolower($unitOfMeasure);
-        if (!array_key_exists($unitOfMeasure, self::ABSOLUTE_UNITS)) {
+        $unitOfMeasure = \strtolower($unitOfMeasure);
+        if (!\array_key_exists($unitOfMeasure, self::ABSOLUTE_UNITS)) {
             throw new Exception("{$unitOfMeasure} is not a vaid unit of measure");
         }
 

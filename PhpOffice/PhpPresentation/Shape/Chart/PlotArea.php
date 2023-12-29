@@ -95,7 +95,7 @@ class PlotArea implements ComparableInterface
      */
     public function getType(): AbstractType
     {
-        if (is_null($this->type)) {
+        if (\is_null($this->type)) {
             throw new UndefinedChartTypeException();
         }
 
@@ -208,7 +208,7 @@ class PlotArea implements ComparableInterface
      */
     public function getHashCode(): string
     {
-        return md5((is_null($this->type) ? 'null' : $this->type->getHashCode()) . $this->axisX->getHashCode() . $this->axisY->getHashCode() . $this->offsetX . $this->offsetY . $this->width . $this->height . __CLASS__);
+        return \md5((\is_null($this->type) ? 'null' : $this->type->getHashCode()) . $this->axisX->getHashCode() . $this->axisY->getHashCode() . $this->offsetX . $this->offsetY . $this->width . $this->height . __CLASS__);
     }
 
     /**

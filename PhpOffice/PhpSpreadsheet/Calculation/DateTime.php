@@ -290,9 +290,9 @@ class DateTime
      *      Use the between method in the DateTimeExcel\Days class instead
      * @see DateTimeExcel\Days::between()
      *
-     * @param array|DateTimeInterface|float|int|string $endDate Excel date serial value (float),
+     * @param array|\DateTimeInterface|float|int|string $endDate Excel date serial value (float),
      * PHP date timestamp (integer), PHP DateTime object, or a standard date string
-     * @param array|DateTimeInterface|float|int|string $startDate Excel date serial value (float),
+     * @param array|\DateTimeInterface|float|int|string $startDate Excel date serial value (float),
      * PHP date timestamp (integer), PHP DateTime object, or a standard date string
      *
      * @return array|int|string Number of days between start date and end date or an error

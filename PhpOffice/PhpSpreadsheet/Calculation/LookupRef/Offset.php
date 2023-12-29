@@ -52,15 +52,15 @@ class Offset
             return ExcelError::VALUE();
         }
 
-        if (!is_object($cell)) {
+        if (!\is_object($cell)) {
             return ExcelError::REF();
         }
 
         [$cellAddress, $worksheet] = self::extractWorksheet($cellAddress, $cell);
 
         $startCell = $endCell = $cellAddress;
-        if (strpos($cellAddress, ':')) {
-            [$startCell, $endCell] = explode(':', $cellAddress);
+        if (\strpos($cellAddress, ':')) {
+            [$startCell, $endCell] = \explode(':', $cellAddress);
         }
         [$startCellColumn, $startCellRow] = Coordinate::coordinateFromString($startCell);
         [$endCellColumn, $endCellRow] = Coordinate::coordinateFromString($endCell);
@@ -102,9 +102,9 @@ class Offset
         $cellAddress = self::assessCellAddress($cellAddress, $cell);
 
         $sheetName = '';
-        if (strpos($cellAddress, '!') !== false) {
+        if (\strpos($cellAddress, '!') !== false) {
             [$sheetName, $cellAddress] = Worksheet::extractSheetTitle($cellAddress, true);
-            $sheetName = trim($sheetName, "'");
+            $sheetName = \trim($sheetName, "'");
         }
 
         $worksheet = ($sheetName !== '')
@@ -116,7 +116,7 @@ class Offset
 
     private static function assessCellAddress(string $cellAddress, Cell $cell): string
     {
-        if (preg_match('/^' . Calculation::CALCULATION_REGEXP_DEFINEDNAME . '$/mui', $cellAddress) !== false) {
+        if (\preg_match('/^' . Calculation::CALCULATION_REGEXP_DEFINEDNAME . '$/mui', $cellAddress) !== false) {
             $cellAddress = Functions::expandDefinedName($cellAddress, $cell);
         }
 
@@ -126,7 +126,7 @@ class Offset
     private static function adjustEndCellColumnForWidth(string $endCellColumn, $width, int $startCellColumn, $columns)
     {
         $endCellColumn = Coordinate::columnIndexFromString($endCellColumn) - 1;
-        if (($width !== null) && (!is_object($width))) {
+        if (($width !== null) && (!\is_object($width))) {
             $endCellColumn = $startCellColumn + (int) $width - 1;
         } else {
             $endCellColumn += (int) $columns;
@@ -137,7 +137,7 @@ class Offset
 
     private static function adustEndCellRowForHeight($height, int $startCellRow, $rows, $endCellRow): int
     {
-        if (($height !== null) && (!is_object($height))) {
+        if (($height !== null) && (!\is_object($height))) {
             $endCellRow = $startCellRow + (int) $height - 1;
         } else {
             $endCellRow += (int) $rows;

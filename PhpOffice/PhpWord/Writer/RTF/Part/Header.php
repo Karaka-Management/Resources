@@ -199,7 +199,7 @@ class Header extends AbstractPart
             $elements = $section->getElements();
             $this->registerBorderColor($section->getStyle());
             foreach ($elements as $element) {
-                if (method_exists($element, 'getFontStyle')) {
+                if (\method_exists($element, 'getFontStyle')) {
                     $style = $element->getFontStyle();
                     $this->registerFontItems($style);
                 }
@@ -248,7 +248,7 @@ class Header extends AbstractPart
      */
     private function registerTableItem(&$table, $value, $default = null): void
     {
-        if (in_array($value, $table) === false && $value !== null && $value != $default) {
+        if (\in_array($value, $table) === false && $value !== null && $value != $default) {
             $table[] = $value;
         }
     }

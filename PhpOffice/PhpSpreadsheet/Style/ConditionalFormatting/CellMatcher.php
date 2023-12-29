@@ -87,7 +87,7 @@ class CellMatcher
 
     protected function setReferenceCellForExpressions(string $conditionalRange): void
     {
-        $conditionalRange = Coordinate::splitRange(str_replace('$', '', strtoupper($conditionalRange)));
+        $conditionalRange = Coordinate::splitRange(\str_replace('$', '', \strtoupper($conditionalRange)));
         [$this->referenceCell] = $conditionalRange[0];
 
         [$this->referenceColumn, $this->referenceRow] = Coordinate::indexesFromString($this->referenceCell);
@@ -95,13 +95,13 @@ class CellMatcher
         // Convert our conditional range to an absolute conditional range, so it can be used  "pinned" in formulae
         $rangeSets = [];
         foreach ($conditionalRange as $rangeSet) {
-            $absoluteRangeSet = array_map(
+            $absoluteRangeSet = \array_map(
                 [Coordinate::class, 'absoluteCoordinate'],
                 $rangeSet
             );
-            $rangeSets[] = implode(':', $absoluteRangeSet);
+            $rangeSets[] = \implode(':', $absoluteRangeSet);
         }
-        $this->conditionalRange = implode(',', $rangeSets);
+        $this->conditionalRange = \implode(',', $rangeSets);
     }
 
     public function evaluateConditional(Conditional $conditional): bool
@@ -153,8 +153,8 @@ class CellMatcher
      */
     protected function wrapValue($value)
     {
-        if (!is_numeric($value)) {
-            if (is_bool($value)) {
+        if (!\is_numeric($value)) {
+            if (\is_bool($value)) {
                 return $value ? 'TRUE' : 'FALSE';
             } elseif ($value === null) {
                 return 'NULL';
@@ -182,45 +182,45 @@ class CellMatcher
         $column = $matches[6];
         $row = $matches[7];
 
-        if (strpos($column, '$') === false) {
+        if (\strpos($column, '$') === false) {
             $column = Coordinate::columnIndexFromString($column);
             $column += $this->cellColumn - $this->referenceColumn;
             $column = Coordinate::stringFromColumnIndex($column);
         }
 
-        if (strpos($row, '$') === false) {
+        if (\strpos($row, '$') === false) {
             $row += $this->cellRow - $this->referenceRow;
         }
 
         if (!empty($matches[4])) {
-            $worksheet = $this->worksheet->getParent()->getSheetByName(trim($matches[4], "'"));
+            $worksheet = $this->worksheet->getParent()->getSheetByName(\trim($matches[4], "'"));
             if ($worksheet === null) {
                 return $this->wrapValue(null);
             }
 
             return $this->wrapValue(
                 $worksheet
-                    ->getCell(str_replace('$', '', "{$column}{$row}"))
+                    ->getCell(\str_replace('$', '', "{$column}{$row}"))
                     ->getCalculatedValue()
             );
         }
 
         return $this->wrapValue(
             $this->worksheet
-                ->getCell(str_replace('$', '', "{$column}{$row}"))
+                ->getCell(\str_replace('$', '', "{$column}{$row}"))
                 ->getCalculatedValue()
         );
     }
 
     protected function cellConditionCheck(string $condition): string
     {
-        $splitCondition = explode(Calculation::FORMULA_STRING_QUOTE, $condition);
+        $splitCondition = \explode(Calculation::FORMULA_STRING_QUOTE, $condition);
         $i = false;
         foreach ($splitCondition as &$value) {
             //    Only count/replace in alternating array entries (ie. not in quoted strings)
             $i = $i === false;
             if ($i) {
-                $value = (string) preg_replace_callback(
+                $value = (string) \preg_replace_callback(
                     '/' . Calculation::CALCULATION_REGEXP_CELLREF_RELATIVE . '/i',
                     [$this, 'conditionCellAdjustment'],
                     $value
@@ -229,12 +229,12 @@ class CellMatcher
         }
         unset($value);
         //    Then rebuild the condition string to return it
-        return implode(Calculation::FORMULA_STRING_QUOTE, $splitCondition);
+        return \implode(Calculation::FORMULA_STRING_QUOTE, $splitCondition);
     }
 
     protected function adjustConditionsForCellReferences(array $conditions): array
     {
-        return array_map(
+        return \array_map(
             [$this, 'cellConditionCheck'],
             $conditions
         );
@@ -242,13 +242,13 @@ class CellMatcher
 
     protected function processOperatorComparison(Conditional $conditional): bool
     {
-        if (array_key_exists($conditional->getOperatorType(), self::COMPARISON_RANGE_OPERATORS)) {
+        if (\array_key_exists($conditional->getOperatorType(), self::COMPARISON_RANGE_OPERATORS)) {
             return $this->processRangeOperator($conditional);
         }
 
         $operator = self::COMPARISON_OPERATORS[$conditional->getOperatorType()];
         $conditions = $this->adjustConditionsForCellReferences($conditional->getConditions());
-        $expression = sprintf('%s%s%s', (string) $this->wrapCellValue(), $operator, (string) array_pop($conditions));
+        $expression = \sprintf('%s%s%s', (string) $this->wrapCellValue(), $operator, (string) \array_pop($conditions));
 
         return $this->evaluateExpression($expression);
     }
@@ -256,9 +256,9 @@ class CellMatcher
     protected function processRangeOperator(Conditional $conditional): bool
     {
         $conditions = $this->adjustConditionsForCellReferences($conditional->getConditions());
-        sort($conditions);
-        $expression = sprintf(
-            (string) preg_replace(
+        \sort($conditions);
+        $expression = \sprintf(
+            (string) \preg_replace(
                 '/\bA1\b/i',
                 (string) $this->wrapCellValue(),
                 self::COMPARISON_RANGE_OPERATORS[$conditional->getOperatorType()]
@@ -273,7 +273,7 @@ class CellMatcher
     {
         $worksheetName = $this->cell->getWorksheet()->getTitle();
 
-        $expression = sprintf(
+        $expression = \sprintf(
             self::COMPARISON_DUPLICATES_OPERATORS[$conditional->getConditionType()],
             $worksheetName,
             $this->conditionalRange,
@@ -286,9 +286,9 @@ class CellMatcher
     protected function processExpression(Conditional $conditional): bool
     {
         $conditions = $this->adjustConditionsForCellReferences($conditional->getConditions());
-        $expression = array_pop($conditions);
+        $expression = \array_pop($conditions);
 
-        $expression = (string) preg_replace(
+        $expression = (string) \preg_replace(
             '/\b' . $this->referenceCell . '\b/i',
             (string) $this->wrapCellValue(),
             $expression

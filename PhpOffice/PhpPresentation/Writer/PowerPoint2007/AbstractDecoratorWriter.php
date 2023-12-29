@@ -125,7 +125,7 @@ abstract class AbstractDecoratorWriter extends \PhpOffice\PhpPresentation\Writer
 
     protected function writeColor(XMLWriter $objWriter, Color $color, ?int $alpha = null): void
     {
-        if (is_null($alpha)) {
+        if (\is_null($alpha)) {
             $alpha = $color->getAlpha();
         }
 
@@ -283,12 +283,12 @@ abstract class AbstractDecoratorWriter extends \PhpOffice\PhpPresentation\Writer
      */
     protected function absoluteZipPath(string $path): string
     {
-        $path = str_replace([
+        $path = \str_replace([
             '/',
             '\\',
         ], DIRECTORY_SEPARATOR, $path);
-        $parts = array_filter(explode(DIRECTORY_SEPARATOR, $path), function (string $var) {
-            return (bool) strlen($var);
+        $parts = \array_filter(\explode(DIRECTORY_SEPARATOR, $path), function (string $var) {
+            return (bool) \strlen($var);
         });
         $absolutes = [];
         foreach ($parts as $part) {
@@ -296,12 +296,12 @@ abstract class AbstractDecoratorWriter extends \PhpOffice\PhpPresentation\Writer
                 continue;
             }
             if ('..' == $part) {
-                array_pop($absolutes);
+                \array_pop($absolutes);
             } else {
                 $absolutes[] = $part;
             }
         }
 
-        return implode('/', $absolutes);
+        return \implode('/', $absolutes);
     }
 }

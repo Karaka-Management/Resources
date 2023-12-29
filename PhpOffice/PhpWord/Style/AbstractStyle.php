@@ -176,7 +176,7 @@ abstract class AbstractStyle
         }
 
         $method = 'set' . Text::removeUnderscorePrefix($key);
-        if (method_exists($this, $method)) {
+        if (\method_exists($this, $method)) {
             $this->$method($value);
         }
 
@@ -226,7 +226,7 @@ abstract class AbstractStyle
      */
     protected function setBoolVal($value, $default)
     {
-        if (!is_bool($value)) {
+        if (!\is_bool($value)) {
             $value = $default;
         }
 
@@ -243,7 +243,7 @@ abstract class AbstractStyle
      */
     protected function setNumericVal($value, $default = null)
     {
-        if (!is_numeric($value)) {
+        if (!\is_numeric($value)) {
             $value = $default;
         }
 
@@ -260,10 +260,10 @@ abstract class AbstractStyle
      */
     protected function setIntVal($value, $default = null)
     {
-        if (is_string($value) && (preg_match('/[^\d]/', $value) == 0)) {
+        if (\is_string($value) && (\preg_match('/[^\d]/', $value) == 0)) {
             $value = (int) $value;
         }
-        if (!is_numeric($value)) {
+        if (!\is_numeric($value)) {
             $value = $default;
         } else {
             $value = (int) $value;
@@ -282,10 +282,10 @@ abstract class AbstractStyle
      */
     protected function setFloatVal($value, $default = null)
     {
-        if (is_string($value) && (preg_match('/[^\d\.\,]/', $value) == 0)) {
+        if (\is_string($value) && (\preg_match('/[^\d\.\,]/', $value) == 0)) {
             $value = (float) $value;
         }
-        if (!is_numeric($value)) {
+        if (!\is_numeric($value)) {
             $value = $default;
         }
 
@@ -303,9 +303,9 @@ abstract class AbstractStyle
      */
     protected function setEnumVal($value = null, $enum = [], $default = null)
     {
-        if ($value != null && trim($value) != '' && !empty($enum) && !in_array($value, $enum)) {
-            throw new InvalidArgumentException("Invalid style value: {$value} Options:" . implode(',', $enum));
-        } elseif ($value === null || trim($value) == '') {
+        if ($value != null && \trim($value) != '' && !empty($enum) && !\in_array($value, $enum)) {
+            throw new \InvalidArgumentException("Invalid style value: {$value} Options:" . \implode(',', $enum));
+        } elseif ($value === null || \trim($value) == '') {
             $value = $default;
         }
 
@@ -323,8 +323,8 @@ abstract class AbstractStyle
      */
     protected function setObjectVal($value, $styleName, &$style)
     {
-        $styleClass = substr(static::class, 0, strrpos(static::class, '\\')) . '\\' . $styleName;
-        if (is_array($value)) {
+        $styleClass = \substr(static::class, 0, \strrpos(static::class, '\\')) . '\\' . $styleName;
+        if (\is_array($value)) {
             /** @var \PhpOffice\PhpWord\Style\AbstractStyle $style Type hint */
             if (!$style instanceof $styleClass) {
                 $style = new $styleClass();

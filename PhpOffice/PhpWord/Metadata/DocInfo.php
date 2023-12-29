@@ -123,8 +123,8 @@ class DocInfo
     {
         $this->creator = '';
         $this->lastModifiedBy = $this->creator;
-        $this->created = time();
-        $this->modified = time();
+        $this->created = \time();
+        $this->modified = \time();
         $this->title = '';
         $this->subject = '';
         $this->description = '';
@@ -201,7 +201,7 @@ class DocInfo
      */
     public function setCreated($value = null)
     {
-        $this->created = $this->setValue($value, time());
+        $this->created = $this->setValue($value, \time());
 
         return $this;
     }
@@ -225,7 +225,7 @@ class DocInfo
      */
     public function setModified($value = null)
     {
-        $this->modified = $this->setValue($value, time());
+        $this->modified = $this->setValue($value, \time());
 
         return $this;
     }
@@ -405,7 +405,7 @@ class DocInfo
      */
     public function getCustomProperties()
     {
-        return array_keys($this->customProperties);
+        return \array_keys($this->customProperties);
     }
 
     /**
@@ -475,16 +475,16 @@ class DocInfo
             self::PROPERTY_TYPE_DATE,
             self::PROPERTY_TYPE_BOOLEAN,
         ];
-        if (($propertyType === null) || (!in_array($propertyType, $propertyTypes))) {
+        if (($propertyType === null) || (!\in_array($propertyType, $propertyTypes))) {
             if ($propertyValue === null) {
                 $propertyType = self::PROPERTY_TYPE_STRING;
-            } elseif (is_float($propertyValue)) {
+            } elseif (\is_float($propertyValue)) {
                 $propertyType = self::PROPERTY_TYPE_FLOAT;
-            } elseif (is_int($propertyValue)) {
+            } elseif (\is_int($propertyValue)) {
                 $propertyType = self::PROPERTY_TYPE_INTEGER;
-            } elseif (is_bool($propertyValue)) {
+            } elseif (\is_bool($propertyValue)) {
                 $propertyType = self::PROPERTY_TYPE_BOOLEAN;
-            } elseif ($propertyValue instanceof DateTime) {
+            } elseif ($propertyValue instanceof \DateTime) {
                 $propertyType = self::PROPERTY_TYPE_DATE;
             } else {
                 $propertyType = self::PROPERTY_TYPE_STRING;
@@ -519,11 +519,11 @@ class DocInfo
             case 'int': // Signed integer
                 return (int) $propertyValue;
             case 'uint': // Unsigned integer
-                return abs((int) $propertyValue);
+                return \abs((int) $propertyValue);
             case 'float': // Float
                 return (float) $propertyValue;
             case 'date': // Date
-                return strtotime($propertyValue);
+                return \strtotime($propertyValue);
             case 'bool': // Boolean
                 return $propertyValue == 'true';
         }
@@ -548,7 +548,7 @@ class DocInfo
             self::PROPERTY_TYPE_BOOLEAN => ['bool'],
         ];
         foreach ($typeGroups as $groupId => $groupMembers) {
-            if (in_array($propertyType, $groupMembers)) {
+            if (\in_array($propertyType, $groupMembers)) {
                 return $groupId;
             }
         }
@@ -592,7 +592,7 @@ class DocInfo
             'date' => ['date', 'filetime'],
         ];
         foreach ($conversions as $conversion => $types) {
-            if (in_array($propertyType, $types)) {
+            if (\in_array($propertyType, $types)) {
                 return $conversion;
             }
         }

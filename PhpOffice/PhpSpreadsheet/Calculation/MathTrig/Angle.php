@@ -22,7 +22,7 @@ class Angle
      */
     public static function toDegrees($number)
     {
-        if (is_array($number)) {
+        if (\is_array($number)) {
             return self::evaluateSingleArgumentArray([self::class, __FUNCTION__], $number);
         }
 
@@ -32,7 +32,7 @@ class Angle
             return $e->getMessage();
         }
 
-        return rad2deg($number);
+        return \rad2deg($number);
     }
 
     /**
@@ -48,7 +48,7 @@ class Angle
      */
     public static function toRadians($number)
     {
-        if (is_array($number)) {
+        if (\is_array($number)) {
             return self::evaluateSingleArgumentArray([self::class, __FUNCTION__], $number);
         }
 
@@ -58,6 +58,6 @@ class Angle
             return $e->getMessage();
         }
 
-        return deg2rad($number);
+        return \deg2rad($number);
     }
 }

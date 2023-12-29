@@ -51,7 +51,7 @@ class Table extends WriterPart
             $objWriter->startElement('autoFilter');
             $objWriter->writeAttribute('ref', $range);
             $objWriter->endElement();
-            foreach (range($rangeStart[0], $rangeEnd[0]) as $offset => $columnIndex) {
+            foreach (\range($rangeStart[0], $rangeEnd[0]) as $offset => $columnIndex) {
                 $column = $table->getColumnByOffset($offset);
 
                 if (!$column->getShowFilterButton()) {
@@ -69,7 +69,7 @@ class Table extends WriterPart
         // Table Columns
         $objWriter->startElement('tableColumns');
         $objWriter->writeAttribute('count', (string) ($rangeEnd[0] - $rangeStart[0] + 1));
-        foreach (range($rangeStart[0], $rangeEnd[0]) as $offset => $columnIndex) {
+        foreach (\range($rangeStart[0], $rangeEnd[0]) as $offset => $columnIndex) {
             $worksheet = $table->getWorksheet();
             if (!$worksheet) {
                 continue;

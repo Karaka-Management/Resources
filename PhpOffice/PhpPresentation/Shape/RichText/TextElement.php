@@ -92,12 +92,12 @@ class TextElement implements TextElementInterface
 
     public function hasHyperlink(): bool
     {
-        return !is_null($this->hyperlink);
+        return !\is_null($this->hyperlink);
     }
 
     public function getHyperlink(): Hyperlink
     {
-        if (is_null($this->hyperlink)) {
+        if (\is_null($this->hyperlink)) {
             $this->hyperlink = new Hyperlink();
         }
 
@@ -147,6 +147,6 @@ class TextElement implements TextElementInterface
      */
     public function getHashCode(): string
     {
-        return md5($this->text . (is_null($this->hyperlink) ? '' : $this->hyperlink->getHashCode()) . __CLASS__);
+        return \md5($this->text . (\is_null($this->hyperlink) ? '' : $this->hyperlink->getHashCode()) . __CLASS__);
     }
 }

@@ -31,7 +31,7 @@ class Poisson
      */
     public static function distribution($value, $mean, $cumulative)
     {
-        if (is_array($value) || is_array($mean) || is_array($cumulative)) {
+        if (\is_array($value) || \is_array($mean) || \is_array($cumulative)) {
             return self::evaluateArrayArguments([self::class, __FUNCTION__], $value, $mean, $cumulative);
         }
 
@@ -49,18 +49,18 @@ class Poisson
 
         if ($cumulative) {
             $summer = 0;
-            $floor = floor($value);
+            $floor = \floor($value);
             for ($i = 0; $i <= $floor; ++$i) {
                 /** @var float */
                 $fact = MathTrig\Factorial::fact($i);
                 $summer += $mean ** $i / $fact;
             }
 
-            return exp(0 - $mean) * $summer;
+            return \exp(0 - $mean) * $summer;
         }
         /** @var float */
         $fact = MathTrig\Factorial::fact($value);
 
-        return (exp(0 - $mean) * $mean ** $value) / $fact;
+        return (\exp(0 - $mean) * $mean ** $value) / $fact;
     }
 }

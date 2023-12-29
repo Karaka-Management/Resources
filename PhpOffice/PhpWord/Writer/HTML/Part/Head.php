@@ -114,12 +114,12 @@ class Head extends AbstractPart
 
         // Custom styles
         $customStyles = Style::getStyles();
-        if (is_array($customStyles)) {
+        if (\is_array($customStyles)) {
             foreach ($customStyles as $name => $style) {
                 if ($style instanceof Font) {
                     $styleWriter = new FontStyleWriter($style);
                     if ($style->getStyleType() == 'title') {
-                        $name = str_replace('Heading_', 'h', $name);
+                        $name = \str_replace('Heading_', 'h', $name);
                     } else {
                         $name = '.' . $name;
                     }

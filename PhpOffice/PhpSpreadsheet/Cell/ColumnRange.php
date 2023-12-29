@@ -40,10 +40,10 @@ class ColumnRange implements AddressRange
      */
     public static function fromArray(array $array, ?Worksheet $worksheet = null): self
     {
-        array_walk(
+        \array_walk(
             $array,
             function (&$column): void {
-                $column = is_numeric($column) ? Coordinate::stringFromColumnIndex((int) $column) : $column;
+                $column = \is_numeric($column) ? Coordinate::stringFromColumnIndex((int) $column) : $column;
             }
         );
         /** @var string $from */
@@ -56,8 +56,8 @@ class ColumnRange implements AddressRange
     private function validateFromTo(int $from, int $to): void
     {
         // Identify actual top and bottom values (in case we've been given bottom and top)
-        $this->from = min($from, $to);
-        $this->to = max($from, $to);
+        $this->from = \min($from, $to);
+        $this->to = \max($from, $to);
     }
 
     public function columnCount(): int
@@ -115,7 +115,7 @@ class ColumnRange implements AddressRange
         $to = $this->to();
 
         if ($this->worksheet !== null) {
-            $title = str_replace("'", "''", $this->worksheet->getTitle());
+            $title = \str_replace("'", "''", $this->worksheet->getTitle());
 
             return "'{$title}'!{$from}:{$to}";
         }

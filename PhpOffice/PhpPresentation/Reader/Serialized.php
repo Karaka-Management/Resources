@@ -49,7 +49,7 @@ class Serialized implements ReaderInterface
     public function fileSupportsUnserializePhpPresentation(string $pFilename): bool
     {
         // Check if file exists
-        if (!file_exists($pFilename)) {
+        if (!\file_exists($pFilename)) {
             throw new FileNotFoundException($pFilename);
         }
 
@@ -66,7 +66,7 @@ class Serialized implements ReaderInterface
     public function load(string $pFilename): PhpPresentation
     {
         // Check if file exists
-        if (!file_exists($pFilename)) {
+        if (!\file_exists($pFilename)) {
             throw new FileNotFoundException($pFilename);
         }
 
@@ -85,7 +85,7 @@ class Serialized implements ReaderInterface
      */
     private function loadSerialized(string $pFilename): PhpPresentation
     {
-        $oArchive = new ZipArchive();
+        $oArchive = new \ZipArchive();
         if (true !== $oArchive->open($pFilename)) {
             throw new InvalidFileFormatException($pFilename, Serialized::class);
         }
@@ -95,15 +95,15 @@ class Serialized implements ReaderInterface
             throw new InvalidFileFormatException($pFilename, Serialized::class, 'The file PhpPresentation.xml is malformed');
         }
 
-        $xmlData = simplexml_load_string($xmlContent);
-        $file = unserialize(base64_decode((string) $xmlData->data));
+        $xmlData = \simplexml_load_string($xmlContent);
+        $file = \unserialize(\base64_decode((string) $xmlData->data));
 
         // Update media links
         for ($i = 0; $i < $file->getSlideCount(); ++$i) {
             for ($j = 0; $j < $file->getSlide($i)->getShapeCollection()->count(); ++$j) {
                 if ($file->getSlide($i)->getShapeCollection()->offsetGet($j) instanceof AbstractDrawingAdapter) {
                     $imgTemp = $file->getSlide($i)->getShapeCollection()->offsetGet($j);
-                    $imgPath = 'zip://' . $pFilename . '#media/' . $imgTemp->getImageIndex() . '/' . pathinfo($imgTemp->getPath(), PATHINFO_BASENAME);
+                    $imgPath = 'zip://' . $pFilename . '#media/' . $imgTemp->getImageIndex() . '/' . \pathinfo($imgTemp->getPath(), PATHINFO_BASENAME);
                     if ($imgTemp instanceof DrawingFile) {
                         $imgTemp->setPath($imgPath, false);
                     } else {

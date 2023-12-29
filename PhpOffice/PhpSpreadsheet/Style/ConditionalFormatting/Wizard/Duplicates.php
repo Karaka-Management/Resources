@@ -67,7 +67,7 @@ class Duplicates extends WizardAbstract implements WizardInterface
      */
     public function __call($methodName, $arguments): self
     {
-        if (!array_key_exists($methodName, self::OPERATORS)) {
+        if (!\array_key_exists($methodName, self::OPERATORS)) {
             throw new Exception('Invalid Operation for Errors CF Rule Wizard');
         }
 

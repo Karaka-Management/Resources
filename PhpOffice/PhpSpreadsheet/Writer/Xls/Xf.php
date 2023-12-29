@@ -247,15 +247,15 @@ class Xf
         $border2 |= CellBorder::style($this->style->getBorders()->getDiagonal()) << 21;
         $border2 |= CellFill::style($this->style->getFill()) << 26;
 
-        $header = pack('vv', $record, $length);
+        $header = \pack('vv', $record, $length);
 
         //BIFF8 options: identation, shrinkToFit and  text direction
         $biff8_options = $this->style->getAlignment()->getIndent();
         $biff8_options |= (int) $this->style->getAlignment()->getShrinkToFit() << 4;
 
-        $data = pack('vvvC', $ifnt, $ifmt, $style, $align);
-        $data .= pack('CCC', self::mapTextRotation($this->style->getAlignment()->getTextRotation()), $biff8_options, $used_attrib);
-        $data .= pack('VVv', $border1, $border2, $icv);
+        $data = \pack('vvvC', $ifnt, $ifmt, $style, $align);
+        $data .= \pack('CCC', self::mapTextRotation($this->style->getAlignment()->getTextRotation()), $biff8_options, $used_attrib);
+        $data .= \pack('VVv', $border1, $border2, $icv);
 
         return $header . $data;
     }
@@ -395,7 +395,7 @@ class Xf
      */
     private static function mapLocked($locked)
     {
-        return array_key_exists($locked, self::LOCK_ARRAY) ? self::LOCK_ARRAY[$locked] : 1;
+        return \array_key_exists($locked, self::LOCK_ARRAY) ? self::LOCK_ARRAY[$locked] : 1;
     }
 
     private const HIDDEN_ARRAY = [
@@ -413,6 +413,6 @@ class Xf
      */
     private static function mapHidden($hidden)
     {
-        return array_key_exists($hidden, self::HIDDEN_ARRAY) ? self::HIDDEN_ARRAY[$hidden] : 0;
+        return \array_key_exists($hidden, self::HIDDEN_ARRAY) ? self::HIDDEN_ARRAY[$hidden] : 0;
     }
 }

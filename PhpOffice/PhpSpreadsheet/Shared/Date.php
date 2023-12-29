@@ -61,7 +61,7 @@ class Date
     /**
      * Default timezone to use for DateTime objects.
      *
-     * @var null|DateTimeZone
+     * @var null|\DateTimeZone
      */
     protected static $defaultTimeZone;
 
@@ -99,7 +99,7 @@ class Date
     /**
      * Set the Default timezone to use for dates.
      *
-     * @param null|DateTimeZone|string $timeZone The timezone to set for all Excel datetimestamp to PHP DateTime Object conversions
+     * @param null|\DateTimeZone|string $timeZone The timezone to set for all Excel datetimestamp to PHP DateTime Object conversions
      *
      * @return bool Success or failure
      */
@@ -119,23 +119,23 @@ class Date
     /**
      * Return the Default timezone, or UTC if default not set.
      */
-    public static function getDefaultTimezone(): DateTimeZone
+    public static function getDefaultTimezone(): \DateTimeZone
     {
-        return self::$defaultTimeZone ?? new DateTimeZone('UTC');
+        return self::$defaultTimeZone ?? new \DateTimeZone('UTC');
     }
 
     /**
      * Return the Default timezone, or local timezone if default is not set.
      */
-    public static function getDefaultOrLocalTimezone(): DateTimeZone
+    public static function getDefaultOrLocalTimezone(): \DateTimeZone
     {
-        return self::$defaultTimeZone ?? new DateTimeZone(date_default_timezone_get());
+        return self::$defaultTimeZone ?? new \DateTimeZone(\date_default_timezone_get());
     }
 
     /**
      * Return the Default timezone even if null.
      */
-    public static function getDefaultTimezoneOrNull(): ?DateTimeZone
+    public static function getDefaultTimezoneOrNull(): ?\DateTimeZone
     {
         return self::$defaultTimeZone;
     }
@@ -143,17 +143,17 @@ class Date
     /**
      * Validate a timezone.
      *
-     * @param null|DateTimeZone|string $timeZone The timezone to validate, either as a timezone string or object
+     * @param null|\DateTimeZone|string $timeZone The timezone to validate, either as a timezone string or object
      *
-     * @return ?DateTimeZone The timezone as a timezone object
+     * @return ?\DateTimeZone The timezone as a timezone object
      */
     private static function validateTimeZone($timeZone)
     {
-        if ($timeZone instanceof DateTimeZone || $timeZone === null) {
+        if ($timeZone instanceof \DateTimeZone || $timeZone === null) {
             return $timeZone;
         }
-        if (in_array($timeZone, DateTimeZone::listIdentifiers(DateTimeZone::ALL_WITH_BC))) {
-            return new DateTimeZone($timeZone);
+        if (\in_array($timeZone, \DateTimeZone::listIdentifiers(\DateTimeZone::ALL_WITH_BC))) {
+            return new \DateTimeZone($timeZone);
         }
 
         throw new PhpSpreadsheetException('Invalid timezone');
@@ -166,14 +166,14 @@ class Date
      */
     public static function convertIsoDate($value)
     {
-        if (!is_string($value)) {
+        if (!\is_string($value)) {
             throw new Exception('Non-string value supplied for Iso Date conversion');
         }
 
-        $date = new DateTime($value);
-        $dateErrors = DateTime::getLastErrors();
+        $date = new \DateTime($value);
+        $dateErrors = \DateTime::getLastErrors();
 
-        if (is_array($dateErrors) && ($dateErrors['warning_count'] > 0 || $dateErrors['error_count'] > 0)) {
+        if (\is_array($dateErrors) && ($dateErrors['warning_count'] > 0 || $dateErrors['error_count'] > 0)) {
             throw new Exception("Invalid string $value supplied for datatype Date");
         }
 
@@ -182,8 +182,8 @@ class Date
             throw new Exception("Invalid string $value supplied for datatype Date");
         }
 
-        if (preg_match('/^\\d\\d:\\d\\d:\\d\\d/', $value) == 1) {
-            $newValue = fmod($newValue, 1.0);
+        if (\preg_match('/^\\d\\d:\\d\\d:\\d\\d/', $value) == 1) {
+            $newValue = \fmod($newValue, 1.0);
         }
 
         return $newValue;
@@ -193,11 +193,11 @@ class Date
      * Convert a MS serialized datetime value from Excel to a PHP Date/Time object.
      *
      * @param float|int $excelTimestamp MS Excel serialized date/time value
-     * @param null|DateTimeZone|string $timeZone The timezone to assume for the Excel timestamp,
+     * @param null|\DateTimeZone|string $timeZone The timezone to assume for the Excel timestamp,
      *                                                                        if you don't want to treat it as a UTC value
      *                                                                    Use the default (UTC) unless you absolutely need a conversion
      *
-     * @return DateTime PHP date/time object
+     * @return \DateTime PHP date/time object
      */
     public static function excelToDateTimeObject($excelTimestamp, $timeZone = null)
     {
@@ -205,27 +205,27 @@ class Date
         if (Functions::getCompatibilityMode() == Functions::COMPATIBILITY_EXCEL) {
             if ($excelTimestamp < 1 && self::$excelCalendar === self::CALENDAR_WINDOWS_1900) {
                 // Unix timestamp base date
-                $baseDate = new DateTime('1970-01-01', $timeZone);
+                $baseDate = new \DateTime('1970-01-01', $timeZone);
             } else {
                 // MS Excel calendar base dates
                 if (self::$excelCalendar == self::CALENDAR_WINDOWS_1900) {
                     // Allow adjustment for 1900 Leap Year in MS Excel
-                    $baseDate = ($excelTimestamp < 60) ? new DateTime('1899-12-31', $timeZone) : new DateTime('1899-12-30', $timeZone);
+                    $baseDate = ($excelTimestamp < 60) ? new \DateTime('1899-12-31', $timeZone) : new \DateTime('1899-12-30', $timeZone);
                 } else {
-                    $baseDate = new DateTime('1904-01-01', $timeZone);
+                    $baseDate = new \DateTime('1904-01-01', $timeZone);
                 }
             }
         } else {
-            $baseDate = new DateTime('1899-12-30', $timeZone);
+            $baseDate = new \DateTime('1899-12-30', $timeZone);
         }
 
-        $days = floor($excelTimestamp);
+        $days = \floor($excelTimestamp);
         $partDay = $excelTimestamp - $days;
-        $hours = floor($partDay * 24);
+        $hours = \floor($partDay * 24);
         $partDay = $partDay * 24 - $hours;
-        $minutes = floor($partDay * 60);
+        $minutes = \floor($partDay * 60);
         $partDay = $partDay * 60 - $minutes;
-        $seconds = round($partDay * 60);
+        $seconds = \round($partDay * 60);
 
         if ($days >= 0) {
             $days = '+' . $days;
@@ -242,7 +242,7 @@ class Date
      * They are not Y2038-safe on a 32-bit system, and have no timezone info.
      *
      * @param float|int $excelTimestamp MS Excel serialized date/time value
-     * @param null|DateTimeZone|string $timeZone The timezone to assume for the Excel timestamp,
+     * @param null|\DateTimeZone|string $timeZone The timezone to assume for the Excel timestamp,
      *                                                                        if you don't want to treat it as a UTC value
      *                                                                    Use the default (UTC) unless you absolutely need a conversion
      *
@@ -265,11 +265,11 @@ class Date
      */
     public static function PHPToExcel($dateValue)
     {
-        if ((is_object($dateValue)) && ($dateValue instanceof DateTimeInterface)) {
+        if ((\is_object($dateValue)) && ($dateValue instanceof \DateTimeInterface)) {
             return self::dateTimeToExcel($dateValue);
-        } elseif (is_numeric($dateValue)) {
+        } elseif (\is_numeric($dateValue)) {
             return self::timestampToExcel($dateValue);
-        } elseif (is_string($dateValue)) {
+        } elseif (\is_string($dateValue)) {
             return self::stringToExcel($dateValue);
         }
 
@@ -279,11 +279,11 @@ class Date
     /**
      * Convert a PHP DateTime object to an MS Excel serialized date/time value.
      *
-     * @param DateTimeInterface $dateValue PHP DateTime object
+     * @param \DateTimeInterface $dateValue PHP DateTime object
      *
      * @return float MS Excel serialized date/time value
      */
-    public static function dateTimeToExcel(DateTimeInterface $dateValue)
+    public static function dateTimeToExcel(\DateTimeInterface $dateValue)
     {
         return self::formattedPHPToExcel(
             (int) $dateValue->format('Y'),
@@ -306,11 +306,11 @@ class Date
      */
     public static function timestampToExcel($unixTimestamp)
     {
-        if (!is_numeric($unixTimestamp)) {
+        if (!\is_numeric($unixTimestamp)) {
             return false;
         }
 
-        return self::dateTimeToExcel(new DateTime('@' . $unixTimestamp));
+        return self::dateTimeToExcel(new \DateTime('@' . $unixTimestamp));
     }
 
     /**
@@ -351,9 +351,9 @@ class Date
         }
 
         //    Calculate the Julian Date, then subtract the Excel base date (JD 2415020 = 31-Dec-1899 Giving Excel Date of 0)
-        $century = (int) substr((string) $year, 0, 2);
-        $decade = (int) substr((string) $year, 2, 2);
-        $excelDate = floor((146097 * $century) / 4) + floor((1461 * $decade) / 4) + floor((153 * $month + 2) / 5) + $day + 1721119 - $myexcelBaseDate + $excel1900isLeapYear;
+        $century = (int) \substr((string) $year, 0, 2);
+        $decade = (int) \substr((string) $year, 2, 2);
+        $excelDate = \floor((146097 * $century) / 4) + \floor((1461 * $decade) / 4) + \floor((153 * $month + 2) / 5) + $day + 1721119 - $myexcelBaseDate + $excel1900isLeapYear;
 
         $excelTime = (($hours * 3600) + ($minutes * 60) + $seconds) / 86400;
 
@@ -375,7 +375,7 @@ class Date
         if ($worksheet !== null && $spreadsheet !== null) {
             $index = $spreadsheet->getActiveSheetIndex();
             $selected = $worksheet->getSelectedCells();
-            $result = is_numeric($value ?? $cell->getCalculatedValue()) &&
+            $result = \is_numeric($value ?? $cell->getCalculatedValue()) &&
                 self::isDateTimeFormat(
                     $worksheet->getStyle(
                         $cell->getCoordinate()
@@ -411,22 +411,22 @@ class Date
      */
     public static function isDateTimeFormatCode($excelFormatCode, bool $dateWithoutTimeOkay = true)
     {
-        if (strtolower($excelFormatCode) === strtolower(NumberFormat::FORMAT_GENERAL)) {
+        if (\strtolower($excelFormatCode) === \strtolower(NumberFormat::FORMAT_GENERAL)) {
             //    "General" contains an epoch letter 'e', so we trap for it explicitly here (case-insensitive check)
             return false;
         }
-        if (preg_match('/[0#]E[+-]0/i', $excelFormatCode)) {
+        if (\preg_match('/[0#]E[+-]0/i', $excelFormatCode)) {
             //    Scientific format
             return false;
         }
 
         // Switch on formatcode
-        if (in_array($excelFormatCode, NumberFormat::DATE_TIME_OR_DATETIME_ARRAY, true)) {
-            return $dateWithoutTimeOkay || in_array($excelFormatCode, NumberFormat::TIME_OR_DATETIME_ARRAY);
+        if (\in_array($excelFormatCode, NumberFormat::DATE_TIME_OR_DATETIME_ARRAY, true)) {
+            return $dateWithoutTimeOkay || \in_array($excelFormatCode, NumberFormat::TIME_OR_DATETIME_ARRAY);
         }
 
         //    Typically number, currency or accounting (or occasionally fraction) formats
-        if ((substr($excelFormatCode, 0, 1) == '_') || (substr($excelFormatCode, 0, 2) == '0 ')) {
+        if ((\substr($excelFormatCode, 0, 1) == '_') || (\substr($excelFormatCode, 0, 2) == '0 ')) {
             return false;
         }
         // Some "special formats" provided in German Excel versions were detected as date time value,
@@ -436,17 +436,17 @@ class Date
         }
         $possibleFormatCharacters = $dateWithoutTimeOkay ? self::POSSIBLE_DATETIME_FORMAT_CHARACTERS : self::POSSIBLE_TIME_FORMAT_CHARACTERS;
         // Try checking for any of the date formatting characters that don't appear within square braces
-        if (preg_match('/(^|\])[^\[]*[' . $possibleFormatCharacters . ']/i', $excelFormatCode)) {
+        if (\preg_match('/(^|\])[^\[]*[' . $possibleFormatCharacters . ']/i', $excelFormatCode)) {
             //    We might also have a format mask containing quoted strings...
             //        we don't want to test for any of our characters within the quoted blocks
-            if (strpos($excelFormatCode, '"') !== false) {
+            if (\strpos($excelFormatCode, '"') !== false) {
                 $segMatcher = false;
-                foreach (explode('"', $excelFormatCode) as $subVal) {
+                foreach (\explode('"', $excelFormatCode) as $subVal) {
                     //    Only test in alternate array entries (the non-quoted blocks)
                     $segMatcher = $segMatcher === false;
                     if (
                         $segMatcher &&
-                        (preg_match('/(^|\])[^\[]*[' . $possibleFormatCharacters . ']/i', $subVal))
+                        (\preg_match('/(^|\])[^\[]*[' . $possibleFormatCharacters . ']/i', $subVal))
                     ) {
                         return true;
                     }
@@ -471,22 +471,22 @@ class Date
      */
     public static function stringToExcel($dateValue)
     {
-        if (strlen($dateValue) < 2) {
+        if (\strlen($dateValue) < 2) {
             return false;
         }
-        if (!preg_match('/^(\d{1,4}[ \.\/\-][A-Z]{3,9}([ \.\/\-]\d{1,4})?|[A-Z]{3,9}[ \.\/\-]\d{1,4}([ \.\/\-]\d{1,4})?|\d{1,4}[ \.\/\-]\d{1,4}([ \.\/\-]\d{1,4})?)( \d{1,2}:\d{1,2}(:\d{1,2})?)?$/iu', $dateValue)) {
+        if (!\preg_match('/^(\d{1,4}[ \.\/\-][A-Z]{3,9}([ \.\/\-]\d{1,4})?|[A-Z]{3,9}[ \.\/\-]\d{1,4}([ \.\/\-]\d{1,4})?|\d{1,4}[ \.\/\-]\d{1,4}([ \.\/\-]\d{1,4})?)( \d{1,2}:\d{1,2}(:\d{1,2})?)?$/iu', $dateValue)) {
             return false;
         }
 
         $dateValueNew = DateTimeExcel\DateValue::fromString($dateValue);
 
-        if (!is_float($dateValueNew)) {
+        if (!\is_float($dateValueNew)) {
             return false;
         }
 
-        if (strpos($dateValue, ':') !== false) {
+        if (\strpos($dateValue, ':') !== false) {
             $timeValue = DateTimeExcel\TimeValue::fromString($dateValue);
-            if (!is_float($timeValue)) {
+            if (!\is_float($timeValue)) {
                 return false;
             }
             $dateValueNew += $timeValue;
@@ -524,23 +524,23 @@ class Date
      */
     public static function dayStringToNumber($day)
     {
-        $strippedDayValue = (str_replace(self::$numberSuffixes, '', $day));
-        if (is_numeric($strippedDayValue)) {
+        $strippedDayValue = (\str_replace(self::$numberSuffixes, '', $day));
+        if (\is_numeric($strippedDayValue)) {
             return (int) $strippedDayValue;
         }
 
         return $day;
     }
 
-    public static function dateTimeFromTimestamp(string $date, ?DateTimeZone $timeZone = null): DateTime
+    public static function dateTimeFromTimestamp(string $date, ?\DateTimeZone $timeZone = null): \DateTime
     {
-        $dtobj = DateTime::createFromFormat('U', $date) ?: new DateTime();
+        $dtobj = \DateTime::createFromFormat('U', $date) ?: new \DateTime();
         $dtobj->setTimeZone($timeZone ?? self::getDefaultOrLocalTimezone());
 
         return $dtobj;
     }
 
-    public static function formattedDateTimeFromTimestamp(string $date, string $format, ?DateTimeZone $timeZone = null): string
+    public static function formattedDateTimeFromTimestamp(string $date, string $format, ?\DateTimeZone $timeZone = null): string
     {
         $dtobj = self::dateTimeFromTimestamp($date, $timeZone);
 

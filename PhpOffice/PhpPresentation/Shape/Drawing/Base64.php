@@ -57,7 +57,7 @@ class Base64 extends AbstractDrawingAdapter
     public function __construct()
     {
         parent::__construct();
-        $this->uniqueName = md5(rand(0, 9999) . time() . rand(0, 9999));
+        $this->uniqueName = \md5(\rand(0, 9999) . \time() . \rand(0, 9999));
         $this->data = '';
     }
 
@@ -75,10 +75,10 @@ class Base64 extends AbstractDrawingAdapter
 
     public function getContents(): string
     {
-        list(, $imageContents) = explode(';', $this->getData());
-        list(, $imageContents) = explode(',', $imageContents);
+        list(, $imageContents) = \explode(';', $this->getData());
+        list(, $imageContents) = \explode(',', $imageContents);
 
-        return base64_decode($imageContents);
+        return \base64_decode($imageContents);
     }
 
     /**
@@ -86,10 +86,10 @@ class Base64 extends AbstractDrawingAdapter
      */
     public function getExtension(): string
     {
-        list($data) = explode(';', $this->getData());
-        list(, $mime) = explode(':', $data);
+        list($data) = \explode(';', $this->getData());
+        list(, $mime) = \explode(':', $data);
 
-        if (!array_key_exists($mime, $this->arrayMimeExtension)) {
+        if (!\array_key_exists($mime, $this->arrayMimeExtension)) {
             throw new UnauthorizedMimetypeException($mime, $this->arrayMimeExtension);
         }
 
@@ -103,22 +103,22 @@ class Base64 extends AbstractDrawingAdapter
 
     public function getMimeType(): string
     {
-        list($data) = explode(';', $this->getData());
-        list(, $mime) = explode(':', $data);
+        list($data) = \explode(';', $this->getData());
+        list(, $mime) = \explode(':', $data);
 
         if (!empty($mime)) {
             return $mime;
         }
 
         $sImage = $this->getContents();
-        if (!function_exists('getimagesizefromstring')) {
-            $uri = 'data://application/octet-stream;base64,' . base64_encode($sImage);
-            $image = getimagesize($uri);
+        if (!\function_exists('getimagesizefromstring')) {
+            $uri = 'data://application/octet-stream;base64,' . \base64_encode($sImage);
+            $image = \getimagesize($uri);
         } else {
-            $image = getimagesizefromstring($sImage);
+            $image = \getimagesizefromstring($sImage);
         }
 
-        return image_type_to_mime_type($image[2]);
+        return \image_type_to_mime_type($image[2]);
     }
 
     /**

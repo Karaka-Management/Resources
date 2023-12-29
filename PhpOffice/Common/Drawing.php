@@ -30,7 +30,7 @@ class Drawing
      */
     public static function pixelsToEmu(float $pValue = 0): float
     {
-        return round($pValue * 9525);
+        return \round($pValue * 9525);
     }
 
     /**
@@ -46,7 +46,7 @@ class Drawing
             return 0;
         }
 
-        return (int) round($pValue / 9525);
+        return (int) \round($pValue / 9525);
     }
 
     /**
@@ -135,7 +135,7 @@ class Drawing
             return 0;
         }
 
-        return (int) round((($pValue / 2.54) * self::DPI_96));
+        return (int) \round((($pValue / 2.54) * self::DPI_96));
     }
 
     /**
@@ -147,7 +147,7 @@ class Drawing
      */
     public static function degreesToAngle(int $pValue = 0): int
     {
-        return (int) round($pValue * 60000);
+        return (int) \round($pValue * 60000);
     }
 
     /**
@@ -163,7 +163,7 @@ class Drawing
             return 0;
         }
 
-        return round($pValue / 60000);
+        return \round($pValue / 60000);
     }
 
     /**
@@ -243,7 +243,7 @@ class Drawing
             return 0;
         }
 
-        return round($pValue / 15);
+        return \round($pValue / 15);
     }
 
     /**
@@ -259,7 +259,7 @@ class Drawing
             return 0;
         }
 
-        return (int) round(($pValue / 0.75) / 9525);
+        return (int) \round(($pValue / 0.75) / 9525);
     }
 
     /**
@@ -272,20 +272,20 @@ class Drawing
     public static function htmlToRGB(string $pValue): ?array
     {
         if ($pValue[0] == '#') {
-            $pValue = substr($pValue, 1);
+            $pValue = \substr($pValue, 1);
         }
 
-        if (strlen($pValue) == 6) {
+        if (\strlen($pValue) == 6) {
             list($colorR, $colorG, $colorB) = [$pValue[0] . $pValue[1], $pValue[2] . $pValue[3], $pValue[4] . $pValue[5]];
-        } elseif (strlen($pValue) == 3) {
+        } elseif (\strlen($pValue) == 3) {
             list($colorR, $colorG, $colorB) = [$pValue[0] . $pValue[0], $pValue[1] . $pValue[1], $pValue[2] . $pValue[2]];
         } else {
             return null;
         }
 
-        $colorR = hexdec($colorR);
-        $colorG = hexdec($colorG);
-        $colorB = hexdec($colorB);
+        $colorR = \hexdec($colorR);
+        $colorG = \hexdec($colorG);
+        $colorB = \hexdec($colorB);
 
         return [$colorR, $colorG, $colorB];
     }

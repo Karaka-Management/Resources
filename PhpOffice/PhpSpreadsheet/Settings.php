@@ -71,7 +71,7 @@ class Settings
      */
     public static function setChartRenderer(string $rendererClassName): void
     {
-        if (!is_a($rendererClassName, IRenderer::class, true)) {
+        if (!\is_a($rendererClassName, IRenderer::class, true)) {
             throw new Exception('Chart renderer must implement ' . IRenderer::class);
         }
 
@@ -102,7 +102,7 @@ class Settings
     public static function setLibXmlLoaderOptions($options): int
     {
         if ($options === null) {
-            $options = defined('LIBXML_DTDLOAD') ? (LIBXML_DTDLOAD | LIBXML_DTDATTR) : 0;
+            $options = \defined('LIBXML_DTDLOAD') ? (LIBXML_DTDLOAD | LIBXML_DTDATTR) : 0;
         }
         self::$libXmlLoaderOptions = $options;
 
@@ -176,7 +176,7 @@ class Settings
     {
         return
             PHP_MAJOR_VERSION === 8 &&
-            (new ReflectionClass(CacheInterface::class))->getMethod('get')->getReturnType() !== null;
+            (new \ReflectionClass(CacheInterface::class))->getMethod('get')->getReturnType() !== null;
     }
 
     /**

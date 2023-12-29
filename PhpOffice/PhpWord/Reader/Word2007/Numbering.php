@@ -94,7 +94,7 @@ class Numbering extends AbstractPart
      *
      * @return array
      */
-    private function readLevel(XMLReader $xmlReader, DOMElement $subnode, $levelId)
+    private function readLevel(XMLReader $xmlReader, \DOMElement $subnode, $levelId)
     {
         $level = [];
 

@@ -41,8 +41,8 @@ class Field extends Text
         $content .= '{';
         $content .= $this->writeFontStyle();
 
-        $methodName = 'write' . ucfirst(strtolower($element->getType()));
-        if (!method_exists($this, $methodName)) {
+        $methodName = 'write' . \ucfirst(\strtolower($element->getType()));
+        if (!\method_exists($this, $methodName)) {
             // Unsupported field
             $content .= '';
         } else {

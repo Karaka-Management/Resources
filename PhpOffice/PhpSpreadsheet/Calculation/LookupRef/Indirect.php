@@ -25,8 +25,8 @@ class Indirect
         if ($a1fmt === null) {
             return Helpers::CELLADDRESS_USE_A1;
         }
-        if (is_string($a1fmt)) {
-            throw new Exception(ExcelError::VALUE());
+        if (\is_string($a1fmt)) {
+            throw new \Exception(ExcelError::VALUE());
         }
 
         return (bool) $a1fmt;
@@ -40,8 +40,8 @@ class Indirect
     private static function validateAddress($cellAddress): string
     {
         $cellAddress = Functions::flattenSingleValue($cellAddress);
-        if (!is_string($cellAddress) || !$cellAddress) {
-            throw new Exception(ExcelError::REF());
+        if (!\is_string($cellAddress) || !$cellAddress) {
+            throw new \Exception(ExcelError::REF());
         }
 
         return $cellAddress;
@@ -70,27 +70,27 @@ class Indirect
         try {
             $a1 = self::a1Format($a1fmt);
             $cellAddress = self::validateAddress($cellAddress);
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             return $e->getMessage();
         }
 
         [$cellAddress, $worksheet, $sheetName] = Helpers::extractWorksheet($cellAddress, $cell);
 
-        if (preg_match('/^' . Calculation::CALCULATION_REGEXP_COLUMNRANGE_RELATIVE . '$/miu', $cellAddress, $matches)) {
-            $cellAddress = self::handleRowColumnRanges($worksheet, ...explode(':', $cellAddress));
-        } elseif (preg_match('/^' . Calculation::CALCULATION_REGEXP_ROWRANGE_RELATIVE . '$/miu', $cellAddress, $matches)) {
-            $cellAddress = self::handleRowColumnRanges($worksheet, ...explode(':', $cellAddress));
+        if (\preg_match('/^' . Calculation::CALCULATION_REGEXP_COLUMNRANGE_RELATIVE . '$/miu', $cellAddress, $matches)) {
+            $cellAddress = self::handleRowColumnRanges($worksheet, ...\explode(':', $cellAddress));
+        } elseif (\preg_match('/^' . Calculation::CALCULATION_REGEXP_ROWRANGE_RELATIVE . '$/miu', $cellAddress, $matches)) {
+            $cellAddress = self::handleRowColumnRanges($worksheet, ...\explode(':', $cellAddress));
         }
 
         try {
             [$cellAddress1, $cellAddress2, $cellAddress] = Helpers::extractCellAddresses($cellAddress, $a1, $cell->getWorkSheet(), $sheetName, $baseRow, $baseCol);
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             return ExcelError::REF();
         }
 
         if (
-            (!preg_match('/^' . Calculation::CALCULATION_REGEXP_CELLREF . '$/miu', $cellAddress1, $matches)) ||
-            (($cellAddress2 !== null) && (!preg_match('/^' . Calculation::CALCULATION_REGEXP_CELLREF . '$/miu', $cellAddress2, $matches)))
+            (!\preg_match('/^' . Calculation::CALCULATION_REGEXP_CELLREF . '$/miu', $cellAddress1, $matches)) ||
+            (($cellAddress2 !== null) && (!\preg_match('/^' . Calculation::CALCULATION_REGEXP_CELLREF . '$/miu', $cellAddress2, $matches)))
         ) {
             return ExcelError::REF();
         }
@@ -113,12 +113,12 @@ class Indirect
     private static function handleRowColumnRanges(?Worksheet $worksheet, string $start, string $end): string
     {
         // Being lazy, we're only checking a single row/column to get the max
-        if (ctype_digit($start) && $start <= 1048576) {
+        if (\ctype_digit($start) && $start <= 1048576) {
             // Max 16,384 columns for Excel2007
             $endColRef = ($worksheet !== null) ? $worksheet->getHighestDataColumn((int) $start) : AddressRange::MAX_COLUMN;
 
             return "A{$start}:{$endColRef}{$end}";
-        } elseif (ctype_alpha($start) && strlen($start) <= 3) {
+        } elseif (\ctype_alpha($start) && \strlen($start) <= 3) {
             // Max 1,048,576 rows for Excel2007
             $endRowRef = ($worksheet !== null) ? $worksheet->getHighestDataRow($start) : AddressRange::MAX_ROW;
 

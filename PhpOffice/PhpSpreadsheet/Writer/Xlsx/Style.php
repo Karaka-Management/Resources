@@ -109,7 +109,7 @@ class Style extends WriterPart
 
         // cellXfs
         $objWriter->startElement('cellXfs');
-        $objWriter->writeAttribute('count', (string) count($spreadsheet->getCellXfCollection()));
+        $objWriter->writeAttribute('count', (string) \count($spreadsheet->getCellXfCollection()));
 
         // xf
         foreach ($spreadsheet->getCellXfCollection() as $cellXf) {
@@ -268,7 +268,7 @@ class Style extends WriterPart
         // font
         $objWriter->startElement('font');
         //    Weird! The order of these elements actually makes a difference when opening Xlsx
-        //        files in Excel2003 with the compatibility pack. It's not documented behaviour,
+        //        files in Excel2003 with the compatibility pack. It's not documented behavior,
         //        and makes for a real WTF!
 
         // Bold. We explicitly write this element also when false (like MS Office Excel 2007 does

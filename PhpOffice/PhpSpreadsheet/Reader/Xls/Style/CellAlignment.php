@@ -31,14 +31,14 @@ class CellAlignment
 
     public static function horizontal(Alignment $alignment, int $horizontal): void
     {
-        if (array_key_exists($horizontal, self::$horizontalAlignmentMap)) {
+        if (\array_key_exists($horizontal, self::$horizontalAlignmentMap)) {
             $alignment->setHorizontal(self::$horizontalAlignmentMap[$horizontal]);
         }
     }
 
     public static function vertical(Alignment $alignment, int $vertical): void
     {
-        if (array_key_exists($vertical, self::$verticalAlignmentMap)) {
+        if (\array_key_exists($vertical, self::$verticalAlignmentMap)) {
             $alignment->setVertical(self::$verticalAlignmentMap[$vertical]);
         }
     }

@@ -228,7 +228,7 @@ class View3D implements ComparableInterface
      */
     public function getHashCode(): string
     {
-        return md5($this->rotationX . $this->rotationY . ($this->rightAngleAxes ? 't' : 'f') . $this->perspective . $this->heightPercent . $this->depthPercent . __CLASS__);
+        return \md5($this->rotationX . $this->rotationY . ($this->rightAngleAxes ? 't' : 'f') . $this->perspective . $this->heightPercent . $this->depthPercent . __CLASS__);
     }
 
     /**

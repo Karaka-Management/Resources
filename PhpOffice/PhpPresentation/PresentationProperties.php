@@ -128,7 +128,7 @@ class PresentationProperties
      */
     public function setThumbnailPath(string $path = ''): self
     {
-        if (file_exists($path)) {
+        if (\file_exists($path)) {
             $this->thumbnail = $path;
         }
 
@@ -180,7 +180,7 @@ class PresentationProperties
      */
     public function setLastView(string $value = self::VIEW_SLIDE): self
     {
-        if (in_array($value, $this->arrayView)) {
+        if (\in_array($value, $this->arrayView)) {
             $this->lastView = $value;
         }
 
@@ -222,7 +222,7 @@ class PresentationProperties
      */
     public function setSlideshowType(string $value = self::SLIDESHOW_TYPE_PRESENT): self
     {
-        if (in_array($value, $this->arraySlideshowTypes)) {
+        if (\in_array($value, $this->arraySlideshowTypes)) {
             $this->slideshowType = $value;
         }
 

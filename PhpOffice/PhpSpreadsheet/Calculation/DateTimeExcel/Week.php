@@ -47,7 +47,7 @@ class Week
      */
     public static function number($dateValue, $method = Constants::STARTWEEK_SUNDAY)
     {
-        if (is_array($dateValue) || is_array($method)) {
+        if (\is_array($dateValue) || \is_array($method)) {
             return self::evaluateArrayArguments([self::class, __FUNCTION__], $dateValue, $method);
         }
 
@@ -84,7 +84,7 @@ class Week
         $daysInFirstWeek = (6 - $firstDayOfFirstWeek + $method) % 7;
         $daysInFirstWeek += 7 * !$daysInFirstWeek;
         $endFirstWeek = $daysInFirstWeek - 1;
-        $weekOfYear = floor(($dayOfYear - $endFirstWeek + 13) / 7);
+        $weekOfYear = \floor(($dayOfYear - $endFirstWeek + 13) / 7);
 
         return (int) $weekOfYear;
     }
@@ -107,7 +107,7 @@ class Week
      */
     public static function isoWeekNumber($dateValue)
     {
-        if (is_array($dateValue)) {
+        if (\is_array($dateValue)) {
             return self::evaluateSingleArgumentArray([self::class, __FUNCTION__], $dateValue);
         }
 
@@ -152,7 +152,7 @@ class Week
      */
     public static function day($dateValue, $style = 1)
     {
-        if (is_array($dateValue) || is_array($style)) {
+        if (\is_array($dateValue) || \is_array($style)) {
             return self::evaluateArrayArguments([self::class, __FUNCTION__], $dateValue, $style);
         }
 
@@ -191,7 +191,7 @@ class Week
      */
     private static function validateStyle($style): int
     {
-        if (!is_numeric($style)) {
+        if (!\is_numeric($style)) {
             throw new Exception(ExcelError::VALUE());
         }
         $style = (int) $style;
@@ -214,10 +214,10 @@ class Week
     private static function apparentBug($dateValue): bool
     {
         if (SharedDateHelper::getExcelCalendar() !== SharedDateHelper::CALENDAR_MAC_1904) {
-            if (is_bool($dateValue)) {
+            if (\is_bool($dateValue)) {
                 return true;
             }
-            if (is_numeric($dateValue) && !((int) $dateValue)) {
+            if (\is_numeric($dateValue) && !((int) $dateValue)) {
                 return true;
             }
         }
@@ -232,7 +232,7 @@ class Week
      */
     private static function validateDateValue($dateValue): float
     {
-        if (is_bool($dateValue)) {
+        if (\is_bool($dateValue)) {
             throw new Exception(ExcelError::VALUE());
         }
 
@@ -250,12 +250,12 @@ class Week
             $method = Constants::STARTWEEK_SUNDAY;
         }
 
-        if (!is_numeric($method)) {
+        if (!\is_numeric($method)) {
             throw new Exception(ExcelError::VALUE());
         }
 
         $method = (int) $method;
-        if (!array_key_exists($method, Constants::METHODARR)) {
+        if (!\array_key_exists($method, Constants::METHODARR)) {
             throw new Exception(ExcelError::NAN());
         }
         $method = Constants::METHODARR[$method];
@@ -268,7 +268,7 @@ class Week
         return $method === Constants::DOW_SUNDAY && SharedDateHelper::getExcelCalendar() === SharedDateHelper::CALENDAR_WINDOWS_1900;
     }
 
-    private static function buggyWeekNum1904(int $method, bool $origNull, DateTime $dateObject): bool
+    private static function buggyWeekNum1904(int $method, bool $origNull, \DateTime $dateObject): bool
     {
         // This appears to be another Excel bug.
 

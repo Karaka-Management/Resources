@@ -25,7 +25,7 @@ class IntClass
      */
     public static function evaluate($number)
     {
-        if (is_array($number)) {
+        if (\is_array($number)) {
             return self::evaluateSingleArgumentArray([self::class, __FUNCTION__], $number);
         }
 
@@ -35,6 +35,6 @@ class IntClass
             return $e->getMessage();
         }
 
-        return (int) floor($number);
+        return (int) \floor($number);
     }
 }

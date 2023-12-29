@@ -15,7 +15,7 @@ class Matrix
      */
     public static function isColumnVector(array $values): bool
     {
-        return count($values, COUNT_RECURSIVE) === (count($values, COUNT_NORMAL) * 2);
+        return \count($values, COUNT_RECURSIVE) === (\count($values, COUNT_NORMAL) * 2);
     }
 
     /**
@@ -23,8 +23,8 @@ class Matrix
      */
     public static function isRowVector(array $values): bool
     {
-        return count($values, COUNT_RECURSIVE) > 1 &&
-            (count($values, COUNT_NORMAL) === 1 || count($values, COUNT_RECURSIVE) === count($values, COUNT_NORMAL));
+        return \count($values, COUNT_RECURSIVE) > 1 &&
+            (\count($values, COUNT_NORMAL) === 1 || \count($values, COUNT_RECURSIVE) === \count($values, COUNT_NORMAL));
     }
 
     /**
@@ -37,7 +37,7 @@ class Matrix
     public static function transpose($matrixData)
     {
         $returnMatrix = [];
-        if (!is_array($matrixData)) {
+        if (!\is_array($matrixData)) {
             $matrixData = [[$matrixData]];
         }
 
@@ -78,7 +78,7 @@ class Matrix
      */
     public static function index($matrix, $rowNum = 0, $columnNum = null)
     {
-        if (is_array($rowNum) || is_array($columnNum)) {
+        if (\is_array($rowNum) || \is_array($columnNum)) {
             return self::evaluateArrayArgumentsSubsetFrom([self::class, __FUNCTION__], 1, $matrix, $rowNum, $columnNum);
         }
 
@@ -93,17 +93,17 @@ class Matrix
             return $e->getMessage();
         }
 
-        if (!is_array($matrix) || ($rowNum > count($matrix))) {
+        if (!\is_array($matrix) || ($rowNum > \count($matrix))) {
             return ExcelError::REF();
         }
 
-        $rowKeys = array_keys($matrix);
-        $columnKeys = @array_keys($matrix[$rowKeys[0]]);
+        $rowKeys = \array_keys($matrix);
+        $columnKeys = @\array_keys($matrix[$rowKeys[0]]);
 
-        if ($columnNum > count($columnKeys)) {
+        if ($columnNum > \count($columnKeys)) {
             return ExcelError::REF();
         }
-        if ($originalColumnNum === null && 1 < count($columnKeys)) {
+        if ($originalColumnNum === null && 1 < \count($columnKeys)) {
             return ExcelError::REF();
         }
 
@@ -113,11 +113,11 @@ class Matrix
 
         $columnNum = $columnKeys[--$columnNum];
         if ($rowNum === 0) {
-            return array_map(
+            return \array_map(
                 function ($value) {
                     return [$value];
                 },
-                array_column($matrix, $columnNum)
+                \array_column($matrix, $columnNum)
             );
         }
         $rowNum = $rowKeys[--$rowNum];
@@ -133,7 +133,7 @@ class Matrix
 
         $rowNum = $rowKeys[--$rowNum];
         $row = $matrix[$rowNum];
-        if (is_array($row)) {
+        if (\is_array($row)) {
             return [$rowNum => $row];
         }
 

@@ -376,7 +376,7 @@ class Font implements ComparableInterface
      */
     public function setFormat(string $value = self::FORMAT_LATIN): self
     {
-        if (in_array($value, [
+        if (\in_array($value, [
             self::FORMAT_COMPLEX_SCRIPT,
             self::FORMAT_EAST_ASIAN,
             self::FORMAT_LATIN,
@@ -394,7 +394,7 @@ class Font implements ComparableInterface
      */
     public function getHashCode(): string
     {
-        return md5(
+        return \md5(
             $this->name
             . $this->size
             . ($this->bold ? 't' : 'f')

@@ -15,12 +15,12 @@ class Subtotal
      */
     protected static function filterHiddenArgs($cellReference, $args): array
     {
-        return array_filter(
+        return \array_filter(
             $args,
             function ($index) use ($cellReference) {
-                $explodeArray = explode('.', $index);
+                $explodeArray = \explode('.', $index);
                 $row = $explodeArray[1] ?? '';
-                if (!is_numeric($row)) {
+                if (!\is_numeric($row)) {
                     return true;
                 }
 
@@ -36,17 +36,17 @@ class Subtotal
      */
     protected static function filterFormulaArgs($cellReference, $args): array
     {
-        return array_filter(
+        return \array_filter(
             $args,
             function ($index) use ($cellReference) {
-                $explodeArray = explode('.', $index);
+                $explodeArray = \explode('.', $index);
                 $row = $explodeArray[1] ?? '';
                 $column = $explodeArray[2] ?? '';
                 $retVal = true;
                 if ($cellReference->getWorksheet()->cellExists($column . $row)) {
                     //take this cell out if it contains the SUBTOTAL or AGGREGATE functions in a formula
                     $isFormula = $cellReference->getWorksheet()->getCell($column . $row)->isFormula();
-                    $cellFormula = !preg_match(
+                    $cellFormula = !\preg_match(
                         '/^=.*\b(SUBTOTAL|AGGREGATE)\s*\(/i',
                         $cellReference->getWorksheet()->getCell($column . $row)->getValue() ?? ''
                     );
@@ -92,7 +92,7 @@ class Subtotal
      */
     public static function evaluate($functionType, ...$args)
     {
-        $cellReference = array_pop($args);
+        $cellReference = \array_pop($args);
         $bArgs = Functions::flattenArrayIndexed($args);
         $aArgs = [];
         // int keys must come before string keys for PHP 8.0+
@@ -100,12 +100,12 @@ class Subtotal
         //    in the subsequent call to call_user_func_array.
         // Fortunately, order of args is unimportant to Subtotal.
         foreach ($bArgs as $key => $value) {
-            if (is_int($key)) {
+            if (\is_int($key)) {
                 $aArgs[$key] = $value;
             }
         }
         foreach ($bArgs as $key => $value) {
-            if (!is_int($key)) {
+            if (!\is_int($key)) {
                 $aArgs[$key] = $value;
             }
         }
@@ -123,11 +123,11 @@ class Subtotal
         }
 
         $aArgs = self::filterFormulaArgs($cellReference, $aArgs);
-        if (array_key_exists($subtotal, self::CALL_FUNCTIONS)) {
+        if (\array_key_exists($subtotal, self::CALL_FUNCTIONS)) {
             /** @var callable */
             $call = self::CALL_FUNCTIONS[$subtotal];
 
-            return call_user_func_array($call, $aArgs);
+            return \call_user_func_array($call, $aArgs);
         }
 
         return ExcelError::VALUE();

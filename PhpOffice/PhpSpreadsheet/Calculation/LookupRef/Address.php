@@ -51,8 +51,8 @@ class Address
     public static function cell($row, $column, $relativity = 1, $referenceStyle = true, $sheetName = '')
     {
         if (
-            is_array($row) || is_array($column) ||
-            is_array($relativity) || is_array($referenceStyle) || is_array($sheetName)
+            \is_array($row) || \is_array($column) ||
+            \is_array($relativity) || \is_array($referenceStyle) || \is_array($sheetName)
         ) {
             return self::evaluateArrayArguments(
                 [self::class, __FUNCTION__],
@@ -73,10 +73,10 @@ class Address
 
         $sheetName = self::sheetName($sheetName);
 
-        if (is_int($referenceStyle)) {
+        if (\is_int($referenceStyle)) {
             $referenceStyle = (bool) $referenceStyle;
         }
-        if ((!is_bool($referenceStyle)) || $referenceStyle === self::REFERENCE_STYLE_A1) {
+        if ((!\is_bool($referenceStyle)) || $referenceStyle === self::REFERENCE_STYLE_A1) {
             return self::formatAsA1($row, $column, $relativity, $sheetName);
         }
 
@@ -86,7 +86,7 @@ class Address
     private static function sheetName(string $sheetName)
     {
         if ($sheetName > '') {
-            if (strpos($sheetName, ' ') !== false || strpos($sheetName, '[') !== false) {
+            if (\strpos($sheetName, ' ') !== false || \strpos($sheetName, '[') !== false) {
                 $sheetName = "'{$sheetName}'";
             }
             $sheetName .= '!';

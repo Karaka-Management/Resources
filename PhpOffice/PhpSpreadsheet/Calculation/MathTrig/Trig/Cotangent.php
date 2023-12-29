@@ -23,7 +23,7 @@ class Cotangent
      */
     public static function cot($angle)
     {
-        if (is_array($angle)) {
+        if (\is_array($angle)) {
             return self::evaluateSingleArgumentArray([self::class, __FUNCTION__], $angle);
         }
 
@@ -33,7 +33,7 @@ class Cotangent
             return $e->getMessage();
         }
 
-        return Helpers::verySmallDenominator(cos($angle), sin($angle));
+        return Helpers::verySmallDenominator(\cos($angle), \sin($angle));
     }
 
     /**
@@ -49,7 +49,7 @@ class Cotangent
      */
     public static function coth($angle)
     {
-        if (is_array($angle)) {
+        if (\is_array($angle)) {
             return self::evaluateSingleArgumentArray([self::class, __FUNCTION__], $angle);
         }
 
@@ -59,7 +59,7 @@ class Cotangent
             return $e->getMessage();
         }
 
-        return Helpers::verySmallDenominator(1.0, tanh($angle));
+        return Helpers::verySmallDenominator(1.0, \tanh($angle));
     }
 
     /**
@@ -75,7 +75,7 @@ class Cotangent
      */
     public static function acot($number)
     {
-        if (is_array($number)) {
+        if (\is_array($number)) {
             return self::evaluateSingleArgumentArray([self::class, __FUNCTION__], $number);
         }
 
@@ -85,7 +85,7 @@ class Cotangent
             return $e->getMessage();
         }
 
-        return (M_PI / 2) - atan($number);
+        return (M_PI / 2) - \atan($number);
     }
 
     /**
@@ -101,7 +101,7 @@ class Cotangent
      */
     public static function acoth($number)
     {
-        if (is_array($number)) {
+        if (\is_array($number)) {
             return self::evaluateSingleArgumentArray([self::class, __FUNCTION__], $number);
         }
 
@@ -111,7 +111,7 @@ class Cotangent
             return $e->getMessage();
         }
 
-        $result = ($number === 1) ? NAN : (log(($number + 1) / ($number - 1)) / 2);
+        $result = ($number === 1) ? NAN : (\log(($number + 1) / ($number - 1)) / 2);
 
         return Helpers::numberOrNan($result);
     }

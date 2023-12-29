@@ -50,17 +50,17 @@ class ChainedBlockStream
     {
         if ($mode != 'r') {
             if ($options & STREAM_REPORT_ERRORS) {
-                trigger_error('Only reading is supported', E_USER_WARNING);
+                \trigger_error('Only reading is supported', E_USER_WARNING);
             }
 
             return false;
         }
 
         // 25 is length of "ole-chainedblockstream://"
-        parse_str(substr($path, 25), $this->params);
+        \parse_str(\substr($path, 25), $this->params);
         if (!isset($this->params['oleInstanceId'], $this->params['blockId'], $GLOBALS['_OLE_INSTANCES'][$this->params['oleInstanceId']])) {
             if ($options & STREAM_REPORT_ERRORS) {
-                trigger_error('OLE stream not found', E_USER_WARNING);
+                \trigger_error('OLE stream not found', E_USER_WARNING);
             }
 
             return false;
@@ -75,20 +75,20 @@ class ChainedBlockStream
             while ($blockId != -2) {
                 $pos = $rootPos + $blockId * $this->ole->bigBlockSize;
                 $blockId = $this->ole->sbat[$blockId];
-                fseek($this->ole->_file_handle, $pos);
-                $this->data .= fread($this->ole->_file_handle, $this->ole->bigBlockSize);
+                \fseek($this->ole->_file_handle, $pos);
+                $this->data .= \fread($this->ole->_file_handle, $this->ole->bigBlockSize);
             }
         } else {
             // Block id refers to big blocks
             while ($blockId != -2) {
                 $pos = $this->ole->getBlockOffset($blockId);
-                fseek($this->ole->_file_handle, $pos);
-                $this->data .= fread($this->ole->_file_handle, $this->ole->bigBlockSize);
+                \fseek($this->ole->_file_handle, $pos);
+                $this->data .= \fread($this->ole->_file_handle, $this->ole->bigBlockSize);
                 $blockId = $this->ole->bbat[$blockId];
             }
         }
         if (isset($this->params['size'])) {
-            $this->data = substr($this->data, 0, $this->params['size']);
+            $this->data = \substr($this->data, 0, $this->params['size']);
         }
 
         if ($options & STREAM_USE_PATH) {
@@ -119,7 +119,7 @@ class ChainedBlockStream
         if ($this->stream_eof()) {
             return false;
         }
-        $s = substr($this->data, $this->pos, $count);
+        $s = \substr($this->data, $this->pos, $count);
         $this->pos += $count;
 
         return $s;
@@ -132,7 +132,7 @@ class ChainedBlockStream
      */
     public function stream_eof() // @codingStandardsIgnoreLine
     {
-        return $this->pos >= strlen($this->data);
+        return $this->pos >= \strlen($this->data);
     }
 
     /**
@@ -161,8 +161,8 @@ class ChainedBlockStream
         } elseif ($whence == SEEK_CUR && -$offset <= $this->pos) {
             $this->pos += $offset;
         // @phpstan-ignore-next-line
-        } elseif ($whence == SEEK_END && -$offset <= count(/** @scrutinizer ignore-type */ $this->data)) {
-            $this->pos = strlen($this->data) + $offset;
+        } elseif ($whence == SEEK_END && -$offset <= \count(/** @scrutinizer ignore-type */ $this->data)) {
+            $this->pos = \strlen($this->data) + $offset;
         } else {
             return false;
         }
@@ -179,7 +179,7 @@ class ChainedBlockStream
     public function stream_stat() // @codingStandardsIgnoreLine
     {
         return [
-            'size' => strlen($this->data),
+            'size' => \strlen($this->data),
         ];
     }
 

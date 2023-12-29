@@ -37,7 +37,7 @@ class BesselI
      */
     public static function BESSELI($x, $ord)
     {
-        if (is_array($x) || is_array($ord)) {
+        if (\is_array($x) || \is_array($ord)) {
             return self::evaluateArrayArguments([self::class, __FUNCTION__], $x, $ord);
         }
 
@@ -54,7 +54,7 @@ class BesselI
 
         $fResult = self::calculate($x, $ord);
 
-        return (is_nan($fResult)) ? ExcelError::NAN() : $fResult;
+        return (\is_nan($fResult)) ? ExcelError::NAN() : $fResult;
     }
 
     private static function calculate(float $x, int $ord): float
@@ -72,7 +72,7 @@ class BesselI
 
     private static function besselI0(float $x): float
     {
-        $ax = abs($x);
+        $ax = \abs($x);
 
         if ($ax < 3.75) {
             $y = $x / 3.75;
@@ -84,14 +84,14 @@ class BesselI
 
         $y = 3.75 / $ax;
 
-        return (exp($ax) / sqrt($ax)) * (0.39894228 + $y * (0.1328592e-1 + $y * (0.225319e-2 + $y * (-0.157565e-2
+        return (\exp($ax) / \sqrt($ax)) * (0.39894228 + $y * (0.1328592e-1 + $y * (0.225319e-2 + $y * (-0.157565e-2
                             + $y * (0.916281e-2 + $y * (-0.2057706e-1 + $y * (0.2635537e-1 +
                                         $y * (-0.1647633e-1 + $y * 0.392377e-2))))))));
     }
 
     private static function besselI1(float $x): float
     {
-        $ax = abs($x);
+        $ax = \abs($x);
 
         if ($ax < 3.75) {
             $y = $x / 3.75;
@@ -106,7 +106,7 @@ class BesselI
         $ans = 0.2282967e-1 + $y * (-0.2895312e-1 + $y * (0.1787654e-1 - $y * 0.420059e-2));
         $ans = 0.39894228 + $y * (-0.3988024e-1 + $y * (-0.362018e-2 + $y * (0.163801e-2 +
                         $y * (-0.1031555e-1 + $y * $ans))));
-        $ans *= exp($ax) / sqrt($ax);
+        $ans *= \exp($ax) / \sqrt($ax);
 
         return ($x < 0.0) ? -$ans : $ans;
     }
@@ -124,17 +124,17 @@ class BesselI
             return 0.0;
         }
 
-        $tox = 2.0 / abs($x);
+        $tox = 2.0 / \abs($x);
         $bip = 0;
         $ans = 0.0;
         $bi = 1.0;
 
-        for ($j = 2 * ($ord + (int) sqrt(40.0 * $ord)); $j > 0; --$j) {
+        for ($j = 2 * ($ord + (int) \sqrt(40.0 * $ord)); $j > 0; --$j) {
             $bim = $bip + $j * $tox * $bi;
             $bip = $bi;
             $bi = $bim;
 
-            if (abs($bi) > 1.0e+12) {
+            if (\abs($bi) > 1.0e+12) {
                 $ans *= 1.0e-12;
                 $bi *= 1.0e-12;
                 $bip *= 1.0e-12;

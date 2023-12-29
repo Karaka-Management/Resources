@@ -274,7 +274,7 @@ class Comment implements IComparable
      */
     public function getHashCode(): string
     {
-        return md5(
+        return \md5(
             $this->author .
             $this->text->getHashCode() .
             $this->width .
@@ -294,9 +294,9 @@ class Comment implements IComparable
      */
     public function __clone()
     {
-        $vars = get_object_vars($this);
+        $vars = \get_object_vars($this);
         foreach ($vars as $key => $value) {
-            if (is_object($value)) {
+            if (\is_object($value)) {
                 $this->$key = clone $value;
             } else {
                 $this->$key = $value;
@@ -323,7 +323,7 @@ class Comment implements IComparable
             return false;
         }
 
-        return getimagesize($path) !== false;
+        return \getimagesize($path) !== false;
     }
 
     /**
@@ -339,7 +339,7 @@ class Comment implements IComparable
      */
     public function setBackgroundImage(Drawing $objDrawing): self
     {
-        if (!array_key_exists($objDrawing->getType(), Drawing::IMAGE_TYPES_CONVERTION_MAP)) {
+        if (!\array_key_exists($objDrawing->getType(), Drawing::IMAGE_TYPES_CONVERTION_MAP)) {
             throw new PhpSpreadsheetException('Unsupported image type in comment background. Supported types: PNG, JPEG, BMP, GIF.');
         }
         $this->backgroundImage = $objDrawing;

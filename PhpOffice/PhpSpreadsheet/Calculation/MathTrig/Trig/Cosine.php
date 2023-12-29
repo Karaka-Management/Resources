@@ -23,7 +23,7 @@ class Cosine
      */
     public static function cos($number)
     {
-        if (is_array($number)) {
+        if (\is_array($number)) {
             return self::evaluateSingleArgumentArray([self::class, __FUNCTION__], $number);
         }
 
@@ -33,7 +33,7 @@ class Cosine
             return $e->getMessage();
         }
 
-        return cos($number);
+        return \cos($number);
     }
 
     /**
@@ -49,7 +49,7 @@ class Cosine
      */
     public static function cosh($number)
     {
-        if (is_array($number)) {
+        if (\is_array($number)) {
             return self::evaluateSingleArgumentArray([self::class, __FUNCTION__], $number);
         }
 
@@ -59,7 +59,7 @@ class Cosine
             return $e->getMessage();
         }
 
-        return cosh($number);
+        return \cosh($number);
     }
 
     /**
@@ -75,7 +75,7 @@ class Cosine
      */
     public static function acos($number)
     {
-        if (is_array($number)) {
+        if (\is_array($number)) {
             return self::evaluateSingleArgumentArray([self::class, __FUNCTION__], $number);
         }
 
@@ -85,7 +85,7 @@ class Cosine
             return $e->getMessage();
         }
 
-        return Helpers::numberOrNan(acos($number));
+        return Helpers::numberOrNan(\acos($number));
     }
 
     /**
@@ -101,7 +101,7 @@ class Cosine
      */
     public static function acosh($number)
     {
-        if (is_array($number)) {
+        if (\is_array($number)) {
             return self::evaluateSingleArgumentArray([self::class, __FUNCTION__], $number);
         }
 
@@ -111,6 +111,6 @@ class Cosine
             return $e->getMessage();
         }
 
-        return Helpers::numberOrNan(acosh($number));
+        return Helpers::numberOrNan(\acosh($number));
     }
 }

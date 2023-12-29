@@ -369,7 +369,7 @@ class Series implements ComparableInterface
 
     public function hasShowSeparator(): bool
     {
-        return !is_null($this->separator);
+        return !\is_null($this->separator);
     }
 
     public function setSeparator(?string $pValue): self
@@ -477,7 +477,7 @@ class Series implements ComparableInterface
      */
     public function getHashCode(): string
     {
-        return md5((is_null($this->fill) ? 'null' : $this->fill->getHashCode()) . (is_null($this->font) ? 'null' : $this->font->getHashCode()) . var_export($this->values, true) . var_export($this, true) . __CLASS__);
+        return \md5((\is_null($this->fill) ? 'null' : $this->fill->getHashCode()) . (\is_null($this->font) ? 'null' : $this->font->getHashCode()) . \var_export($this->values, true) . \var_export($this, true) . __CLASS__);
     }
 
     /**
@@ -515,7 +515,7 @@ class Series implements ComparableInterface
     {
         $this->font = clone $this->font;
         $this->marker = clone $this->marker;
-        if (is_object($this->outline)) {
+        if (\is_object($this->outline)) {
             $this->outline = clone $this->outline;
         }
     }

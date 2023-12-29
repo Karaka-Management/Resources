@@ -35,7 +35,7 @@ class NetworkDays
      */
     public static function count($startDate, $endDate, ...$dateArgs)
     {
-        if (is_array($startDate) || is_array($endDate)) {
+        if (\is_array($startDate) || \is_array($endDate)) {
             return self::evaluateArrayArgumentsSubset(
                 [self::class, __FUNCTION__],
                 2,
@@ -49,8 +49,8 @@ class NetworkDays
             //    Retrieve the mandatory start and end date that are referenced in the function definition
             $sDate = Helpers::getDateValue($startDate);
             $eDate = Helpers::getDateValue($endDate);
-            $startDate = min($sDate, $eDate);
-            $endDate = max($sDate, $eDate);
+            $startDate = \min($sDate, $eDate);
+            $endDate = \max($sDate, $eDate);
             //    Get the optional days
             $dateArgs = Functions::flattenArray($dateArgs);
             //    Test any extra holiday parameters
@@ -65,14 +65,14 @@ class NetworkDays
         // Execute function
         $startDow = self::calcStartDow($startDate);
         $endDow = self::calcEndDow($endDate);
-        $wholeWeekDays = (int) floor(($endDate - $startDate) / 7) * 5;
+        $wholeWeekDays = (int) \floor(($endDate - $startDate) / 7) * 5;
         $partWeekDays = self::calcPartWeekDays($startDow, $endDow);
 
         //    Test any extra holiday parameters
         $holidayCountedArray = [];
         foreach ($holidayArray as $holidayDate) {
             if (($holidayDate >= $startDate) && ($holidayDate <= $endDate)) {
-                if ((Week::day($holidayDate, 2) < 6) && (!in_array($holidayDate, $holidayCountedArray))) {
+                if ((Week::day($holidayDate, 2) < 6) && (!\in_array($holidayDate, $holidayCountedArray))) {
                     --$partWeekDays;
                     $holidayCountedArray[] = $holidayDate;
                 }

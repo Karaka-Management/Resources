@@ -194,8 +194,8 @@ class Protection
      */
     public function setSalt($salt)
     {
-        if ($salt !== null && strlen($salt) !== 16) {
-            throw new InvalidArgumentException('salt has to be of exactly 16 bytes length');
+        if ($salt !== null && \strlen($salt) !== 16) {
+            throw new \InvalidArgumentException('salt has to be of exactly 16 bytes length');
         }
 
         $this->salt = $salt;

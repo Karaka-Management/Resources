@@ -130,8 +130,8 @@ abstract class AbstractWriter implements WriterInterface
      */
     public function getWriterPart($partName = '')
     {
-        if ($partName != '' && isset($this->writerParts[strtolower($partName)])) {
-            return $this->writerParts[strtolower($partName)];
+        if ($partName != '' && isset($this->writerParts[\strtolower($partName)])) {
+            return $this->writerParts[\strtolower($partName)];
         }
 
         return null;
@@ -160,7 +160,7 @@ abstract class AbstractWriter implements WriterInterface
         $this->useDiskCaching = $value;
 
         if (null !== $directory) {
-            if (is_dir($directory)) {
+            if (\is_dir($directory)) {
                 $this->diskCachingDirectory = $directory;
             } else {
                 throw new Exception("Directory does not exist: $directory");
@@ -199,8 +199,8 @@ abstract class AbstractWriter implements WriterInterface
      */
     public function setTempDir($value)
     {
-        if (!is_dir($value)) {
-            mkdir($value);
+        if (!\is_dir($value)) {
+            \mkdir($value);
         }
         $this->tempDir = $value;
 
@@ -219,12 +219,12 @@ abstract class AbstractWriter implements WriterInterface
     protected function getTempFile($filename)
     {
         // Temporary directory
-        $this->setTempDir(Settings::getTempDir() . uniqid('/PHPWordWriter_', true) . '/');
+        $this->setTempDir(Settings::getTempDir() . \uniqid('/PHPWordWriter_', true) . '/');
 
         // Temporary file
         $this->originalFilename = $filename;
-        if (strpos(strtolower($filename), 'php://') === 0) {
-            $filename = tempnam(Settings::getTempDir(), 'PhpWord');
+        if (\strpos(\strtolower($filename), 'php://') === 0) {
+            $filename = \tempnam(Settings::getTempDir(), 'PhpWord');
             if (false === $filename) {
                 $filename = $this->originalFilename; // @codeCoverageIgnore
             } // @codeCoverageIgnore
@@ -242,11 +242,11 @@ abstract class AbstractWriter implements WriterInterface
         if ($this->originalFilename != $this->tempFilename) {
             // @codeCoverageIgnoreStart
             // Can't find any test case. Uncomment when found.
-            if (false === copy($this->tempFilename, $this->originalFilename)) {
+            if (false === \copy($this->tempFilename, $this->originalFilename)) {
                 throw new CopyFileException($this->tempFilename, $this->originalFilename);
             }
             // @codeCoverageIgnoreEnd
-            @unlink($this->tempFilename);
+            @\unlink($this->tempFilename);
         }
 
         $this->clearTempDir();
@@ -257,7 +257,7 @@ abstract class AbstractWriter implements WriterInterface
      */
     protected function clearTempDir(): void
     {
-        if (is_dir($this->tempDir)) {
+        if (\is_dir($this->tempDir)) {
             $this->deleteDir($this->tempDir);
         }
     }
@@ -272,8 +272,8 @@ abstract class AbstractWriter implements WriterInterface
     protected function getZipArchive($filename)
     {
         // Remove any existing file
-        if (file_exists($filename)) {
-            unlink($filename);
+        if (\file_exists($filename)) {
+            \unlink($filename);
         }
 
         // Try opening the ZIP file
@@ -303,7 +303,7 @@ abstract class AbstractWriter implements WriterInterface
     protected function openFile($filename)
     {
         $filename = $this->getTempFile($filename);
-        $fileHandle = fopen($filename, 'wb');
+        $fileHandle = \fopen($filename, 'wb');
         // @codeCoverageIgnoreStart
         // Can't find any test case. Uncomment when found.
         if ($fileHandle === false) {
@@ -324,8 +324,8 @@ abstract class AbstractWriter implements WriterInterface
      */
     protected function writeFile($fileHandle, $content): void
     {
-        fwrite($fileHandle, $content);
-        fclose($fileHandle);
+        \fwrite($fileHandle, $content);
+        \fclose($fileHandle);
         $this->cleanupTempFile();
     }
 
@@ -347,17 +347,17 @@ abstract class AbstractWriter implements WriterInterface
 
             // Retrive GD image content or get local media
             if (isset($element['isMemImage']) && $element['isMemImage']) {
-                $image = call_user_func($element['createFunction'], $element['source']);
+                $image = \call_user_func($element['createFunction'], $element['source']);
                 if ($element['imageType'] === 'image/png') {
                     // PNG images need to preserve alpha channel information
-                    imagesavealpha($image, true);
+                    \imagesavealpha($image, true);
                 }
-                ob_start();
-                call_user_func($element['imageFunction'], $image);
-                $imageContents = ob_get_contents();
-                ob_end_clean();
+                \ob_start();
+                \call_user_func($element['imageFunction'], $image);
+                $imageContents = \ob_get_contents();
+                \ob_end_clean();
                 $zip->addFromString($target, $imageContents);
-                imagedestroy($image);
+                \imagedestroy($image);
             } else {
                 $this->addFileToPackage($zip, $element['source'], $target);
             }
@@ -375,11 +375,11 @@ abstract class AbstractWriter implements WriterInterface
      */
     protected function addFileToPackage($zipPackage, $source, $target): void
     {
-        $isArchive = strpos($source, 'zip://') !== false;
+        $isArchive = \strpos($source, 'zip://') !== false;
         $actualSource = null;
         if ($isArchive) {
-            $source = substr($source, 6);
-            [$zipFilename, $imageFilename] = explode('#', $source);
+            $source = \substr($source, 6);
+            [$zipFilename, $imageFilename] = \explode('#', $source);
 
             $zip = new ZipArchive();
             if ($zip->open($zipFilename) !== false) {
@@ -405,16 +405,16 @@ abstract class AbstractWriter implements WriterInterface
      */
     private function deleteDir($dir): void
     {
-        foreach (scandir($dir) as $file) {
+        foreach (\scandir($dir) as $file) {
             if ($file === '.' || $file === '..') {
                 continue;
-            } elseif (is_file($dir . '/' . $file)) {
-                unlink($dir . '/' . $file);
-            } elseif (is_dir($dir . '/' . $file)) {
+            } elseif (\is_file($dir . '/' . $file)) {
+                \unlink($dir . '/' . $file);
+            } elseif (\is_dir($dir . '/' . $file)) {
                 $this->deleteDir($dir . '/' . $file);
             }
         }
 
-        rmdir($dir);
+        \rmdir($dir);
     }
 }

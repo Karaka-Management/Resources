@@ -57,18 +57,18 @@ final class StructuredReference implements Operand
     {
         $val = $matches[0];
 
-        $srCount = substr_count($val, self::OPEN_BRACE)
-            - substr_count($val, self::CLOSE_BRACE);
+        $srCount = \substr_count($val, self::OPEN_BRACE)
+            - \substr_count($val, self::CLOSE_BRACE);
         while ($srCount > 0) {
-            $srIndex = strlen($val);
-            $srStringRemainder = substr($formula, $index + $srIndex);
-            $closingPos = strpos($srStringRemainder, self::CLOSE_BRACE);
+            $srIndex = \strlen($val);
+            $srStringRemainder = \substr($formula, $index + $srIndex);
+            $closingPos = \strpos($srStringRemainder, self::CLOSE_BRACE);
             if ($closingPos === false) {
                 throw new Exception("Formula Error: No closing ']' to match opening '['");
             }
-            $srStringRemainder = substr($srStringRemainder, 0, $closingPos + 1);
+            $srStringRemainder = \substr($srStringRemainder, 0, $closingPos + 1);
             --$srCount;
-            if (strpos($srStringRemainder, self::OPEN_BRACE) !== false) {
+            if (\strpos($srStringRemainder, self::OPEN_BRACE) !== false) {
                 ++$srCount;
             }
             $val .= $srStringRemainder;
@@ -91,8 +91,8 @@ final class StructuredReference implements Operand
 
     private function isRowReference(): bool
     {
-        return strpos($this->value, '[@') !== false
-            || strpos($this->value, '[' . self::ITEM_SPECIFIER_THIS_ROW . ']') !== false;
+        return \strpos($this->value, '[@') !== false
+            || \strpos($this->value, '[' . self::ITEM_SPECIFIER_THIS_ROW . ']') !== false;
     }
 
     /**
@@ -101,7 +101,7 @@ final class StructuredReference implements Operand
      */
     private function getTableStructure(Cell $cell): void
     {
-        preg_match(self::TABLE_REFERENCE, $this->value, $matches);
+        \preg_match(self::TABLE_REFERENCE, $this->value, $matches);
 
         $this->tableName = $matches[1];
         $this->table = ($this->tableName === '')
@@ -173,25 +173,25 @@ final class StructuredReference implements Operand
 
     private function getRowReference(Cell $cell): string
     {
-        $reference = str_replace("\u{a0}", ' ', $this->reference);
+        $reference = \str_replace("\u{a0}", ' ', $this->reference);
         /** @var string $reference */
-        $reference = str_replace('[' . self::ITEM_SPECIFIER_THIS_ROW . '],', '', $reference);
+        $reference = \str_replace('[' . self::ITEM_SPECIFIER_THIS_ROW . '],', '', $reference);
 
         foreach ($this->columns as $columnId => $columnName) {
-            $columnName = str_replace("\u{a0}", ' ', $columnName);
+            $columnName = \str_replace("\u{a0}", ' ', $columnName);
             $cellReference = $columnId . $cell->getRow();
-            $pattern1 = '/\[' . preg_quote($columnName) . '\]/miu';
-            $pattern2 = '/@' . preg_quote($columnName) . '/miu';
+            $pattern1 = '/\[' . \preg_quote($columnName) . '\]/miu';
+            $pattern2 = '/@' . \preg_quote($columnName) . '/miu';
             /** @var string $reference */
-            if (preg_match($pattern1, $reference) === 1) {
-                $reference = preg_replace($pattern1, $cellReference, $reference);
-            } elseif (preg_match($pattern2, $reference) === 1) {
-                $reference = preg_replace($pattern2, $cellReference, $reference);
+            if (\preg_match($pattern1, $reference) === 1) {
+                $reference = \preg_replace($pattern1, $cellReference, $reference);
+            } elseif (\preg_match($pattern2, $reference) === 1) {
+                $reference = \preg_replace($pattern2, $cellReference, $reference);
             }
         }
 
         /** @var string $reference */
-        return $this->validateParsedReference(trim($reference, '[]@, '));
+        return $this->validateParsedReference(\trim($reference, '[]@, '));
     }
 
     /**
@@ -200,18 +200,18 @@ final class StructuredReference implements Operand
      */
     private function getColumnReference(): string
     {
-        $reference = str_replace("\u{a0}", ' ', $this->reference);
+        $reference = \str_replace("\u{a0}", ' ', $this->reference);
         $startRow = ($this->totalsRow === null) ? $this->lastDataRow : $this->totalsRow;
         $endRow = ($this->headersRow === null) ? $this->firstDataRow : $this->headersRow;
 
         [$startRow, $endRow] = $this->getRowsForColumnReference($reference, $startRow, $endRow);
         $reference = $this->getColumnsForColumnReference($reference, $startRow, $endRow);
 
-        $reference = trim($reference, '[]@, ');
-        if (substr_count($reference, ':') > 1) {
-            $cells = explode(':', $reference);
-            $firstCell = array_shift($cells);
-            $lastCell = array_pop($cells);
+        $reference = \trim($reference, '[]@, ');
+        if (\substr_count($reference, ':') > 1) {
+            $cells = \explode(':', $reference);
+            $firstCell = \array_shift($cells);
+            $lastCell = \array_pop($cells);
             $reference = "{$firstCell}:{$lastCell}";
         }
 
@@ -224,8 +224,8 @@ final class StructuredReference implements Operand
      */
     private function validateParsedReference(string $reference): string
     {
-        if (preg_match('/^' . Calculation::CALCULATION_REGEXP_CELLREF . ':' . Calculation::CALCULATION_REGEXP_CELLREF . '$/miu', $reference) !== 1) {
-            if (preg_match('/^' . Calculation::CALCULATION_REGEXP_CELLREF . '$/miu', $reference) !== 1) {
+        if (\preg_match('/^' . Calculation::CALCULATION_REGEXP_CELLREF . ':' . Calculation::CALCULATION_REGEXP_CELLREF . '$/miu', $reference) !== 1) {
+            if (\preg_match('/^' . Calculation::CALCULATION_REGEXP_CELLREF . '$/miu', $reference) !== 1) {
                 throw new Exception("Invalid Structured Reference {$this->reference} {$reference}");
             }
         }
@@ -235,9 +235,9 @@ final class StructuredReference implements Operand
 
     private function fullData(int $startRow, int $endRow): string
     {
-        $columns = array_keys($this->columns);
-        $firstColumn = array_shift($columns);
-        $lastColumn = (empty($columns)) ? $firstColumn : array_pop($columns);
+        $columns = \array_keys($this->columns);
+        $firstColumn = \array_shift($columns);
+        $lastColumn = (empty($columns)) ? $firstColumn : \array_pop($columns);
 
         return "{$firstColumn}{$startRow}:{$lastColumn}{$endRow}";
     }
@@ -286,7 +286,7 @@ final class StructuredReference implements Operand
         foreach (self::ITEM_SPECIFIER_ROWS_SET as $rowReference) {
             $pattern = '/\[' . $rowReference . '\]/mui';
             /** @var string $reference */
-            if (preg_match($pattern, $reference) === 1) {
+            if (\preg_match($pattern, $reference) === 1) {
                 if (($rowReference === self::ITEM_SPECIFIER_HEADERS) && ($this->table->getShowHeaderRow() === false)) {
                     throw new Exception(
                         'Table Headers are Hidden, and should not be Referenced',
@@ -294,9 +294,9 @@ final class StructuredReference implements Operand
                     );
                 }
                 $rowsSelected = true;
-                $startRow = min($startRow, $this->getMinimumRow($rowReference));
-                $endRow = max($endRow, $this->getMaximumRow($rowReference));
-                $reference = preg_replace($pattern, '', $reference);
+                $startRow = \min($startRow, $this->getMinimumRow($rowReference));
+                $endRow = \max($endRow, $this->getMaximumRow($rowReference));
+                $reference = \preg_replace($pattern, '', $reference);
             }
         }
         if ($rowsSelected === false) {
@@ -312,14 +312,14 @@ final class StructuredReference implements Operand
     {
         $columnsSelected = false;
         foreach ($this->columns as $columnId => $columnName) {
-            $columnName = str_replace("\u{a0}", ' ', $columnName);
+            $columnName = \str_replace("\u{a0}", ' ', $columnName);
             $cellFrom = "{$columnId}{$startRow}";
             $cellTo = "{$columnId}{$endRow}";
             $cellReference = ($cellFrom === $cellTo) ? $cellFrom : "{$cellFrom}:{$cellTo}";
-            $pattern = '/\[' . preg_quote($columnName) . '\]/mui';
-            if (preg_match($pattern, $reference) === 1) {
+            $pattern = '/\[' . \preg_quote($columnName) . '\]/mui';
+            if (\preg_match($pattern, $reference) === 1) {
                 $columnsSelected = true;
-                $reference = preg_replace($pattern, $cellReference, $reference);
+                $reference = \preg_replace($pattern, $cellReference, $reference);
             }
             /** @var string $reference */
         }

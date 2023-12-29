@@ -107,7 +107,7 @@ class Rels extends AbstractPart
     private function writeRel(XMLWriter $xmlWriter, $relId, $type, $target, $targetMode = ''): void
     {
         if ($type != '' && $target != '') {
-            if (strpos($relId, 'rId') === false) {
+            if (\strpos($relId, 'rId') === false) {
                 $relId = 'rId' . $relId;
             }
             $xmlWriter->startElement('Relationship');

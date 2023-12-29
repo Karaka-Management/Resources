@@ -15,7 +15,7 @@ class Properties
         $this->spreadsheet = $spreadsheet;
     }
 
-    public function load(SimpleXMLElement $xml, $namespacesMeta): void
+    public function load(\SimpleXMLElement $xml, $namespacesMeta): void
     {
         $docProps = $this->spreadsheet->getProperties();
         $officeProperty = $xml->children($namespacesMeta['office']);
@@ -38,7 +38,7 @@ class Properties
         }
     }
 
-    private function setCoreProperties(DocumentProperties $docProps, SimpleXMLElement $officePropertyDC): void
+    private function setCoreProperties(DocumentProperties $docProps, \SimpleXMLElement $officePropertyDC): void
     {
         foreach ($officePropertyDC as $propertyName => $propertyValue) {
             $propertyValue = (string) $propertyValue;
@@ -70,7 +70,7 @@ class Properties
 
     private function setMetaProperties(
         $namespacesMeta,
-        SimpleXMLElement $propertyValue,
+        \SimpleXMLElement $propertyValue,
         $propertyName,
         DocumentProperties $docProps
     ): void {

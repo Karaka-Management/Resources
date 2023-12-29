@@ -60,6 +60,6 @@ class AbstractTypeLine extends AbstractType
      */
     public function getHashCode(): string
     {
-        return md5($this->isSmooth() ? '1' : '0');
+        return \md5($this->isSmooth() ? '1' : '0');
     }
 }

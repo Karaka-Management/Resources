@@ -33,7 +33,7 @@ abstract class IOFactory
      */
     public static function createWriter(PhpWord $phpWord, $name = 'Word2007')
     {
-        if ($name !== 'WriterInterface' && !in_array($name, ['ODText', 'RTF', 'Word2007', 'HTML', 'PDF'], true)) {
+        if ($name !== 'WriterInterface' && !\in_array($name, ['ODText', 'RTF', 'Word2007', 'HTML', 'PDF'], true)) {
             throw new Exception("\"{$name}\" is not a valid writer.");
         }
 
@@ -66,7 +66,7 @@ abstract class IOFactory
     private static function createObject($type, $name, $phpWord = null)
     {
         $class = "PhpOffice\\PhpWord\\{$type}\\{$name}";
-        if (class_exists($class) && self::isConcreteClass($class)) {
+        if (\class_exists($class) && self::isConcreteClass($class)) {
             return new $class($phpWord);
         }
 
@@ -98,7 +98,7 @@ abstract class IOFactory
      */
     private static function isConcreteClass($class)
     {
-        $reflection = new ReflectionClass($class);
+        $reflection = new \ReflectionClass($class);
 
         return !$reflection->isAbstract() && !$reflection->isInterface();
     }

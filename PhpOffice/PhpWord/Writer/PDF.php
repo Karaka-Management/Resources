@@ -46,10 +46,10 @@ class PDF
             throw new Exception('PDF rendering library or library path has not been defined.');
         }
 
-        $includePath = str_replace('\\', '/', get_include_path());
-        $rendererPath = str_replace('\\', '/', $pdfLibraryPath);
-        if (strpos($rendererPath, $includePath) === false) {
-            set_include_path(get_include_path() . PATH_SEPARATOR . $pdfLibraryPath);
+        $includePath = \str_replace('\\', '/', \get_include_path());
+        $rendererPath = \str_replace('\\', '/', $pdfLibraryPath);
+        if (\strpos($rendererPath, $includePath) === false) {
+            \set_include_path(\get_include_path() . PATH_SEPARATOR . $pdfLibraryPath);
         }
 
         $rendererName = static::class . '\\' . $pdfLibraryName;
@@ -71,6 +71,6 @@ class PDF
         //     throw new Exception("PDF Rendering library has not been defined.");
         // }
 
-        return call_user_func_array([$this->renderer, $name], $arguments);
+        return \call_user_func_array([$this->renderer, $name], $arguments);
     }
 }

@@ -164,7 +164,7 @@ abstract class AbstractGraphic extends AbstractShape implements ComparableInterf
         // Resize proportional?
         if ($this->resizeProportional && 0 != $pValue && 0 != $this->width) {
             $ratio = $this->height / $this->width;
-            $this->height = (int) round($ratio * $pValue);
+            $this->height = (int) \round($ratio * $pValue);
         }
 
         // Set width
@@ -183,7 +183,7 @@ abstract class AbstractGraphic extends AbstractShape implements ComparableInterf
         // Resize proportional?
         if ($this->resizeProportional && 0 != $pValue && 0 != $this->height) {
             $ratio = $this->width / $this->height;
-            $this->width = (int) round($ratio * $pValue);
+            $this->width = (int) \round($ratio * $pValue);
         }
 
         // Set height
@@ -205,10 +205,10 @@ abstract class AbstractGraphic extends AbstractShape implements ComparableInterf
         $yratio = $height / $this->height;
         if ($this->resizeProportional && !(0 == $width || 0 == $height)) {
             if (($xratio * $this->height) < $height) {
-                $this->height = (int) ceil($xratio * $this->height);
+                $this->height = (int) \ceil($xratio * $this->height);
                 $this->width = $width;
             } else {
-                $this->width = (int) ceil($yratio * $this->width);
+                $this->width = (int) \ceil($yratio * $this->width);
                 $this->height = $height;
             }
         }
@@ -245,6 +245,6 @@ abstract class AbstractGraphic extends AbstractShape implements ComparableInterf
      */
     public function getHashCode(): string
     {
-        return md5($this->name . $this->description . parent::getHashCode() . __CLASS__);
+        return \md5($this->name . $this->description . parent::getHashCode() . __CLASS__);
     }
 }

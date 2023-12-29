@@ -24,7 +24,7 @@ class Deviations
         $aArgs = Functions::flattenArrayIndexed($args);
 
         $aMean = Averages::average($aArgs);
-        if (!is_numeric($aMean)) {
+        if (!\is_numeric($aMean)) {
             return ExcelError::NAN();
         }
 
@@ -34,13 +34,13 @@ class Deviations
         foreach ($aArgs as $k => $arg) {
             // Is it a numeric value?
             if (
-                (is_bool($arg)) &&
+                (\is_bool($arg)) &&
                 ((!Functions::isCellValue($k)) ||
                     (Functions::getCompatibilityMode() == Functions::COMPATIBILITY_OPENOFFICE))
             ) {
                 $arg = (int) $arg;
             }
-            if ((is_numeric($arg)) && (!is_string($arg))) {
+            if ((\is_numeric($arg)) && (!\is_string($arg))) {
                 $returnValue += ($arg - $aMean) ** 2;
                 ++$aCount;
             }
@@ -65,7 +65,7 @@ class Deviations
     {
         $aArgs = Functions::flattenArrayIndexed($args);
         $mean = Averages::average($aArgs);
-        if (!is_numeric($mean)) {
+        if (!\is_numeric($mean)) {
             return ExcelError::DIV0();
         }
         $stdDev = StandardDeviations::STDEV($aArgs);
@@ -74,10 +74,10 @@ class Deviations
             $count = $summer = 0;
 
             foreach ($aArgs as $k => $arg) {
-                if ((is_bool($arg)) && (!Functions::isMatrixValue($k))) {
+                if ((\is_bool($arg)) && (!Functions::isMatrixValue($k))) {
                 } else {
                     // Is it a numeric value?
-                    if ((is_numeric($arg)) && (!is_string($arg))) {
+                    if ((\is_numeric($arg)) && (!\is_string($arg))) {
                         $summer += (($arg - $mean) / $stdDev) ** 4;
                         ++$count;
                     }
@@ -110,23 +110,23 @@ class Deviations
     {
         $aArgs = Functions::flattenArrayIndexed($args);
         $mean = Averages::average($aArgs);
-        if (!is_numeric($mean)) {
+        if (!\is_numeric($mean)) {
             return ExcelError::DIV0();
         }
         $stdDev = StandardDeviations::STDEV($aArgs);
-        if ($stdDev === 0.0 || is_string($stdDev)) {
+        if ($stdDev === 0.0 || \is_string($stdDev)) {
             return ExcelError::DIV0();
         }
 
         $count = $summer = 0;
         // Loop through arguments
         foreach ($aArgs as $k => $arg) {
-            if ((is_bool($arg)) && (!Functions::isMatrixValue($k))) {
-            } elseif (!is_numeric($arg)) {
+            if ((\is_bool($arg)) && (!Functions::isMatrixValue($k))) {
+            } elseif (!\is_numeric($arg)) {
                 return ExcelError::VALUE();
             } else {
                 // Is it a numeric value?
-                if ((is_numeric($arg)) && (!is_string($arg))) {
+                if ((\is_numeric($arg)) && (!\is_string($arg))) {
                     $summer += (($arg - $mean) / $stdDev) ** 3;
                     ++$count;
                 }

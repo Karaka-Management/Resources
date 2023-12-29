@@ -28,10 +28,10 @@ class UnauthorizedMimetypeException extends PhpPresentationException
      */
     public function __construct(string $expectedMimetype, array $authorizedMimetypes)
     {
-        parent::__construct(sprintf(
+        parent::__construct(\sprintf(
             'The mime type %s is not found in autorized values (%s)',
             $expectedMimetype,
-            implode(', ', $authorizedMimetypes)
+            \implode(', ', $authorizedMimetypes)
         ));
     }
 }

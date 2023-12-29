@@ -171,7 +171,7 @@ class Chart extends AbstractGraphic implements ComparableInterface
      */
     public function setDisplayBlankAs(string $value): self
     {
-        if (in_array($value, [self::BLANKAS_GAP, self::BLANKAS_SPAN, self::BLANKAS_ZERO])) {
+        if (\in_array($value, [self::BLANKAS_GAP, self::BLANKAS_SPAN, self::BLANKAS_ZERO])) {
             $this->displayBlankAs = $value;
         }
 
@@ -209,6 +209,6 @@ class Chart extends AbstractGraphic implements ComparableInterface
      */
     public function getHashCode(): string
     {
-        return md5(parent::getHashCode() . $this->title->getHashCode() . $this->legend->getHashCode() . $this->plotArea->getHashCode() . $this->view3D->getHashCode() . ($this->includeSpreadsheet ? 1 : 0) . __CLASS__);
+        return \md5(parent::getHashCode() . $this->title->getHashCode() . $this->legend->getHashCode() . $this->plotArea->getHashCode() . $this->view3D->getHashCode() . ($this->includeSpreadsheet ? 1 : 0) . __CLASS__);
     }
 }

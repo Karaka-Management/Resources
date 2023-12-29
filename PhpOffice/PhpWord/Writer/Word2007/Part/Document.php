@@ -38,7 +38,7 @@ class Document extends AbstractPart
         $xmlWriter = $this->getXmlWriter();
 
         $sections = $phpWord->getSections();
-        $sectionCount = count($sections);
+        $sectionCount = \count($sections);
         $currentSection = 0;
         $drawingSchema = 'http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing';
 

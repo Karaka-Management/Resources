@@ -76,7 +76,7 @@ class ConfigVariables
 			// Uses Adobe CJK fonts for CJK languages
 			// default TRUE, only set false if you have defined some available fonts that support CJK
 			// If true this will not stop use of other CJK fonts if specified by font-family:
-			// and vice versa i.e. only dictates behaviour when specified by lang="" incl. AutoFont()
+			// and vice versa i.e. only dictates behavior when specified by lang="" incl. AutoFont()
 			'useAdobeCJK' => false,
 
 			// When embedding full TTF font files, remakes the font file using only core tables

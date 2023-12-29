@@ -26,6 +26,6 @@ class Xml extends AbstractEscaper
 {
     protected function escapeSingleValue($input)
     {
-        return (null !== $input) ? htmlspecialchars($input, ENT_QUOTES) : '';
+        return (null !== $input) ? \htmlspecialchars($input, ENT_QUOTES) : '';
     }
 }

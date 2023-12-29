@@ -55,7 +55,7 @@ class ListItemRun extends TextRun
         $this->depth = $depth;
 
         // Version >= 0.10.0 will pass numbering style name. Older version will use old method
-        if (null !== $listStyle && is_string($listStyle)) {
+        if (null !== $listStyle && \is_string($listStyle)) {
             $this->style = new ListItemStyle($listStyle);
         } else {
             $this->style = $this->setNewStyle(new ListItemStyle(), $listStyle, true);

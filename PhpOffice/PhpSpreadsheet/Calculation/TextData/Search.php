@@ -27,7 +27,7 @@ class Search
      */
     public static function sensitive($needle, $haystack, $offset = 1)
     {
-        if (is_array($needle) || is_array($haystack) || is_array($offset)) {
+        if (\is_array($needle) || \is_array($haystack) || \is_array($offset)) {
             return self::evaluateArrayArguments([self::class, __FUNCTION__], $needle, $haystack, $offset);
         }
 
@@ -44,7 +44,7 @@ class Search
                 return $offset;
             }
 
-            $pos = mb_strpos($haystack, $needle, --$offset, 'UTF-8');
+            $pos = \mb_strpos($haystack, $needle, --$offset, 'UTF-8');
             if ($pos !== false) {
                 return ++$pos;
             }
@@ -69,7 +69,7 @@ class Search
      */
     public static function insensitive($needle, $haystack, $offset = 1)
     {
-        if (is_array($needle) || is_array($haystack) || is_array($offset)) {
+        if (\is_array($needle) || \is_array($haystack) || \is_array($offset)) {
             return self::evaluateArrayArguments([self::class, __FUNCTION__], $needle, $haystack, $offset);
         }
 
@@ -86,7 +86,7 @@ class Search
                 return $offset;
             }
 
-            $pos = mb_stripos($haystack, $needle, --$offset, 'UTF-8');
+            $pos = \mb_stripos($haystack, $needle, --$offset, 'UTF-8');
             if ($pos !== false) {
                 return ++$pos;
             }

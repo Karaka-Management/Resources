@@ -24,7 +24,7 @@ class OutOfBoundsException extends PhpPresentationException
 {
     public function __construct(int $minBounds, ?int $maxBounds, int $expectedBounds)
     {
-        parent::__construct(sprintf(
+        parent::__construct(\sprintf(
             'The expected value (%d) is out of bounds (%d, %s)',
             $expectedBounds,
             $minBounds,

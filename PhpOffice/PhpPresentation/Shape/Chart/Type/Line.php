@@ -36,6 +36,6 @@ class Line extends AbstractTypeLine implements ComparableInterface
             $hash .= $series->getHashCode();
         }
 
-        return md5(parent::getHashCode() . $hash . __CLASS__);
+        return \md5(parent::getHashCode() . $hash . __CLASS__);
     }
 }

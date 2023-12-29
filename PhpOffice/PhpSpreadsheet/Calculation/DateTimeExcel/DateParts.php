@@ -30,7 +30,7 @@ class DateParts
      */
     public static function day($dateValue)
     {
-        if (is_array($dateValue)) {
+        if (\is_array($dateValue)) {
             return self::evaluateSingleArgumentArray([self::class, __FUNCTION__], $dateValue);
         }
 
@@ -70,7 +70,7 @@ class DateParts
      */
     public static function month($dateValue)
     {
-        if (is_array($dateValue)) {
+        if (\is_array($dateValue)) {
             return self::evaluateSingleArgumentArray([self::class, __FUNCTION__], $dateValue);
         }
 
@@ -108,7 +108,7 @@ class DateParts
      */
     public static function year($dateValue)
     {
-        if (is_array($dateValue)) {
+        if (\is_array($dateValue)) {
             return self::evaluateSingleArgumentArray([self::class, __FUNCTION__], $dateValue);
         }
 
@@ -135,13 +135,13 @@ class DateParts
     {
         // Excel does not treat 0 consistently for DAY vs. (MONTH or YEAR)
         if (SharedDateHelper::getExcelCalendar() === SharedDateHelper::CALENDAR_WINDOWS_1900 && Functions::getCompatibilityMode() == Functions::COMPATIBILITY_EXCEL) {
-            if (is_bool($dateValue)) {
+            if (\is_bool($dateValue)) {
                 return (int) $dateValue;
             }
             if ($dateValue === null) {
                 return 0;
             }
-            if (is_numeric($dateValue) && $dateValue < 1 && $dateValue >= 0) {
+            if (\is_numeric($dateValue) && $dateValue < 1 && $dateValue >= 0) {
                 return 0;
             }
         }

@@ -87,7 +87,7 @@ class Converter
      */
     public static function cmToEmu($centimeter = 1)
     {
-        return round($centimeter / self::INCH_TO_CM * self::INCH_TO_PIXEL * self::PIXEL_TO_EMU);
+        return \round($centimeter / self::INCH_TO_CM * self::INCH_TO_PIXEL * self::PIXEL_TO_EMU);
     }
 
     /**
@@ -147,7 +147,7 @@ class Converter
      */
     public static function inchToEmu($inch = 1)
     {
-        return round($inch * self::INCH_TO_PIXEL * self::PIXEL_TO_EMU);
+        return \round($inch * self::INCH_TO_PIXEL * self::PIXEL_TO_EMU);
     }
 
     /**
@@ -195,7 +195,7 @@ class Converter
      */
     public static function pixelToEmu($pixel = 1)
     {
-        return round($pixel * self::PIXEL_TO_EMU);
+        return \round($pixel * self::PIXEL_TO_EMU);
     }
 
     /**
@@ -231,7 +231,7 @@ class Converter
      */
     public static function pointToEmu($point = 1)
     {
-        return round($point / self::INCH_TO_POINT * self::INCH_TO_PIXEL * self::PIXEL_TO_EMU);
+        return \round($point / self::INCH_TO_POINT * self::INCH_TO_PIXEL * self::PIXEL_TO_EMU);
     }
 
     /**
@@ -255,7 +255,7 @@ class Converter
      */
     public static function emuToPixel($emu = 1)
     {
-        return round($emu / self::PIXEL_TO_EMU);
+        return \round($emu / self::PIXEL_TO_EMU);
     }
 
     /**
@@ -279,7 +279,7 @@ class Converter
      */
     public static function degreeToAngle($degree = 1)
     {
-        return (int) round($degree * self::DEGREE_TO_ANGLE);
+        return (int) \round($degree * self::DEGREE_TO_ANGLE);
     }
 
     /**
@@ -291,7 +291,7 @@ class Converter
      */
     public static function angleToDegree($angle = 1)
     {
-        return round($angle / self::DEGREE_TO_ANGLE);
+        return \round($angle / self::DEGREE_TO_ANGLE);
     }
 
     /**
@@ -349,22 +349,22 @@ class Converter
     public static function htmlToRgb($value)
     {
         if ($value[0] == '#') {
-            $value = substr($value, 1);
+            $value = \substr($value, 1);
         } else {
             $value = self::stringToRgb($value);
         }
 
-        if (strlen($value) == 6) {
+        if (\strlen($value) == 6) {
             [$red, $green, $blue] = [$value[0] . $value[1], $value[2] . $value[3], $value[4] . $value[5]];
-        } elseif (strlen($value) == 3) {
+        } elseif (\strlen($value) == 3) {
             [$red, $green, $blue] = [$value[0] . $value[0], $value[1] . $value[1], $value[2] . $value[2]];
         } else {
             return false;
         }
 
-        $red = ctype_xdigit($red) ? hexdec($red) : 0;
-        $green = ctype_xdigit($green) ? hexdec($green) : 0;
-        $blue = ctype_xdigit($blue) ? hexdec($blue) : 0;
+        $red = \ctype_xdigit($red) ? \hexdec($red) : 0;
+        $green = \ctype_xdigit($green) ? \hexdec($green) : 0;
+        $blue = \ctype_xdigit($blue) ? \hexdec($blue) : 0;
 
         return [$red, $green, $blue];
     }
@@ -382,7 +382,7 @@ class Converter
             return 0;
         }
         $matches = [];
-        if (preg_match('/^[+-]?([0-9]+\.?[0-9]*)?(px|em|ex|%|in|cm|mm|pt|pc)$/i', $value, $matches)) {
+        if (\preg_match('/^[+-]?([0-9]+\.?[0-9]*)?(px|em|ex|%|in|cm|mm|pt|pc)$/i', $value, $matches)) {
             $size = $matches[1];
             $unit = $matches[2];
 

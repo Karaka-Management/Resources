@@ -38,7 +38,7 @@ class Format
      */
     public static function DOLLAR($value = 0, $decimals = 2)
     {
-        if (is_array($value) || is_array($decimals)) {
+        if (\is_array($value) || \is_array($decimals)) {
             return self::evaluateArrayArguments([self::class, __FUNCTION__], $value, $decimals);
         }
 
@@ -51,9 +51,9 @@ class Format
 
         $mask = '$#,##0';
         if ($decimals > 0) {
-            $mask .= '.' . str_repeat('0', $decimals);
+            $mask .= '.' . \str_repeat('0', $decimals);
         } else {
-            $round = 10 ** abs($decimals);
+            $round = 10 ** \abs($decimals);
             if ($value < 0) {
                 $round = 0 - $round;
             }
@@ -80,7 +80,7 @@ class Format
      */
     public static function FIXEDFORMAT($value, $decimals = 2, $noCommas = false)
     {
-        if (is_array($value) || is_array($decimals) || is_array($noCommas)) {
+        if (\is_array($value) || \is_array($decimals) || \is_array($noCommas)) {
             return self::evaluateArrayArguments([self::class, __FUNCTION__], $value, $decimals, $noCommas);
         }
 
@@ -91,12 +91,12 @@ class Format
             return $e->getMessage();
         }
 
-        $valueResult = round($value, $decimals);
+        $valueResult = \round($value, $decimals);
         if ($decimals < 0) {
             $decimals = 0;
         }
         if ($noCommas === false) {
-            $valueResult = number_format(
+            $valueResult = \number_format(
                 $valueResult,
                 $decimals,
                 StringHelper::getDecimalSeparator(),
@@ -121,14 +121,14 @@ class Format
      */
     public static function TEXTFORMAT($value, $format)
     {
-        if (is_array($value) || is_array($format)) {
+        if (\is_array($value) || \is_array($format)) {
             return self::evaluateArrayArguments([self::class, __FUNCTION__], $value, $format);
         }
 
         $value = Helpers::extractString($value);
         $format = Helpers::extractString($format);
 
-        if (!is_numeric($value) && Date::isDateTimeFormatCode($format)) {
+        if (!\is_numeric($value) && Date::isDateTimeFormatCode($format)) {
             $value = DateTimeExcel\DateValue::fromString($value);
         }
 
@@ -143,7 +143,7 @@ class Format
     private static function convertValue($value)
     {
         $value = $value ?? 0;
-        if (is_bool($value)) {
+        if (\is_bool($value)) {
             if (Functions::getCompatibilityMode() === Functions::COMPATIBILITY_OPENOFFICE) {
                 $value = (int) $value;
             } else {
@@ -160,13 +160,13 @@ class Format
      * @param mixed $value Value to check
      *                         Or can be an array of values
      *
-     * @return array|DateTimeInterface|float|int|string A string if arguments are invalid
+     * @return array|\DateTimeInterface|float|int|string A string if arguments are invalid
      *         If an array of values is passed for the argument, then the returned result
      *            will also be an array with matching dimensions
      */
     public static function VALUE($value = '')
     {
-        if (is_array($value)) {
+        if (\is_array($value)) {
             return self::evaluateSingleArgumentArray([self::class, __FUNCTION__], $value);
         }
 
@@ -175,20 +175,20 @@ class Format
         } catch (CalcExp $e) {
             return $e->getMessage();
         }
-        if (!is_numeric($value)) {
-            $numberValue = str_replace(
+        if (!\is_numeric($value)) {
+            $numberValue = \str_replace(
                 StringHelper::getThousandsSeparator(),
                 '',
-                trim($value, " \t\n\r\0\x0B" . StringHelper::getCurrencyCode())
+                \trim($value, " \t\n\r\0\x0B" . StringHelper::getCurrencyCode())
             );
-            if (is_numeric($numberValue)) {
+            if (\is_numeric($numberValue)) {
                 return (float) $numberValue;
             }
 
             $dateSetting = Functions::getReturnDateType();
             Functions::setReturnDateType(Functions::RETURNDATE_EXCEL);
 
-            if (strpos($value, ':') !== false) {
+            if (\strpos($value, ':') !== false) {
                 $timeValue = Functions::scalar(DateTimeExcel\TimeValue::fromString($value));
                 if ($timeValue !== ExcelError::VALUE()) {
                     Functions::setReturnDateType($dateSetting);
@@ -223,19 +223,19 @@ class Format
      */
     public static function valueToText($value, $format = false)
     {
-        if (is_array($value) || is_array($format)) {
+        if (\is_array($value) || \is_array($format)) {
             return self::evaluateArrayArguments([self::class, __FUNCTION__], $value, $format);
         }
 
         $format = (bool) $format;
 
-        if (is_object($value) && $value instanceof RichText) {
+        if (\is_object($value) && $value instanceof RichText) {
             $value = $value->getPlainText();
         }
-        if (is_string($value)) {
+        if (\is_string($value)) {
             $value = ($format === true) ? Calculation::wrapResult($value) : $value;
-            $value = str_replace("\n", '', $value);
-        } elseif (is_bool($value)) {
+            $value = \str_replace("\n", '', $value);
+        } elseif (\is_bool($value)) {
             $value = Calculation::getLocaleBoolean($value ? 'TRUE' : 'FALSE');
         }
 
@@ -272,7 +272,7 @@ class Format
      */
     public static function NUMBERVALUE($value = '', $decimalSeparator = null, $groupSeparator = null)
     {
-        if (is_array($value) || is_array($decimalSeparator) || is_array($groupSeparator)) {
+        if (\is_array($value) || \is_array($decimalSeparator) || \is_array($groupSeparator)) {
             return self::evaluateArrayArguments([self::class, __FUNCTION__], $value, $decimalSeparator, $groupSeparator);
         }
 
@@ -284,31 +284,31 @@ class Format
             return $e->getMessage();
         }
 
-        if (!is_numeric($value)) {
-            $decimalPositions = preg_match_all('/' . preg_quote($decimalSeparator) . '/', $value, $matches, PREG_OFFSET_CAPTURE);
+        if (!\is_numeric($value)) {
+            $decimalPositions = \preg_match_all('/' . \preg_quote($decimalSeparator) . '/', $value, $matches, PREG_OFFSET_CAPTURE);
             if ($decimalPositions > 1) {
                 return ExcelError::VALUE();
             }
-            $decimalOffset = array_pop($matches[0])[1]; // @phpstan-ignore-line
-            if (strpos($value, $groupSeparator, $decimalOffset) !== false) {
+            $decimalOffset = \array_pop($matches[0])[1]; // @phpstan-ignore-line
+            if (\strpos($value, $groupSeparator, $decimalOffset) !== false) {
                 return ExcelError::VALUE();
             }
 
-            $value = str_replace([$groupSeparator, $decimalSeparator], ['', '.'], $value);
+            $value = \str_replace([$groupSeparator, $decimalSeparator], ['', '.'], $value);
 
             // Handle the special case of trailing % signs
-            $percentageString = rtrim($value, '%');
-            if (!is_numeric($percentageString)) {
+            $percentageString = \rtrim($value, '%');
+            if (!\is_numeric($percentageString)) {
                 return ExcelError::VALUE();
             }
 
-            $percentageAdjustment = strlen($value) - strlen($percentageString);
+            $percentageAdjustment = \strlen($value) - \strlen($percentageString);
             if ($percentageAdjustment) {
                 $value = (float) $percentageString;
                 $value /= 10 ** ($percentageAdjustment * 2);
             }
         }
 
-        return is_array($value) ? ExcelError::VALUE() : (float) $value;
+        return \is_array($value) ? ExcelError::VALUE() : (float) $value;
     }
 }

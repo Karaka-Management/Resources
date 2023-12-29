@@ -48,7 +48,7 @@ class Border extends AbstractStyle
         $content = '';
 
         $sides = ['top', 'left', 'right', 'bottom'];
-        $sizeCount = count($this->sizes);
+        $sizeCount = \count($this->sizes);
 
         // Page border measure
         // 8 = from text, infront off; 32 = from edge, infront on; 40 = from edge, infront off
@@ -83,7 +83,7 @@ class Border extends AbstractStyle
         $colorIndex = 0;
         if ($rtfWriter !== null) {
             $colorTable = $rtfWriter->getColorTable();
-            $index = array_search($color, $colorTable);
+            $index = \array_search($color, $colorTable);
             if ($index !== false && $colorIndex !== null) {
                 $colorIndex = $index + 1;
             }
@@ -91,9 +91,9 @@ class Border extends AbstractStyle
 
         $content = '';
 
-        $content .= '\pgbrdr' . substr($side, 0, 1);
+        $content .= '\pgbrdr' . \substr($side, 0, 1);
         $content .= '\brdrs'; // Single-thickness border; @todo Get other type of border
-        $content .= '\brdrw' . round($width); // Width
+        $content .= '\brdrw' . \round($width); // Width
         $content .= '\brdrcf' . $colorIndex; // Color
         $content .= '\brsp480'; // Space in twips between borders and the paragraph (24pt, following OOXML)
         $content .= ' ';

@@ -79,7 +79,7 @@ abstract class BaseWriter implements IWriter
         $this->useDiskCaching = $useDiskCache;
 
         if ($cacheDirectory !== null) {
-            if (is_dir($cacheDirectory)) {
+            if (\is_dir($cacheDirectory)) {
                 $this->diskCachingDirectory = $cacheDirectory;
             } else {
                 throw new Exception("Directory does not exist: $cacheDirectory");
@@ -111,7 +111,7 @@ abstract class BaseWriter implements IWriter
      */
     public function openFileHandle($filename): void
     {
-        if (is_resource($filename)) {
+        if (\is_resource($filename)) {
             $this->fileHandle = $filename;
             $this->shouldCloseFile = false;
 
@@ -119,13 +119,13 @@ abstract class BaseWriter implements IWriter
         }
 
         $mode = 'wb';
-        $scheme = parse_url($filename, PHP_URL_SCHEME);
+        $scheme = \parse_url($filename, PHP_URL_SCHEME);
         if ($scheme === 's3') {
             // @codeCoverageIgnoreStart
             $mode = 'w';
             // @codeCoverageIgnoreEnd
         }
-        $fileHandle = $filename ? fopen($filename, $mode) : false;
+        $fileHandle = $filename ? \fopen($filename, $mode) : false;
         if ($fileHandle === false) {
             throw new Exception('Could not open file "' . $filename . '" for writing.');
         }
@@ -140,7 +140,7 @@ abstract class BaseWriter implements IWriter
     protected function maybeCloseFileHandle(): void
     {
         if ($this->shouldCloseFile) {
-            if (!fclose($this->fileHandle)) {
+            if (!\fclose($this->fileHandle)) {
                 throw new Exception('Could not close file after writing.');
             }
         }

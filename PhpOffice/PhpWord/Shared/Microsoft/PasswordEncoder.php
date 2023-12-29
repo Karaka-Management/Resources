@@ -107,44 +107,44 @@ class PasswordEncoder
      */
     public static function hashPassword($password, $algorithmName = self::ALGORITHM_SHA_1, $salt = null, $spinCount = 10000)
     {
-        $origEncoding = mb_internal_encoding();
-        mb_internal_encoding('UTF-8');
+        $origEncoding = \mb_internal_encoding();
+        \mb_internal_encoding('UTF-8');
 
-        $password = mb_substr($password, 0, min(self::$passwordMaxLength, mb_strlen($password)));
+        $password = \mb_substr($password, 0, \min(self::$passwordMaxLength, \mb_strlen($password)));
 
         //   Get the single-byte values by iterating through the Unicode characters of the truncated password.
         //   For each character, if the low byte is not equal to 0, take it. Otherwise, take the high byte.
-        $passUtf8 = mb_convert_encoding($password, 'UCS-2LE', 'UTF-8');
+        $passUtf8 = \mb_convert_encoding($password, 'UCS-2LE', 'UTF-8');
         $byteChars = [];
 
-        for ($i = 0; $i < mb_strlen($password); ++$i) {
-            $byteChars[$i] = ord(substr($passUtf8, $i * 2, 1));
+        for ($i = 0; $i < \mb_strlen($password); ++$i) {
+            $byteChars[$i] = \ord(\substr($passUtf8, $i * 2, 1));
 
             if ($byteChars[$i] == 0) {
-                $byteChars[$i] = ord(substr($passUtf8, $i * 2 + 1, 1));
+                $byteChars[$i] = \ord(\substr($passUtf8, $i * 2 + 1, 1));
             }
         }
 
         // build low-order word and hig-order word and combine them
         $combinedKey = self::buildCombinedKey($byteChars);
         // build reversed hexadecimal string
-        $hex = str_pad(strtoupper(dechex($combinedKey & 0xFFFFFFFF)), 8, '0', \STR_PAD_LEFT);
+        $hex = \str_pad(\strtoupper(\dechex($combinedKey & 0xFFFFFFFF)), 8, '0', \STR_PAD_LEFT);
         $reversedHex = $hex[6] . $hex[7] . $hex[4] . $hex[5] . $hex[2] . $hex[3] . $hex[0] . $hex[1];
 
-        $generatedKey = mb_convert_encoding($reversedHex, 'UCS-2LE', 'UTF-8');
+        $generatedKey = \mb_convert_encoding($reversedHex, 'UCS-2LE', 'UTF-8');
 
         // Implementation Notes List:
         //   Word requires that the initial hash of the password with the salt not be considered in the count.
         //   The initial hash of salt + key is not included in the iteration count.
         $algorithm = self::getAlgorithm($algorithmName);
-        $generatedKey = hash($algorithm, $salt . $generatedKey, true);
+        $generatedKey = \hash($algorithm, $salt . $generatedKey, true);
 
         for ($i = 0; $i < $spinCount; ++$i) {
-            $generatedKey = hash($algorithm, $generatedKey . pack('CCCC', $i, $i >> 8, $i >> 16, $i >> 24), true);
+            $generatedKey = \hash($algorithm, $generatedKey . \pack('CCCC', $i, $i >> 8, $i >> 16, $i >> 24), true);
         }
-        $generatedKey = base64_encode($generatedKey);
+        $generatedKey = \base64_encode($generatedKey);
 
-        mb_internal_encoding($origEncoding);
+        \mb_internal_encoding($origEncoding);
 
         return $generatedKey;
     }
@@ -187,7 +187,7 @@ class PasswordEncoder
      */
     private static function buildCombinedKey($byteChars)
     {
-        $byteCharsLength = count($byteChars);
+        $byteCharsLength = \count($byteChars);
         // Compute the high-order word
         // Initialize from the initial code array (see above), depending on the passwords length.
         $highOrderWord = self::$initialCodeArray[$byteCharsLength - 1];
@@ -222,7 +222,7 @@ class PasswordEncoder
     }
 
     /**
-     * Simulate behaviour of (signed) int32.
+     * Simulate behavior of (signed) int32.
      *
      * @codeCoverageIgnore
      *

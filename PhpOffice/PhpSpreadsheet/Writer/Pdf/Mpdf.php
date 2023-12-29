@@ -61,20 +61,20 @@ class Mpdf extends Pdf
         $pdf->SetCreator($this->spreadsheet->getProperties()->getCreator());
 
         $html = $this->generateHTMLAll();
-        $bodyLocation = strpos($html, Html::BODY_LINE);
+        $bodyLocation = \strpos($html, Html::BODY_LINE);
         // Make sure first data presented to Mpdf includes body tag
         //   so that Mpdf doesn't parse it as content. Issue 2432.
         if ($bodyLocation !== false) {
-            $bodyLocation += strlen(Html::BODY_LINE);
-            $pdf->WriteHTML(substr($html, 0, $bodyLocation));
-            $html = substr($html, $bodyLocation);
+            $bodyLocation += \strlen(Html::BODY_LINE);
+            $pdf->WriteHTML(\substr($html, 0, $bodyLocation));
+            $html = \substr($html, $bodyLocation);
         }
         foreach (\array_chunk(\explode(PHP_EOL, $html), 1000) as $lines) {
             $pdf->WriteHTML(\implode(PHP_EOL, $lines));
         }
 
         //  Write to file
-        fwrite($fileHandle, $pdf->Output('', 'S'));
+        \fwrite($fileHandle, $pdf->Output('', 'S'));
 
         parent::restoreStateAfterSave();
     }

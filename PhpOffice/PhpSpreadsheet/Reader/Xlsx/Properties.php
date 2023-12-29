@@ -24,15 +24,15 @@ class Properties
     /**
      * @param mixed $obj
      */
-    private static function nullOrSimple($obj): ?SimpleXMLElement
+    private static function nullOrSimple($obj): ?\SimpleXMLElement
     {
-        return ($obj instanceof SimpleXMLElement) ? $obj : null;
+        return ($obj instanceof \SimpleXMLElement) ? $obj : null;
     }
 
-    private function extractPropertyData(string $propertyData): ?SimpleXMLElement
+    private function extractPropertyData(string $propertyData): ?\SimpleXMLElement
     {
         // okay to omit namespace because everything will be processed by xpath
-        $obj = simplexml_load_string(
+        $obj = \simplexml_load_string(
             $this->securityScanner->scan($propertyData),
             'SimpleXMLElement',
             Settings::getLibXmlLoaderOptions()
@@ -45,7 +45,7 @@ class Properties
     {
         $xmlCore = $this->extractPropertyData($propertyData);
 
-        if (is_object($xmlCore)) {
+        if (\is_object($xmlCore)) {
             $xmlCore->registerXPathNamespace('dc', Namespaces::DC_ELEMENTS);
             $xmlCore->registerXPathNamespace('dcterms', Namespaces::DC_TERMS);
             $xmlCore->registerXPathNamespace('cp', Namespaces::CORE_PROPERTIES2);
@@ -66,7 +66,7 @@ class Properties
     {
         $xmlCore = $this->extractPropertyData($propertyData);
 
-        if (is_object($xmlCore)) {
+        if (\is_object($xmlCore)) {
             if (isset($xmlCore->Company)) {
                 $this->docProps->setCompany((string) $xmlCore->Company);
             }
@@ -80,9 +80,9 @@ class Properties
     {
         $xmlCore = $this->extractPropertyData($propertyData);
 
-        if (is_object($xmlCore)) {
+        if (\is_object($xmlCore)) {
             foreach ($xmlCore as $xmlProperty) {
-                /** @var SimpleXMLElement $xmlProperty */
+                /** @var \SimpleXMLElement $xmlProperty */
                 $cellDataOfficeAttributes = $xmlProperty->attributes();
                 if (isset($cellDataOfficeAttributes['name'])) {
                     $propertyName = (string) $cellDataOfficeAttributes['name'];
@@ -102,8 +102,8 @@ class Properties
      * @param null|array|false $array
      * @param mixed $key
      */
-    private static function getArrayItem($array, $key = 0): ?SimpleXMLElement
+    private static function getArrayItem($array, $key = 0): ?\SimpleXMLElement
     {
-        return is_array($array) ? ($array[$key] ?? null) : null;
+        return \is_array($array) ? ($array[$key] ?? null) : null;
     }
 }

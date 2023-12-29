@@ -57,12 +57,12 @@ class Gcd
             return $e->getMessage();
         }
 
-        if (count($arrayArgs) <= 0) {
+        if (\count($arrayArgs) <= 0) {
             return ExcelError::VALUE();
         }
-        $gcd = (int) array_pop($arrayArgs);
+        $gcd = (int) \array_pop($arrayArgs);
         do {
-            $gcd = self::evaluateGCD($gcd, (int) array_pop($arrayArgs));
+            $gcd = self::evaluateGCD($gcd, (int) \array_pop($arrayArgs));
         } while (!empty($arrayArgs));
 
         return $gcd;

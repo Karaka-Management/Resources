@@ -41,9 +41,9 @@ class File
 
     private static function validateZipFirst4(string $zipFile): bool
     {
-        $contents = @file_get_contents($zipFile, false, null, 0, 4);
+        $contents = @\file_get_contents($zipFile, false, null, 0, 4);
 
-        return in_array($contents, self::ZIP_FIRST_4, true);
+        return \in_array($contents, self::ZIP_FIRST_4, true);
     }
 
     /**
@@ -54,13 +54,13 @@ class File
         // Sick construction, but it seems that
         // file_exists returns strange values when
         // doing the original file_exists on ZIP archives...
-        if (strtolower(substr($filename, 0, 6)) == 'zip://') {
+        if (\strtolower(\substr($filename, 0, 6)) == 'zip://') {
             // Open ZIP file and verify if the file exists
-            $zipFile = substr($filename, 6, strrpos($filename, '#') - 6);
-            $archiveFile = substr($filename, strrpos($filename, '#') + 1);
+            $zipFile = \substr($filename, 6, \strrpos($filename, '#') - 6);
+            $archiveFile = \substr($filename, \strrpos($filename, '#') + 1);
 
             if (self::validateZipFirst4($zipFile)) {
-                $zip = new ZipArchive();
+                $zip = new \ZipArchive();
                 $res = $zip->open($zipFile);
                 if ($res === true) {
                     $returnValue = ($zip->getFromName($archiveFile) !== false);
@@ -73,7 +73,7 @@ class File
             return false;
         }
 
-        return file_exists($filename);
+        return \file_exists($filename);
     }
 
     /**
@@ -85,15 +85,15 @@ class File
         $returnValue = '';
 
         // Try using realpath()
-        if (file_exists($filename)) {
-            $returnValue = realpath($filename) ?: '';
+        if (\file_exists($filename)) {
+            $returnValue = \realpath($filename) ?: '';
         }
 
         // Found something?
         if ($returnValue === '') {
-            $pathArray = explode('/', $filename);
-            while (in_array('..', $pathArray) && $pathArray[0] != '..') {
-                $iMax = count($pathArray);
+            $pathArray = \explode('/', $filename);
+            while (\in_array('..', $pathArray) && $pathArray[0] != '..') {
+                $iMax = \count($pathArray);
                 for ($i = 0; $i < $iMax; ++$i) {
                     if ($pathArray[$i] == '..' && $i > 0) {
                         unset($pathArray[$i], $pathArray[$i - 1]);
@@ -102,7 +102,7 @@ class File
                     }
                 }
             }
-            $returnValue = implode('/', $pathArray);
+            $returnValue = \implode('/', $pathArray);
         }
 
         // Return
@@ -114,25 +114,25 @@ class File
      */
     public static function sysGetTempDir(): string
     {
-        $path = sys_get_temp_dir();
+        $path = \sys_get_temp_dir();
         if (self::$useUploadTempDirectory) {
             //  use upload-directory when defined to allow running on environments having very restricted
             //      open_basedir configs
-            if (ini_get('upload_tmp_dir') !== false) {
-                if ($temp = ini_get('upload_tmp_dir')) {
-                    if (file_exists($temp)) {
+            if (\ini_get('upload_tmp_dir') !== false) {
+                if ($temp = \ini_get('upload_tmp_dir')) {
+                    if (\file_exists($temp)) {
                         $path = $temp;
                     }
                 }
             }
         }
 
-        return realpath($path) ?: '';
+        return \realpath($path) ?: '';
     }
 
     public static function temporaryFilename(): string
     {
-        $filename = tempnam(self::sysGetTempDir(), 'phpspreadsheet');
+        $filename = \tempnam(self::sysGetTempDir(), 'phpspreadsheet');
         if ($filename === false) {
             throw new Exception('Could not create temporary file');
         }
@@ -145,11 +145,11 @@ class File
      */
     public static function assertFile(string $filename, string $zipMember = ''): void
     {
-        if (!is_file($filename)) {
+        if (!\is_file($filename)) {
             throw new ReaderException('File "' . $filename . '" does not exist.');
         }
 
-        if (!is_readable($filename)) {
+        if (!\is_readable($filename)) {
             throw new ReaderException('Could not open "' . $filename . '" for reading.');
         }
 
@@ -166,10 +166,10 @@ class File
      */
     public static function testFileNoThrow(string $filename, ?string $zipMember = null): bool
     {
-        if (!is_file($filename)) {
+        if (!\is_file($filename)) {
             return false;
         }
-        if (!is_readable($filename)) {
+        if (!\is_readable($filename)) {
             return false;
         }
         if ($zipMember === null) {

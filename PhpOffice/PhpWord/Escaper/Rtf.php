@@ -33,10 +33,10 @@ class Rtf extends AbstractEscaper
             return '{\\u' . $code . '}';
         }
         if ($code == 123 || $code == 125 || $code == 92) { // open or close brace or backslash
-            return '\\' . chr($code);
+            return '\\' . \chr($code);
         }
 
-        return chr($code);
+        return \chr($code);
     }
 
     protected function escapeMultibyteCharacter($code)
@@ -55,14 +55,14 @@ class Rtf extends AbstractEscaper
 
         $numberOfBytes = 1;
         $bytes = [];
-        for ($i = 0; $i < strlen($input); ++$i) {
+        for ($i = 0; $i < \strlen($input); ++$i) {
             $character = $input[$i];
-            $asciiCode = ord($character);
+            $asciiCode = \ord($character);
 
             if ($asciiCode < 128) {
                 $escapedValue .= $this->escapeAsciiCharacter($asciiCode);
             } else {
-                if (0 == count($bytes)) {
+                if (0 == \count($bytes)) {
                     if ($asciiCode < 224) {
                         $numberOfBytes = 2;
                     } elseif ($asciiCode < 240) {
@@ -74,7 +74,7 @@ class Rtf extends AbstractEscaper
 
                 $bytes[] = $asciiCode;
 
-                if ($numberOfBytes == count($bytes)) {
+                if ($numberOfBytes == \count($bytes)) {
                     if (4 == $numberOfBytes) {
                         $multibyteCode = ($bytes[0] % 8) * 262144 + ($bytes[1] % 64) * 4096 + ($bytes[2] % 64) * 64 + ($bytes[3] % 64);
                     } elseif (3 == $numberOfBytes) {

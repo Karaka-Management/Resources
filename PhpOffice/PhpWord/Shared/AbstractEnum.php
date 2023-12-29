@@ -30,8 +30,8 @@ abstract class AbstractEnum
             self::$constCacheArray = [];
         }
         $calledClass = static::class;
-        if (!array_key_exists($calledClass, self::$constCacheArray)) {
-            $reflect = new ReflectionClass($calledClass);
+        if (!\array_key_exists($calledClass, self::$constCacheArray)) {
+            $reflect = new \ReflectionClass($calledClass);
             self::$constCacheArray[$calledClass] = $reflect->getConstants();
         }
 
@@ -45,7 +45,7 @@ abstract class AbstractEnum
      */
     public static function values()
     {
-        return array_values(self::getConstants());
+        return \array_values(self::getConstants());
     }
 
     /**
@@ -57,9 +57,9 @@ abstract class AbstractEnum
      */
     public static function isValid($value)
     {
-        $values = array_values(self::getConstants());
+        $values = \array_values(self::getConstants());
 
-        return in_array($value, $values, true);
+        return \in_array($value, $values, true);
     }
 
     /**
@@ -71,9 +71,9 @@ abstract class AbstractEnum
     {
         if (!self::isValid($value)) {
             $calledClass = static::class;
-            $values = array_values(self::getConstants());
+            $values = \array_values(self::getConstants());
 
-            throw new InvalidArgumentException("$value is not a valid value for $calledClass, possible values are " . implode(', ', $values));
+            throw new \InvalidArgumentException("$value is not a valid value for $calledClass, possible values are " . \implode(', ', $values));
         }
     }
 }

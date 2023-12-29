@@ -129,7 +129,7 @@ class Content extends WriterPart
                 $objWriter->startElement('table:table-column');
                 $objWriter->writeAttribute(
                     'table:style-name',
-                    sprintf('%s_%d_%d', Style::COLUMN_STYLE_PREFIX, $sheetIndex, $columnDimension->getColumnNumeric())
+                    \sprintf('%s_%d_%d', Style::COLUMN_STYLE_PREFIX, $sheetIndex, $columnDimension->getColumnNumeric())
                 );
                 $objWriter->writeAttribute('table:default-cell-style-name', 'ce0');
 //                $objWriter->writeAttribute('table:number-columns-repeated', self::NUMBER_COLS_REPEATED_MAX);
@@ -165,7 +165,7 @@ class Content extends WriterPart
                     if ($sheet->getRowDimension($row->getRowIndex())->getRowHeight() > 0) {
                         $objWriter->writeAttribute(
                             'table:style-name',
-                            sprintf('%s_%d_%d', Style::ROW_STYLE_PREFIX, $sheetIndex, $row->getRowIndex())
+                            \sprintf('%s_%d_%d', Style::ROW_STYLE_PREFIX, $sheetIndex, $row->getRowIndex())
                         );
                     }
                     $this->writeCells($objWriter, $cellIterator);
@@ -222,7 +222,7 @@ class Content extends WriterPart
                         }
                     }
                     $objWriter->writeAttribute('table:formula', $this->formulaConvertor->convertFormula($cell->getValue()));
-                    if (is_numeric($formulaValue)) {
+                    if (\is_numeric($formulaValue)) {
                         $objWriter->writeAttribute('office:value-type', 'float');
                     } else {
                         $objWriter->writeAttribute('office:value-type', 'string');

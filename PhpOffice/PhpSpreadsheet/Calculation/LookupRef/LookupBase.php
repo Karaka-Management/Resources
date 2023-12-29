@@ -12,7 +12,7 @@ abstract class LookupBase
      */
     protected static function validateLookupArray($lookup_array): void
     {
-        if (!is_array($lookup_array)) {
+        if (!\is_array($lookup_array)) {
             throw new Exception(ExcelError::REF());
         }
     }
@@ -25,7 +25,7 @@ abstract class LookupBase
         // VLOOKUP(whatever, whatever, cellref) yields REF error
         //   when cellref is '=SQRT(-1)'. So just try our best here.
         // Similar results if string (literal yields VALUE, cellRef REF).
-        if (!is_numeric($index_number)) {
+        if (!\is_numeric($index_number)) {
             throw new Exception(ExcelError::throwError($index_number));
         }
         if ($index_number < 1) {

@@ -24,7 +24,7 @@ class Tangent
      */
     public static function tan($angle)
     {
-        if (is_array($angle)) {
+        if (\is_array($angle)) {
             return self::evaluateSingleArgumentArray([self::class, __FUNCTION__], $angle);
         }
 
@@ -34,7 +34,7 @@ class Tangent
             return $e->getMessage();
         }
 
-        return Helpers::verySmallDenominator(sin($angle), cos($angle));
+        return Helpers::verySmallDenominator(\sin($angle), \cos($angle));
     }
 
     /**
@@ -50,7 +50,7 @@ class Tangent
      */
     public static function tanh($angle)
     {
-        if (is_array($angle)) {
+        if (\is_array($angle)) {
             return self::evaluateSingleArgumentArray([self::class, __FUNCTION__], $angle);
         }
 
@@ -60,7 +60,7 @@ class Tangent
             return $e->getMessage();
         }
 
-        return tanh($angle);
+        return \tanh($angle);
     }
 
     /**
@@ -76,7 +76,7 @@ class Tangent
      */
     public static function atan($number)
     {
-        if (is_array($number)) {
+        if (\is_array($number)) {
             return self::evaluateSingleArgumentArray([self::class, __FUNCTION__], $number);
         }
 
@@ -86,7 +86,7 @@ class Tangent
             return $e->getMessage();
         }
 
-        return Helpers::numberOrNan(atan($number));
+        return Helpers::numberOrNan(\atan($number));
     }
 
     /**
@@ -102,7 +102,7 @@ class Tangent
      */
     public static function atanh($number)
     {
-        if (is_array($number)) {
+        if (\is_array($number)) {
             return self::evaluateSingleArgumentArray([self::class, __FUNCTION__], $number);
         }
 
@@ -112,7 +112,7 @@ class Tangent
             return $e->getMessage();
         }
 
-        return Helpers::numberOrNan(atanh($number));
+        return Helpers::numberOrNan(\atanh($number));
     }
 
     /**
@@ -141,7 +141,7 @@ class Tangent
      */
     public static function atan2($xCoordinate, $yCoordinate)
     {
-        if (is_array($xCoordinate) || is_array($yCoordinate)) {
+        if (\is_array($xCoordinate) || \is_array($yCoordinate)) {
             return self::evaluateArrayArguments([self::class, __FUNCTION__], $xCoordinate, $yCoordinate);
         }
 
@@ -156,6 +156,6 @@ class Tangent
             return ExcelError::DIV0();
         }
 
-        return atan2($yCoordinate, $xCoordinate);
+        return \atan2($yCoordinate, $xCoordinate);
     }
 }

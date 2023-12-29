@@ -13,10 +13,10 @@ class ColumnAndRowAttributes extends BaseParserClass
     /** @var Worksheet */
     private $worksheet;
 
-    /** @var ?SimpleXMLElement */
+    /** @var ?\SimpleXMLElement */
     private $worksheetXml;
 
-    public function __construct(Worksheet $workSheet, ?SimpleXMLElement $worksheetXml = null)
+    public function __construct(Worksheet $workSheet, ?\SimpleXMLElement $worksheetXml = null)
     {
         $this->worksheet = $workSheet;
         $this->worksheetXml = $worksheetXml;
@@ -90,7 +90,7 @@ class ColumnAndRowAttributes extends BaseParserClass
             $rowsAttributes = $this->readRowAttributes($this->worksheetXml->sheetData->row, $readDataOnly);
         }
 
-        if ($readFilter !== null && get_class($readFilter) === DefaultReadFilter::class) {
+        if ($readFilter !== null && \get_class($readFilter) === DefaultReadFilter::class) {
             $readFilter = null;
         }
 
@@ -133,7 +133,7 @@ class ColumnAndRowAttributes extends BaseParserClass
         return false;
     }
 
-    private function readColumnAttributes(SimpleXMLElement $worksheetCols, bool $readDataOnly): array
+    private function readColumnAttributes(\SimpleXMLElement $worksheetCols, bool $readDataOnly): array
     {
         $columnAttributes = [];
 
@@ -157,7 +157,7 @@ class ColumnAndRowAttributes extends BaseParserClass
         return $columnAttributes;
     }
 
-    private function readColumnRangeAttributes(?SimpleXMLElement $column, bool $readDataOnly): array
+    private function readColumnRangeAttributes(?\SimpleXMLElement $column, bool $readDataOnly): array
     {
         $columnAttributes = [];
         if ($column !== null) {
@@ -192,7 +192,7 @@ class ColumnAndRowAttributes extends BaseParserClass
         return false;
     }
 
-    private function readRowAttributes(SimpleXMLElement $worksheetRow, bool $readDataOnly): array
+    private function readRowAttributes(\SimpleXMLElement $worksheetRow, bool $readDataOnly): array
     {
         $rowAttributes = [];
 

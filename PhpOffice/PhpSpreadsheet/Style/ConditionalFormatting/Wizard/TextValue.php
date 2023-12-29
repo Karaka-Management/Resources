@@ -81,16 +81,16 @@ class TextValue extends WizardAbstract implements WizardInterface
     protected function setExpression(): void
     {
         $operand = $this->operandValueType === Wizard::VALUE_TYPE_LITERAL
-            ? $this->wrapValue(str_replace('"', '""', $this->operand))
+            ? $this->wrapValue(\str_replace('"', '""', $this->operand))
             : $this->cellConditionCheck($this->operand);
 
         if (
             $this->operator === Conditional::OPERATOR_CONTAINSTEXT ||
             $this->operator === Conditional::OPERATOR_NOTCONTAINS
         ) {
-            $this->expression = sprintf(self::EXPRESSIONS[$this->operator], $operand, $this->referenceCell);
+            $this->expression = \sprintf(self::EXPRESSIONS[$this->operator], $operand, $this->referenceCell);
         } else {
-            $this->expression = sprintf(self::EXPRESSIONS[$this->operator], $this->referenceCell, $operand, $operand);
+            $this->expression = \sprintf(self::EXPRESSIONS[$this->operator], $this->referenceCell, $operand, $operand);
         }
     }
 
@@ -115,24 +115,24 @@ class TextValue extends WizardAbstract implements WizardInterface
 
     public static function fromConditional(Conditional $conditional, string $cellRange = 'A1'): WizardInterface
     {
-        if (!in_array($conditional->getConditionType(), self::OPERATORS, true)) {
+        if (!\in_array($conditional->getConditionType(), self::OPERATORS, true)) {
             throw new Exception('Conditional is not a Text Value CF Rule conditional');
         }
 
         $wizard = new self($cellRange);
-        $wizard->operator = (string) array_search($conditional->getConditionType(), self::OPERATORS, true);
+        $wizard->operator = (string) \array_search($conditional->getConditionType(), self::OPERATORS, true);
         $wizard->style = $conditional->getStyle();
         $wizard->stopIfTrue = $conditional->getStopIfTrue();
 
         // Best-guess to try and identify if the text is a string literal, a cell reference or a formula?
         $wizard->operandValueType = Wizard::VALUE_TYPE_LITERAL;
         $condition = $conditional->getText();
-        if (preg_match('/^' . Calculation::CALCULATION_REGEXP_CELLREF_RELATIVE . '$/i', $condition)) {
+        if (\preg_match('/^' . Calculation::CALCULATION_REGEXP_CELLREF_RELATIVE . '$/i', $condition)) {
             $wizard->operandValueType = Wizard::VALUE_TYPE_CELL;
             $condition = self::reverseAdjustCellRef($condition, $cellRange);
         } elseif (
-            preg_match('/\(\)/', $condition) ||
-            preg_match('/' . Calculation::CALCULATION_REGEXP_CELLREF_RELATIVE . '/i', $condition)
+            \preg_match('/\(\)/', $condition) ||
+            \preg_match('/' . Calculation::CALCULATION_REGEXP_CELLREF_RELATIVE . '/i', $condition)
         ) {
             $wizard->operandValueType = Wizard::VALUE_TYPE_FORMULA;
         }
@@ -153,7 +153,7 @@ class TextValue extends WizardAbstract implements WizardInterface
 
         $this->operator(self::MAGIC_OPERATIONS[$methodName]);
         //$this->operand(...$arguments);
-        if (count($arguments) < 2) {
+        if (\count($arguments) < 2) {
             $this->operand($arguments[0]);
         } else {
             $this->operand($arguments[0], $arguments[1]);

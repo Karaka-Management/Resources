@@ -445,7 +445,7 @@ class ConvertUOM
             $conversionGroups[] = $conversionUnit['Group'];
         }
 
-        return array_merge(array_unique($conversionGroups));
+        return \array_merge(\array_unique($conversionGroups));
     }
 
     /**
@@ -535,11 +535,11 @@ class ConvertUOM
      */
     public static function CONVERT($value, $fromUOM, $toUOM)
     {
-        if (is_array($value) || is_array($fromUOM) || is_array($toUOM)) {
+        if (\is_array($value) || \is_array($fromUOM) || \is_array($toUOM)) {
             return self::evaluateArrayArguments([self::class, __FUNCTION__], $value, $fromUOM, $toUOM);
         }
 
-        if (!is_numeric($value)) {
+        if (!\is_numeric($value)) {
             return ExcelError::VALUE();
         }
 
@@ -581,8 +581,8 @@ class ConvertUOM
         }
 
         // Check 1-character standard metric multiplier prefixes
-        $multiplierType = substr($uom, 0, 1);
-        $uom = substr($uom, 1);
+        $multiplierType = \substr($uom, 0, 1);
+        $uom = \substr($uom, 1);
         if (isset(self::$conversionUnits[$uom], self::$conversionMultipliers[$multiplierType])) {
             if (self::$conversionUnits[$uom]['AllowPrefix'] === false) {
                 throw new Exception('Prefix not allowed for UoM');
@@ -592,8 +592,8 @@ class ConvertUOM
             return [$uom, $unitCategory, self::$conversionMultipliers[$multiplierType]['multiplier']];
         }
 
-        $multiplierType .= substr($uom, 0, 1);
-        $uom = substr($uom, 1);
+        $multiplierType .= \substr($uom, 0, 1);
+        $uom = \substr($uom, 1);
 
         // Check 2-character standard metric multiplier prefixes
         if (isset(self::$conversionUnits[$uom], self::$conversionMultipliers[$multiplierType])) {

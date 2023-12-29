@@ -27,7 +27,7 @@ class StringTable extends WriterPart
         $aStringTable = [];
 
         // Is an existing table given?
-        if (($existingTable !== null) && is_array($existingTable)) {
+        if (($existingTable !== null) && \is_array($existingTable)) {
             $aStringTable = $existingTable;
         }
 
@@ -40,7 +40,7 @@ class StringTable extends WriterPart
             $cell = $worksheet->getCellCollection()->get($coordinate);
             $cellValue = $cell->getValue();
             if (
-                !is_object($cellValue) &&
+                !\is_object($cellValue) &&
                 ($cellValue !== null) &&
                 $cellValue !== '' &&
                 ($cell->getDataType() == DataType::TYPE_STRING || $cell->getDataType() == DataType::TYPE_STRING2 || $cell->getDataType() == DataType::TYPE_NULL) &&
@@ -84,7 +84,7 @@ class StringTable extends WriterPart
         // String table
         $objWriter->startElement('sst');
         $objWriter->writeAttribute('xmlns', Namespaces::MAIN);
-        $objWriter->writeAttribute('uniqueCount', (string) count($stringTable));
+        $objWriter->writeAttribute('uniqueCount', (string) \count($stringTable));
 
         // Loop through string table
         foreach ($stringTable as $textElement) {
@@ -93,7 +93,7 @@ class StringTable extends WriterPart
             if (!($textElement instanceof RichText)) {
                 $textToWrite = StringHelper::controlCharacterPHP2OOXML($textElement);
                 $objWriter->startElement('t');
-                if ($textToWrite !== trim($textToWrite)) {
+                if ($textToWrite !== \trim($textToWrite)) {
                     $objWriter->writeAttribute('xml:space', 'preserve');
                 }
                 $objWriter->writeRawData($textToWrite);
@@ -227,7 +227,7 @@ class StringTable extends WriterPart
                 // rPr
                 $objWriter->startElement($prefix . 'rPr');
                 $size = $element->getFont()->getSize();
-                if (is_numeric($size)) {
+                if (\is_numeric($size)) {
                     $objWriter->writeAttribute('sz', (string) (int) ($size * 100));
                 }
 
@@ -305,7 +305,7 @@ class StringTable extends WriterPart
                 $objWriter->startElement($prefix . $type);
                 $objWriter->writeAttribute('val', $value);
                 $alpha = $underlineColor->getAlpha();
-                if (is_numeric($alpha)) {
+                if (\is_numeric($alpha)) {
                     $objWriter->startElement('a:alpha');
                     $objWriter->writeAttribute('val', ChartColor::alphaToXml((int) $alpha));
                     $objWriter->endElement();

@@ -44,7 +44,7 @@ class Footnote extends AbstractElement
         /** @var \PhpOffice\PhpWord\Writer\HTML $parentWriter Type hint */
         $parentWriter = $this->parentWriter;
 
-        $noteId = count($parentWriter->getNotes()) + 1;
+        $noteId = \count($parentWriter->getNotes()) + 1;
         $noteMark = $this->noteType . '-' . $this->element->getRelationId();
         $content = "<a name=\"{$noteMark}\"><a href=\"#note-{$noteId}\" class=\"NoteRef\"><sup>{$noteId}</sup></a>";
 

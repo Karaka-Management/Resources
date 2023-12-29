@@ -21,7 +21,7 @@ class LogarithmicBestFit extends BestFit
      */
     public function getValueOfYForX($xValue)
     {
-        return $this->getIntersect() + $this->getSlope() * log($xValue - $this->xOffset);
+        return $this->getIntersect() + $this->getSlope() * \log($xValue - $this->xOffset);
     }
 
     /**
@@ -33,7 +33,7 @@ class LogarithmicBestFit extends BestFit
      */
     public function getValueOfXForY($yValue)
     {
-        return exp(($yValue - $this->getIntersect()) / $this->getSlope());
+        return \exp(($yValue - $this->getIntersect()) / $this->getSlope());
     }
 
     /**
@@ -59,9 +59,9 @@ class LogarithmicBestFit extends BestFit
      */
     private function logarithmicRegression(array $yValues, array $xValues, bool $const): void
     {
-        $adjustedYValues = array_map(
+        $adjustedYValues = \array_map(
             function ($value) {
-                return ($value < 0.0) ? 0 - log(abs($value)) : log($value);
+                return ($value < 0.0) ? 0 - \log(\abs($value)) : \log($value);
             },
             $yValues
         );

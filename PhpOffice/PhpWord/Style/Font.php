@@ -891,7 +891,7 @@ class Font extends AbstractStyle
      */
     public function setLang($value = null)
     {
-        if (is_string($value) && $value != '') {
+        if (\is_string($value) && $value != '') {
             $value = new Language($value);
         }
         $this->setObjectVal($value, 'Language', $this->lang);

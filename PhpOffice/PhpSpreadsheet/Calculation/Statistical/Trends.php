@@ -15,7 +15,7 @@ class Trends
     private static function filterTrendValues(array &$array1, array &$array2): void
     {
         foreach ($array1 as $key => $value) {
-            if ((is_bool($value)) || (is_string($value)) || ($value === null)) {
+            if ((\is_bool($value)) || (\is_string($value)) || ($value === null)) {
                 unset($array1[$key], $array2[$key]);
             }
         }
@@ -23,10 +23,10 @@ class Trends
 
     private static function checkTrendArrays(&$array1, &$array2): void
     {
-        if (!is_array($array1)) {
+        if (!\is_array($array1)) {
             $array1 = [$array1];
         }
-        if (!is_array($array2)) {
+        if (!\is_array($array2)) {
             $array2 = [$array2];
         }
 
@@ -37,14 +37,14 @@ class Trends
         self::filterTrendValues($array2, $array1);
 
         // Reset the array indexes
-        $array1 = array_merge($array1);
-        $array2 = array_merge($array2);
+        $array1 = \array_merge($array1);
+        $array2 = \array_merge($array2);
     }
 
     protected static function validateTrendArrays(array $yValues, array $xValues): void
     {
-        $yValueCount = count($yValues);
-        $xValueCount = count($xValues);
+        $yValueCount = \count($yValues);
+        $xValueCount = \count($xValues);
 
         if (($yValueCount === 0) || ($yValueCount !== $xValueCount)) {
             throw new Exception(ExcelError::NA());
@@ -65,7 +65,7 @@ class Trends
      */
     public static function CORREL($yValues, $xValues = null)
     {
-        if (($xValues === null) || (!is_array($yValues)) || (!is_array($xValues))) {
+        if (($xValues === null) || (!\is_array($yValues)) || (!\is_array($xValues))) {
             return ExcelError::VALUE();
         }
 
@@ -122,7 +122,7 @@ class Trends
      */
     public static function FORECAST($xValue, $yValues, $xValues)
     {
-        if (is_array($xValue)) {
+        if (\is_array($xValue)) {
             return self::evaluateArrayArgumentsSubset([self::class, __FUNCTION__], 1, $xValue, $yValues, $xValues);
         }
 

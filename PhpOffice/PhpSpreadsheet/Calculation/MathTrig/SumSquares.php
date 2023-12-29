@@ -39,8 +39,8 @@ class SumSquares
 
     private static function getCount(array $array1, array $array2): int
     {
-        $count = count($array1);
-        if ($count !== count($array2)) {
+        $count = \count($array1);
+        if ($count !== \count($array2)) {
             throw new Exception(ExcelError::NA());
         }
 
@@ -54,7 +54,7 @@ class SumSquares
      */
     private static function numericNotString($item): bool
     {
-        return is_numeric($item) && !is_string($item);
+        return \is_numeric($item) && !\is_string($item);
     }
 
     /**

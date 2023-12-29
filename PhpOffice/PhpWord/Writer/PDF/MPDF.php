@@ -36,7 +36,7 @@ class MPDF extends AbstractRenderer implements WriterInterface
      */
     public function __construct(PhpWord $phpWord)
     {
-        if (file_exists(Settings::getPdfRendererPath() . '/mpdf.php')) {
+        if (\file_exists(Settings::getPdfRendererPath() . '/mpdf.php')) {
             // MPDF version 5.* needs this file to be included, later versions not
             $this->includeFile = 'mpdf.php';
         }
@@ -65,8 +65,8 @@ class MPDF extends AbstractRenderer implements WriterInterface
         $fileHandle = parent::prepareForSave($filename);
 
         //  PDF settings
-        $paperSize = strtoupper('A4');
-        $orientation = strtoupper('portrait');
+        $paperSize = \strtoupper('A4');
+        $orientation = \strtoupper('portrait');
 
         //  Create PDF
         $pdf = $this->createExternalWriterInstance();
@@ -85,7 +85,7 @@ class MPDF extends AbstractRenderer implements WriterInterface
         $pdf->writeHTML($this->getContent());
 
         //  Write to file
-        fwrite($fileHandle, $pdf->output($filename, 'S'));
+        \fwrite($fileHandle, $pdf->output($filename, 'S'));
 
         parent::restoreStateAfterSave($fileHandle);
     }

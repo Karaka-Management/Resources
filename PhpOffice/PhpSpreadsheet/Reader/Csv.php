@@ -163,10 +163,10 @@ class Csv extends BaseReader
      */
     protected function skipBOM(): void
     {
-        rewind($this->fileHandle);
+        \rewind($this->fileHandle);
 
-        if (fgets($this->fileHandle, self::UTF8_BOM_LEN + 1) !== self::UTF8_BOM) {
-            rewind($this->fileHandle);
+        if (\fgets($this->fileHandle, self::UTF8_BOM_LEN + 1) !== self::UTF8_BOM) {
+            \rewind($this->fileHandle);
         }
     }
 
@@ -175,13 +175,13 @@ class Csv extends BaseReader
      */
     protected function checkSeparator(): void
     {
-        $line = fgets($this->fileHandle);
+        $line = \fgets($this->fileHandle);
         if ($line === false) {
             return;
         }
 
-        if ((strlen(trim($line, "\r\n")) == 5) && (stripos($line, 'sep=') === 0)) {
-            $this->delimiter = substr($line, 4, 1);
+        if ((\strlen(\trim($line, "\r\n")) == 5) && (\stripos($line, 'sep=') === 0)) {
+            $this->delimiter = \substr($line, 4, 1);
 
             return;
         }
@@ -240,18 +240,18 @@ class Csv extends BaseReader
         $worksheetInfo[0]['totalColumns'] = 0;
 
         // Loop through each line of the file in turn
-        $rowData = fgetcsv($fileHandle, 0, $this->delimiter ?? '', $this->enclosure, $this->escapeCharacter);
-        while (is_array($rowData)) {
+        $rowData = \fgetcsv($fileHandle, 0, $this->delimiter ?? '', $this->enclosure, $this->escapeCharacter);
+        while (\is_array($rowData)) {
             ++$worksheetInfo[0]['totalRows'];
-            $worksheetInfo[0]['lastColumnIndex'] = max($worksheetInfo[0]['lastColumnIndex'], count($rowData) - 1);
-            $rowData = fgetcsv($fileHandle, 0, $this->delimiter ?? '', $this->enclosure, $this->escapeCharacter);
+            $worksheetInfo[0]['lastColumnIndex'] = \max($worksheetInfo[0]['lastColumnIndex'], \count($rowData) - 1);
+            $rowData = \fgetcsv($fileHandle, 0, $this->delimiter ?? '', $this->enclosure, $this->escapeCharacter);
         }
 
         $worksheetInfo[0]['lastColumnLetter'] = Coordinate::stringFromColumnIndex($worksheetInfo[0]['lastColumnIndex'] + 1);
         $worksheetInfo[0]['totalColumns'] = $worksheetInfo[0]['lastColumnIndex'] + 1;
 
         // Close file
-        fclose($fileHandle);
+        \fclose($fileHandle);
 
         return $worksheetInfo;
     }
@@ -277,7 +277,7 @@ class Csv extends BaseReader
         $spreadsheet = new Spreadsheet();
 
         // Load into this instance
-        return $this->loadStringOrFile('data://text/plain,' . urlencode($contents), $spreadsheet, true);
+        return $this->loadStringOrFile('data://text/plain,' . \urlencode($contents), $spreadsheet, true);
     }
 
     private function openFileOrMemory(string $filename): void
@@ -292,12 +292,12 @@ class Csv extends BaseReader
         }
         $this->openFile($filename);
         if ($this->inputEncoding !== 'UTF-8') {
-            fclose($this->fileHandle);
-            $entireFile = file_get_contents($filename);
-            $this->fileHandle = fopen('php://memory', 'r+b');
+            \fclose($this->fileHandle);
+            $entireFile = \file_get_contents($filename);
+            $this->fileHandle = \fopen('php://memory', 'r+b');
             if ($this->fileHandle !== false && $entireFile !== false) {
                 $data = StringHelper::convertEncoding($entireFile, 'UTF-8', $this->inputEncoding);
-                fwrite($this->fileHandle, $data);
+                \fwrite($this->fileHandle, $data);
                 $this->skipBOM();
             }
         }
@@ -314,8 +314,8 @@ class Csv extends BaseReader
     {
         $retVal = null;
         if ($value !== null && $this->testAutodetect) {
-            $retVal2 = @ini_set('auto_detect_line_endings', $value);
-            if (is_string($retVal2)) {
+            $retVal2 = @\ini_set('auto_detect_line_endings', $value);
+            if (\is_string($retVal2)) {
                 $retVal = $retVal2;
             }
         }
@@ -336,7 +336,7 @@ class Csv extends BaseReader
      */
     private function openDataUri(string $filename): void
     {
-        $fileHandle = fopen($filename, 'rb');
+        $fileHandle = \fopen($filename, 'rb');
         if ($fileHandle === false) {
             // @codeCoverageIgnoreStart
             throw new ReaderException('Could not open file ' . $filename . ' for reading.');
@@ -386,10 +386,10 @@ class Csv extends BaseReader
         $outRow = 0;
 
         // Loop through each line of the file in turn
-        $rowData = fgetcsv($fileHandle, 0, $this->delimiter ?? '', $this->enclosure, $this->escapeCharacter);
+        $rowData = \fgetcsv($fileHandle, 0, $this->delimiter ?? '', $this->enclosure, $this->escapeCharacter);
         $valueBinder = Cell::getValueBinder();
-        $preserveBooleanString = method_exists($valueBinder, 'getBooleanConversion') && $valueBinder->getBooleanConversion();
-        while (is_array($rowData)) {
+        $preserveBooleanString = \method_exists($valueBinder, 'getBooleanConversion') && $valueBinder->getBooleanConversion();
+        while (\is_array($rowData)) {
             $noOutputYet = true;
             $columnLetter = 'A';
             foreach ($rowData as $rowDatum) {
@@ -413,12 +413,12 @@ class Csv extends BaseReader
                 }
                 ++$columnLetter;
             }
-            $rowData = fgetcsv($fileHandle, 0, $this->delimiter ?? '', $this->enclosure, $this->escapeCharacter);
+            $rowData = \fgetcsv($fileHandle, 0, $this->delimiter ?? '', $this->enclosure, $this->escapeCharacter);
             ++$currentRow;
         }
 
         // Close file
-        fclose($fileHandle);
+        \fclose($fileHandle);
 
         $this->setAutoDetect($iniset);
 
@@ -433,10 +433,10 @@ class Csv extends BaseReader
      */
     private function convertBoolean(&$rowDatum, bool $preserveBooleanString): void
     {
-        if (is_string($rowDatum) && !$preserveBooleanString) {
-            if (strcasecmp(Calculation::getTRUE(), $rowDatum) === 0 || strcasecmp('true', $rowDatum) === 0) {
+        if (\is_string($rowDatum) && !$preserveBooleanString) {
+            if (\strcasecmp(Calculation::getTRUE(), $rowDatum) === 0 || \strcasecmp('true', $rowDatum) === 0) {
                 $rowDatum = true;
-            } elseif (strcasecmp(Calculation::getFALSE(), $rowDatum) === 0 || strcasecmp('false', $rowDatum) === 0) {
+            } elseif (\strcasecmp(Calculation::getFALSE(), $rowDatum) === 0 || \strcasecmp('false', $rowDatum) === 0) {
                 $rowDatum = false;
             }
         } else {
@@ -452,21 +452,21 @@ class Csv extends BaseReader
     private function convertFormattedNumber(&$rowDatum): string
     {
         $numberFormatMask = NumberFormat::FORMAT_GENERAL;
-        if ($this->castFormattedNumberToNumeric === true && is_string($rowDatum)) {
-            $numeric = str_replace(
+        if ($this->castFormattedNumberToNumeric === true && \is_string($rowDatum)) {
+            $numeric = \str_replace(
                 [StringHelper::getThousandsSeparator(), StringHelper::getDecimalSeparator()],
                 ['', '.'],
                 $rowDatum
             );
 
-            if (is_numeric($numeric)) {
-                $decimalPos = strpos($rowDatum, StringHelper::getDecimalSeparator());
+            if (\is_numeric($numeric)) {
+                $decimalPos = \strpos($rowDatum, StringHelper::getDecimalSeparator());
                 if ($this->preserveNumericFormatting === true) {
-                    $numberFormatMask = (strpos($rowDatum, StringHelper::getThousandsSeparator()) !== false)
+                    $numberFormatMask = (\strpos($rowDatum, StringHelper::getThousandsSeparator()) !== false)
                         ? '#,##0' : '0';
                     if ($decimalPos !== false) {
-                        $decimals = strlen($rowDatum) - $decimalPos - 1;
-                        $numberFormatMask .= '.' . str_repeat('0', min($decimals, 6));
+                        $decimals = \strlen($rowDatum) - $decimalPos - 1;
+                        $numberFormatMask .= '.' . \str_repeat('0', \min($decimals, 6));
                     }
                 }
 
@@ -552,16 +552,16 @@ class Csv extends BaseReader
             return false;
         }
 
-        fclose($this->fileHandle);
+        \fclose($this->fileHandle);
 
         // Trust file extension if any
-        $extension = strtolower(/** @scrutinizer ignore-type */ pathinfo($filename, PATHINFO_EXTENSION));
-        if (in_array($extension, ['csv', 'tsv'])) {
+        $extension = \strtolower(/** @scrutinizer ignore-type */ \pathinfo($filename, PATHINFO_EXTENSION));
+        if (\in_array($extension, ['csv', 'tsv'])) {
             return true;
         }
 
         // Attempt to guess mimetype
-        $type = mime_content_type($filename);
+        $type = \mime_content_type($filename);
         $supportedTypes = [
             'application/csv',
             'text/csv',
@@ -569,14 +569,14 @@ class Csv extends BaseReader
             'inode/x-empty',
         ];
 
-        return in_array($type, $supportedTypes, true);
+        return \in_array($type, $supportedTypes, true);
     }
 
     private static function guessEncodingTestNoBom(string &$encoding, string &$contents, string $compare, string $setEncoding): void
     {
         if ($encoding === '') {
-            $pos = strpos($contents, $compare);
-            if ($pos !== false && $pos % strlen($compare) === 0) {
+            $pos = \strpos($contents, $compare);
+            if ($pos !== false && $pos % \strlen($compare) === 0) {
                 $encoding = $setEncoding;
             }
         }
@@ -585,12 +585,12 @@ class Csv extends BaseReader
     private static function guessEncodingNoBom(string $filename): string
     {
         $encoding = '';
-        $contents = file_get_contents($filename);
+        $contents = \file_get_contents($filename);
         self::guessEncodingTestNoBom($encoding, $contents, self::UTF32BE_LF, 'UTF-32BE');
         self::guessEncodingTestNoBom($encoding, $contents, self::UTF32LE_LF, 'UTF-32LE');
         self::guessEncodingTestNoBom($encoding, $contents, self::UTF16BE_LF, 'UTF-16BE');
         self::guessEncodingTestNoBom($encoding, $contents, self::UTF16LE_LF, 'UTF-16LE');
-        if ($encoding === '' && preg_match('//u', $contents) === 1) {
+        if ($encoding === '' && \preg_match('//u', $contents) === 1) {
             $encoding = 'UTF-8';
         }
 
@@ -600,7 +600,7 @@ class Csv extends BaseReader
     private static function guessEncodingTestBom(string &$encoding, string $first4, string $compare, string $setEncoding): void
     {
         if ($encoding === '') {
-            if ($compare === substr($first4, 0, strlen($compare))) {
+            if ($compare === \substr($first4, 0, \strlen($compare))) {
                 $encoding = $setEncoding;
             }
         }
@@ -609,7 +609,7 @@ class Csv extends BaseReader
     private static function guessEncodingBom(string $filename): string
     {
         $encoding = '';
-        $first4 = file_get_contents($filename, false, null, 0, 4);
+        $first4 = \file_get_contents($filename, false, null, 0, 4);
         if ($first4 !== false) {
             self::guessEncodingTestBom($encoding, $first4, self::UTF8_BOM, 'UTF-8');
             self::guessEncodingTestBom($encoding, $first4, self::UTF16BE_BOM, 'UTF-16BE');

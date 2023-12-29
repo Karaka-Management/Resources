@@ -69,7 +69,7 @@ abstract class AbstractSlide extends AbstractDecoratorWriter
                         $objWriter,
                         $relId,
                         'http://schemas.openxmlformats.org/officeDocument/2006/relationships/image',
-                        '../media/' . str_replace(' ', '_', $iterator->current()->getIndexedFilename())
+                        '../media/' . \str_replace(' ', '_', $iterator->current()->getIndexedFilename())
                     );
                     $iterator->current()->relationId = 'rId' . $relId;
                     ++$relId;
@@ -94,7 +94,7 @@ abstract class AbstractSlide extends AbstractDecoratorWriter
                                 $objWriter,
                                 $relId,
                                 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/image',
-                                '../media/' . str_replace(' ', '_', $iterator2->current()->getIndexedFilename())
+                                '../media/' . \str_replace(' ', '_', $iterator2->current()->getIndexedFilename())
                             );
                             $iterator2->current()->relationId = 'rId' . $relId;
                             ++$relId;
@@ -120,14 +120,14 @@ abstract class AbstractSlide extends AbstractDecoratorWriter
     }
 
     /**
-     * @param array<int, AbstractShape>|ArrayObject<int, AbstractShape> $shapes
+     * @param array<int, AbstractShape>|\ArrayObject<int, AbstractShape> $shapes
      * @param int $shapeId
      *
      * @throws UndefinedChartTypeException
      */
     protected function writeShapeCollection(XMLWriter $objWriter, $shapes = [], &$shapeId = 0): void
     {
-        if (0 == count($shapes)) {
+        if (0 == \count($shapes)) {
             return;
         }
         foreach ($shapes as $shape) {
@@ -191,7 +191,7 @@ abstract class AbstractSlide extends AbstractDecoratorWriter
             $objWriter->startElement('p:nvPr');
             $objWriter->startElement('p:ph');
             $objWriter->writeAttribute('type', $shape->getPlaceholder()->getType());
-            if (!is_null($shape->getPlaceholder()->getIdx())) {
+            if (!\is_null($shape->getPlaceholder()->getIdx())) {
                 $objWriter->writeAttribute('idx', $shape->getPlaceholder()->getIdx());
             }
             $objWriter->endElement();
@@ -272,10 +272,10 @@ abstract class AbstractSlide extends AbstractDecoratorWriter
             // a:spAutoFit
             $objWriter->startElement('a:' . $shape->getAutoFit());
             if (RichText::AUTOFIT_NORMAL == $shape->getAutoFit()) {
-                if (!is_null($shape->getFontScale())) {
+                if (!\is_null($shape->getFontScale())) {
                     $objWriter->writeAttribute('fontScale', $shape->getFontScale() * 1000);
                 }
-                if (!is_null($shape->getLineSpaceReduction())) {
+                if (!\is_null($shape->getLineSpaceReduction())) {
                     $objWriter->writeAttribute('lnSpcReduction', $shape->getLineSpaceReduction() * 1000);
                 }
             }
@@ -373,14 +373,14 @@ abstract class AbstractSlide extends AbstractDecoratorWriter
         // p:graphicFrame/a:graphic/a:graphicData/a:tbl/a:tblGrid
         $objWriter->startElement('a:tblGrid');
         // Write cell widths
-        $countCells = count($shape->getRow(0)->getCells());
+        $countCells = \count($shape->getRow(0)->getCells());
         for ($cell = 0; $cell < $countCells; ++$cell) {
             //  p:graphicFrame/a:graphic/a:graphicData/a:tbl/a:tblGrid/a:gridCol
             $objWriter->startElement('a:gridCol');
             // Calculate column width
             $width = $shape->getRow(0)->getCell($cell)->getWidth();
             if (0 == $width) {
-                $colCount = count($shape->getRow(0)->getCells());
+                $colCount = \count($shape->getRow(0)->getCells());
                 $totalWidth = $shape->getWidth();
                 $width = $totalWidth / $colCount;
             }
@@ -394,13 +394,13 @@ abstract class AbstractSlide extends AbstractDecoratorWriter
         // Default border style
         $defaultBorder = new Border();
         // Write rows
-        $countRows = count($shape->getRows());
+        $countRows = \count($shape->getRows());
         for ($row = 0; $row < $countRows; ++$row) {
             // p:graphicFrame/a:graphic/a:graphicData/a:tbl/a:tr
             $objWriter->startElement('a:tr');
             $objWriter->writeAttribute('h', CommonDrawing::pixelsToEmu($shape->getRow($row)->getHeight()));
             // Write cells
-            $countCells = count($shape->getRow($row)->getCells());
+            $countCells = \count($shape->getRow($row)->getCells());
             for ($cell = 0; $cell < $countCells; ++$cell) {
                 // Current cell
                 $currentCell = $shape->getRow($row)->getCell($cell);
@@ -934,8 +934,8 @@ abstract class AbstractSlide extends AbstractDecoratorWriter
 
         // p:notes/p:cSld/p:spTree/p:sp[1]/p:spPr/a:xfrm/a:ext
         $objWriter->startElement('a:ext');
-        $objWriter->writeAttribute('cx', CommonDrawing::pixelsToEmu(round($pNote->getExtentX() / 2)));
-        $objWriter->writeAttribute('cy', CommonDrawing::pixelsToEmu(round($pNote->getExtentY() / 2)));
+        $objWriter->writeAttribute('cx', CommonDrawing::pixelsToEmu(\round($pNote->getExtentX() / 2)));
+        $objWriter->writeAttribute('cy', CommonDrawing::pixelsToEmu(\round($pNote->getExtentY() / 2)));
         $objWriter->endElement();
 
         // p:notes/p:cSld/p:spTree/p:sp[1]/p:spPr/a:xfrm
@@ -1026,7 +1026,7 @@ abstract class AbstractSlide extends AbstractDecoratorWriter
         // p:notes/p:cSld/p:spTree/p:sp[2]/p:spPr/a:xfrm/a:off
         $objWriter->startElement('a:off');
         $objWriter->writeAttribute('x', CommonDrawing::pixelsToEmu($pNote->getOffsetX()));
-        $objWriter->writeAttribute('y', CommonDrawing::pixelsToEmu(round($pNote->getExtentY() / 2) + $pNote->getOffsetY()));
+        $objWriter->writeAttribute('y', CommonDrawing::pixelsToEmu(\round($pNote->getExtentY() / 2) + $pNote->getOffsetY()));
         $objWriter->endElement();
 
         // p:notes/p:cSld/p:spTree/p:sp[2]/p:spPr/a:xfrm/a:ext
@@ -1543,7 +1543,7 @@ abstract class AbstractSlide extends AbstractDecoratorWriter
             return;
         }
         $objWriter->startElement('p:transition');
-        if (!is_null($transition->getSpeed())) {
+        if (!\is_null($transition->getSpeed())) {
             $objWriter->writeAttribute('spd', $transition->getSpeed());
         }
         $objWriter->writeAttribute('advClick', $transition->hasManualTrigger() ? '1' : '0');
@@ -1780,19 +1780,19 @@ abstract class AbstractSlide extends AbstractDecoratorWriter
 
     private function getGUID(): string
     {
-        if (function_exists('com_create_guid')) {
-            return com_create_guid();
+        if (\function_exists('com_create_guid')) {
+            return \com_create_guid();
         } else {
-            mt_srand(intval(microtime(true) * 10000));
-            $charid = strtoupper(md5(uniqid((string) rand(), true)));
-            $hyphen = chr(45); // "-"
-            $uuid = chr(123)// "{"
-                . substr($charid, 0, 8) . $hyphen
-                . substr($charid, 8, 4) . $hyphen
-                . substr($charid, 12, 4) . $hyphen
-                . substr($charid, 16, 4) . $hyphen
-                . substr($charid, 20, 12)
-                . chr(125); // "}"
+            \mt_srand(\intval(\microtime(true) * 10000));
+            $charid = \strtoupper(\md5(\uniqid((string) \rand(), true)));
+            $hyphen = \chr(45); // "-"
+            $uuid = \chr(123)// "{"
+                . \substr($charid, 0, 8) . $hyphen
+                . \substr($charid, 8, 4) . $hyphen
+                . \substr($charid, 12, 4) . $hyphen
+                . \substr($charid, 16, 4) . $hyphen
+                . \substr($charid, 20, 12)
+                . \chr(125); // "}"
 
             return $uuid;
         }

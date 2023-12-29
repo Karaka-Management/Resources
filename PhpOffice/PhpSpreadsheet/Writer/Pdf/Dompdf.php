@@ -39,7 +39,7 @@ class Dompdf extends Pdf
         $orientation = ($orientation === PageSetup::ORIENTATION_LANDSCAPE) ? 'L' : 'P';
         $printPaperSize = $this->getPaperSize() ?? $setup->getPaperSize();
         $paperSize = self::$paperSizes[$printPaperSize] ?? PageSetup::getPaperSizeDefault();
-        if (is_array($paperSize) && count($paperSize) === 2) {
+        if (\is_array($paperSize) && \count($paperSize) === 2) {
             $paperSize = [0.0, 0.0, $paperSize[0], $paperSize[1]];
         }
 
@@ -53,7 +53,7 @@ class Dompdf extends Pdf
         $pdf->render();
 
         //  Write to file
-        fwrite($fileHandle, $pdf->output() ?? '');
+        \fwrite($fileHandle, $pdf->output() ?? '');
 
         parent::restoreStateAfterSave();
     }

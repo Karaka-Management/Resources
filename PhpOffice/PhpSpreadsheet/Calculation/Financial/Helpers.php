@@ -26,7 +26,7 @@ class Helpers
      */
     public static function daysPerYear($year, $basis = 0)
     {
-        if (!is_numeric($basis)) {
+        if (!\is_numeric($basis)) {
             return ExcelError::NAN();
         }
 
@@ -49,9 +49,9 @@ class Helpers
      *
      * Returns a boolean TRUE/FALSE indicating if this date is the last date of the month
      *
-     * @param DateTimeInterface $date The date for testing
+     * @param \DateTimeInterface $date The date for testing
      */
-    public static function isLastDayOfMonth(DateTimeInterface $date): bool
+    public static function isLastDayOfMonth(\DateTimeInterface $date): bool
     {
         return $date->format('d') === $date->format('t');
     }

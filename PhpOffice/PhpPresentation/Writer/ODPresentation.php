@@ -86,8 +86,8 @@ class ODPresentation extends AbstractWriter implements WriterInterface
         }
         // If $pFilename is php://output or php://stdout, make it a temporary file...
         $originalFilename = $pFilename;
-        if ('php://output' == strtolower($pFilename) || 'php://stdout' == strtolower($pFilename)) {
-            $pFilename = @tempnam('./', 'phppttmp');
+        if ('php://output' == \strtolower($pFilename) || 'php://stdout' == \strtolower($pFilename)) {
+            $pFilename = @\tempnam('./', 'phppttmp');
             if ('' == $pFilename) {
                 $pFilename = $originalFilename;
             }
@@ -105,7 +105,7 @@ class ODPresentation extends AbstractWriter implements WriterInterface
         $arrayChart = [];
 
         $arrayFiles = [];
-        $oDir = new DirectoryIterator(dirname(__FILE__) . DIRECTORY_SEPARATOR . 'ODPresentation');
+        $oDir = new \DirectoryIterator(\dirname(__FILE__) . DIRECTORY_SEPARATOR . 'ODPresentation');
         foreach ($oDir as $oFile) {
             if (!$oFile->isFile()) {
                 continue;
@@ -120,7 +120,7 @@ class ODPresentation extends AbstractWriter implements WriterInterface
             $arrayFiles[$oFile->getBasename('.php')] = $class;
         }
 
-        ksort($arrayFiles);
+        \ksort($arrayFiles);
 
         foreach ($arrayFiles as $o) {
             $oService = $o->newInstance();
@@ -138,10 +138,10 @@ class ODPresentation extends AbstractWriter implements WriterInterface
 
         // If a temporary file was used, copy it to the correct file stream
         if ($originalFilename != $pFilename) {
-            if (false === copy($pFilename, $originalFilename)) {
+            if (false === \copy($pFilename, $originalFilename)) {
                 throw new FileCopyException($pFilename, $originalFilename);
             }
-            if (false === @unlink($pFilename)) {
+            if (false === @\unlink($pFilename)) {
                 throw new FileRemoveException($pFilename);
             }
         }
@@ -171,8 +171,8 @@ class ODPresentation extends AbstractWriter implements WriterInterface
     {
         $this->useDiskCaching = $pValue;
 
-        if (!is_null($directory)) {
-            if (!is_dir($directory)) {
+        if (!\is_null($directory)) {
+            if (!\is_dir($directory)) {
                 throw new DirectoryNotFoundException($directory);
             }
             $this->diskCachingDirectory = $directory;

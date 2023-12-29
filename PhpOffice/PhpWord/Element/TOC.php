@@ -66,11 +66,11 @@ class TOC extends AbstractElement
     {
         $this->tocStyle = new TOCStyle();
 
-        if (null !== $tocStyle && is_array($tocStyle)) {
+        if (null !== $tocStyle && \is_array($tocStyle)) {
             $this->tocStyle->setStyleByArray($tocStyle);
         }
 
-        if (null !== $fontStyle && is_array($fontStyle)) {
+        if (null !== $fontStyle && \is_array($fontStyle)) {
             $this->fontStyle = new Font();
             $this->fontStyle->setStyleByArray($fontStyle);
         } else {

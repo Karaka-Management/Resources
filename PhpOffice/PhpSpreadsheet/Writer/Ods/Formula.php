@@ -24,7 +24,7 @@ class Formula
         $formula = $this->convertCellReferences($formula, $worksheetName);
         $formula = $this->convertDefinedNames($formula);
 
-        if (substr($formula, 0, 1) !== '=') {
+        if (\substr($formula, 0, 1) !== '=') {
             $formula = '=' . $formula;
         }
 
@@ -33,16 +33,16 @@ class Formula
 
     private function convertDefinedNames(string $formula): string
     {
-        $splitCount = preg_match_all(
+        $splitCount = \preg_match_all(
             '/' . Calculation::CALCULATION_REGEXP_DEFINEDNAME . '/mui',
             $formula,
             $splitRanges,
             PREG_OFFSET_CAPTURE
         );
 
-        $lengths = array_map('strlen', array_column($splitRanges[0], 0));
-        $offsets = array_column($splitRanges[0], 1);
-        $values = array_column($splitRanges[0], 0);
+        $lengths = \array_map('strlen', \array_column($splitRanges[0], 0));
+        $offsets = \array_column($splitRanges[0], 1);
+        $values = \array_column($splitRanges[0], 0);
 
         while ($splitCount > 0) {
             --$splitCount;
@@ -50,8 +50,8 @@ class Formula
             $offset = $offsets[$splitCount];
             $value = $values[$splitCount];
 
-            if (in_array($value, $this->definedNames, true)) {
-                $formula = substr($formula, 0, $offset) . '$$' . $value . substr($formula, $offset + $length);
+            if (\in_array($value, $this->definedNames, true)) {
+                $formula = \substr($formula, 0, $offset) . '$$' . $value . \substr($formula, $offset + $length);
             }
         }
 
@@ -60,15 +60,15 @@ class Formula
 
     private function convertCellReferences(string $formula, string $worksheetName): string
     {
-        $splitCount = preg_match_all(
+        $splitCount = \preg_match_all(
             '/' . Calculation::CALCULATION_REGEXP_CELLREF_RELATIVE . '/mui',
             $formula,
             $splitRanges,
             PREG_OFFSET_CAPTURE
         );
 
-        $lengths = array_map('strlen', array_column($splitRanges[0], 0));
-        $offsets = array_column($splitRanges[0], 1);
+        $lengths = \array_map('strlen', \array_column($splitRanges[0], 0));
+        $offsets = \array_column($splitRanges[0], 1);
 
         $worksheets = $splitRanges[2];
         $columns = $splitRanges[6];
@@ -77,7 +77,7 @@ class Formula
         // Replace any commas in the formula with semi-colons for Ods
         // If by chance there are commas in worksheet names, then they will be "fixed" again in the loop
         //    because we've already extracted worksheet names with our preg_match_all()
-        $formula = str_replace(',', ';', $formula);
+        $formula = \str_replace(',', ';', $formula);
         while ($splitCount > 0) {
             --$splitCount;
             $length = $lengths[$splitCount];
@@ -93,11 +93,11 @@ class Formula
                     $worksheet = $worksheetName;
                 }
             } else {
-                $worksheet = str_replace("''", "'", trim($worksheet, "'"));
+                $worksheet = \str_replace("''", "'", \trim($worksheet, "'"));
             }
             if (!empty($worksheet)) {
-                $newRange = "['" . str_replace("'", "''", $worksheet) . "'";
-            } elseif (substr($formula, $offset - 1, 1) !== ':') {
+                $newRange = "['" . \str_replace("'", "''", $worksheet) . "'";
+            } elseif (\substr($formula, $offset - 1, 1) !== ':') {
                 $newRange = '[';
             }
             $newRange .= '.';
@@ -109,9 +109,9 @@ class Formula
                 $newRange .= $row;
             }
             // close the wrapping [] unless this is the first part of a range
-            $newRange .= substr($formula, $offset + $length, 1) !== ':' ? ']' : '';
+            $newRange .= \substr($formula, $offset + $length, 1) !== ':' ? ']' : '';
 
-            $formula = substr($formula, 0, $offset) . $newRange . substr($formula, $offset + $length);
+            $formula = \substr($formula, 0, $offset) . $newRange . \substr($formula, $offset + $length);
         }
 
         return $formula;

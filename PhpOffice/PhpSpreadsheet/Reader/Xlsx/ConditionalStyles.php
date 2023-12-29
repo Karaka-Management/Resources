@@ -17,7 +17,7 @@ class ConditionalStyles
     /** @var Worksheet */
     private $worksheet;
 
-    /** @var SimpleXMLElement */
+    /** @var \SimpleXMLElement */
     private $worksheetXml;
 
     /**
@@ -28,7 +28,7 @@ class ConditionalStyles
     /** @var array */
     private $dxfs;
 
-    public function __construct(Worksheet $workSheet, SimpleXMLElement $worksheetXml, array $dxfs = [])
+    public function __construct(Worksheet $workSheet, \SimpleXMLElement $worksheetXml, array $dxfs = [])
     {
         $this->worksheet = $workSheet;
         $this->worksheetXml = $worksheetXml;
@@ -63,15 +63,15 @@ class ConditionalStyles
     private function setConditionalsFromExt(array $conditionals): void
     {
         foreach ($conditionals as $conditionalRange => $cfRules) {
-            ksort($cfRules);
+            \ksort($cfRules);
             // Priority is used as the key for sorting; but may not start at 0,
             // so we use array_values to reset the index after sorting.
             $this->worksheet->getStyle($conditionalRange)
-                ->setConditionalStyles(array_values($cfRules));
+                ->setConditionalStyles(\array_values($cfRules));
         }
     }
 
-    private function readConditionalsFromExt(SimpleXMLElement $extLst, StyleReader $styleReader): array
+    private function readConditionalsFromExt(\SimpleXMLElement $extLst, StyleReader $styleReader): array
     {
         $conditionals = [];
 
@@ -114,7 +114,7 @@ class ConditionalStyles
         return $conditionals;
     }
 
-    private function readConditionalRuleFromExt(SimpleXMLElement $cfRuleXml, SimpleXMLElement $attributes): Conditional
+    private function readConditionalRuleFromExt(\SimpleXMLElement $cfRuleXml, \SimpleXMLElement $attributes): Conditional
     {
         $conditionType = (string) $attributes->type;
         $operatorType = (string) $attributes->operator;
@@ -134,14 +134,14 @@ class ConditionalStyles
             $conditionType === Conditional::CONDITION_ENDSWITH ||
             $conditionType === Conditional::CONDITION_TIMEPERIOD
         ) {
-            $conditional->setText(array_pop($operands) ?? '');
+            $conditional->setText(\array_pop($operands) ?? '');
         }
         $conditional->setConditions($operands);
 
         return $conditional;
     }
 
-    private function readStyleFromExt(SimpleXMLElement $extCfRuleXml, StyleReader $styleReader): Style
+    private function readStyleFromExt(\SimpleXMLElement $extCfRuleXml, StyleReader $styleReader): Style
     {
         $cfStyle = new Style(false, true);
         if ($extCfRuleXml->dxf) {
@@ -158,7 +158,7 @@ class ConditionalStyles
         return $cfStyle;
     }
 
-    private function readConditionalStyles(SimpleXMLElement $xmlSheet): array
+    private function readConditionalStyles(\SimpleXMLElement $xmlSheet): array
     {
         $conditionals = [];
         foreach ($xmlSheet->conditionalFormatting as $conditional) {
@@ -174,21 +174,21 @@ class ConditionalStyles
         return $conditionals;
     }
 
-    private function setConditionalStyles(Worksheet $worksheet, array $conditionals, SimpleXMLElement $xmlExtLst): void
+    private function setConditionalStyles(Worksheet $worksheet, array $conditionals, \SimpleXMLElement $xmlExtLst): void
     {
         foreach ($conditionals as $cellRangeReference => $cfRules) {
-            ksort($cfRules);
+            \ksort($cfRules);
             $conditionalStyles = $this->readStyleRules($cfRules, $xmlExtLst);
 
             // Extract all cell references in $cellRangeReference
-            $cellBlocks = explode(' ', str_replace('$', '', strtoupper($cellRangeReference)));
+            $cellBlocks = \explode(' ', \str_replace('$', '', \strtoupper($cellRangeReference)));
             foreach ($cellBlocks as $cellBlock) {
                 $worksheet->getStyle($cellBlock)->setConditionalStyles($conditionalStyles);
             }
         }
     }
 
-    private function readStyleRules(array $cfRules, SimpleXMLElement $extLst): array
+    private function readStyleRules(array $cfRules, \SimpleXMLElement $extLst): array
     {
         $conditionalFormattingRuleExtensions = ConditionalFormattingRuleExtension::parseExtLstXml($extLst);
         $conditionalStyles = [];
@@ -208,7 +208,7 @@ class ConditionalStyles
                 $objConditional->setStopIfTrue(true);
             }
 
-            if (count($cfRule->formula) >= 1) {
+            if (\count($cfRule->formula) >= 1) {
                 foreach ($cfRule->formula as $formulax) {
                     $formula = (string) $formulax;
                     if ($formula === 'TRUE') {
@@ -238,7 +238,7 @@ class ConditionalStyles
     }
 
     /**
-     * @param SimpleXMLElement|stdClass $cfRule
+     * @param \SimpleXMLElement|\stdClass $cfRule
      */
     private function readDataBarOfConditionalRule($cfRule, array $conditionalFormattingRuleExtensions): ConditionalDataBar
     {
@@ -252,7 +252,7 @@ class ConditionalStyles
         //conditionalFormatValueObjects
         $cfvoXml = $cfRule->dataBar->cfvo;
         $cfvoIndex = 0;
-        foreach ((count($cfvoXml) > 1 ? $cfvoXml : [$cfvoXml]) as $cfvo) {
+        foreach ((\count($cfvoXml) > 1 ? $cfvoXml : [$cfvoXml]) as $cfvo) {
             if ($cfvoIndex === 0) {
                 $dataBar->setMinimumConditionalFormatValueObject(new ConditionalFormatValueObject((string) $cfvo['type'], (string) $cfvo['val']));
             }
@@ -273,13 +273,13 @@ class ConditionalStyles
     }
 
     /**
-     * @param SimpleXMLElement|stdClass $cfRule
+     * @param \SimpleXMLElement|\stdClass $cfRule
      */
     private function readDataBarExtLstOfConditionalRule(ConditionalDataBar $dataBar, $cfRule, array $conditionalFormattingRuleExtensions): void
     {
         if (isset($cfRule->extLst)) {
             $ns = $cfRule->extLst->getNamespaces(true);
-            foreach ((count($cfRule->extLst) > 0 ? $cfRule->extLst->ext : [$cfRule->extLst->ext]) as $ext) {
+            foreach ((\count($cfRule->extLst) > 0 ? $cfRule->extLst->ext : [$cfRule->extLst->ext]) as $ext) {
                 $extId = (string) $ext->children($ns['x14'])->id;
                 if (isset($conditionalFormattingRuleExtensions[$extId]) && (string) $ext['uri'] === '{B025F937-C7B1-47D3-B67F-A62EFF666E3E}') {
                     $dataBar->setConditionalFormattingRuleExt($conditionalFormattingRuleExtensions[$extId]);

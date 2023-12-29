@@ -39,8 +39,8 @@ class Image extends AbstractStyle
 
         $width = $style->getWidth();
         $height = $style->getHeight();
-        $css['width'] = $this->getValueIf(is_numeric($width), $width . 'px');
-        $css['height'] = $this->getValueIf(is_numeric($height), $height . 'px');
+        $css['width'] = $this->getValueIf(\is_numeric($width), $width . 'px');
+        $css['height'] = $this->getValueIf(\is_numeric($height), $height . 'px');
 
         return $this->assembleCss($css);
     }

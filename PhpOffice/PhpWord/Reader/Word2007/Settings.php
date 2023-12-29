@@ -56,19 +56,19 @@ class Settings extends AbstractPart
         $nodes = $xmlReader->getElements('*');
         if ($nodes->length > 0) {
             foreach ($nodes as $node) {
-                $name = str_replace('w:', '', $node->nodeName);
+                $name = \str_replace('w:', '', $node->nodeName);
                 $value = $xmlReader->getAttribute('w:val', $node);
                 $method = 'set' . $name;
 
-                if (in_array($name, $this::$booleanProperties)) {
+                if (\in_array($name, $this::$booleanProperties)) {
                     if ($value == 'false') {
                         $docSettings->$method(false);
                     } else {
                         $docSettings->$method(true);
                     }
-                } elseif (method_exists($this, $method)) {
+                } elseif (\method_exists($this, $method)) {
                     $this->$method($xmlReader, $phpWord, $node);
-                } elseif (method_exists($docSettings, $method)) {
+                } elseif (\method_exists($docSettings, $method)) {
                     $docSettings->$method($value);
                 }
             }
@@ -78,7 +78,7 @@ class Settings extends AbstractPart
     /**
      * Sets the document Language.
      */
-    protected function setThemeFontLang(XMLReader $xmlReader, PhpWord $phpWord, DOMElement $node): void
+    protected function setThemeFontLang(XMLReader $xmlReader, PhpWord $phpWord, \DOMElement $node): void
     {
         $val = $xmlReader->getAttribute('w:val', $node);
         $eastAsia = $xmlReader->getAttribute('w:eastAsia', $node);
@@ -95,7 +95,7 @@ class Settings extends AbstractPart
     /**
      * Sets the document protection.
      */
-    protected function setDocumentProtection(XMLReader $xmlReader, PhpWord $phpWord, DOMElement $node): void
+    protected function setDocumentProtection(XMLReader $xmlReader, PhpWord $phpWord, \DOMElement $node): void
     {
         $documentProtection = $phpWord->getSettings()->getDocumentProtection();
 
@@ -108,7 +108,7 @@ class Settings extends AbstractPart
     /**
      * Sets the proof state.
      */
-    protected function setProofState(XMLReader $xmlReader, PhpWord $phpWord, DOMElement $node): void
+    protected function setProofState(XMLReader $xmlReader, PhpWord $phpWord, \DOMElement $node): void
     {
         $proofState = $phpWord->getSettings()->getProofState();
 
@@ -126,7 +126,7 @@ class Settings extends AbstractPart
     /**
      * Sets the proof state.
      */
-    protected function setZoom(XMLReader $xmlReader, PhpWord $phpWord, DOMElement $node): void
+    protected function setZoom(XMLReader $xmlReader, PhpWord $phpWord, \DOMElement $node): void
     {
         $percent = $xmlReader->getAttribute('w:percent', $node);
         $val = $xmlReader->getAttribute('w:val', $node);
@@ -139,18 +139,18 @@ class Settings extends AbstractPart
     /**
      * Set the Revision view.
      */
-    protected function setRevisionView(XMLReader $xmlReader, PhpWord $phpWord, DOMElement $node): void
+    protected function setRevisionView(XMLReader $xmlReader, PhpWord $phpWord, \DOMElement $node): void
     {
         $revisionView = new TrackChangesView();
-        $revisionView->setMarkup(filter_var($xmlReader->getAttribute('w:markup', $node), FILTER_VALIDATE_BOOLEAN));
+        $revisionView->setMarkup(\filter_var($xmlReader->getAttribute('w:markup', $node), FILTER_VALIDATE_BOOLEAN));
         $revisionView->setComments($xmlReader->getAttribute('w:comments', $node));
-        $revisionView->setInsDel(filter_var($xmlReader->getAttribute('w:insDel', $node), FILTER_VALIDATE_BOOLEAN));
-        $revisionView->setFormatting(filter_var($xmlReader->getAttribute('w:formatting', $node), FILTER_VALIDATE_BOOLEAN));
-        $revisionView->setInkAnnotations(filter_var($xmlReader->getAttribute('w:inkAnnotations', $node), FILTER_VALIDATE_BOOLEAN));
+        $revisionView->setInsDel(\filter_var($xmlReader->getAttribute('w:insDel', $node), FILTER_VALIDATE_BOOLEAN));
+        $revisionView->setFormatting(\filter_var($xmlReader->getAttribute('w:formatting', $node), FILTER_VALIDATE_BOOLEAN));
+        $revisionView->setInkAnnotations(\filter_var($xmlReader->getAttribute('w:inkAnnotations', $node), FILTER_VALIDATE_BOOLEAN));
         $phpWord->getSettings()->setRevisionView($revisionView);
     }
 
-    protected function setConsecutiveHyphenLimit(XMLReader $xmlReader, PhpWord $phpWord, DOMElement $node): void
+    protected function setConsecutiveHyphenLimit(XMLReader $xmlReader, PhpWord $phpWord, \DOMElement $node): void
     {
         $value = $xmlReader->getAttribute('w:val', $node);
 
@@ -159,7 +159,7 @@ class Settings extends AbstractPart
         }
     }
 
-    protected function setHyphenationZone(XMLReader $xmlReader, PhpWord $phpWord, DOMElement $node): void
+    protected function setHyphenationZone(XMLReader $xmlReader, PhpWord $phpWord, \DOMElement $node): void
     {
         $value = $xmlReader->getAttribute('w:val', $node);
 

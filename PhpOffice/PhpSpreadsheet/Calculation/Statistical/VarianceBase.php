@@ -8,9 +8,9 @@ abstract class VarianceBase
 {
     protected static function datatypeAdjustmentAllowStrings($value)
     {
-        if (is_bool($value)) {
+        if (\is_bool($value)) {
             return (int) $value;
-        } elseif (is_string($value)) {
+        } elseif (\is_string($value)) {
             return 0;
         }
 
@@ -19,7 +19,7 @@ abstract class VarianceBase
 
     protected static function datatypeAdjustmentBooleans($value)
     {
-        if (is_bool($value) && (Functions::getCompatibilityMode() == Functions::COMPATIBILITY_OPENOFFICE)) {
+        if (\is_bool($value) && (Functions::getCompatibilityMode() == Functions::COMPATIBILITY_OPENOFFICE)) {
             return (int) $value;
         }
 

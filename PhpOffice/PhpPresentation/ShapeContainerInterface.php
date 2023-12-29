@@ -30,7 +30,7 @@ interface ShapeContainerInterface
     /**
      * Get collection of shapes.
      *
-     * @return array<int, AbstractShape>|ArrayObject<int, AbstractShape>
+     * @return array<int, AbstractShape>|\ArrayObject<int, AbstractShape>
      */
     public function getShapeCollection();
 

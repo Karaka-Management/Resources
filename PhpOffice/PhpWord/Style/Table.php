@@ -175,14 +175,14 @@ class Table extends Border
     public function __construct($tableStyle = null, $firstRowStyle = null)
     {
         // Clone first row from table style, but with certain properties disabled
-        if ($firstRowStyle !== null && is_array($firstRowStyle)) {
+        if ($firstRowStyle !== null && \is_array($firstRowStyle)) {
             $this->firstRowStyle = clone $this;
             $this->firstRowStyle->isFirstRow = true;
             unset($this->firstRowStyle->firstRowStyle, $this->firstRowStyle->borderInsideHSize, $this->firstRowStyle->borderInsideHColor, $this->firstRowStyle->borderInsideVSize, $this->firstRowStyle->borderInsideVColor, $this->firstRowStyle->cellMarginTop, $this->firstRowStyle->cellMarginLeft, $this->firstRowStyle->cellMarginRight, $this->firstRowStyle->cellMarginBottom, $this->firstRowStyle->cellSpacing);
             $this->firstRowStyle->setStyleByArray($firstRowStyle);
         }
 
-        if ($tableStyle !== null && is_array($tableStyle)) {
+        if ($tableStyle !== null && \is_array($tableStyle)) {
             $this->setStyleByArray($tableStyle);
         }
     }
@@ -530,7 +530,7 @@ class Table extends Border
     {
         $margins = $this->getCellMargin();
 
-        return $margins !== array_filter($margins, 'is_null');
+        return $margins !== \array_filter($margins, 'is_null');
     }
 
     /**

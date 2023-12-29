@@ -29,7 +29,7 @@ class Title extends Text
         /** @var \PhpOffice\PhpWord\Element\Title $element Type hint */
         $element = $this->element;
         $style = $element->getStyle();
-        $style = str_replace('Heading', 'Heading_', $style ?? '');
+        $style = \str_replace('Heading', 'Heading_', $style ?? '');
         $style = \PhpOffice\PhpWord\Style::getStyle($style);
         if ($style instanceof \PhpOffice\PhpWord\Style\Font) {
             $this->fontStyle = $style;
@@ -57,8 +57,8 @@ class Title extends Text
     {
         /** @var \PhpOffice\PhpWord\Element\Title $element Type hint */
         $element = $this->element;
-        $elementClass = str_replace('\\Writer\\RTF', '', static::class);
-        if (!$element instanceof $elementClass || !is_string($element->getText())) {
+        $elementClass = \str_replace('\\Writer\\RTF', '', static::class);
+        if (!$element instanceof $elementClass || !\is_string($element->getText())) {
             return '';
         }
 
@@ -69,9 +69,9 @@ class Title extends Text
         $content .= $this->writeOpening();
         $endout = '';
         $style = $element->getStyle();
-        if (is_string($style)) {
-            $style = str_replace('Heading', '', $style);
-            if (is_numeric($style)) {
+        if (\is_string($style)) {
+            $style = \str_replace('Heading', '', $style);
+            if (\is_numeric($style)) {
                 $style = (int) $style - 1;
                 if ($style >= 0 && $style <= 8) {
                     $content .= '{\\outlinelevel' . $style;

@@ -31,7 +31,7 @@ class Difference
      */
     public static function interval($startDate, $endDate, $unit = 'D')
     {
-        if (is_array($startDate) || is_array($endDate) || is_array($unit)) {
+        if (\is_array($startDate) || \is_array($endDate) || \is_array($unit)) {
             return self::evaluateArrayArguments([self::class, __FUNCTION__], $startDate, $endDate, $unit);
         }
 
@@ -39,7 +39,7 @@ class Difference
             $startDate = Helpers::getDateValue($startDate);
             $endDate = Helpers::getDateValue($endDate);
             $difference = self::initialDiff($startDate, $endDate);
-            $unit = strtoupper($unit);
+            $unit = \strtoupper($unit);
         } catch (Exception $e) {
             return $e->getMessage();
         }
@@ -65,7 +65,7 @@ class Difference
         $retVal = self::replaceRetValue($retVal, $unit, 'YD') ?? self::datedifYD($difference, $startYears, $endYears, $PHPStartDateObject, $PHPEndDateObject);
         $retVal = self::replaceRetValue($retVal, $unit, 'YM') ?? self::datedifYM($PHPDiffDateObject);
 
-        return is_bool($retVal) ? ExcelError::VALUE() : $retVal;
+        return \is_bool($retVal) ? ExcelError::VALUE() : $retVal;
     }
 
     private static function initialDiff(float $startDate, float $endDate): float
@@ -99,12 +99,12 @@ class Difference
         return (int) $difference;
     }
 
-    private static function datedifM(DateInterval $PHPDiffDateObject): int
+    private static function datedifM(\DateInterval $PHPDiffDateObject): int
     {
         return 12 * (int) $PHPDiffDateObject->format('%y') + (int) $PHPDiffDateObject->format('%m');
     }
 
-    private static function datedifMD(int $startDays, int $endDays, DateTime $PHPEndDateObject, DateInterval $PHPDiffDateObject): int
+    private static function datedifMD(int $startDays, int $endDays, \DateTime $PHPEndDateObject, \DateInterval $PHPDiffDateObject): int
     {
         if ($endDays < $startDays) {
             $retVal = $endDays;
@@ -118,12 +118,12 @@ class Difference
         return $retVal;
     }
 
-    private static function datedifY(DateInterval $PHPDiffDateObject): int
+    private static function datedifY(\DateInterval $PHPDiffDateObject): int
     {
         return (int) $PHPDiffDateObject->format('%y');
     }
 
-    private static function datedifYD(float $difference, int $startYears, int $endYears, DateTime $PHPStartDateObject, DateTime $PHPEndDateObject): int
+    private static function datedifYD(float $difference, int $startYears, int $endYears, \DateTime $PHPStartDateObject, \DateTime $PHPEndDateObject): int
     {
         $retVal = (int) $difference;
         if ($endYears > $startYears) {
@@ -142,7 +142,7 @@ class Difference
 
             // Adjust for leap years cases
             $isLeapEndYear = $PHPEndDateObject->format('L');
-            $limit = new DateTime($PHPEndDateObject->format('Y-02-29'));
+            $limit = new \DateTime($PHPEndDateObject->format('Y-02-29'));
             if (!$isLeapStartYear && !$wasLeapEndYear && $isLeapEndYear && $PHPEndDateObject >= $limit) {
                 --$retVal;
             }
@@ -151,7 +151,7 @@ class Difference
         return (int) $retVal;
     }
 
-    private static function datedifYM(DateInterval $PHPDiffDateObject): int
+    private static function datedifYM(\DateInterval $PHPDiffDateObject): int
     {
         return (int) $PHPDiffDateObject->format('%m');
     }

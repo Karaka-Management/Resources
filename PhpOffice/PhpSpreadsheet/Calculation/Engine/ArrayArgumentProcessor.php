@@ -64,21 +64,21 @@ class ArrayArgumentProcessor
      */
     private static function evaluateVectorMatrixPair(callable $method, array $matrixIndexes, ...$arguments): array
     {
-        $matrix2 = array_pop($matrixIndexes);
+        $matrix2 = \array_pop($matrixIndexes);
         /** @var array $matrixValues2 */
         $matrixValues2 = $arguments[$matrix2];
-        $matrix1 = array_pop($matrixIndexes);
+        $matrix1 = \array_pop($matrixIndexes);
         /** @var array $matrixValues1 */
         $matrixValues1 = $arguments[$matrix1];
 
-        $rows = min(array_map([self::$arrayArgumentHelper, 'rowCount'], [$matrix1, $matrix2]));
-        $columns = min(array_map([self::$arrayArgumentHelper, 'columnCount'], [$matrix1, $matrix2]));
+        $rows = \min(\array_map([self::$arrayArgumentHelper, 'rowCount'], [$matrix1, $matrix2]));
+        $columns = \min(\array_map([self::$arrayArgumentHelper, 'columnCount'], [$matrix1, $matrix2]));
 
         if ($rows === 1) {
-            $rows = max(array_map([self::$arrayArgumentHelper, 'rowCount'], [$matrix1, $matrix2]));
+            $rows = \max(\array_map([self::$arrayArgumentHelper, 'rowCount'], [$matrix1, $matrix2]));
         }
         if ($columns === 1) {
-            $columns = max(array_map([self::$arrayArgumentHelper, 'columnCount'], [$matrix1, $matrix2]));
+            $columns = \max(\array_map([self::$arrayArgumentHelper, 'columnCount'], [$matrix1, $matrix2]));
         }
 
         $result = [];
@@ -105,10 +105,10 @@ class ArrayArgumentProcessor
      */
     private static function evaluateMatrixPair(callable $method, array $matrixIndexes, ...$arguments): array
     {
-        $matrix2 = array_pop($matrixIndexes);
+        $matrix2 = \array_pop($matrixIndexes);
         /** @var array $matrixValues2 */
         $matrixValues2 = $arguments[$matrix2];
-        $matrix1 = array_pop($matrixIndexes);
+        $matrix1 = \array_pop($matrixIndexes);
         /** @var array $matrixValues1 */
         $matrixValues1 = $arguments[$matrix1];
 
@@ -160,9 +160,9 @@ class ArrayArgumentProcessor
      */
     private static function evaluateNthArgumentAsArray(callable $method, int $nthArgument, ...$arguments): array
     {
-        $values = array_slice($arguments, $nthArgument - 1, 1);
+        $values = \array_slice($arguments, $nthArgument - 1, 1);
         /** @var array $values */
-        $values = array_pop($values);
+        $values = \array_pop($values);
 
         $result = [];
         foreach ($values as $value) {

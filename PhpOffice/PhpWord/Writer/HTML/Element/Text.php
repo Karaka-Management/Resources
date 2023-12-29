@@ -116,7 +116,7 @@ class Text extends AbstractElement
         $content = '';
         if (!$this->withoutP) {
             $style = '';
-            if (method_exists($this->element, 'getParagraphStyle')) {
+            if (\method_exists($this->element, 'getParagraphStyle')) {
                 $style = $this->getParagraphStyle();
             }
             $content .= "<p{$style}>";
@@ -176,7 +176,7 @@ class Text extends AbstractElement
         if ($changed->getDate() != null) {
             $changedProp['changed']['date'] = $changed->getDate()->format('Y-m-d\TH:i:s\Z');
         }
-        $content .= json_encode($changedProp);
+        $content .= \json_encode($changedProp);
         $content .= '\' ';
         $content .= 'title="' . $changed->getAuthor();
         if ($changed->getDate() != null) {
@@ -220,7 +220,7 @@ class Text extends AbstractElement
         /** @var \PhpOffice\PhpWord\Element\Text $element Type hint */
         $element = $this->element;
         $style = '';
-        if (!method_exists($element, 'getParagraphStyle')) {
+        if (!\method_exists($element, 'getParagraphStyle')) {
             return $style;
         }
 
@@ -229,7 +229,7 @@ class Text extends AbstractElement
         if ($pStyleIsObject) {
             $styleWriter = new ParagraphStyleWriter($paragraphStyle);
             $style = $styleWriter->write();
-        } elseif (is_string($paragraphStyle)) {
+        } elseif (\is_string($paragraphStyle)) {
             $style = $paragraphStyle;
         }
         if ($style) {
@@ -253,7 +253,7 @@ class Text extends AbstractElement
         if ($fStyleIsObject) {
             $styleWriter = new FontStyleWriter($fontStyle);
             $style = $styleWriter->write();
-        } elseif (is_string($fontStyle)) {
+        } elseif (\is_string($fontStyle)) {
             $style = $fontStyle;
         }
         if ($style) {

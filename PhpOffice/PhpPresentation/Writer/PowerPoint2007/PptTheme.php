@@ -80,7 +80,7 @@ class PptTheme extends AbstractDecoratorWriter
         // Create XML writer
         $objWriter = new XMLWriter(XMLWriter::STORAGE_MEMORY);
 
-        $name = 'Theme' . rand(1, 100);
+        $name = 'Theme' . \rand(1, 100);
 
         // XML header
         $objWriter->startDocument('1.0', 'UTF-8', 'yes');
@@ -101,7 +101,7 @@ class PptTheme extends AbstractDecoratorWriter
             // a:theme/a:themeElements/a:clrScheme/a:*
             $objWriter->startElement('a:' . $oSchemeColor->getValue());
 
-            if (in_array($oSchemeColor->getValue(), [
+            if (\in_array($oSchemeColor->getValue(), [
                 'dk1', 'lt1',
             ])) {
                 $objWriter->startElement('a:sysClr');

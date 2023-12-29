@@ -91,14 +91,14 @@ class Styles
         $this->readDataOnly = $readDataOnly;
     }
 
-    public function read(SimpleXMLElement $sheet, int $maxRow, int $maxCol): void
+    public function read(\SimpleXMLElement $sheet, int $maxRow, int $maxCol): void
     {
         if ($sheet->Styles->StyleRegion !== null) {
             $this->readStyles($sheet->Styles->StyleRegion, $maxRow, $maxCol);
         }
     }
 
-    private function readStyles(SimpleXMLElement $styleRegion, int $maxRow, int $maxCol): void
+    private function readStyles(\SimpleXMLElement $styleRegion, int $maxRow, int $maxCol): void
     {
         foreach ($styleRegion as $style) {
             /** @scrutinizer ignore-call */
@@ -125,7 +125,7 @@ class Styles
         }
     }
 
-    private function addBorderDiagonal(SimpleXMLElement $srssb, array &$styleArray): void
+    private function addBorderDiagonal(\SimpleXMLElement $srssb, array &$styleArray): void
     {
         if (isset($srssb->Diagonal, $srssb->{'Rev-Diagonal'})) {
             $styleArray['borders']['diagonal'] = self::parseBorderAttributes($srssb->Diagonal->attributes());
@@ -139,40 +139,40 @@ class Styles
         }
     }
 
-    private function addBorderStyle(SimpleXMLElement $srssb, array &$styleArray, string $direction): void
+    private function addBorderStyle(\SimpleXMLElement $srssb, array &$styleArray, string $direction): void
     {
-        $ucDirection = ucfirst($direction);
+        $ucDirection = \ucfirst($direction);
         if (isset($srssb->$ucDirection)) {
             $styleArray['borders'][$direction] = self::parseBorderAttributes($srssb->$ucDirection->attributes());
         }
     }
 
-    private function calcRotation(SimpleXMLElement $styleAttributes): int
+    private function calcRotation(\SimpleXMLElement $styleAttributes): int
     {
         $rotation = (int) $styleAttributes->Rotation;
         if ($rotation >= 270 && $rotation <= 360) {
             $rotation -= 360;
         }
-        $rotation = (abs($rotation) > 90) ? 0 : $rotation;
+        $rotation = (\abs($rotation) > 90) ? 0 : $rotation;
 
         return $rotation;
     }
 
     private static function addStyle(array &$styleArray, string $key, string $value): void
     {
-        if (array_key_exists($value, self::$mappings[$key])) {
+        if (\array_key_exists($value, self::$mappings[$key])) {
             $styleArray[$key] = self::$mappings[$key][$value];
         }
     }
 
     private static function addStyle2(array &$styleArray, string $key1, string $key, string $value): void
     {
-        if (array_key_exists($value, self::$mappings[$key])) {
+        if (\array_key_exists($value, self::$mappings[$key])) {
             $styleArray[$key1][$key] = self::$mappings[$key][$value];
         }
     }
 
-    private static function parseBorderAttributes(?SimpleXMLElement $borderAttributes): array
+    private static function parseBorderAttributes(?\SimpleXMLElement $borderAttributes): array
     {
         $styleArray = [];
         if ($borderAttributes !== null) {
@@ -188,15 +188,15 @@ class Styles
 
     private static function parseGnumericColour(string $gnmColour): string
     {
-        [$gnmR, $gnmG, $gnmB] = explode(':', $gnmColour);
-        $gnmR = substr(str_pad($gnmR, 4, '0', STR_PAD_RIGHT), 0, 2);
-        $gnmG = substr(str_pad($gnmG, 4, '0', STR_PAD_RIGHT), 0, 2);
-        $gnmB = substr(str_pad($gnmB, 4, '0', STR_PAD_RIGHT), 0, 2);
+        [$gnmR, $gnmG, $gnmB] = \explode(':', $gnmColour);
+        $gnmR = \substr(\str_pad($gnmR, 4, '0', STR_PAD_RIGHT), 0, 2);
+        $gnmG = \substr(\str_pad($gnmG, 4, '0', STR_PAD_RIGHT), 0, 2);
+        $gnmB = \substr(\str_pad($gnmB, 4, '0', STR_PAD_RIGHT), 0, 2);
 
         return $gnmR . $gnmG . $gnmB;
     }
 
-    private function addColors(array &$styleArray, SimpleXMLElement $styleAttributes): void
+    private function addColors(array &$styleArray, \SimpleXMLElement $styleAttributes): void
     {
         $RGB = self::parseGnumericColour((string) $styleAttributes['Fore']);
         $styleArray['font']['color']['rgb'] = $RGB;
@@ -215,7 +215,7 @@ class Styles
         }
     }
 
-    private function readStyleRange(SimpleXMLElement $styleAttributes, int $maxCol, int $maxRow): string
+    private function readStyleRange(\SimpleXMLElement $styleAttributes, int $maxCol, int $maxRow): string
     {
         $startColumn = Coordinate::stringFromColumnIndex((int) $styleAttributes['startCol'] + 1);
         $startRow = $styleAttributes['startRow'] + 1;
@@ -229,7 +229,7 @@ class Styles
         return $cellRange;
     }
 
-    private function readStyle(array $styleArray, SimpleXMLElement $styleAttributes, SimpleXMLElement $style): array
+    private function readStyle(array $styleArray, \SimpleXMLElement $styleAttributes, \SimpleXMLElement $style): array
     {
         self::addStyle2($styleArray, 'alignment', 'horizontal', (string) $styleAttributes['HAlign']);
         self::addStyle2($styleArray, 'alignment', 'vertical', (string) $styleAttributes['VAlign']);

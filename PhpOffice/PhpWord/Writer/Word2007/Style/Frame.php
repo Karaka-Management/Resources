@@ -41,7 +41,7 @@ class Frame extends AbstractStyle
         }
         $xmlWriter = $this->getXmlWriter();
 
-        $maxZIndex = min(PHP_INT_MAX, self::PHP_32BIT_INT_MAX);
+        $maxZIndex = \min(PHP_INT_MAX, self::PHP_32BIT_INT_MAX);
         $zIndices = [FrameStyle::WRAP_INFRONT => $maxZIndex, FrameStyle::WRAP_BEHIND => -$maxZIndex];
 
         $properties = [
@@ -65,7 +65,7 @@ class Frame extends AbstractStyle
         ];
         $posStyles = $this->getStyles($style, $properties);
 
-        $styles = array_merge($sizeStyles, $posStyles);
+        $styles = \array_merge($sizeStyles, $posStyles);
 
         // zIndex for infront & behind wrap
         $wrap = $style->getWrap();

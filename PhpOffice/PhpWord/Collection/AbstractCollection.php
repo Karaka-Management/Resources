@@ -50,7 +50,7 @@ abstract class AbstractCollection
      */
     public function getItem($index)
     {
-        if (array_key_exists($index, $this->items)) {
+        if (\array_key_exists($index, $this->items)) {
             return $this->items[$index];
         }
 
@@ -65,7 +65,7 @@ abstract class AbstractCollection
      */
     public function setItem($index, $item): void
     {
-        if (array_key_exists($index, $this->items)) {
+        if (\array_key_exists($index, $this->items)) {
             $this->items[$index] = $item;
         }
     }
@@ -92,6 +92,6 @@ abstract class AbstractCollection
      */
     public function countItems()
     {
-        return count($this->items);
+        return \count($this->items);
     }
 }

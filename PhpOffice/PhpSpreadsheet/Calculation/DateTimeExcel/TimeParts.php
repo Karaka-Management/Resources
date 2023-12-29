@@ -29,13 +29,13 @@ class TimeParts
      */
     public static function hour($timeValue)
     {
-        if (is_array($timeValue)) {
+        if (\is_array($timeValue)) {
             return self::evaluateSingleArgumentArray([self::class, __FUNCTION__], $timeValue);
         }
 
         try {
             Helpers::nullFalseTrueToNumber($timeValue);
-            if (!is_numeric($timeValue)) {
+            if (!\is_numeric($timeValue)) {
                 $timeValue = Helpers::getTimeValue($timeValue);
             }
             Helpers::validateNotNegative($timeValue);
@@ -44,7 +44,7 @@ class TimeParts
         }
 
         // Execute function
-        $timeValue = fmod($timeValue, 1);
+        $timeValue = \fmod($timeValue, 1);
         $timeValue = SharedDateHelper::excelToDateTimeObject($timeValue);
 
         return (int) $timeValue->format('H');
@@ -69,13 +69,13 @@ class TimeParts
      */
     public static function minute($timeValue)
     {
-        if (is_array($timeValue)) {
+        if (\is_array($timeValue)) {
             return self::evaluateSingleArgumentArray([self::class, __FUNCTION__], $timeValue);
         }
 
         try {
             Helpers::nullFalseTrueToNumber($timeValue);
-            if (!is_numeric($timeValue)) {
+            if (!\is_numeric($timeValue)) {
                 $timeValue = Helpers::getTimeValue($timeValue);
             }
             Helpers::validateNotNegative($timeValue);
@@ -84,7 +84,7 @@ class TimeParts
         }
 
         // Execute function
-        $timeValue = fmod($timeValue, 1);
+        $timeValue = \fmod($timeValue, 1);
         $timeValue = SharedDateHelper::excelToDateTimeObject($timeValue);
 
         return (int) $timeValue->format('i');
@@ -109,13 +109,13 @@ class TimeParts
      */
     public static function second($timeValue)
     {
-        if (is_array($timeValue)) {
+        if (\is_array($timeValue)) {
             return self::evaluateSingleArgumentArray([self::class, __FUNCTION__], $timeValue);
         }
 
         try {
             Helpers::nullFalseTrueToNumber($timeValue);
-            if (!is_numeric($timeValue)) {
+            if (!\is_numeric($timeValue)) {
                 $timeValue = Helpers::getTimeValue($timeValue);
             }
             Helpers::validateNotNegative($timeValue);
@@ -124,7 +124,7 @@ class TimeParts
         }
 
         // Execute function
-        $timeValue = fmod($timeValue, 1);
+        $timeValue = \fmod($timeValue, 1);
         $timeValue = SharedDateHelper::excelToDateTimeObject($timeValue);
 
         return (int) $timeValue->format('s');

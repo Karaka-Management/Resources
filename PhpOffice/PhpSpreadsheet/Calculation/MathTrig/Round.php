@@ -24,7 +24,7 @@ class Round
      */
     public static function round($number, $precision)
     {
-        if (is_array($number) || is_array($precision)) {
+        if (\is_array($number) || \is_array($precision)) {
             return self::evaluateArrayArguments([self::class, __FUNCTION__], $number, $precision);
         }
 
@@ -35,7 +35,7 @@ class Round
             return $e->getMessage();
         }
 
-        return round($number, (int) $precision);
+        return \round($number, (int) $precision);
     }
 
     /**
@@ -52,7 +52,7 @@ class Round
      */
     public static function up($number, $digits)
     {
-        if (is_array($number) || is_array($digits)) {
+        if (\is_array($number) || \is_array($digits)) {
             return self::evaluateArrayArguments([self::class, __FUNCTION__], $number, $digits);
         }
 
@@ -68,10 +68,10 @@ class Round
         }
 
         if ($number < 0.0) {
-            return round($number - 0.5 * 0.1 ** $digits, $digits, PHP_ROUND_HALF_DOWN);
+            return \round($number - 0.5 * 0.1 ** $digits, $digits, PHP_ROUND_HALF_DOWN);
         }
 
-        return round($number + 0.5 * 0.1 ** $digits, $digits, PHP_ROUND_HALF_DOWN);
+        return \round($number + 0.5 * 0.1 ** $digits, $digits, PHP_ROUND_HALF_DOWN);
     }
 
     /**
@@ -88,7 +88,7 @@ class Round
      */
     public static function down($number, $digits)
     {
-        if (is_array($number) || is_array($digits)) {
+        if (\is_array($number) || \is_array($digits)) {
             return self::evaluateArrayArguments([self::class, __FUNCTION__], $number, $digits);
         }
 
@@ -104,10 +104,10 @@ class Round
         }
 
         if ($number < 0.0) {
-            return round($number + 0.5 * 0.1 ** $digits, $digits, PHP_ROUND_HALF_UP);
+            return \round($number + 0.5 * 0.1 ** $digits, $digits, PHP_ROUND_HALF_UP);
         }
 
-        return round($number - 0.5 * 0.1 ** $digits, $digits, PHP_ROUND_HALF_UP);
+        return \round($number - 0.5 * 0.1 ** $digits, $digits, PHP_ROUND_HALF_UP);
     }
 
     /**
@@ -124,7 +124,7 @@ class Round
      */
     public static function multiple($number, $multiple)
     {
-        if (is_array($number) || is_array($multiple)) {
+        if (\is_array($number) || \is_array($multiple)) {
             return self::evaluateArrayArguments([self::class, __FUNCTION__], $number, $multiple);
         }
 
@@ -141,7 +141,7 @@ class Round
         if ((Helpers::returnSign($number)) == (Helpers::returnSign($multiple))) {
             $multiplier = 1 / $multiple;
 
-            return round($number * $multiplier) / $multiplier;
+            return \round($number * $multiplier) / $multiplier;
         }
 
         return ExcelError::NAN();
@@ -167,7 +167,7 @@ class Round
      */
     public static function even($number)
     {
-        if (is_array($number)) {
+        if (\is_array($number)) {
             return self::evaluateSingleArgumentArray([self::class, __FUNCTION__], $number);
         }
 
@@ -193,7 +193,7 @@ class Round
      */
     public static function odd($number)
     {
-        if (is_array($number)) {
+        if (\is_array($number)) {
             return self::evaluateSingleArgumentArray([self::class, __FUNCTION__], $number);
         }
 
@@ -208,7 +208,7 @@ class Round
             return 1;
         }
 
-        $result = ceil($number / $significance) * $significance;
+        $result = \ceil($number / $significance) * $significance;
         if ($result == Helpers::getEven($result)) {
             $result += $significance;
         }

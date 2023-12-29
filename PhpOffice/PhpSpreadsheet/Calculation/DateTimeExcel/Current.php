@@ -26,7 +26,7 @@ class Current
      */
     public static function today()
     {
-        $dti = new DateTimeImmutable();
+        $dti = new \DateTimeImmutable();
         $dateArray = Helpers::dateParse($dti->format('c'));
 
         return Helpers::dateParseSucceeded($dateArray) ? Helpers::returnIn3FormatsArray($dateArray, true) : ExcelError::VALUE();
@@ -51,7 +51,7 @@ class Current
      */
     public static function now()
     {
-        $dti = new DateTimeImmutable();
+        $dti = new \DateTimeImmutable();
         $dateArray = Helpers::dateParse($dti->format('c'));
 
         return Helpers::dateParseSucceeded($dateArray) ? Helpers::returnIn3FormatsArray($dateArray) : ExcelError::VALUE();

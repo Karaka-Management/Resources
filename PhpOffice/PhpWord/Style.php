@@ -133,7 +133,7 @@ class Style
      */
     public static function countStyles()
     {
-        return count(self::$styles);
+        return \count(self::$styles);
     }
 
     /**
@@ -199,10 +199,10 @@ class Style
     {
         if (!isset(self::$styles[$name])) {
             if ($value !== null) {
-                if (is_array($value)) {
+                if (\is_array($value)) {
                     $style->setStyleByArray($value);
                 } elseif ($value instanceof AbstractStyle) {
-                    if (get_class($style) == get_class($value)) {
+                    if (\get_class($style) == \get_class($value)) {
                         $style = $value;
                     }
                 }

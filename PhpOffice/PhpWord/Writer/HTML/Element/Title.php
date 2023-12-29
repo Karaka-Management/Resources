@@ -40,7 +40,7 @@ class Title extends AbstractElement
         $tag = 'h' . $this->element->getDepth();
 
         $text = $this->element->getText();
-        if (is_string($text)) {
+        if (\is_string($text)) {
             if (Settings::isOutputEscapingEnabled()) {
                 $text = $this->escaper->escapeHtml($text);
             }

@@ -47,7 +47,7 @@ abstract class AbstractSlide implements ComparableInterface, ShapeContainerInter
     /**
      * Collection of shapes.
      *
-     * @var array<int, AbstractShape>|ArrayObject<int, AbstractShape>
+     * @var array<int, AbstractShape>|\ArrayObject<int, AbstractShape>
      */
     protected $shapeCollection = [];
     /**
@@ -102,7 +102,7 @@ abstract class AbstractSlide implements ComparableInterface, ShapeContainerInter
     /**
      * Get collection of shapes.
      *
-     * @return array<int, AbstractShape>|ArrayObject<int, AbstractShape>
+     * @return array<int, AbstractShape>|\ArrayObject<int, AbstractShape>
      */
     public function getShapeCollection()
     {
@@ -112,7 +112,7 @@ abstract class AbstractSlide implements ComparableInterface, ShapeContainerInter
     /**
      * Get collection of shapes.
      *
-     * @param array<int, AbstractShape>|ArrayObject<int, AbstractShape> $shapeCollection
+     * @param array<int, AbstractShape>|\ArrayObject<int, AbstractShape> $shapeCollection
      *
      * @return AbstractSlide
      */
@@ -198,7 +198,7 @@ abstract class AbstractSlide implements ComparableInterface, ShapeContainerInter
      */
     public function getHashCode(): string
     {
-        return md5($this->identifier . __CLASS__);
+        return \md5($this->identifier . __CLASS__);
     }
 
     /**

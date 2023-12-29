@@ -20,10 +20,10 @@ class Days
      * Excel Function:
      *        DAYS(endDate, startDate)
      *
-     * @param array|DateTimeInterface|float|int|string $endDate Excel date serial value (float),
+     * @param array|\DateTimeInterface|float|int|string $endDate Excel date serial value (float),
      *           PHP date timestamp (integer), PHP DateTime object, or a standard date string
      *                         Or can be an array of date values
-     * @param array|DateTimeInterface|float|int|string $startDate Excel date serial value (float),
+     * @param array|\DateTimeInterface|float|int|string $startDate Excel date serial value (float),
      *           PHP date timestamp (integer), PHP DateTime object, or a standard date string
      *                         Or can be an array of date values
      *
@@ -33,7 +33,7 @@ class Days
      */
     public static function between($endDate, $startDate)
     {
-        if (is_array($endDate) || is_array($startDate)) {
+        if (\is_array($endDate) || \is_array($startDate)) {
             return self::evaluateArrayArguments([self::class, __FUNCTION__], $endDate, $startDate);
         }
 
@@ -50,7 +50,7 @@ class Days
 
         $days = ExcelError::VALUE();
         $diff = $PHPStartDateObject->diff($PHPEndDateObject);
-        if ($diff !== false && !is_bool($diff->days)) {
+        if ($diff !== false && !\is_bool($diff->days)) {
             $days = $diff->days;
             if ($diff->invert) {
                 $days = -$days;

@@ -91,7 +91,7 @@ class Word2007 extends AbstractReader implements ReaderInterface
     private function readPart(PhpWord $phpWord, $relationships, $partName, $docFile, $xmlFile): void
     {
         $partClass = "PhpOffice\\PhpWord\\Reader\\Word2007\\{$partName}";
-        if (class_exists($partClass)) {
+        if (\class_exists($partClass)) {
             /** @var \PhpOffice\PhpWord\Reader\Word2007\AbstractPart $part Type hint */
             $part = new $partClass($docFile, $xmlFile);
             $part->setRels($relationships);
@@ -119,8 +119,8 @@ class Word2007 extends AbstractReader implements ReaderInterface
         if ($zip->open($docFile) === true) {
             for ($i = 0; $i < $zip->numFiles; ++$i) {
                 $xmlFile = $zip->getNameIndex($i);
-                if ((substr($xmlFile, 0, strlen($wordRelsPath))) == $wordRelsPath && (substr($xmlFile, -1)) != '/') {
-                    $docPart = str_replace('.xml.rels', '', str_replace($wordRelsPath, '', $xmlFile));
+                if ((\substr($xmlFile, 0, \strlen($wordRelsPath))) == $wordRelsPath && (\substr($xmlFile, -1)) != '/') {
+                    $docPart = \str_replace('.xml.rels', '', \str_replace($wordRelsPath, '', $xmlFile));
                     $relationships[$docPart] = $this->getRels($docFile, $xmlFile, 'word/');
                 }
             }
@@ -156,9 +156,9 @@ class Word2007 extends AbstractReader implements ReaderInterface
             $mode = $xmlReader->getAttribute('TargetMode', $node);
 
             // Remove URL prefixes from $type to make it easier to read
-            $type = str_replace($metaPrefix, '', $type);
-            $type = str_replace($officePrefix, '', $type);
-            $docPart = str_replace('.xml', '', $target);
+            $type = \str_replace($metaPrefix, '', $type);
+            $type = \str_replace($officePrefix, '', $type);
+            $docPart = \str_replace('.xml', '', $target);
 
             // Do not add prefix to link source
             if ($type != 'hyperlink' && $mode != 'External') {
@@ -168,7 +168,7 @@ class Word2007 extends AbstractReader implements ReaderInterface
             // Push to return array
             $rels[$rId] = ['type' => $type, 'target' => $target, 'docPart' => $docPart, 'targetMode' => $mode];
         }
-        ksort($rels);
+        \ksort($rels);
 
         return $rels;
     }

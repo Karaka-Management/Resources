@@ -32,7 +32,7 @@ class CellFont
 
     public static function underline(Font $font, int $underline): void
     {
-        if (array_key_exists($underline, self::$underlineMap)) {
+        if (\array_key_exists($underline, self::$underlineMap)) {
             $font->setUnderline(self::$underlineMap[$underline]);
         }
     }

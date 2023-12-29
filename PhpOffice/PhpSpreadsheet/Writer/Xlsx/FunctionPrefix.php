@@ -164,7 +164,7 @@ class FunctionPrefix
      */
     protected static function addXlfnPrefix(string $functionString): string
     {
-        return (string) preg_replace(self::XLFNREGEXP, '_xlfn.$1(', $functionString);
+        return (string) \preg_replace(self::XLFNREGEXP, '_xlfn.$1(', $functionString);
     }
 
     /**
@@ -172,7 +172,7 @@ class FunctionPrefix
      */
     protected static function addXlwsPrefix(string $functionString): string
     {
-        return (string) preg_replace(self::XLWSREGEXP, '_xlws.$1(', $functionString);
+        return (string) \preg_replace(self::XLWSREGEXP, '_xlws.$1(', $functionString);
     }
 
     /**
@@ -189,6 +189,6 @@ class FunctionPrefix
      */
     public static function addFunctionPrefixStripEquals(string $functionString): string
     {
-        return self::addFunctionPrefix(substr($functionString, 1));
+        return self::addFunctionPrefix(\substr($functionString, 1));
     }
 }

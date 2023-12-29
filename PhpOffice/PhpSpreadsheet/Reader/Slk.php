@@ -74,17 +74,17 @@ class Slk extends BaseReader
         }
 
         // Read sample data (first 2 KB will do)
-        $data = (string) fread($this->fileHandle, 2048);
+        $data = (string) \fread($this->fileHandle, 2048);
 
         // Count delimiters in file
-        $delimiterCount = substr_count($data, ';');
+        $delimiterCount = \substr_count($data, ';');
         $hasDelimiter = $delimiterCount > 0;
 
         // Analyze first line looking for ID; signature
-        $lines = explode("\n", $data);
-        $hasId = substr($lines[0], 0, 4) === 'ID;P';
+        $lines = \explode("\n", $data);
+        $hasId = \substr($lines[0], 0, 4) === 'ID;P';
 
-        fclose($this->fileHandle);
+        \fclose($this->fileHandle);
 
         return $hasDelimiter && $hasId;
     }
@@ -141,15 +141,15 @@ class Slk extends BaseReader
         // Open file
         $this->canReadOrBust($filename);
         $fileHandle = $this->fileHandle;
-        rewind($fileHandle);
+        \rewind($fileHandle);
 
         $worksheetInfo = [];
-        $worksheetInfo[0]['worksheetName'] = basename($filename, '.slk');
+        $worksheetInfo[0]['worksheetName'] = \basename($filename, '.slk');
 
         // loop through one row (line) at a time in the file
         $rowIndex = 0;
         $columnIndex = 0;
-        while (($rowData = fgets($fileHandle)) !== false) {
+        while (($rowData = \fgets($fileHandle)) !== false) {
             $columnIndex = 0;
 
             // convert SYLK encoded $rowData to UTF-8
@@ -157,18 +157,18 @@ class Slk extends BaseReader
 
             // explode each row at semicolons while taking into account that literal semicolon (;)
             // is escaped like this (;;)
-            $rowData = explode("\t", str_replace('¤', ';', str_replace(';', "\t", str_replace(';;', '¤', rtrim($rowData)))));
+            $rowData = \explode("\t", \str_replace('¤', ';', \str_replace(';', "\t", \str_replace(';;', '¤', \rtrim($rowData)))));
 
-            $dataType = array_shift($rowData);
+            $dataType = \array_shift($rowData);
             if ($dataType == 'B') {
                 foreach ($rowData as $rowDatum) {
                     switch ($rowDatum[0]) {
                         case 'X':
-                            $columnIndex = (int) substr($rowDatum, 1) - 1;
+                            $columnIndex = (int) \substr($rowDatum, 1) - 1;
 
                             break;
                         case 'Y':
-                            $rowIndex = substr($rowDatum, 1);
+                            $rowIndex = \substr($rowDatum, 1);
 
                             break;
                     }
@@ -184,7 +184,7 @@ class Slk extends BaseReader
         $worksheetInfo[0]['totalColumns'] = $worksheetInfo[0]['lastColumnIndex'] + 1;
 
         // Close file
-        fclose($fileHandle);
+        \fclose($fileHandle);
 
         return $worksheetInfo;
     }
@@ -220,19 +220,19 @@ class Slk extends BaseReader
 
     private function processFormula(string $rowDatum, bool &$hasCalculatedValue, string &$cellDataFormula, string $row, string $column): void
     {
-        $cellDataFormula = '=' . substr($rowDatum, 1);
+        $cellDataFormula = '=' . \substr($rowDatum, 1);
         //    Convert R1C1 style references to A1 style references (but only when not quoted)
-        $temp = explode('"', $cellDataFormula);
+        $temp = \explode('"', $cellDataFormula);
         $key = false;
         foreach ($temp as &$value) {
             //    Only count/replace in alternate array entries
             $key = $key === false;
             if ($key) {
-                preg_match_all('/(R(\[?-?\d*\]?))(C(\[?-?\d*\]?))/', $value, $cellReferences, PREG_SET_ORDER + PREG_OFFSET_CAPTURE);
+                \preg_match_all('/(R(\[?-?\d*\]?))(C(\[?-?\d*\]?))/', $value, $cellReferences, PREG_SET_ORDER + PREG_OFFSET_CAPTURE);
                 //    Reverse the matches array, otherwise all our offsets will become incorrect if we modify our way
                 //        through the formula from left to right. Reversing means that we work right to left.through
                 //        the formula
-                $cellReferences = array_reverse($cellReferences);
+                $cellReferences = \array_reverse($cellReferences);
                 //    Loop through each R1C1 style reference in turn, converting it to its A1 style equivalent,
                 //        then modify the formula to use that new reference
                 foreach ($cellReferences as $cellReference) {
@@ -243,7 +243,7 @@ class Slk extends BaseReader
                     }
                     //    Bracketed R references are relative to the current row
                     if ($rowReference[0] == '[') {
-                        $rowReference = (int) $row + (int) trim($rowReference, '[]');
+                        $rowReference = (int) $row + (int) \trim($rowReference, '[]');
                     }
                     $columnReference = $cellReference[4][0];
                     //    Empty C reference is the current column
@@ -252,17 +252,17 @@ class Slk extends BaseReader
                     }
                     //    Bracketed C references are relative to the current column
                     if ($columnReference[0] == '[') {
-                        $columnReference = (int) $column + (int) trim($columnReference, '[]');
+                        $columnReference = (int) $column + (int) \trim($columnReference, '[]');
                     }
                     $A1CellReference = Coordinate::stringFromColumnIndex((int) $columnReference) . $rowReference;
 
-                    $value = substr_replace($value, $A1CellReference, $cellReference[0][1], strlen($cellReference[0][0]));
+                    $value = \substr_replace($value, $A1CellReference, $cellReference[0][1], \strlen($cellReference[0][0]));
                 }
             }
         }
         unset($value);
         //    Then rebuild the formula string
-        $cellDataFormula = implode('"', $temp);
+        $cellDataFormula = \implode('"', $temp);
         $hasCalculatedValue = true;
     }
 
@@ -275,16 +275,16 @@ class Slk extends BaseReader
             switch ($rowDatum[0]) {
                 case 'C':
                 case 'X':
-                    $column = substr($rowDatum, 1);
+                    $column = \substr($rowDatum, 1);
 
                     break;
                 case 'R':
                 case 'Y':
-                    $row = substr($rowDatum, 1);
+                    $row = \substr($rowDatum, 1);
 
                     break;
                 case 'K':
-                    $cellData = substr($rowDatum, 1);
+                    $cellData = \substr($rowDatum, 1);
 
                     break;
                 case 'E':
@@ -292,7 +292,7 @@ class Slk extends BaseReader
 
                     break;
                 case 'A':
-                    $comment = substr($rowDatum, 1);
+                    $comment = \substr($rowDatum, 1);
                     $columnLetter = Coordinate::stringFromColumnIndex((int) $column);
                     $spreadsheet->getActiveSheet()
                         ->getComment("$columnLetter$row")
@@ -330,12 +330,12 @@ class Slk extends BaseReader
             switch ($rowDatum[0]) {
                 case 'C':
                 case 'X':
-                    $column = substr($rowDatum, 1);
+                    $column = \substr($rowDatum, 1);
 
                     break;
                 case 'R':
                 case 'Y':
-                    $row = substr($rowDatum, 1);
+                    $row = \substr($rowDatum, 1);
 
                     break;
                 case 'P':
@@ -343,7 +343,7 @@ class Slk extends BaseReader
 
                     break;
                 case 'W':
-                    [$startCol, $endCol, $columnWidth] = explode(' ', substr($rowDatum, 1));
+                    [$startCol, $endCol, $columnWidth] = \explode(' ', \substr($rowDatum, 1));
 
                     break;
                 case 'S':
@@ -369,18 +369,18 @@ class Slk extends BaseReader
 
     private function styleSettings(string $rowDatum, array &$styleData, string &$fontStyle): void
     {
-        $styleSettings = substr($rowDatum, 1);
-        $iMax = strlen($styleSettings);
+        $styleSettings = \substr($rowDatum, 1);
+        $iMax = \strlen($styleSettings);
         for ($i = 0; $i < $iMax; ++$i) {
             $char = $styleSettings[$i];
-            if (array_key_exists($char, self::STYLE_SETTINGS_FONT)) {
+            if (\array_key_exists($char, self::STYLE_SETTINGS_FONT)) {
                 $styleData['font'][self::STYLE_SETTINGS_FONT[$char]] = true;
-            } elseif (array_key_exists($char, self::STYLE_SETTINGS_BORDER)) {
+            } elseif (\array_key_exists($char, self::STYLE_SETTINGS_BORDER)) {
                 $styleData['borders'][self::STYLE_SETTINGS_BORDER[$char]]['borderStyle'] = Border::BORDER_THIN;
             } elseif ($char == 'S') {
                 $styleData['fill']['fillType'] = \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_PATTERN_GRAY125;
             } elseif ($char == 'M') {
-                if (preg_match('/M([1-9]\\d*)/', $styleSettings, $matches)) {
+                if (\preg_match('/M([1-9]\\d*)/', $styleSettings, $matches)) {
                     $fontStyle = $matches[1];
                 }
             }
@@ -441,16 +441,16 @@ class Slk extends BaseReader
         foreach ($rowData as $rowDatum) {
             switch ($rowDatum[0]) {
                 case 'P':
-                    $formatArray['numberFormat']['formatCode'] = str_replace($fromFormats, $toFormats, substr($rowDatum, 1));
+                    $formatArray['numberFormat']['formatCode'] = \str_replace($fromFormats, $toFormats, \substr($rowDatum, 1));
 
                     break;
                 case 'E':
                 case 'F':
-                    $formatArray['font']['name'] = substr($rowDatum, 1);
+                    $formatArray['font']['name'] = \substr($rowDatum, 1);
 
                     break;
                 case 'M':
-                    $formatArray['font']['size'] = ((float) substr($rowDatum, 1)) / 20;
+                    $formatArray['font']['size'] = ((float) \substr($rowDatum, 1)) / 20;
 
                     break;
                 case 'L':
@@ -468,7 +468,7 @@ class Slk extends BaseReader
 
     private function processPColors(string $rowDatum, array &$formatArray): void
     {
-        if (preg_match('/L([1-9]\\d*)/', $rowDatum, $matches)) {
+        if (\preg_match('/L([1-9]\\d*)/', $rowDatum, $matches)) {
             $fontColor = $matches[1] % 8;
             $formatArray['font']['color']['argb'] = self::COLOR_ARRAY[$fontColor];
         }
@@ -476,10 +476,10 @@ class Slk extends BaseReader
 
     private function processPFontStyles(string $rowDatum, array &$formatArray): void
     {
-        $styleSettings = substr($rowDatum, 1);
-        $iMax = strlen($styleSettings);
+        $styleSettings = \substr($rowDatum, 1);
+        $iMax = \strlen($styleSettings);
         for ($i = 0; $i < $iMax; ++$i) {
-            if (array_key_exists($styleSettings[$i], self::FONT_STYLE_MAPPINGS)) {
+            if (\array_key_exists($styleSettings[$i], self::FONT_STYLE_MAPPINGS)) {
                 $formatArray['font'][self::FONT_STYLE_MAPPINGS[$styleSettings[$i]]] = true;
             }
         }
@@ -487,10 +487,10 @@ class Slk extends BaseReader
 
     private function processPFinal(Spreadsheet &$spreadsheet, array $formatArray): void
     {
-        if (array_key_exists('numberFormat', $formatArray)) {
+        if (\array_key_exists('numberFormat', $formatArray)) {
             $this->formats['P' . $this->format] = $formatArray;
             ++$this->format;
-        } elseif (array_key_exists('font', $formatArray)) {
+        } elseif (\array_key_exists('font', $formatArray)) {
             ++$this->fontcount;
             $this->fonts[$this->fontcount] = $formatArray;
             if ($this->fontcount === 1) {
@@ -511,28 +511,28 @@ class Slk extends BaseReader
         // Open file
         $this->canReadOrBust($filename);
         $fileHandle = $this->fileHandle;
-        rewind($fileHandle);
+        \rewind($fileHandle);
 
         // Create new Worksheets
         while ($spreadsheet->getSheetCount() <= $this->sheetIndex) {
             $spreadsheet->createSheet();
         }
         $spreadsheet->setActiveSheetIndex($this->sheetIndex);
-        $spreadsheet->getActiveSheet()->setTitle(substr(basename($filename, '.slk'), 0, Worksheet::SHEET_TITLE_MAXIMUM_LENGTH));
+        $spreadsheet->getActiveSheet()->setTitle(\substr(\basename($filename, '.slk'), 0, Worksheet::SHEET_TITLE_MAXIMUM_LENGTH));
 
         // Loop through file
         $column = $row = '';
 
         // loop through one row (line) at a time in the file
-        while (($rowDataTxt = fgets($fileHandle)) !== false) {
+        while (($rowDataTxt = \fgets($fileHandle)) !== false) {
             // convert SYLK encoded $rowData to UTF-8
             $rowDataTxt = StringHelper::SYLKtoUTF8($rowDataTxt);
 
             // explode each row at semicolons while taking into account that literal semicolon (;)
             // is escaped like this (;;)
-            $rowData = explode("\t", str_replace('¤', ';', str_replace(';', "\t", str_replace(';;', '¤', rtrim($rowDataTxt)))));
+            $rowData = \explode("\t", \str_replace('¤', ';', \str_replace(';', "\t", \str_replace(';;', '¤', \rtrim($rowDataTxt)))));
 
-            $dataType = array_shift($rowData);
+            $dataType = \array_shift($rowData);
             if ($dataType == 'P') {
                 //    Read shared styles
                 $this->processPRecord($rowData, $spreadsheet);
@@ -548,7 +548,7 @@ class Slk extends BaseReader
         }
 
         // Close file
-        fclose($fileHandle);
+        \fclose($fileHandle);
 
         // Return
         return $spreadsheet;
@@ -559,9 +559,9 @@ class Slk extends BaseReader
         foreach ($rowData as $rowDatum) {
             $char0 = $rowDatum[0];
             if ($char0 === 'X' || $char0 == 'C') {
-                $column = substr($rowDatum, 1);
+                $column = \substr($rowDatum, 1);
             } elseif ($char0 === 'Y' || $char0 == 'R') {
-                $row = substr($rowDatum, 1);
+                $row = \substr($rowDatum, 1);
             }
         }
     }

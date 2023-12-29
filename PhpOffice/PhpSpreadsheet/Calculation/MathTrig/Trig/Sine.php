@@ -23,7 +23,7 @@ class Sine
      */
     public static function sin($angle)
     {
-        if (is_array($angle)) {
+        if (\is_array($angle)) {
             return self::evaluateSingleArgumentArray([self::class, __FUNCTION__], $angle);
         }
 
@@ -33,7 +33,7 @@ class Sine
             return $e->getMessage();
         }
 
-        return sin($angle);
+        return \sin($angle);
     }
 
     /**
@@ -49,7 +49,7 @@ class Sine
      */
     public static function sinh($angle)
     {
-        if (is_array($angle)) {
+        if (\is_array($angle)) {
             return self::evaluateSingleArgumentArray([self::class, __FUNCTION__], $angle);
         }
 
@@ -59,7 +59,7 @@ class Sine
             return $e->getMessage();
         }
 
-        return sinh($angle);
+        return \sinh($angle);
     }
 
     /**
@@ -75,7 +75,7 @@ class Sine
      */
     public static function asin($number)
     {
-        if (is_array($number)) {
+        if (\is_array($number)) {
             return self::evaluateSingleArgumentArray([self::class, __FUNCTION__], $number);
         }
 
@@ -85,7 +85,7 @@ class Sine
             return $e->getMessage();
         }
 
-        return Helpers::numberOrNan(asin($number));
+        return Helpers::numberOrNan(\asin($number));
     }
 
     /**
@@ -101,7 +101,7 @@ class Sine
      */
     public static function asinh($number)
     {
-        if (is_array($number)) {
+        if (\is_array($number)) {
             return self::evaluateSingleArgumentArray([self::class, __FUNCTION__], $number);
         }
 
@@ -111,6 +111,6 @@ class Sine
             return $e->getMessage();
         }
 
-        return Helpers::numberOrNan(asinh($number));
+        return Helpers::numberOrNan(\asinh($number));
     }
 }

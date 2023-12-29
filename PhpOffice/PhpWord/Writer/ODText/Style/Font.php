@@ -35,7 +35,7 @@ class Font extends AbstractStyle
         }
         $xmlWriter = $this->getXmlWriter();
 
-        $stylep = (method_exists($style, 'getParagraph')) ? $style->getParagraph() : null;
+        $stylep = (\method_exists($style, 'getParagraph')) ? $style->getParagraph() : null;
         if ($stylep instanceof \PhpOffice\PhpWord\Style\Paragraph) {
             $temp1 = clone $stylep;
             $temp1->setStyleName($style->getStyleName());
@@ -55,9 +55,9 @@ class Font extends AbstractStyle
         $size = $style->getSize();
 
         // Size
-        $xmlWriter->writeAttributeIf(is_numeric($size), 'fo:font-size', $size . 'pt');
-        $xmlWriter->writeAttributeIf(is_numeric($size), 'style:font-size-asian', $size . 'pt');
-        $xmlWriter->writeAttributeIf(is_numeric($size), 'style:font-size-complex', $size . 'pt');
+        $xmlWriter->writeAttributeIf(\is_numeric($size), 'fo:font-size', $size . 'pt');
+        $xmlWriter->writeAttributeIf(\is_numeric($size), 'style:font-size-asian', $size . 'pt');
+        $xmlWriter->writeAttributeIf(\is_numeric($size), 'style:font-size-complex', $size . 'pt');
 
         // Color
         $color = $style->getColor();

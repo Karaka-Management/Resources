@@ -81,7 +81,7 @@ class TCPDF extends AbstractRenderer implements WriterInterface
         $pdf->SetCreator($docProps->getCreator());
 
         //  Write to file
-        fwrite($fileHandle, $pdf->Output($filename, 'S'));
+        \fwrite($fileHandle, $pdf->Output($filename, 'S'));
 
         parent::restoreStateAfterSave($fileHandle);
     }

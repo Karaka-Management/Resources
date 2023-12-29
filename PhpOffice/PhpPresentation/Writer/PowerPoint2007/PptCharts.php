@@ -60,11 +60,11 @@ class PptCharts extends AbstractDecoratorWriter
 
                 if ($shape->hasIncludedSpreadsheet()) {
                     $this->getZip()->addFromString('ppt/charts/_rels/' . $shape->getIndexedFilename() . '.rels', $this->writeChartRelationships($shape));
-                    $pFilename = tempnam(sys_get_temp_dir(), 'PhpSpreadsheet');
+                    $pFilename = \tempnam(\sys_get_temp_dir(), 'PhpSpreadsheet');
                     $this->getZip()->addFromString('ppt/embeddings/' . $shape->getIndexedFilename() . '.xlsx', $this->writeSpreadsheet($this->getPresentation(), $shape, $pFilename . '.xlsx'));
 
                     // remove temp file
-                    if (false === @unlink($pFilename)) {
+                    if (false === @\unlink($pFilename)) {
                         throw new FileRemoveException($pFilename);
                     }
                 }
@@ -239,7 +239,7 @@ class PptCharts extends AbstractDecoratorWriter
 
         // Set properties
         $title = $chart->getTitle()->getText();
-        if (0 == strlen($title)) {
+        if (0 == \strlen($title)) {
             $title = 'Chart';
         }
         $spreadsheet->getProperties()
@@ -260,15 +260,15 @@ class PptCharts extends AbstractDecoratorWriter
             $sheet->setCellValueByColumnAndRow(1 + $seriesIndex, 1, $series->getTitle());
 
             // X-axis
-            $axisXData = array_keys($series->getValues());
-            $numAxisXData = count($axisXData);
+            $axisXData = \array_keys($series->getValues());
+            $numAxisXData = \count($axisXData);
             for ($i = 0; $i < $numAxisXData; ++$i) {
                 $sheet->setCellValueByColumnAndRow(0, $i + 2, $axisXData[$i]);
             }
 
             // Y-axis
-            $axisYData = array_values($series->getValues());
-            $numAxisYData = count($axisYData);
+            $axisYData = \array_values($series->getValues());
+            $numAxisYData = \count($axisYData);
             for ($i = 0; $i < $numAxisYData; ++$i) {
                 $sheet->setCellValueByColumnAndRow(1 + $seriesIndex, $i + 2, $axisYData[$i]);
             }
@@ -281,8 +281,8 @@ class PptCharts extends AbstractDecoratorWriter
         $writer->save($tempName);
 
         // Load file in memory
-        $returnValue = file_get_contents($tempName);
-        if (false === @unlink($tempName)) {
+        $returnValue = \file_get_contents($tempName);
+        if (false === @\unlink($tempName)) {
             throw new FileRemoveException($tempName);
         }
 
@@ -351,16 +351,16 @@ class PptCharts extends AbstractDecoratorWriter
         // c:strLit / c:numLit
         // c:strRef / c:numRef
         $referenceType = ($isReference ? 'Ref' : 'Lit');
-        $dataType = is_numeric($values[0]) ? 'num' : 'str';
+        $dataType = \is_numeric($values[0]) ? 'num' : 'str';
         $objWriter->startElement('c:' . $dataType . $referenceType);
 
-        $numValues = count($values);
+        $numValues = \count($values);
         if (!$isReference) {
             // Value
 
             // c:ptCount
             $objWriter->startElement('c:ptCount');
-            $objWriter->writeAttribute('val', count($values));
+            $objWriter->writeAttribute('val', \count($values));
             $objWriter->endElement();
 
             // Add points
@@ -368,7 +368,7 @@ class PptCharts extends AbstractDecoratorWriter
                 // c:pt
                 $objWriter->startElement('c:pt');
                 $objWriter->writeAttribute('idx', $i);
-                $objWriter->writeElement('c:v', strval($values[$i]));
+                $objWriter->writeElement('c:v', \strval($values[$i]));
                 $objWriter->endElement();
             }
         } else {
@@ -378,7 +378,7 @@ class PptCharts extends AbstractDecoratorWriter
 
             // c:ptCount
             $objWriter->startElement('c:ptCount');
-            $objWriter->writeAttribute('val', count($values));
+            $objWriter->writeAttribute('val', \count($values));
             $objWriter->endElement();
 
             // Add points
@@ -386,7 +386,7 @@ class PptCharts extends AbstractDecoratorWriter
                 // c:pt
                 $objWriter->startElement('c:pt');
                 $objWriter->writeAttribute('idx', $i);
-                $objWriter->writeElement('c:v', strval($values[$i]));
+                $objWriter->writeElement('c:v', \strval($values[$i]));
                 $objWriter->endElement();
             }
 
@@ -763,19 +763,19 @@ class PptCharts extends AbstractDecoratorWriter
             }
 
             // Write X axis data
-            $axisXData = array_keys($series->getValues());
+            $axisXData = \array_keys($series->getValues());
 
             // c:cat
             $objWriter->startElement('c:cat');
-            $this->writeMultipleValuesOrReference($objWriter, $includeSheet, $axisXData, 'Sheet1!$A$2:$A$' . (1 + count($axisXData)));
+            $this->writeMultipleValuesOrReference($objWriter, $includeSheet, $axisXData, 'Sheet1!$A$2:$A$' . (1 + \count($axisXData)));
             $objWriter->endElement();
 
             // Write Y axis data
-            $axisYData = array_values($series->getValues());
+            $axisYData = \array_values($series->getValues());
 
             // c:val
             $objWriter->startElement('c:val');
-            $coords = ($includeSheet ? 'Sheet1!$' . Coordinate::stringFromColumnIndex($seriesIndex + 1) . '$2:$' . Coordinate::stringFromColumnIndex($seriesIndex + 1) . '$' . (1 + count($axisYData)) : '');
+            $coords = ($includeSheet ? 'Sheet1!$' . Coordinate::stringFromColumnIndex($seriesIndex + 1) . '$2:$' . Coordinate::stringFromColumnIndex($seriesIndex + 1) . '$' . (1 + \count($axisYData)) : '');
             $this->writeMultipleValuesOrReference($objWriter, $includeSheet, $axisYData, $coords);
             $objWriter->endElement();
 
@@ -961,19 +961,19 @@ class PptCharts extends AbstractDecoratorWriter
             }
 
             // Write X axis data
-            $axisXData = array_keys($series->getValues());
+            $axisXData = \array_keys($series->getValues());
 
             // c:cat
             $objWriter->startElement('c:cat');
-            $this->writeMultipleValuesOrReference($objWriter, $includeSheet, $axisXData, 'Sheet1!$A$2:$A$' . (1 + count($axisXData)));
+            $this->writeMultipleValuesOrReference($objWriter, $includeSheet, $axisXData, 'Sheet1!$A$2:$A$' . (1 + \count($axisXData)));
             $objWriter->endElement();
 
             // Write Y axis data
-            $axisYData = array_values($series->getValues());
+            $axisYData = \array_values($series->getValues());
 
             // c:val
             $objWriter->startElement('c:val');
-            $coords = ($includeSheet ? 'Sheet1!$' . Coordinate::stringFromColumnIndex($seriesIndex + 1) . '$2:$' . Coordinate::stringFromColumnIndex($seriesIndex + 1) . '$' . (1 + count($axisYData)) : '');
+            $coords = ($includeSheet ? 'Sheet1!$' . Coordinate::stringFromColumnIndex($seriesIndex + 1) . '$2:$' . Coordinate::stringFromColumnIndex($seriesIndex + 1) . '$' . (1 + \count($axisYData)) : '');
             $this->writeMultipleValuesOrReference($objWriter, $includeSheet, $axisYData, $coords);
             $objWriter->endElement();
 
@@ -1158,19 +1158,19 @@ class PptCharts extends AbstractDecoratorWriter
             }
 
             // Write X axis data
-            $axisXData = array_keys($series->getValues());
+            $axisXData = \array_keys($series->getValues());
 
             // c:cat
             $objWriter->startElement('c:cat');
-            $this->writeMultipleValuesOrReference($objWriter, $includeSheet, $axisXData, 'Sheet1!$A$2:$A$' . (1 + count($axisXData)));
+            $this->writeMultipleValuesOrReference($objWriter, $includeSheet, $axisXData, 'Sheet1!$A$2:$A$' . (1 + \count($axisXData)));
             $objWriter->endElement();
 
             // Write Y axis data
-            $axisYData = array_values($series->getValues());
+            $axisYData = \array_values($series->getValues());
 
             // c:val
             $objWriter->startElement('c:val');
-            $coords = ($includeSheet ? 'Sheet1!$' . Coordinate::stringFromColumnIndex($seriesIndex + 1) . '$2:$' . Coordinate::stringFromColumnIndex($seriesIndex + 1) . '$' . (1 + count($axisYData)) : '');
+            $coords = ($includeSheet ? 'Sheet1!$' . Coordinate::stringFromColumnIndex($seriesIndex + 1) . '$2:$' . Coordinate::stringFromColumnIndex($seriesIndex + 1) . '$' . (1 + \count($axisYData)) : '');
             $this->writeMultipleValuesOrReference($objWriter, $includeSheet, $axisYData, $coords);
             $objWriter->endElement();
 
@@ -1257,19 +1257,19 @@ class PptCharts extends AbstractDecoratorWriter
             }
 
             // Write X axis data
-            $axisXData = array_keys($series->getValues());
+            $axisXData = \array_keys($series->getValues());
 
             // c:cat
             $objWriter->startElement('c:cat');
-            $this->writeMultipleValuesOrReference($objWriter, $includeSheet, $axisXData, 'Sheet1!$A$2:$A$' . (1 + count($axisXData)));
+            $this->writeMultipleValuesOrReference($objWriter, $includeSheet, $axisXData, 'Sheet1!$A$2:$A$' . (1 + \count($axisXData)));
             $objWriter->endElement();
 
             // Write Y axis data
-            $axisYData = array_values($series->getValues());
+            $axisYData = \array_values($series->getValues());
 
             // c:val
             $objWriter->startElement('c:val');
-            $coords = ($includeSheet ? 'Sheet1!$' . Coordinate::stringFromColumnIndex($seriesIndex + 1) . '$2:$' . Coordinate::stringFromColumnIndex($seriesIndex + 1) . '$' . (1 + count($axisYData)) : '');
+            $coords = ($includeSheet ? 'Sheet1!$' . Coordinate::stringFromColumnIndex($seriesIndex + 1) . '$2:$' . Coordinate::stringFromColumnIndex($seriesIndex + 1) . '$' . (1 + \count($axisYData)) : '');
             $this->writeMultipleValuesOrReference($objWriter, $includeSheet, $axisYData, $coords);
             $objWriter->endElement();
 
@@ -1278,7 +1278,7 @@ class PptCharts extends AbstractDecoratorWriter
             ++$seriesIndex;
         }
 
-        if (isset($series) && is_object($series) && $series instanceof Chart\Series) {
+        if (isset($series) && \is_object($series) && $series instanceof Chart\Series) {
             // c:dLbls
             $objWriter->startElement('c:dLbls');
 
@@ -1502,19 +1502,19 @@ class PptCharts extends AbstractDecoratorWriter
             $objWriter->endElement();
 
             // Write X axis data
-            $axisXData = array_keys($series->getValues());
+            $axisXData = \array_keys($series->getValues());
 
             // c:cat
             $objWriter->startElement('c:cat');
-            $this->writeMultipleValuesOrReference($objWriter, $includeSheet, $axisXData, 'Sheet1!$A$2:$A$' . (1 + count($axisXData)));
+            $this->writeMultipleValuesOrReference($objWriter, $includeSheet, $axisXData, 'Sheet1!$A$2:$A$' . (1 + \count($axisXData)));
             $objWriter->endElement();
 
             // Write Y axis data
-            $axisYData = array_values($series->getValues());
+            $axisYData = \array_values($series->getValues());
 
             // c:val
             $objWriter->startElement('c:val');
-            $coords = ($includeSheet ? 'Sheet1!$' . Coordinate::stringFromColumnIndex($seriesIndex + 1) . '$2:$' . Coordinate::stringFromColumnIndex($seriesIndex + 1) . '$' . (1 + count($axisYData)) : '');
+            $coords = ($includeSheet ? 'Sheet1!$' . Coordinate::stringFromColumnIndex($seriesIndex + 1) . '$2:$' . Coordinate::stringFromColumnIndex($seriesIndex + 1) . '$' . (1 + \count($axisYData)) : '');
             $this->writeMultipleValuesOrReference($objWriter, $includeSheet, $axisYData, $coords);
             $objWriter->endElement();
 
@@ -1661,19 +1661,19 @@ class PptCharts extends AbstractDecoratorWriter
             $objWriter->endElement();
 
             // Write X axis data
-            $axisXData = array_keys($series->getValues());
+            $axisXData = \array_keys($series->getValues());
 
             // c:cat
             $objWriter->startElement('c:cat');
-            $this->writeMultipleValuesOrReference($objWriter, $includeSheet, $axisXData, 'Sheet1!$A$2:$A$' . (1 + count($axisXData)));
+            $this->writeMultipleValuesOrReference($objWriter, $includeSheet, $axisXData, 'Sheet1!$A$2:$A$' . (1 + \count($axisXData)));
             $objWriter->endElement();
 
             // Write Y axis data
-            $axisYData = array_values($series->getValues());
+            $axisYData = \array_values($series->getValues());
 
             // c:val
             $objWriter->startElement('c:val');
-            $coords = ($includeSheet ? 'Sheet1!$' . Coordinate::stringFromColumnIndex($seriesIndex + 1) . '$2:$' . Coordinate::stringFromColumnIndex($seriesIndex + 1) . '$' . (1 + count($axisYData)) : '');
+            $coords = ($includeSheet ? 'Sheet1!$' . Coordinate::stringFromColumnIndex($seriesIndex + 1) . '$2:$' . Coordinate::stringFromColumnIndex($seriesIndex + 1) . '$' . (1 + \count($axisYData)) : '');
             $this->writeMultipleValuesOrReference($objWriter, $includeSheet, $axisYData, $coords);
             $objWriter->endElement();
 
@@ -1810,19 +1810,19 @@ class PptCharts extends AbstractDecoratorWriter
             $objWriter->endElement();
 
             // Write X axis data
-            $axisXData = array_keys($series->getValues());
+            $axisXData = \array_keys($series->getValues());
 
             // c:cat
             $objWriter->startElement('c:cat');
-            $this->writeMultipleValuesOrReference($objWriter, $includeSheet, $axisXData, 'Sheet1!$A$2:$A$' . (1 + count($axisXData)));
+            $this->writeMultipleValuesOrReference($objWriter, $includeSheet, $axisXData, 'Sheet1!$A$2:$A$' . (1 + \count($axisXData)));
             $objWriter->endElement();
 
             // Write Y axis data
-            $axisYData = array_values($series->getValues());
+            $axisYData = \array_values($series->getValues());
 
             // c:val
             $objWriter->startElement('c:val');
-            $coords = ($includeSheet ? 'Sheet1!$' . Coordinate::stringFromColumnIndex($seriesIndex + 1) . '$2:$' . Coordinate::stringFromColumnIndex($seriesIndex + 1) . '$' . (1 + count($axisYData)) : '');
+            $coords = ($includeSheet ? 'Sheet1!$' . Coordinate::stringFromColumnIndex($seriesIndex + 1) . '$2:$' . Coordinate::stringFromColumnIndex($seriesIndex + 1) . '$' . (1 + \count($axisYData)) : '');
             $this->writeMultipleValuesOrReference($objWriter, $includeSheet, $axisYData, $coords);
             $objWriter->endElement();
 
@@ -1986,19 +1986,19 @@ class PptCharts extends AbstractDecoratorWriter
             $objWriter->endElement();
 
             // Write X axis data
-            $axisXData = array_keys($series->getValues());
+            $axisXData = \array_keys($series->getValues());
 
             // c:cat
             $objWriter->startElement('c:cat');
-            $this->writeMultipleValuesOrReference($objWriter, $includeSheet, $axisXData, 'Sheet1!$A$2:$A$' . (1 + count($axisXData)));
+            $this->writeMultipleValuesOrReference($objWriter, $includeSheet, $axisXData, 'Sheet1!$A$2:$A$' . (1 + \count($axisXData)));
             $objWriter->endElement();
 
             // Write Y axis data
-            $axisYData = array_values($series->getValues());
+            $axisYData = \array_values($series->getValues());
 
             // c:val
             $objWriter->startElement('c:val');
-            $coords = ($includeSheet ? 'Sheet1!$' . Coordinate::stringFromColumnIndex($seriesIndex + 1) . '$2:$' . Coordinate::stringFromColumnIndex($seriesIndex + 1) . '$' . (1 + count($axisYData)) : '');
+            $coords = ($includeSheet ? 'Sheet1!$' . Coordinate::stringFromColumnIndex($seriesIndex + 1) . '$2:$' . Coordinate::stringFromColumnIndex($seriesIndex + 1) . '$' . (1 + \count($axisYData)) : '');
             $this->writeMultipleValuesOrReference($objWriter, $includeSheet, $axisYData, $coords);
             $objWriter->endElement();
 
@@ -2164,19 +2164,19 @@ class PptCharts extends AbstractDecoratorWriter
             $objWriter->endElement();
 
             // Write X axis data
-            $axisXData = array_keys($series->getValues());
+            $axisXData = \array_keys($series->getValues());
 
             // c:xVal
             $objWriter->startElement('c:xVal');
-            $this->writeMultipleValuesOrReference($objWriter, $includeSheet, $axisXData, 'Sheet1!$A$2:$A$' . (1 + count($axisXData)));
+            $this->writeMultipleValuesOrReference($objWriter, $includeSheet, $axisXData, 'Sheet1!$A$2:$A$' . (1 + \count($axisXData)));
             $objWriter->endElement();
 
             // Write Y axis data
-            $axisYData = array_values($series->getValues());
+            $axisYData = \array_values($series->getValues());
 
             // c:yVal
             $objWriter->startElement('c:yVal');
-            $coords = ($includeSheet ? 'Sheet1!$' . Coordinate::stringFromColumnIndex($seriesIndex + 1) . '$2:$' . Coordinate::stringFromColumnIndex($seriesIndex + 1) . '$' . (1 + count($axisYData)) : '');
+            $coords = ($includeSheet ? 'Sheet1!$' . Coordinate::stringFromColumnIndex($seriesIndex + 1) . '$2:$' . Coordinate::stringFromColumnIndex($seriesIndex + 1) . '$' . (1 + \count($axisYData)) : '');
             $this->writeMultipleValuesOrReference($objWriter, $includeSheet, $axisYData, $coords);
             $objWriter->endElement();
 
@@ -2480,7 +2480,7 @@ class PptCharts extends AbstractDecoratorWriter
         $objWriter->endElement();
 
         // c:crosses "autoZero" | "min" | "max" | custom string value
-        if (in_array($crossesAt, ['autoZero', 'min', 'max'])) {
+        if (\in_array($crossesAt, ['autoZero', 'min', 'max'])) {
             $objWriter->startElement('c:crosses');
             $objWriter->writeAttribute('val', $crossesAt);
             $objWriter->endElement();

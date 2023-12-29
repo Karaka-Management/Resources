@@ -132,17 +132,17 @@ class Functions
 
     public static function isMatrixValue($idx)
     {
-        return (substr_count($idx, '.') <= 1) || (preg_match('/\.[A-Z]/', $idx) > 0);
+        return (\substr_count($idx, '.') <= 1) || (\preg_match('/\.[A-Z]/', $idx) > 0);
     }
 
     public static function isValue($idx)
     {
-        return substr_count($idx, '.') === 0;
+        return \substr_count($idx, '.') === 0;
     }
 
     public static function isCellValue($idx)
     {
-        return substr_count($idx, '.') > 1;
+        return \substr_count($idx, '.') > 1;
     }
 
     public static function ifCondition($condition)
@@ -152,45 +152,45 @@ class Functions
         if ($condition === '') {
             return '=""';
         }
-        if (!is_string($condition) || !in_array($condition[0], ['>', '<', '='], true)) {
+        if (!\is_string($condition) || !\in_array($condition[0], ['>', '<', '='], true)) {
             $condition = self::operandSpecialHandling($condition);
-            if (is_bool($condition)) {
+            if (\is_bool($condition)) {
                 return '=' . ($condition ? 'TRUE' : 'FALSE');
-            } elseif (!is_numeric($condition)) {
+            } elseif (!\is_numeric($condition)) {
                 if ($condition !== '""') { // Not an empty string
                     // Escape any quotes in the string value
-                    $condition = (string) preg_replace('/"/ui', '""', $condition);
+                    $condition = (string) \preg_replace('/"/ui', '""', $condition);
                 }
-                $condition = Calculation::wrapResult(strtoupper($condition));
+                $condition = Calculation::wrapResult(\strtoupper($condition));
             }
 
-            return str_replace('""""', '""', '=' . $condition);
+            return \str_replace('""""', '""', '=' . $condition);
         }
-        preg_match('/(=|<[>=]?|>=?)(.*)/', $condition, $matches);
+        \preg_match('/(=|<[>=]?|>=?)(.*)/', $condition, $matches);
         [, $operator, $operand] = $matches;
 
         $operand = self::operandSpecialHandling($operand);
-        if (is_numeric(trim($operand, '"'))) {
-            $operand = trim($operand, '"');
-        } elseif (!is_numeric($operand) && $operand !== 'FALSE' && $operand !== 'TRUE') {
-            $operand = str_replace('"', '""', $operand);
-            $operand = Calculation::wrapResult(strtoupper($operand));
+        if (\is_numeric(\trim($operand, '"'))) {
+            $operand = \trim($operand, '"');
+        } elseif (!\is_numeric($operand) && $operand !== 'FALSE' && $operand !== 'TRUE') {
+            $operand = \str_replace('"', '""', $operand);
+            $operand = Calculation::wrapResult(\strtoupper($operand));
         }
 
-        return str_replace('""""', '""', $operator . $operand);
+        return \str_replace('""""', '""', $operator . $operand);
     }
 
     private static function operandSpecialHandling($operand)
     {
-        if (is_numeric($operand) || is_bool($operand)) {
+        if (\is_numeric($operand) || \is_bool($operand)) {
             return $operand;
-        } elseif (strtoupper($operand) === Calculation::getTRUE() || strtoupper($operand) === Calculation::getFALSE()) {
-            return strtoupper($operand);
+        } elseif (\strtoupper($operand) === Calculation::getTRUE() || \strtoupper($operand) === Calculation::getFALSE()) {
+            return \strtoupper($operand);
         }
 
         // Check for percentage
-        if (preg_match('/^\-?\d*\.?\d*\s?\%$/', $operand)) {
-            return ((float) rtrim($operand, '%')) / 100;
+        if (\preg_match('/^\-?\d*\.?\d*\s?\%$/', $operand)) {
+            return ((float) \rtrim($operand, '%')) / 100;
         }
 
         // Check for dates
@@ -529,18 +529,18 @@ class Functions
      */
     public static function flattenArray($array)
     {
-        if (!is_array($array)) {
+        if (!\is_array($array)) {
             return (array) $array;
         }
 
         $flattened = [];
-        $stack = array_values($array);
+        $stack = \array_values($array);
 
         while (!empty($stack)) {
-            $value = array_shift($stack);
+            $value = \array_shift($stack);
 
-            if (is_array($value)) {
-                array_unshift($stack, ...array_values($value));
+            if (\is_array($value)) {
+                \array_unshift($stack, ...\array_values($value));
             } else {
                 $flattened[] = $value;
             }
@@ -556,13 +556,13 @@ class Functions
      */
     public static function scalar($value)
     {
-        if (!is_array($value)) {
+        if (!\is_array($value)) {
             return $value;
         }
 
         do {
-            $value = array_pop($value);
-        } while (is_array($value));
+            $value = \array_pop($value);
+        } while (\is_array($value));
 
         return $value;
     }
@@ -576,15 +576,15 @@ class Functions
      */
     public static function flattenArrayIndexed($array)
     {
-        if (!is_array($array)) {
+        if (!\is_array($array)) {
             return (array) $array;
         }
 
         $arrayValues = [];
         foreach ($array as $k1 => $value) {
-            if (is_array($value)) {
+            if (\is_array($value)) {
                 foreach ($value as $k2 => $val) {
-                    if (is_array($val)) {
+                    if (\is_array($val)) {
                         foreach ($val as $k3 => $v) {
                             $arrayValues[$k1 . '.' . $k2 . '.' . $k3] = $v;
                         }
@@ -609,8 +609,8 @@ class Functions
      */
     public static function flattenSingleValue($value = '')
     {
-        while (is_array($value)) {
-            $value = array_shift($value);
+        while (\is_array($value)) {
+            $value = \array_shift($value);
         }
 
         return $value;
@@ -637,15 +637,15 @@ class Functions
         $worksheet = $cell->getWorksheet();
         $spreadsheet = $worksheet->getParent();
         // Uppercase coordinate
-        $pCoordinatex = strtoupper($coordinate);
+        $pCoordinatex = \strtoupper($coordinate);
         // Eliminate leading equal sign
-        $pCoordinatex = (string) preg_replace('/^=/', '', $pCoordinatex);
+        $pCoordinatex = (string) \preg_replace('/^=/', '', $pCoordinatex);
         $defined = $spreadsheet->getDefinedName($pCoordinatex, $worksheet);
         if ($defined !== null) {
             $worksheet2 = $defined->getWorkSheet();
             if (!$defined->isFormula() && $worksheet2 !== null) {
                 $coordinate = "'" . $worksheet2->getTitle() . "'!" .
-                    (string) preg_replace('/^=/', '', str_replace('$', '', $defined->getValue()));
+                    (string) \preg_replace('/^=/', '', \str_replace('$', '', $defined->getValue()));
             }
         }
 
@@ -654,13 +654,13 @@ class Functions
 
     public static function trimTrailingRange(string $coordinate): string
     {
-        return (string) preg_replace('/:[\\w\$]+$/', '', $coordinate);
+        return (string) \preg_replace('/:[\\w\$]+$/', '', $coordinate);
     }
 
     public static function trimSheetFromCellReference(string $coordinate): string
     {
-        if (strpos($coordinate, '!') !== false) {
-            $coordinate = substr($coordinate, strrpos($coordinate, '!') + 1);
+        if (\strpos($coordinate, '!') !== false) {
+            $coordinate = \substr($coordinate, \strrpos($coordinate, '!') + 1);
         }
 
         return $coordinate;

@@ -38,7 +38,7 @@ class Font extends AbstractStyle
     {
         $xmlWriter = $this->getXmlWriter();
 
-        $isStyleName = $this->isInline && null !== $this->style && is_string($this->style);
+        $isStyleName = $this->isInline && null !== $this->style && \is_string($this->style);
         if ($isStyleName) {
             $xmlWriter->startElement('w:rPr');
             $xmlWriter->startElement('w:rStyle');

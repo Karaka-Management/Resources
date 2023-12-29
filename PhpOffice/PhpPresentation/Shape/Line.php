@@ -55,6 +55,6 @@ class Line extends AbstractShape implements ComparableInterface
      */
     public function getHashCode(): string
     {
-        return md5($this->getBorder()->getLineStyle() . parent::getHashCode() . __CLASS__);
+        return \md5($this->getBorder()->getLineStyle() . parent::getHashCode() . __CLASS__);
     }
 }

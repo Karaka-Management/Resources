@@ -8,7 +8,7 @@ use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
 class DefinedNames extends BaseLoader
 {
-    public function read(DOMElement $workbookData): void
+    public function read(\DOMElement $workbookData): void
     {
         $this->readDefinedRanges($workbookData);
         $this->readDefinedExpressions($workbookData);
@@ -17,7 +17,7 @@ class DefinedNames extends BaseLoader
     /**
      * Read any Named Ranges that are defined in this spreadsheet.
      */
-    protected function readDefinedRanges(DOMElement $workbookData): void
+    protected function readDefinedRanges(\DOMElement $workbookData): void
     {
         $namedRanges = $workbookData->getElementsByTagNameNS($this->tableNs, 'named-range');
         foreach ($namedRanges as $definedNameElement) {
@@ -35,7 +35,7 @@ class DefinedNames extends BaseLoader
     /**
      * Read any Named Formulae that are defined in this spreadsheet.
      */
-    protected function readDefinedExpressions(DOMElement $workbookData): void
+    protected function readDefinedExpressions(\DOMElement $workbookData): void
     {
         $namedExpressions = $workbookData->getElementsByTagNameNS($this->tableNs, 'named-expression');
         foreach ($namedExpressions as $definedNameElement) {
@@ -44,7 +44,7 @@ class DefinedNames extends BaseLoader
             $expression = $definedNameElement->getAttributeNS($this->tableNs, 'expression');
 
             $baseAddress = FormulaTranslator::convertToExcelAddressValue($baseAddress);
-            $expression = substr($expression, strpos($expression, ':=') + 1);
+            $expression = \substr($expression, \strpos($expression, ':=') + 1);
             $expression = FormulaTranslator::convertToExcelFormulaValue($expression);
 
             $this->addDefinedName($baseAddress, $definedName, $expression);

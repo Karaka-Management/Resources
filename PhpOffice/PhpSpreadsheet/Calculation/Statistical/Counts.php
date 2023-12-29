@@ -83,7 +83,7 @@ class Counts extends AggregateBase
         if ($range === null) {
             return 1;
         }
-        if (!is_array($range) || array_key_exists(0, $range)) {
+        if (!\is_array($range) || \array_key_exists(0, $range)) {
             throw new CalcException('Must specify range of cells, not any kind of literal');
         }
         $returnValue = 0;
@@ -92,7 +92,7 @@ class Counts extends AggregateBase
         $aArgs = Functions::flattenArray($range);
         foreach ($aArgs as $arg) {
             // Is it a blank cell?
-            if (($arg === null) || ((is_string($arg)) && ($arg == ''))) {
+            if (($arg === null) || ((\is_string($arg)) && ($arg == ''))) {
                 ++$returnValue;
             }
         }

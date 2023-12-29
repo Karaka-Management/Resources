@@ -80,7 +80,7 @@ class Legend
      */
     public function setPosition($position)
     {
-        if (!in_array($position, self::POSITION_XLREF)) {
+        if (!\in_array($position, self::POSITION_XLREF)) {
             return false;
         }
 
@@ -97,7 +97,7 @@ class Legend
     public function getPositionXL()
     {
         // Scrutinizer thinks the following could return string. It is wrong.
-        return array_search($this->position, self::POSITION_XLREF);
+        return \array_search($this->position, self::POSITION_XLREF);
     }
 
     /**

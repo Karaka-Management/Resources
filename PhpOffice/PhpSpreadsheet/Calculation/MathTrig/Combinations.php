@@ -27,7 +27,7 @@ class Combinations
      */
     public static function withoutRepetition($numObjs, $numInSet)
     {
-        if (is_array($numObjs) || is_array($numInSet)) {
+        if (\is_array($numObjs) || \is_array($numInSet)) {
             return self::evaluateArrayArguments([self::class, __FUNCTION__], $numObjs, $numInSet);
         }
 
@@ -40,7 +40,7 @@ class Combinations
             return $e->getMessage();
         }
 
-        return round(Factorial::fact($numObjs) / Factorial::fact($numObjs - $numInSet)) / Factorial::fact($numInSet);
+        return \round(Factorial::fact($numObjs) / Factorial::fact($numObjs - $numInSet)) / Factorial::fact($numInSet);
     }
 
     /**
@@ -61,7 +61,7 @@ class Combinations
      */
     public static function withRepetition($numObjs, $numInSet)
     {
-        if (is_array($numObjs) || is_array($numInSet)) {
+        if (\is_array($numObjs) || \is_array($numInSet)) {
             return self::evaluateArrayArguments([self::class, __FUNCTION__], $numObjs, $numInSet);
         }
 
@@ -84,7 +84,7 @@ class Combinations
             return $e->getMessage();
         }
 
-        return round(
+        return \round(
             Factorial::fact($numObjs + $numInSet - 1) / Factorial::fact($numObjs - 1)
         ) / Factorial::fact($numInSet);
     }

@@ -162,7 +162,7 @@ class Chart extends WriterPart
         $objWriter->endElement();
 
         $caption = $title->getCaption();
-        if ((is_array($caption)) && (count($caption) > 0)) {
+        if ((\is_array($caption)) && (\count($caption) > 0)) {
             $caption = $caption[0];
         }
         $this->getParentWriter()->getWriterPartstringtable()->writeRichTextForCharts($objWriter, $caption, 'a');
@@ -565,7 +565,7 @@ class Chart extends WriterPart
             $objWriter->startElement('a:p');
 
             $caption = $xAxisLabel->getCaption();
-            if (is_array($caption)) {
+            if (\is_array($caption)) {
                 $caption = $caption[0];
             }
             $this->getParentWriter()->getWriterPartstringtable()->writeRichTextForCharts($objWriter, $caption, 'a');
@@ -608,7 +608,7 @@ class Chart extends WriterPart
         }
 
         $textRotation = $yAxis->getAxisOptionsProperty('textRotation');
-        if (is_numeric($textRotation)) {
+        if (\is_numeric($textRotation)) {
             $objWriter->startElement('c:txPr');
             $objWriter->startElement('a:bodyPr');
             $objWriter->writeAttribute('rot', Properties::angleToXml((float) $textRotation));
@@ -781,7 +781,7 @@ class Chart extends WriterPart
             $objWriter->startElement('a:p');
 
             $caption = $yAxisLabel->getCaption();
-            if (is_array($caption)) {
+            if (\is_array($caption)) {
                 $caption = $caption[0];
             }
             $this->getParentWriter()->getWriterPartstringtable()->writeRichTextForCharts($objWriter, $caption, 'a');
@@ -826,7 +826,7 @@ class Chart extends WriterPart
         }
 
         $textRotation = $xAxis->getAxisOptionsProperty('textRotation');
-        if (is_numeric($textRotation)) {
+        if (\is_numeric($textRotation)) {
             $objWriter->startElement('c:txPr');
             $objWriter->startElement('a:bodyPr');
             $objWriter->writeAttribute('rot', Properties::angleToXml((float) $textRotation));
@@ -961,8 +961,8 @@ class Chart extends WriterPart
             for ($i = 0; $i < $groupCount; ++$i) {
                 $chartTypes[] = $plotArea->getPlotGroupByIndex($i)->getPlotType();
             }
-            $chartType = array_unique($chartTypes);
-            if (count($chartTypes) == 0) {
+            $chartType = \array_unique($chartTypes);
+            if (\count($chartTypes) == 0) {
                 throw new WriterException('Chart is not yet implemented');
             }
         }
@@ -1020,7 +1020,7 @@ class Chart extends WriterPart
 
         //    Get these details before the loop, because we can use the count to check for varyColors
         $plotSeriesOrder = $plotGroup->getPlotOrder();
-        $plotSeriesCount = count($plotSeriesOrder);
+        $plotSeriesCount = \count($plotSeriesOrder);
 
         if (($groupType !== DataSeries::TYPE_RADARCHART) && ($groupType !== DataSeries::TYPE_STOCKCHART)) {
             if ($groupType !== DataSeries::TYPE_LINECHART) {
@@ -1041,7 +1041,7 @@ class Chart extends WriterPart
             $objWriter->startElement('c:ser');
 
             $objWriter->startElement('c:idx');
-            $adder = array_key_exists(0, $plotSeriesOrder) ? $this->seriesIndex : 0;
+            $adder = \array_key_exists(0, $plotSeriesOrder) ? $this->seriesIndex : 0;
             $objWriter->writeAttribute('val', (string) ($adder + $plotSeriesIdx));
             $objWriter->endElement();
 
@@ -1057,7 +1057,7 @@ class Chart extends WriterPart
             }
             if ($plotLabel && $groupType !== DataSeries::TYPE_LINECHART) {
                 $fillColor = $plotLabel->getFillColorObject();
-                if ($fillColor !== null && !is_array($fillColor) && $fillColor->isUsable()) {
+                if ($fillColor !== null && !\is_array($fillColor) && $fillColor->isUsable()) {
                     $objWriter->startElement('c:spPr');
                     $this->writeColor($objWriter, $fillColor);
                     $objWriter->endElement(); // c:spPr
@@ -1067,9 +1067,9 @@ class Chart extends WriterPart
             //    Values
             $plotSeriesValues = $plotGroup->getPlotValuesByIndex($plotSeriesIdx);
 
-            if ($plotSeriesValues !== false && in_array($groupType, self::CUSTOM_COLOR_TYPES, true)) {
+            if ($plotSeriesValues !== false && \in_array($groupType, self::CUSTOM_COLOR_TYPES, true)) {
                 $fillColorValues = $plotSeriesValues->getFillColorObject();
-                if ($fillColorValues !== null && is_array($fillColorValues)) {
+                if ($fillColorValues !== null && \is_array($fillColorValues)) {
                     foreach ($plotSeriesValues->getDataValues() as $dataKey => $dataValue) {
                         $this->writePlotSeriesValuesElement($objWriter, $dataKey, $fillColorValues[$dataKey] ?? null);
                     }
@@ -1241,7 +1241,7 @@ class Chart extends WriterPart
 
                 if (($groupType == DataSeries::TYPE_PIECHART) || ($groupType == DataSeries::TYPE_PIECHART_3D) || ($groupType == DataSeries::TYPE_DONUTCHART)) {
                     $plotStyle = $plotGroup->getPlotStyle();
-                    if (is_numeric($plotStyle)) {
+                    if (\is_numeric($plotStyle)) {
                         $objWriter->startElement('c:explosion');
                         $objWriter->writeAttribute('val', $plotStyle);
                         $objWriter->endElement();
@@ -1622,33 +1622,33 @@ class Chart extends WriterPart
         $effect = $xAxis->getShadowProperty('effect');
         $objWriter->startElement("a:$effect");
 
-        if (is_numeric($xAxis->getShadowProperty('blur'))) {
+        if (\is_numeric($xAxis->getShadowProperty('blur'))) {
             $objWriter->writeAttribute('blurRad', Properties::pointsToXml((float) $xAxis->getShadowProperty('blur')));
         }
-        if (is_numeric($xAxis->getShadowProperty('distance'))) {
+        if (\is_numeric($xAxis->getShadowProperty('distance'))) {
             $objWriter->writeAttribute('dist', Properties::pointsToXml((float) $xAxis->getShadowProperty('distance')));
         }
-        if (is_numeric($xAxis->getShadowProperty('direction'))) {
+        if (\is_numeric($xAxis->getShadowProperty('direction'))) {
             $objWriter->writeAttribute('dir', Properties::angleToXml((float) $xAxis->getShadowProperty('direction')));
         }
         $algn = $xAxis->getShadowProperty('algn');
-        if (is_string($algn) && $algn !== '') {
+        if (\is_string($algn) && $algn !== '') {
             $objWriter->writeAttribute('algn', $algn);
         }
         foreach (['sx', 'sy'] as $sizeType) {
             $sizeValue = $xAxis->getShadowProperty(['size', $sizeType]);
-            if (is_numeric($sizeValue)) {
+            if (\is_numeric($sizeValue)) {
                 $objWriter->writeAttribute($sizeType, Properties::tenthOfPercentToXml((float) $sizeValue));
             }
         }
         foreach (['kx', 'ky'] as $sizeType) {
             $sizeValue = $xAxis->getShadowProperty(['size', $sizeType]);
-            if (is_numeric($sizeValue)) {
+            if (\is_numeric($sizeValue)) {
                 $objWriter->writeAttribute($sizeType, Properties::angleToXml((float) $sizeValue));
             }
         }
         $rotWithShape = $xAxis->getShadowProperty('rotWithShape');
-        if (is_numeric($rotWithShape)) {
+        if (\is_numeric($rotWithShape)) {
             $objWriter->writeAttribute('rotWithShape', (string) (int) $rotWithShape);
         }
 
@@ -1684,7 +1684,7 @@ class Chart extends WriterPart
     {
         $objWriter->startElement('a:ln');
         $widthTemp = $gridlines->getLineStyleProperty('width');
-        if (is_numeric($widthTemp)) {
+        if (\is_numeric($widthTemp)) {
             $objWriter->writeAttribute('w', Properties::pointsToXml((float) $widthTemp));
         }
         $this->writeNotEmpty($objWriter, 'cap', $gridlines->getLineStyleProperty('cap'));
@@ -1748,13 +1748,13 @@ class Chart extends WriterPart
             $objWriter->startElement("a:$type");
             $objWriter->writeAttribute('val', $value);
             $alpha = $chartColor->getAlpha();
-            if (is_numeric($alpha)) {
+            if (\is_numeric($alpha)) {
                 $objWriter->startElement('a:alpha');
                 $objWriter->writeAttribute('val', ChartColor::alphaToXml((int) $alpha));
                 $objWriter->endElement(); // a:alpha
             }
             $brightness = $chartColor->getBrightness();
-            if (is_numeric($brightness)) {
+            if (\is_numeric($brightness)) {
                 $brightness = (int) $brightness;
                 $lumOff = 100 - $brightness;
                 $objWriter->startElement('a:lumMod');

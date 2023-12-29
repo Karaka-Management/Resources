@@ -77,7 +77,7 @@ class Settings extends AbstractPart
     {
         if ($settingValue == '') {
             $xmlWriter->writeElement($settingKey);
-        } elseif (is_array($settingValue) && !empty($settingValue)) {
+        } elseif (\is_array($settingValue) && !empty($settingValue)) {
             $xmlWriter->startElement($settingKey);
 
             /** @var array $settingValue Type hint */
@@ -170,7 +170,7 @@ class Settings extends AbstractPart
      */
     private function setOnOffValue($settingName, $booleanValue): void
     {
-        if (!is_bool($booleanValue)) {
+        if (!\is_bool($booleanValue)) {
             return;
         }
 
@@ -195,7 +195,7 @@ class Settings extends AbstractPart
                 ];
             } else {
                 if ($documentProtection->getSalt() == null) {
-                    $documentProtection->setSalt(openssl_random_pseudo_bytes(16));
+                    $documentProtection->setSalt(\openssl_random_pseudo_bytes(16));
                 }
                 $passwordHash = PasswordEncoder::hashPassword($documentProtection->getPassword(), $documentProtection->getAlgorithm(), $documentProtection->getSalt(), $documentProtection->getSpinCount());
                 $this->settings['w:documentProtection'] = [
@@ -208,7 +208,7 @@ class Settings extends AbstractPart
                         'w:cryptAlgorithmSid' => PasswordEncoder::getAlgorithmId($documentProtection->getAlgorithm()),
                         'w:cryptSpinCount' => $documentProtection->getSpinCount(),
                         'w:hash' => $passwordHash,
-                        'w:salt' => base64_encode($documentProtection->getSalt()),
+                        'w:salt' => \base64_encode($documentProtection->getSalt()),
                     ],
                 ];
             }
@@ -276,7 +276,7 @@ class Settings extends AbstractPart
     private function setZoom($zoom = null): void
     {
         if ($zoom !== null) {
-            $attr = is_int($zoom) ? 'w:percent' : 'w:val';
+            $attr = \is_int($zoom) ? 'w:percent' : 'w:val';
             $this->settings['w:zoom'] = ['@attributes' => [$attr => $zoom]];
         }
     }

@@ -65,10 +65,10 @@ class DocPropsCustom extends AbstractPart
 
                     break;
                 case 'd':
-                    if ($propertyValue instanceof DateTime) {
+                    if ($propertyValue instanceof \DateTime) {
                         $xmlWriter->writeElement('vt:filetime', $propertyValue->format($this->dateFormat));
                     } else {
-                        $xmlWriter->writeElement('vt:filetime', date($this->dateFormat, $propertyValue));
+                        $xmlWriter->writeElement('vt:filetime', \date($this->dateFormat, $propertyValue));
                     }
 
                     break;

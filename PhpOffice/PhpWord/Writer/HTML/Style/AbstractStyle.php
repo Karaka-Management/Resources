@@ -82,7 +82,7 @@ abstract class AbstractStyle
      */
     public function getStyle()
     {
-        if (!$this->style instanceof Style && !is_array($this->style)) {
+        if (!$this->style instanceof Style && !\is_array($this->style)) {
             return '';
         }
 
@@ -106,7 +106,7 @@ abstract class AbstractStyle
             }
         }
         if (!empty($pairs)) {
-            $string = implode('; ', $pairs) . ';';
+            $string = \implode('; ', $pairs) . ';';
         }
 
         return $string;

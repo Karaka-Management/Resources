@@ -72,7 +72,7 @@ class Line extends AbstractElement
         }
 
         $xmlWriter->startElement('v:shape');
-        $xmlWriter->writeAttribute('id', sprintf('_x0000_s1%1$03d', $elementId));
+        $xmlWriter->writeAttribute('id', \sprintf('_x0000_s1%1$03d', $elementId));
         $xmlWriter->writeAttribute('type', '#_x0000_t32'); //type should correspond to shapetype id
 
         $styleWriter->write();

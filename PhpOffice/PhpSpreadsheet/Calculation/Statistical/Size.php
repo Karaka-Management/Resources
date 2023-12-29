@@ -23,10 +23,10 @@ class Size
     public static function large(...$args)
     {
         $aArgs = Functions::flattenArray($args);
-        $entry = array_pop($aArgs);
+        $entry = \array_pop($aArgs);
 
-        if ((is_numeric($entry)) && (!is_string($entry))) {
-            $entry = (int) floor($entry);
+        if ((\is_numeric($entry)) && (!\is_string($entry))) {
+            $entry = (int) \floor($entry);
 
             $mArgs = self::filter($aArgs);
             $count = Counts::COUNT($mArgs);
@@ -34,7 +34,7 @@ class Size
             if ($count === 0 || $entry < 0 || $entry >= $count) {
                 return ExcelError::NAN();
             }
-            rsort($mArgs);
+            \rsort($mArgs);
 
             return $mArgs[$entry];
         }
@@ -59,10 +59,10 @@ class Size
     {
         $aArgs = Functions::flattenArray($args);
 
-        $entry = array_pop($aArgs);
+        $entry = \array_pop($aArgs);
 
-        if ((is_numeric($entry)) && (!is_string($entry))) {
-            $entry = (int) floor($entry);
+        if ((\is_numeric($entry)) && (!\is_string($entry))) {
+            $entry = (int) \floor($entry);
 
             $mArgs = self::filter($aArgs);
             $count = Counts::COUNT($mArgs);
@@ -70,7 +70,7 @@ class Size
             if ($count === 0 || $entry < 0 || $entry >= $count) {
                 return ExcelError::NAN();
             }
-            sort($mArgs);
+            \sort($mArgs);
 
             return $mArgs[$entry];
         }
@@ -87,7 +87,7 @@ class Size
 
         foreach ($args as $arg) {
             // Is it a numeric value?
-            if ((is_numeric($arg)) && (!is_string($arg))) {
+            if ((\is_numeric($arg)) && (!\is_string($arg))) {
                 $mArgs[] = $arg;
             }
         }

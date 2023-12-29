@@ -54,7 +54,7 @@ class Xlsx extends BaseReader
     private $referenceHelper;
 
     /**
-     * @var ZipArchive
+     * @var \ZipArchive
      */
     private $zip;
 
@@ -81,7 +81,7 @@ class Xlsx extends BaseReader
         }
 
         $result = false;
-        $this->zip = $zip = new ZipArchive();
+        $this->zip = $zip = new \ZipArchive();
 
         if ($zip->open($filename) === true) {
             [$workbookBasename] = $this->getWorkbookBaseName();
@@ -96,12 +96,12 @@ class Xlsx extends BaseReader
     /**
      * @param mixed $value
      */
-    public static function testSimpleXml($value): SimpleXMLElement
+    public static function testSimpleXml($value): \SimpleXMLElement
     {
-        return ($value instanceof SimpleXMLElement) ? $value : new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><root></root>');
+        return ($value instanceof \SimpleXMLElement) ? $value : new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><root></root>');
     }
 
-    public static function getAttributes(?SimpleXMLElement $value, string $ns = ''): SimpleXMLElement
+    public static function getAttributes(?\SimpleXMLElement $value, string $ns = ''): \SimpleXMLElement
     {
         return self::testSimpleXml($value === null ? $value : $value->attributes($ns));
     }
@@ -109,7 +109,7 @@ class Xlsx extends BaseReader
     // Phpstan thinks, correctly, that xpath can return false.
     // Scrutinizer thinks it can't.
     // Sigh.
-    private static function xpathNoFalse(SimpleXmlElement $sxml, string $path): array
+    private static function xpathNoFalse(\SimpleXmlElement $sxml, string $path): array
     {
         return self::falseToArray($sxml->xpath($path));
     }
@@ -119,16 +119,16 @@ class Xlsx extends BaseReader
      */
     public static function falseToArray($value): array
     {
-        return is_array($value) ? $value : [];
+        return \is_array($value) ? $value : [];
     }
 
-    private function loadZip(string $filename, string $ns = '', bool $replaceUnclosedBr = false): SimpleXMLElement
+    private function loadZip(string $filename, string $ns = '', bool $replaceUnclosedBr = false): \SimpleXMLElement
     {
         $contents = $this->getFromZipArchive($this->zip, $filename);
         if ($replaceUnclosedBr) {
-            $contents = str_replace('<br>', '<br/>', $contents);
+            $contents = \str_replace('<br>', '<br/>', $contents);
         }
-        $rels = simplexml_load_string(
+        $rels = \simplexml_load_string(
             $this->securityScanner->scan($contents),
             'SimpleXMLElement',
             Settings::getLibXmlLoaderOptions(),
@@ -140,10 +140,10 @@ class Xlsx extends BaseReader
 
     // This function is just to identify cases where I'm not sure
     // why empty namespace is required.
-    private function loadZipNonamespace(string $filename, string $ns): SimpleXMLElement
+    private function loadZipNonamespace(string $filename, string $ns): \SimpleXMLElement
     {
         $contents = $this->getFromZipArchive($this->zip, $filename);
-        $rels = simplexml_load_string(
+        $rels = \simplexml_load_string(
             $this->securityScanner->scan($contents),
             'SimpleXMLElement',
             Settings::getLibXmlLoaderOptions(),
@@ -179,7 +179,7 @@ class Xlsx extends BaseReader
 
         $worksheetNames = [];
 
-        $this->zip = $zip = new ZipArchive();
+        $this->zip = $zip = new \ZipArchive();
         $zip->open($filename);
 
         //    The files we're looking at here are small enough that simpleXML is more efficient than XMLReader
@@ -218,7 +218,7 @@ class Xlsx extends BaseReader
 
         $worksheetInfo = [];
 
-        $this->zip = $zip = new ZipArchive();
+        $this->zip = $zip = new \ZipArchive();
         $zip->open($filename);
 
         $rels = $this->loadZip(self::INITIAL_FILE, Namespaces::RELATIONSHIPS);
@@ -228,9 +228,9 @@ class Xlsx extends BaseReader
             $mainNS = self::REL_TO_MAIN[$relType] ?? Namespaces::MAIN;
             if ($mainNS !== '') {
                 $relTarget = (string) $rel['Target'];
-                $dir = dirname($relTarget);
-                $namespace = dirname($relType);
-                $relsWorkbook = $this->loadZip("$dir/_rels/" . basename($relTarget) . '.rels', '');
+                $dir = \dirname($relTarget);
+                $namespace = \dirname($relType);
+                $relsWorkbook = $this->loadZip("$dir/_rels/" . \basename($relTarget) . '.rels', '');
 
                 $worksheets = [];
                 foreach ($relsWorkbook->Relationship as $elex) {
@@ -245,8 +245,8 @@ class Xlsx extends BaseReader
 
                 $xmlWorkbook = $this->loadZip($relTarget, $mainNS);
                 if ($xmlWorkbook->sheets) {
-                    $dir = dirname($relTarget);
-                    /** @var SimpleXMLElement $eleSheet */
+                    $dir = \dirname($relTarget);
+                    /** @var \SimpleXMLElement $eleSheet */
                     foreach ($xmlWorkbook->sheets->sheet as $eleSheet) {
                         $tmpInfo = [
                             'worksheetName' => (string) self::getAttributes($eleSheet)['name'],
@@ -257,9 +257,9 @@ class Xlsx extends BaseReader
                         ];
 
                         $fileWorksheet = (string) $worksheets[(string) self::getArrayItem(self::getAttributes($eleSheet, $namespace), 'id')];
-                        $fileWorksheetPath = strpos($fileWorksheet, '/') === 0 ? substr($fileWorksheet, 1) : "$dir/$fileWorksheet";
+                        $fileWorksheetPath = \strpos($fileWorksheet, '/') === 0 ? \substr($fileWorksheet, 1) : "$dir/$fileWorksheet";
 
-                        $xml = new XMLReader();
+                        $xml = new \XMLReader();
                         $xml->xml(
                             $this->securityScanner->scanFile(
                                 'zip://' . File::realpath($filename) . '#' . $fileWorksheetPath
@@ -271,17 +271,17 @@ class Xlsx extends BaseReader
 
                         $currCells = 0;
                         while ($xml->read()) {
-                            if ($xml->localName == 'row' && $xml->nodeType == XMLReader::ELEMENT && $xml->namespaceURI === $mainNS) {
+                            if ($xml->localName == 'row' && $xml->nodeType == \XMLReader::ELEMENT && $xml->namespaceURI === $mainNS) {
                                 $row = $xml->getAttribute('r');
                                 $tmpInfo['totalRows'] = $row;
-                                $tmpInfo['totalColumns'] = max($tmpInfo['totalColumns'], $currCells);
+                                $tmpInfo['totalColumns'] = \max($tmpInfo['totalColumns'], $currCells);
                                 $currCells = 0;
-                            } elseif ($xml->localName == 'c' && $xml->nodeType == XMLReader::ELEMENT && $xml->namespaceURI === $mainNS) {
+                            } elseif ($xml->localName == 'c' && $xml->nodeType == \XMLReader::ELEMENT && $xml->namespaceURI === $mainNS) {
                                 $cell = $xml->getAttribute('r');
-                                $currCells = $cell ? max($currCells, Coordinate::indexesFromString($cell)[0]) : ($currCells + 1);
+                                $currCells = $cell ? \max($currCells, Coordinate::indexesFromString($cell)[0]) : ($currCells + 1);
                             }
                         }
-                        $tmpInfo['totalColumns'] = max($tmpInfo['totalColumns'], $currCells);
+                        $tmpInfo['totalColumns'] = \max($tmpInfo['totalColumns'], $currCells);
                         $xml->close();
 
                         $tmpInfo['lastColumnIndex'] = $tmpInfo['totalColumns'] - 1;
@@ -298,7 +298,7 @@ class Xlsx extends BaseReader
         return $worksheetInfo;
     }
 
-    private static function castToBoolean(SimpleXMLElement $c): bool
+    private static function castToBoolean(\SimpleXMLElement $c): bool
     {
         $value = isset($c->v) ? (string) $c->v : null;
         if ($value == '0') {
@@ -310,12 +310,12 @@ class Xlsx extends BaseReader
         return (bool) $c->v;
     }
 
-    private static function castToError(?SimpleXMLElement $c): ?string
+    private static function castToError(?\SimpleXMLElement $c): ?string
     {
         return isset($c, $c->v) ? (string) $c->v : null;
     }
 
-    private static function castToString(?SimpleXMLElement $c): ?string
+    private static function castToString(?\SimpleXMLElement $c): ?string
     {
         return isset($c, $c->v) ? (string) $c->v : null;
     }
@@ -324,7 +324,7 @@ class Xlsx extends BaseReader
      * @param mixed $value
      * @param mixed $calculatedValue
      */
-    private function castToFormula(?SimpleXMLElement $c, string $r, string &$cellDataType, &$value, &$calculatedValue, array &$sharedFormulas, string $castBaseType): void
+    private function castToFormula(?\SimpleXMLElement $c, string $r, string &$cellDataType, &$value, &$calculatedValue, array &$sharedFormulas, string $castBaseType): void
     {
         if ($c === null) {
             return;
@@ -335,7 +335,7 @@ class Xlsx extends BaseReader
         $calculatedValue = self::$castBaseType($c);
 
         // Shared formula?
-        if (isset($attr['t']) && strtolower((string) $attr['t']) == 'shared') {
+        if (isset($attr['t']) && \strtolower((string) $attr['t']) == 'shared') {
             $instance = (string) $attr['si'];
 
             if (!isset($sharedFormulas[(string) $attr['si']])) {
@@ -356,11 +356,11 @@ class Xlsx extends BaseReader
     /**
      * @param string $fileName
      */
-    private function fileExistsInArchive(ZipArchive $archive, $fileName = ''): bool
+    private function fileExistsInArchive(\ZipArchive $archive, $fileName = ''): bool
     {
         // Root-relative paths
-        if (strpos($fileName, '//') !== false) {
-            $fileName = substr($fileName, strpos($fileName, '//') + 1);
+        if (\strpos($fileName, '//') !== false) {
+            $fileName = \substr($fileName, \strpos($fileName, '//') + 1);
         }
         $fileName = File::realpath($fileName);
 
@@ -368,9 +368,9 @@ class Xlsx extends BaseReader
         //    so we need to load case-insensitively from the zip file
 
         // Apache POI fixes
-        $contents = $archive->locateName($fileName, ZipArchive::FL_NOCASE);
+        $contents = $archive->locateName($fileName, \ZipArchive::FL_NOCASE);
         if ($contents === false) {
-            $contents = $archive->locateName(substr($fileName, 1), ZipArchive::FL_NOCASE);
+            $contents = $archive->locateName(\substr($fileName, 1), \ZipArchive::FL_NOCASE);
         }
 
         return $contents !== false;
@@ -381,24 +381,24 @@ class Xlsx extends BaseReader
      *
      * @return string
      */
-    private function getFromZipArchive(ZipArchive $archive, $fileName = '')
+    private function getFromZipArchive(\ZipArchive $archive, $fileName = '')
     {
         // Root-relative paths
-        if (strpos($fileName, '//') !== false) {
-            $fileName = substr($fileName, strpos($fileName, '//') + 1);
+        if (\strpos($fileName, '//') !== false) {
+            $fileName = \substr($fileName, \strpos($fileName, '//') + 1);
         }
         // Relative paths generated by dirname($filename) when $filename
         // has no path (i.e.files in root of the zip archive)
-        $fileName = (string) preg_replace('/^\.\//', '', $fileName);
+        $fileName = (string) \preg_replace('/^\.\//', '', $fileName);
         $fileName = File::realpath($fileName);
 
         // Sadly, some 3rd party xlsx generators don't use consistent case for filenaming
         //    so we need to load case-insensitively from the zip file
 
         // Apache POI fixes
-        $contents = $archive->getFromName($fileName, 0, ZipArchive::FL_NOCASE);
+        $contents = $archive->getFromName($fileName, 0, \ZipArchive::FL_NOCASE);
         if ($contents === false) {
-            $contents = $archive->getFromName(substr($fileName, 1), 0, ZipArchive::FL_NOCASE);
+            $contents = $archive->getFromName(\substr($fileName, 1), 0, \ZipArchive::FL_NOCASE);
         }
 
         return ($contents === false) ? '' : $contents;
@@ -419,7 +419,7 @@ class Xlsx extends BaseReader
 
         $unparsedLoadedData = [];
 
-        $this->zip = $zip = new ZipArchive();
+        $this->zip = $zip = new \ZipArchive();
         $zip->open($filename);
 
         //    Read the theme first, because we need the colour scheme when reading the styles
@@ -432,13 +432,13 @@ class Xlsx extends BaseReader
         foreach ($wbRels->Relationship as $relx) {
             $rel = self::getAttributes($relx);
             $relTarget = (string) $rel['Target'];
-            if (substr($relTarget, 0, 4) === '/xl/') {
-                $relTarget = substr($relTarget, 4);
+            if (\substr($relTarget, 0, 4) === '/xl/') {
+                $relTarget = \substr($relTarget, 4);
             }
             switch ($rel['Type']) {
                 case "$xmlNamespaceBase/theme":
                     $themeOrderArray = ['lt1', 'dk1', 'lt2', 'dk2'];
-                    $themeOrderAdditional = count($themeOrderArray);
+                    $themeOrderAdditional = \count($themeOrderArray);
 
                     $xmlTheme = $this->loadZip("xl/{$relTarget}", $drawingNS);
                     $xmlThemeName = self::getAttributes($xmlTheme);
@@ -451,7 +451,7 @@ class Xlsx extends BaseReader
 
                     $themeColours = [];
                     foreach ($colourScheme as $k => $xmlColour) {
-                        $themePos = array_search($k, $themeOrderArray);
+                        $themePos = \array_search($k, $themeOrderArray);
                         if ($themePos === false) {
                             $themePos = $themeOrderAdditional++;
                         }
@@ -501,10 +501,10 @@ class Xlsx extends BaseReader
 
                     break;
                 case "$xmlNamespaceBase/officeDocument":
-                    $dir = dirname($relTarget);
+                    $dir = \dirname($relTarget);
 
                     // Do not specify namespace in next stmt - do it in Xpath
-                    $relsWorkbook = $this->loadZip("$dir/_rels/" . basename($relTarget) . '.rels', '');
+                    $relsWorkbook = $this->loadZip("$dir/_rels/" . \basename($relTarget) . '.rels', '');
                     $relsWorkbook->registerXPathNamespace('rel', Namespaces::RELATIONSHIPS);
 
                     $sharedStrings = [];
@@ -707,13 +707,13 @@ class Xlsx extends BaseReader
                     $charts = $chartDetails = [];
 
                     if ($xmlWorkbookNS->sheets) {
-                        /** @var SimpleXMLElement $eleSheet */
+                        /** @var \SimpleXMLElement $eleSheet */
                         foreach ($xmlWorkbookNS->sheets->sheet as $eleSheet) {
                             $eleSheetAttr = self::getAttributes($eleSheet);
                             ++$oldSheetId;
 
                             // Check if sheet should be skipped
-                            if (is_array($this->loadSheetsOnly) && !in_array((string) $eleSheetAttr['name'], $this->loadSheetsOnly)) {
+                            if (\is_array($this->loadSheetsOnly) && !\in_array((string) $eleSheetAttr['name'], $this->loadSheetsOnly)) {
                                 ++$countSkippedSheets;
                                 $mapSheetId[$oldSheetId] = null;
 
@@ -902,7 +902,7 @@ class Xlsx extends BaseReader
                             if (!$this->readDataOnly && $xmlSheetNS && $xmlSheetNS->sheetProtection) {
                                 $protAttr = $xmlSheetNS->sheetProtection->attributes() ?? [];
                                 foreach ($protAttr as $key => $value) {
-                                    $method = 'set' . ucfirst($key);
+                                    $method = 'set' . \ucfirst($key);
                                     $docSheet->getProtection()->$method(self::boolean((string) $value));
                                 }
                             }
@@ -921,7 +921,7 @@ class Xlsx extends BaseReader
                                     /** @scrutinizer ignore-call */
                                     $mergeCell = $mergeCellx->attributes();
                                     $mergeRef = (string) ($mergeCell['ref'] ?? '');
-                                    if (strpos($mergeRef, ':') !== false) {
+                                    if (\strpos($mergeRef, ':') !== false) {
                                         $docSheet->mergeCells($mergeRef, Worksheet::MERGE_CELL_CONTENT_HIDE);
                                     }
                                 }
@@ -972,7 +972,7 @@ class Xlsx extends BaseReader
                             if (!$this->readDataOnly) {
                                 $hyperlinkReader = new Hyperlinks($docSheet);
                                 // Locate hyperlink relations
-                                $relationsFileName = dirname("$dir/$fileWorksheet") . '/_rels/' . basename($fileWorksheet) . '.rels';
+                                $relationsFileName = \dirname("$dir/$fileWorksheet") . '/_rels/' . \basename($fileWorksheet) . '.rels';
                                 if ($zip->locateName($relationsFileName)) {
                                     $relsWorksheet = $this->loadZip($relationsFileName, Namespaces::RELATIONSHIPS);
                                     $hyperlinkReader->readHyperlinks($relsWorksheet);
@@ -989,7 +989,7 @@ class Xlsx extends BaseReader
                             $vmlComments = [];
                             if (!$this->readDataOnly) {
                                 // Locate comment relations
-                                $commentRelations = dirname("$dir/$fileWorksheet") . '/_rels/' . basename($fileWorksheet) . '.rels';
+                                $commentRelations = \dirname("$dir/$fileWorksheet") . '/_rels/' . \basename($fileWorksheet) . '.rels';
                                 if ($zip->locateName($commentRelations)) {
                                     $relsWorksheet = $this->loadZip($commentRelations, Namespaces::RELATIONSHIPS);
                                     foreach ($relsWorksheet->Relationship as $elex) {
@@ -1006,7 +1006,7 @@ class Xlsx extends BaseReader
                                 // Loop through comments
                                 foreach ($comments as $relName => $relPath) {
                                     // Load comments file
-                                    $relPath = File::realpath(dirname("$dir/$fileWorksheet") . '/' . $relPath);
+                                    $relPath = File::realpath(\dirname("$dir/$fileWorksheet") . '/' . $relPath);
                                     // okay to ignore namespace - using xpath
                                     $commentsFile = $this->loadZip($relPath, '');
 
@@ -1037,20 +1037,20 @@ class Xlsx extends BaseReader
                                 // Loop through VML comments
                                 foreach ($vmlComments as $relName => $relPath) {
                                     // Load VML comments file
-                                    $relPath = File::realpath(dirname("$dir/$fileWorksheet") . '/' . $relPath);
+                                    $relPath = File::realpath(\dirname("$dir/$fileWorksheet") . '/' . $relPath);
 
                                     try {
                                         // no namespace okay - processed with Xpath
                                         $vmlCommentsFile = $this->loadZip($relPath, '', true);
                                         $vmlCommentsFile->registerXPathNamespace('v', Namespaces::URN_VML);
-                                    } catch (Throwable $ex) {
+                                    } catch (\Throwable $ex) {
                                         //Ignore unparsable vmlDrawings. Later they will be moved from $unparsedVmlDrawings to $unparsedLoadedData
                                         continue;
                                     }
 
                                     // Locate VML drawings image relations
                                     $drowingImages = [];
-                                    $VMLDrawingsRelations = dirname($relPath) . '/_rels/' . basename($relPath) . '.rels';
+                                    $VMLDrawingsRelations = \dirname($relPath) . '/_rels/' . \basename($relPath) . '.rels';
                                     $vmlDrawingContents[$relName] = $this->securityScanner->scan($this->getFromZipArchive($zip, $relPath));
                                     if ($zip->locateName($VMLDrawingsRelations)) {
                                         $relsVMLDrawing = $this->loadZip($VMLDrawingsRelations, Namespaces::RELATIONSHIPS);
@@ -1068,31 +1068,31 @@ class Xlsx extends BaseReader
 
                                         if (isset($shape['style'])) {
                                             $style = (string) $shape['style'];
-                                            $fillColor = strtoupper(substr((string) $shape['fillcolor'], 1));
+                                            $fillColor = \strtoupper(\substr((string) $shape['fillcolor'], 1));
                                             $column = null;
                                             $row = null;
                                             $fillImageRelId = null;
                                             $fillImageTitle = '';
 
                                             $clientData = $shape->xpath('.//x:ClientData');
-                                            if (is_array($clientData) && !empty($clientData)) {
+                                            if (\is_array($clientData) && !empty($clientData)) {
                                                 $clientData = $clientData[0];
 
                                                 if (isset($clientData['ObjectType']) && (string) $clientData['ObjectType'] == 'Note') {
                                                     $temp = $clientData->xpath('.//x:Row');
-                                                    if (is_array($temp)) {
+                                                    if (\is_array($temp)) {
                                                         $row = $temp[0];
                                                     }
 
                                                     $temp = $clientData->xpath('.//x:Column');
-                                                    if (is_array($temp)) {
+                                                    if (\is_array($temp)) {
                                                         $column = $temp[0];
                                                     }
                                                 }
                                             }
 
                                             $fillImageRelNode = $shape->xpath('.//v:fill/@o:relid');
-                                            if (is_array($fillImageRelNode) && !empty($fillImageRelNode)) {
+                                            if (\is_array($fillImageRelNode) && !empty($fillImageRelNode)) {
                                                 $fillImageRelNode = $fillImageRelNode[0];
 
                                                 if (isset($fillImageRelNode['relid'])) {
@@ -1101,7 +1101,7 @@ class Xlsx extends BaseReader
                                             }
 
                                             $fillImageTitleNode = $shape->xpath('.//v:fill/@o:title');
-                                            if (is_array($fillImageTitleNode) && !empty($fillImageTitleNode)) {
+                                            if (\is_array($fillImageTitleNode) && !empty($fillImageTitleNode)) {
                                                 $fillImageTitleNode = $fillImageTitleNode[0];
 
                                                 if (isset($fillImageTitleNode['title'])) {
@@ -1116,7 +1116,7 @@ class Xlsx extends BaseReader
                                                 if (isset($drowingImages[$fillImageRelId])) {
                                                     $objDrawing = new \PhpOffice\PhpSpreadsheet\Worksheet\Drawing();
                                                     $objDrawing->setName($fillImageTitle);
-                                                    $imagePath = str_replace('../', 'xl/', $drowingImages[$fillImageRelId]);
+                                                    $imagePath = \str_replace('../', 'xl/', $drowingImages[$fillImageRelId]);
                                                     $objDrawing->setPath(
                                                         'zip://' . File::realpath($filename) . '#' . $imagePath,
                                                         true,
@@ -1126,9 +1126,9 @@ class Xlsx extends BaseReader
                                                 }
 
                                                 // Parse style
-                                                $styleArray = explode(';', str_replace(' ', '', $style));
+                                                $styleArray = \explode(';', \str_replace(' ', '', $style));
                                                 foreach ($styleArray as $stylePair) {
-                                                    $stylePair = explode(':', $stylePair);
+                                                    $stylePair = \explode(':', $stylePair);
 
                                                     if ($stylePair[0] == 'margin-left') {
                                                         $comment->setMarginLeft($stylePair[1]);
@@ -1156,7 +1156,7 @@ class Xlsx extends BaseReader
                                 // unparsed vmlDrawing
                                 if ($unparsedVmlDrawings) {
                                     foreach ($unparsedVmlDrawings as $rId => $relPath) {
-                                        $rId = substr($rId, 3); // rIdXXX
+                                        $rId = \substr($rId, 3); // rIdXXX
                                         $unparsedVmlDrawing = &$unparsedLoadedData['sheets'][$docSheet->getCodeName()]['vmlDrawings'];
                                         $unparsedVmlDrawing[$rId] = [];
                                         $unparsedVmlDrawing[$rId]['filePath'] = self::dirAdd("$dir/$fileWorksheet", $relPath);
@@ -1173,8 +1173,8 @@ class Xlsx extends BaseReader
                                     if ($vmlHfRidAttr !== null && isset($vmlHfRidAttr['id'])) {
                                         $vmlHfRid = (string) $vmlHfRidAttr['id'][0];
                                     }
-                                    if ($zip->locateName(dirname("$dir/$fileWorksheet") . '/_rels/' . basename($fileWorksheet) . '.rels')) {
-                                        $relsWorksheet = $this->loadZipNoNamespace(dirname("$dir/$fileWorksheet") . '/_rels/' . basename($fileWorksheet) . '.rels', Namespaces::RELATIONSHIPS);
+                                    if ($zip->locateName(\dirname("$dir/$fileWorksheet") . '/_rels/' . \basename($fileWorksheet) . '.rels')) {
+                                        $relsWorksheet = $this->loadZipNoNamespace(\dirname("$dir/$fileWorksheet") . '/_rels/' . \basename($fileWorksheet) . '.rels', Namespaces::RELATIONSHIPS);
                                         $vmlRelationship = '';
 
                                         foreach ($relsWorksheet->Relationship as $ele) {
@@ -1187,7 +1187,7 @@ class Xlsx extends BaseReader
 
                                         if ($vmlRelationship != '') {
                                             // Fetch linked images
-                                            $relsVML = $this->loadZipNoNamespace(dirname($vmlRelationship) . '/_rels/' . basename($vmlRelationship) . '.rels', Namespaces::RELATIONSHIPS);
+                                            $relsVML = $this->loadZipNoNamespace(\dirname($vmlRelationship) . '/_rels/' . \basename($vmlRelationship) . '.rels', Namespaces::RELATIONSHIPS);
                                             $drawings = [];
                                             if (isset($relsVML->Relationship)) {
                                                 foreach ($relsVML->Relationship as $ele) {
@@ -1216,7 +1216,7 @@ class Xlsx extends BaseReader
                                                 $imageData = self::getAttributes($imageData, Namespaces::URN_MSOFFICE);
                                                 $style = self::toCSSArray((string) $shape['style']);
 
-                                                if (array_key_exists((string) $imageData['relid'], $drawings)) {
+                                                if (\array_key_exists((string) $imageData['relid'], $drawings)) {
                                                     $shapeId = (string) $shape['id'];
                                                     $hfImages[$shapeId] = new HeaderFooterDrawing();
                                                     if (isset($imageData['title'])) {
@@ -1242,15 +1242,15 @@ class Xlsx extends BaseReader
                             }
 
                             // TODO: Autoshapes from twoCellAnchors!
-                            $drawingFilename = dirname("$dir/$fileWorksheet")
+                            $drawingFilename = \dirname("$dir/$fileWorksheet")
                                 . '/_rels/'
-                                . basename($fileWorksheet)
+                                . \basename($fileWorksheet)
                                 . '.rels';
-                            if (substr($drawingFilename, 0, 7) === 'xl//xl/') {
-                                $drawingFilename = substr($drawingFilename, 4);
+                            if (\substr($drawingFilename, 0, 7) === 'xl//xl/') {
+                                $drawingFilename = \substr($drawingFilename, 4);
                             }
-                            if (substr($drawingFilename, 0, 8) === '/xl//xl/') {
-                                $drawingFilename = substr($drawingFilename, 5);
+                            if (\substr($drawingFilename, 0, 8) === '/xl//xl/') {
+                                $drawingFilename = \substr($drawingFilename, 5);
                             }
                             if ($zip->locateName($drawingFilename)) {
                                 $relsWorksheet = $this->loadZipNoNamespace($drawingFilename, Namespaces::RELATIONSHIPS);
@@ -1258,8 +1258,8 @@ class Xlsx extends BaseReader
                                 foreach ($relsWorksheet->Relationship as $ele) {
                                     if ((string) $ele['Type'] === "$xmlNamespaceBase/drawing") {
                                         $eleTarget = (string) $ele['Target'];
-                                        if (substr($eleTarget, 0, 4) === '/xl/') {
-                                            $drawings[(string) $ele['Id']] = substr($eleTarget, 1);
+                                        if (\substr($eleTarget, 0, 4) === '/xl/') {
+                                            $drawings[(string) $ele['Id']] = \substr($eleTarget, 1);
                                         } else {
                                             $drawings[(string) $ele['Id']] = self::dirAdd("$dir/$fileWorksheet", $ele['Target']);
                                         }
@@ -1272,7 +1272,7 @@ class Xlsx extends BaseReader
                                     foreach ($xmlSheetNS->drawing as $drawing) {
                                         $drawingRelId = (string) self::getArrayItem(self::getAttributes($drawing, $xmlNamespaceBase), 'id');
                                         $fileDrawing = $drawings[$drawingRelId];
-                                        $drawingFilename = dirname($fileDrawing) . '/_rels/' . basename($fileDrawing) . '.rels';
+                                        $drawingFilename = \dirname($fileDrawing) . '/_rels/' . \basename($fileDrawing) . '.rels';
                                         $relsDrawing = $this->loadZipNoNamespace($drawingFilename, $xmlNamespaceBase);
 
                                         $images = [];
@@ -1285,8 +1285,8 @@ class Xlsx extends BaseReader
                                                 }
                                                 if ($eleType === "$xmlNamespaceBase/image") {
                                                     $eleTarget = (string) $ele['Target'];
-                                                    if (substr($eleTarget, 0, 4) === '/xl/') {
-                                                        $eleTarget = substr($eleTarget, 1);
+                                                    if (\substr($eleTarget, 0, 4) === '/xl/') {
+                                                        $eleTarget = \substr($eleTarget, 1);
                                                         $images[(string) $ele['Id']] = $eleTarget;
                                                     } else {
                                                         $images[(string) $ele['Id']] = self::dirAdd($fileDrawing, $eleTarget);
@@ -1294,8 +1294,8 @@ class Xlsx extends BaseReader
                                                 } elseif ($eleType === "$xmlNamespaceBase/chart") {
                                                     if ($this->includeCharts) {
                                                         $eleTarget = (string) $ele['Target'];
-                                                        if (substr($eleTarget, 0, 4) === '/xl/') {
-                                                            $index = substr($eleTarget, 1);
+                                                        if (\substr($eleTarget, 0, 4) === '/xl/') {
+                                                            $index = \substr($eleTarget, 1);
                                                         } else {
                                                             $index = self::dirAdd($fileDrawing, $eleTarget);
                                                         }
@@ -1315,11 +1315,11 @@ class Xlsx extends BaseReader
                                             foreach ($xmlDrawingChildren->oneCellAnchor as $oneCellAnchor) {
                                                 $oneCellAnchor = self::testSimpleXml($oneCellAnchor);
                                                 if ($oneCellAnchor->pic->blipFill) {
-                                                    /** @var SimpleXMLElement $blip */
+                                                    /** @var \SimpleXMLElement $blip */
                                                     $blip = $oneCellAnchor->pic->blipFill->children(Namespaces::DRAWINGML)->blip;
-                                                    /** @var SimpleXMLElement $xfrm */
+                                                    /** @var \SimpleXMLElement $xfrm */
                                                     $xfrm = $oneCellAnchor->pic->spPr->children(Namespaces::DRAWINGML)->xfrm;
-                                                    /** @var SimpleXMLElement $outerShdw */
+                                                    /** @var \SimpleXMLElement $outerShdw */
                                                     $outerShdw = $oneCellAnchor->pic->spPr->children(Namespaces::DRAWINGML)->effectLst->outerShdw;
 
                                                     $objDrawing = new \PhpOffice\PhpSpreadsheet\Worksheet\Drawing();
@@ -1341,7 +1341,7 @@ class Xlsx extends BaseReader
                                                             'link'
                                                         );
                                                         if (isset($images[$linkImageKey])) {
-                                                            $url = str_replace('xl/drawings/', '', $images[$linkImageKey]);
+                                                            $url = \str_replace('xl/drawings/', '', $images[$linkImageKey]);
                                                             $objDrawing->setPath($url);
                                                         }
                                                     }
@@ -1379,7 +1379,7 @@ class Xlsx extends BaseReader
                                                     $height = Drawing::EMUToPixels(self::getArrayItem(self::getAttributes($oneCellAnchor->ext), 'cy'));
 
                                                     $graphic = $oneCellAnchor->graphicFrame->children(Namespaces::DRAWINGML)->graphic;
-                                                    /** @var SimpleXMLElement $chartRef */
+                                                    /** @var \SimpleXMLElement $chartRef */
                                                     $chartRef = $graphic->graphicData->children(Namespaces::CHART)->chart;
                                                     $thisChart = (string) self::getAttributes($chartRef, $xmlNamespaceBase);
 
@@ -1426,7 +1426,7 @@ class Xlsx extends BaseReader
                                                             'link'
                                                         );
                                                         if (isset($images[$linkImageKey])) {
-                                                            $url = str_replace('xl/drawings/', '', $images[$linkImageKey]);
+                                                            $url = \str_replace('xl/drawings/', '', $images[$linkImageKey]);
                                                             $objDrawing->setPath($url);
                                                         }
                                                     }
@@ -1470,7 +1470,7 @@ class Xlsx extends BaseReader
                                                     $toOffsetX = Drawing::EMUToPixels($twoCellAnchor->to->colOff);
                                                     $toOffsetY = Drawing::EMUToPixels($twoCellAnchor->to->rowOff);
                                                     $graphic = $twoCellAnchor->graphicFrame->children(Namespaces::DRAWINGML)->graphic;
-                                                    /** @var SimpleXMLElement $chartRef */
+                                                    /** @var \SimpleXMLElement $chartRef */
                                                     $chartRef = $graphic->graphicData->children(Namespaces::CHART)->chart;
                                                     $thisChart = (string) self::getAttributes($chartRef, $xmlNamespaceBase);
 
@@ -1490,7 +1490,7 @@ class Xlsx extends BaseReader
                                             foreach ($xmlDrawingChildren->absoluteAnchor as $absoluteAnchor) {
                                                 if (($this->includeCharts) && ($absoluteAnchor->graphicFrame)) {
                                                     $graphic = $absoluteAnchor->graphicFrame->children(Namespaces::DRAWINGML)->graphic;
-                                                    /** @var SimpleXMLElement $chartRef */
+                                                    /** @var \SimpleXMLElement $chartRef */
                                                     $chartRef = $graphic->graphicData->children(Namespaces::CHART)->chart;
                                                     $thisChart = (string) self::getAttributes($chartRef, $xmlNamespaceBase);
                                                     $width = Drawing::EMUToPixels((int) self::getArrayItem(self::getAttributes($absoluteAnchor->ext), 'cx')[0]);
@@ -1553,10 +1553,10 @@ class Xlsx extends BaseReader
                                 foreach ($xmlWorkbook->definedNames->definedName as $definedName) {
                                     // Extract range
                                     $extractedRange = (string) $definedName;
-                                    if (($spos = strpos($extractedRange, '!')) !== false) {
-                                        $extractedRange = substr($extractedRange, 0, $spos) . str_replace('$', '', substr($extractedRange, $spos));
+                                    if (($spos = \strpos($extractedRange, '!')) !== false) {
+                                        $extractedRange = \substr($extractedRange, 0, $spos) . \str_replace('$', '', \substr($extractedRange, $spos));
                                     } else {
-                                        $extractedRange = str_replace('$', '', $extractedRange);
+                                        $extractedRange = \str_replace('$', '', $extractedRange);
                                     }
 
                                     // Valid range?
@@ -1570,10 +1570,10 @@ class Xlsx extends BaseReader
                                         switch ((string) $definedName['name']) {
                                             case '_xlnm._FilterDatabase':
                                                 if ((string) $definedName['hidden'] !== '1') {
-                                                    $extractedRange = explode(',', $extractedRange);
+                                                    $extractedRange = \explode(',', $extractedRange);
                                                     foreach ($extractedRange as $range) {
                                                         $autoFilterRange = $range;
-                                                        if (strpos($autoFilterRange, ':') !== false) {
+                                                        if (\strpos($autoFilterRange, ':') !== false) {
                                                             $docSheet->getAutoFilter()->setRange($autoFilterRange);
                                                         }
                                                     }
@@ -1582,17 +1582,17 @@ class Xlsx extends BaseReader
                                                 break;
                                             case '_xlnm.Print_Titles':
                                                 // Split $extractedRange
-                                                $extractedRange = explode(',', $extractedRange);
+                                                $extractedRange = \explode(',', $extractedRange);
 
                                                 // Set print titles
                                                 foreach ($extractedRange as $range) {
                                                     $matches = [];
-                                                    $range = str_replace('$', '', $range);
+                                                    $range = \str_replace('$', '', $range);
 
                                                     // check for repeating columns, e g. 'A:A' or 'A:D'
-                                                    if (preg_match('/!?([A-Z]+)\:([A-Z]+)$/', $range, $matches)) {
+                                                    if (\preg_match('/!?([A-Z]+)\:([A-Z]+)$/', $range, $matches)) {
                                                         $docSheet->getPageSetup()->setColumnsToRepeatAtLeft([$matches[1], $matches[2]]);
-                                                    } elseif (preg_match('/!?(\d+)\:(\d+)$/', $range, $matches)) {
+                                                    } elseif (\preg_match('/!?(\d+)\:(\d+)$/', $range, $matches)) {
                                                         // check for repeating rows, e.g. '1:1' or '1:5'
                                                         $docSheet->getPageSetup()->setRowsToRepeatAtTop([$matches[1], $matches[2]]);
                                                     }
@@ -1600,20 +1600,20 @@ class Xlsx extends BaseReader
 
                                                 break;
                                             case '_xlnm.Print_Area':
-                                                $rangeSets = preg_split("/('?(?:.*?)'?(?:![A-Z0-9]+:[A-Z0-9]+)),?/", $extractedRange, -1, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE) ?: [];
+                                                $rangeSets = \preg_split("/('?(?:.*?)'?(?:![A-Z0-9]+:[A-Z0-9]+)),?/", $extractedRange, -1, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE) ?: [];
                                                 $newRangeSets = [];
                                                 foreach ($rangeSets as $rangeSet) {
                                                     [, $rangeSet] = Worksheet::extractSheetTitle($rangeSet, true);
                                                     if (empty($rangeSet)) {
                                                         continue;
                                                     }
-                                                    if (strpos($rangeSet, ':') === false) {
+                                                    if (\strpos($rangeSet, ':') === false) {
                                                         $rangeSet = $rangeSet . ':' . $rangeSet;
                                                     }
-                                                    $newRangeSets[] = str_replace('$', '', $rangeSet);
+                                                    $newRangeSets[] = \str_replace('$', '', $rangeSet);
                                                 }
-                                                if (count($newRangeSets) > 0) {
-                                                    $docSheet->getPageSetup()->setPrintArea(implode(',', $newRangeSets));
+                                                if (\count($newRangeSets) > 0) {
+                                                    $docSheet->getPageSetup()->setPrintArea(\implode(',', $newRangeSets));
                                                 }
 
                                                 break;
@@ -1652,9 +1652,9 @@ class Xlsx extends BaseReader
                                             if ($mapSheetId[(int) $definedName['localSheetId']] !== null) {
                                                 $range = Worksheet::extractSheetTitle((string) $definedName, true);
                                                 $scope = $excel->getSheet($mapSheetId[(int) $definedName['localSheetId']]);
-                                                if (strpos((string) $definedName, '!') !== false) {
-                                                    $range[0] = str_replace("''", "'", $range[0]);
-                                                    $range[0] = str_replace("'", '', $range[0]);
+                                                if (\strpos((string) $definedName, '!') !== false) {
+                                                    $range[0] = \str_replace("''", "'", $range[0]);
+                                                    $range[0] = \str_replace("'", '', $range[0]);
                                                     if ($worksheet = $excel->getSheetByName($range[0])) { // @phpstan-ignore-line
                                                         $excel->addDefinedName(DefinedName::createInstance((string) $definedName['name'], $worksheet, $extractedRange, true, $scope));
                                                     } else {
@@ -1671,13 +1671,13 @@ class Xlsx extends BaseReader
                                     $definedRange = (string) $definedName;
                                     // "Global" definedNames
                                     $locatedSheet = null;
-                                    if (strpos((string) $definedName, '!') !== false) {
+                                    if (\strpos((string) $definedName, '!') !== false) {
                                         // Modify range, and extract the first worksheet reference
                                         // Need to split on a comma or a space if not in quotes, and extract the first part.
-                                        $definedNameValueParts = preg_split("/[ ,](?=([^']*'[^']*')*[^']*$)/miuU", $definedRange);
+                                        $definedNameValueParts = \preg_split("/[ ,](?=([^']*'[^']*')*[^']*$)/miuU", $definedRange);
                                         // Extract sheet name
                                         [$extractedSheetName] = Worksheet::extractSheetTitle((string) $definedNameValueParts[0], true); // @phpstan-ignore-line
-                                        $extractedSheetName = trim($extractedSheetName, "'");
+                                        $extractedSheetName = \trim($extractedSheetName, "'");
 
                                         // Locate sheet
                                         $locatedSheet = $excel->getSheetByName($extractedSheetName);
@@ -1716,10 +1716,10 @@ class Xlsx extends BaseReader
                 switch ($contentType['ContentType']) {
                     case 'application/vnd.openxmlformats-officedocument.drawingml.chart+xml':
                         if ($this->includeCharts) {
-                            $chartEntryRef = ltrim((string) $contentType['PartName'], '/');
+                            $chartEntryRef = \ltrim((string) $contentType['PartName'], '/');
                             $chartElements = $this->loadZip($chartEntryRef);
                             $chartReader = new Chart($chartNS, $drawingNS);
-                            $objChart = $chartReader->readChart($chartElements, basename($chartEntryRef, '.xml'));
+                            $objChart = $chartReader->readChart($chartElements, \basename($chartEntryRef, '.xml'));
                             if (isset($charts[$chartEntryRef])) {
                                 $chartPositionRef = $charts[$chartEntryRef]['sheet'] . '!' . $charts[$chartEntryRef]['id'];
                                 if (isset($chartDetails[$chartPositionRef])) {
@@ -1727,7 +1727,7 @@ class Xlsx extends BaseReader
                                     $objChart->setWorksheet($excel->getSheetByName($charts[$chartEntryRef]['sheet']));
                                     // For oneCellAnchor or absoluteAnchor positioned charts,
                                     //     toCoordinate is not in the data. Does it need to be calculated?
-                                    if (array_key_exists('toCoordinate', $chartDetails[$chartPositionRef])) {
+                                    if (\array_key_exists('toCoordinate', $chartDetails[$chartPositionRef])) {
                                         // twoCellAnchor
                                         $objChart->setTopLeftPosition($chartDetails[$chartPositionRef]['fromCoordinate'], $chartDetails[$chartPositionRef]['fromOffsetX'], $chartDetails[$chartPositionRef]['fromOffsetY']);
                                         $objChart->setBottomRightPosition($chartDetails[$chartPositionRef]['toCoordinate'], $chartDetails[$chartPositionRef]['toOffsetX'], $chartDetails[$chartPositionRef]['toOffsetY']);
@@ -1735,7 +1735,7 @@ class Xlsx extends BaseReader
                                         // oneCellAnchor or absoluteAnchor (e.g. Chart sheet)
                                         $objChart->setTopLeftPosition($chartDetails[$chartPositionRef]['fromCoordinate'], $chartDetails[$chartPositionRef]['fromOffsetX'], $chartDetails[$chartPositionRef]['fromOffsetY']);
                                         $objChart->setBottomRightPosition('', $chartDetails[$chartPositionRef]['width'], $chartDetails[$chartPositionRef]['height']);
-                                        if (array_key_exists('oneCellAnchor', $chartDetails[$chartPositionRef])) {
+                                        if (\array_key_exists('oneCellAnchor', $chartDetails[$chartPositionRef])) {
                                             $objChart->setOneCellAnchor($chartDetails[$chartPositionRef]['oneCellAnchor']);
                                         }
                                     }
@@ -1764,15 +1764,15 @@ class Xlsx extends BaseReader
     /**
      * @return RichText
      */
-    private function parseRichText(?SimpleXMLElement $is)
+    private function parseRichText(?\SimpleXMLElement $is)
     {
         $value = new RichText();
 
         if (isset($is->t)) {
             $value->createText(StringHelper::controlCharacterOOXML2PHP((string) $is->t));
         } elseif ($is !== null) {
-            if (is_object($is->r)) {
-                /** @var SimpleXMLElement $run */
+            if (\is_object($is->r)) {
+                /** @var \SimpleXMLElement $run */
                 foreach ($is->r as $run) {
                     if (!isset($run->rPr)) {
                         $value->createText(StringHelper::controlCharacterOOXML2PHP((string) $run->t));
@@ -1816,7 +1816,7 @@ class Xlsx extends BaseReader
                         if (isset($run->rPr->vertAlign)) {
                             $attr = $run->rPr->vertAlign->attributes();
                             if (isset($attr['val'])) {
-                                $vertAlign = strtolower((string) $attr['val']);
+                                $vertAlign = \strtolower((string) $attr['val']);
                                 if ($vertAlign == 'superscript') {
                                     $objFont->setSuperscript(true);
                                 }
@@ -1850,10 +1850,10 @@ class Xlsx extends BaseReader
         return $value;
     }
 
-    private function readRibbon(Spreadsheet $excel, string $customUITarget, ZipArchive $zip): void
+    private function readRibbon(Spreadsheet $excel, string $customUITarget, \ZipArchive $zip): void
     {
-        $baseDir = dirname($customUITarget);
-        $nameCustomUI = basename($customUITarget);
+        $baseDir = \dirname($customUITarget);
+        $nameCustomUI = \basename($customUITarget);
         // get the xml file (ribbon)
         $localRibbon = $this->getFromZipArchive($zip, $customUITarget);
         $customUIImagesNames = [];
@@ -1863,7 +1863,7 @@ class Xlsx extends BaseReader
         $dataRels = $this->getFromZipArchive($zip, $pathRels);
         if ($dataRels) {
             // exists and not empty if the ribbon have some pictures (other than internal MSO)
-            $UIRels = simplexml_load_string(
+            $UIRels = \simplexml_load_string(
                 $this->securityScanner->scan($dataRels),
                 'SimpleXMLElement',
                 Settings::getLibXmlLoaderOptions()
@@ -1881,7 +1881,7 @@ class Xlsx extends BaseReader
         }
         if ($localRibbon) {
             $excel->setRibbonXMLData($customUITarget, $localRibbon);
-            if (count($customUIImagesNames) > 0 && count($customUIImagesBinaries) > 0) {
+            if (\count($customUIImagesNames) > 0 && \count($customUIImagesBinaries) > 0) {
                 $excel->setRibbonBinObjects($customUIImagesNames, $customUIImagesBinaries);
             } else {
                 $excel->setRibbonBinObjects(null, null);
@@ -1893,50 +1893,50 @@ class Xlsx extends BaseReader
     }
 
     /**
-     * @param null|array|bool|SimpleXMLElement $array
+     * @param null|array|bool|\SimpleXMLElement $array
      * @param int|string $key
      *
      * @return mixed
      */
     private static function getArrayItem($array, $key = 0)
     {
-        return ($array === null || is_bool($array)) ? null : ($array[$key] ?? null);
+        return ($array === null || \is_bool($array)) ? null : ($array[$key] ?? null);
     }
 
     /**
-     * @param null|SimpleXMLElement|string $base
-     * @param null|SimpleXMLElement|string $add
+     * @param null|\SimpleXMLElement|string $base
+     * @param null|\SimpleXMLElement|string $add
      */
     private static function dirAdd($base, $add): string
     {
         $base = (string) $base;
         $add = (string) $add;
 
-        return (string) preg_replace('~[^/]+/\.\./~', '', dirname($base) . "/$add");
+        return (string) \preg_replace('~[^/]+/\.\./~', '', \dirname($base) . "/$add");
     }
 
     private static function toCSSArray(string $style): array
     {
         $style = self::stripWhiteSpaceFromStyleString($style);
 
-        $temp = explode(';', $style);
+        $temp = \explode(';', $style);
         $style = [];
         foreach ($temp as $item) {
-            $item = explode(':', $item);
+            $item = \explode(':', $item);
 
-            if (strpos($item[1], 'px') !== false) {
-                $item[1] = str_replace('px', '', $item[1]);
+            if (\strpos($item[1], 'px') !== false) {
+                $item[1] = \str_replace('px', '', $item[1]);
             }
-            if (strpos($item[1], 'pt') !== false) {
-                $item[1] = str_replace('pt', '', $item[1]);
+            if (\strpos($item[1], 'pt') !== false) {
+                $item[1] = \str_replace('pt', '', $item[1]);
                 $item[1] = (string) Font::fontSizeToPixels((int) $item[1]);
             }
-            if (strpos($item[1], 'in') !== false) {
-                $item[1] = str_replace('in', '', $item[1]);
+            if (\strpos($item[1], 'in') !== false) {
+                $item[1] = \str_replace('in', '', $item[1]);
                 $item[1] = (string) Font::inchSizeToPixels((int) $item[1]);
             }
-            if (strpos($item[1], 'cm') !== false) {
-                $item[1] = str_replace('cm', '', $item[1]);
+            if (\strpos($item[1], 'cm') !== false) {
+                $item[1] = \str_replace('cm', '', $item[1]);
                 $item[1] = (string) Font::centimeterSizeToPixels((int) $item[1]);
             }
 
@@ -1948,12 +1948,12 @@ class Xlsx extends BaseReader
 
     public static function stripWhiteSpaceFromStyleString(string $string): string
     {
-        return trim(str_replace(["\r", "\n", ' '], '', $string), ';');
+        return \trim(\str_replace(["\r", "\n", ' '], '', $string), ';');
     }
 
     private static function boolean(string $value): bool
     {
-        if (is_numeric($value)) {
+        if (\is_numeric($value)) {
             return (bool) $value;
         }
 
@@ -1963,7 +1963,7 @@ class Xlsx extends BaseReader
     /**
      * @param array $hyperlinks
      */
-    private function readHyperLinkDrawing(\PhpOffice\PhpSpreadsheet\Worksheet\Drawing $objDrawing, SimpleXMLElement $cellAnchor, $hyperlinks): void
+    private function readHyperLinkDrawing(\PhpOffice\PhpSpreadsheet\Worksheet\Drawing $objDrawing, \SimpleXMLElement $cellAnchor, $hyperlinks): void
     {
         $hlinkClick = $cellAnchor->pic->nvPicPr->cNvPr->children(Namespaces::DRAWINGML)->hlinkClick;
 
@@ -1979,7 +1979,7 @@ class Xlsx extends BaseReader
         $objDrawing->setHyperlink($hyperlink);
     }
 
-    private function readProtection(Spreadsheet $excel, SimpleXMLElement $xmlWorkbook): void
+    private function readProtection(Spreadsheet $excel, \SimpleXMLElement $xmlWorkbook): void
     {
         if (!$xmlWorkbook->workbookProtection) {
             return;
@@ -2004,7 +2004,7 @@ class Xlsx extends BaseReader
         }
     }
 
-    private static function getLockValue(SimpleXmlElement $protection, string $key): ?bool
+    private static function getLockValue(\SimpleXmlElement $protection, string $key): ?bool
     {
         $returnValue = null;
         $protectKey = $protection[$key];
@@ -2019,11 +2019,11 @@ class Xlsx extends BaseReader
     private function readFormControlProperties(Spreadsheet $excel, string $dir, string $fileWorksheet, Worksheet $docSheet, array &$unparsedLoadedData): void
     {
         $zip = $this->zip;
-        if (!$zip->locateName(dirname("$dir/$fileWorksheet") . '/_rels/' . basename($fileWorksheet) . '.rels')) {
+        if (!$zip->locateName(\dirname("$dir/$fileWorksheet") . '/_rels/' . \basename($fileWorksheet) . '.rels')) {
             return;
         }
 
-        $filename = dirname("$dir/$fileWorksheet") . '/_rels/' . basename($fileWorksheet) . '.rels';
+        $filename = \dirname("$dir/$fileWorksheet") . '/_rels/' . \basename($fileWorksheet) . '.rels';
         $relsWorksheet = $this->loadZipNoNamespace($filename, Namespaces::RELATIONSHIPS);
         $ctrlProps = [];
         foreach ($relsWorksheet->Relationship as $ele) {
@@ -2034,7 +2034,7 @@ class Xlsx extends BaseReader
 
         $unparsedCtrlProps = &$unparsedLoadedData['sheets'][$docSheet->getCodeName()]['ctrlProps'];
         foreach ($ctrlProps as $rId => $ctrlProp) {
-            $rId = substr($rId, 3); // rIdXXX
+            $rId = \substr($rId, 3); // rIdXXX
             $unparsedCtrlProps[$rId] = [];
             $unparsedCtrlProps[$rId]['filePath'] = self::dirAdd("$dir/$fileWorksheet", $ctrlProp['Target']);
             $unparsedCtrlProps[$rId]['relFilePath'] = (string) $ctrlProp['Target'];
@@ -2046,11 +2046,11 @@ class Xlsx extends BaseReader
     private function readPrinterSettings(Spreadsheet $excel, string $dir, string $fileWorksheet, Worksheet $docSheet, array &$unparsedLoadedData): void
     {
         $zip = $this->zip;
-        if (!$zip->locateName(dirname("$dir/$fileWorksheet") . '/_rels/' . basename($fileWorksheet) . '.rels')) {
+        if (!$zip->locateName(\dirname("$dir/$fileWorksheet") . '/_rels/' . \basename($fileWorksheet) . '.rels')) {
             return;
         }
 
-        $filename = dirname("$dir/$fileWorksheet") . '/_rels/' . basename($fileWorksheet) . '.rels';
+        $filename = \dirname("$dir/$fileWorksheet") . '/_rels/' . \basename($fileWorksheet) . '.rels';
         $relsWorksheet = $this->loadZipNoNamespace($filename, Namespaces::RELATIONSHIPS);
         $sheetPrinterSettings = [];
         foreach ($relsWorksheet->Relationship as $ele) {
@@ -2061,8 +2061,8 @@ class Xlsx extends BaseReader
 
         $unparsedPrinterSettings = &$unparsedLoadedData['sheets'][$docSheet->getCodeName()]['printerSettings'];
         foreach ($sheetPrinterSettings as $rId => $printerSettings) {
-            $rId = substr($rId, 3); // rIdXXX
-            if (substr($rId, -2) !== 'ps') {
+            $rId = \substr($rId, 3); // rIdXXX
+            if (\substr($rId, -2) !== 'ps') {
                 $rId = $rId . 'ps'; // rIdXXX, add 'ps' suffix to avoid identical resource identifier collision with unparsed vmlDrawing
             }
             $unparsedPrinterSettings[$rId] = [];
@@ -2086,9 +2086,9 @@ class Xlsx extends BaseReader
             switch ($type) {
                 case Namespaces::OFFICE_DOCUMENT:
                 case Namespaces::PURL_OFFICE_DOCUMENT:
-                    $basename = basename((string) $rel['Target']);
-                    $xmlNamespaceBase = dirname($type);
-                    if (preg_match('/workbook.*\.xml/', $basename)) {
+                    $basename = \basename((string) $rel['Target']);
+                    $xmlNamespaceBase = \dirname($type);
+                    if (\preg_match('/workbook.*\.xml/', $basename)) {
                         $workbookBasename = $basename;
                     }
 
@@ -2099,7 +2099,7 @@ class Xlsx extends BaseReader
         return [$workbookBasename, $xmlNamespaceBase];
     }
 
-    private function readSheetProtection(Worksheet $docSheet, SimpleXMLElement $xmlSheet): void
+    private function readSheetProtection(Worksheet $docSheet, \SimpleXMLElement $xmlSheet): void
     {
         if ($this->readDataOnly || !$xmlSheet->sheetProtection) {
             return;
@@ -2125,7 +2125,7 @@ class Xlsx extends BaseReader
     }
 
     private function readAutoFilter(
-        SimpleXMLElement $xmlSheet,
+        \SimpleXMLElement $xmlSheet,
         Worksheet $docSheet
     ): void {
         if ($xmlSheet && $xmlSheet->autoFilter) {
@@ -2134,11 +2134,11 @@ class Xlsx extends BaseReader
     }
 
     private function readTables(
-        SimpleXMLElement $xmlSheet,
+        \SimpleXMLElement $xmlSheet,
         Worksheet $docSheet,
         string $dir,
         string $fileWorksheet,
-        ZipArchive $zip
+        \ZipArchive $zip
     ): void {
         if ($xmlSheet && $xmlSheet->tableParts && (int) $xmlSheet->tableParts['count'] > 0) {
             $this->readTablesInTablesFile($xmlSheet, $dir, $fileWorksheet, $zip, $docSheet);
@@ -2146,16 +2146,16 @@ class Xlsx extends BaseReader
     }
 
     private function readTablesInTablesFile(
-        SimpleXMLElement $xmlSheet,
+        \SimpleXMLElement $xmlSheet,
         string $dir,
         string $fileWorksheet,
-        ZipArchive $zip,
+        \ZipArchive $zip,
         Worksheet $docSheet
     ): void {
         foreach ($xmlSheet->tableParts->tablePart as $tablePart) {
             $relation = self::getAttributes($tablePart, Namespaces::SCHEMA_OFFICE_DOCUMENT);
             $tablePartRel = (string) $relation['id'];
-            $relationsFileName = dirname("$dir/$fileWorksheet") . '/_rels/' . basename($fileWorksheet) . '.rels';
+            $relationsFileName = \dirname("$dir/$fileWorksheet") . '/_rels/' . \basename($fileWorksheet) . '.rels';
 
             if ($zip->locateName($relationsFileName)) {
                 $relsTableReferences = $this->loadZip($relationsFileName, Namespaces::RELATIONSHIPS);
@@ -2164,7 +2164,7 @@ class Xlsx extends BaseReader
 
                     if ((string) $relationshipAttributes['Id'] === $tablePartRel) {
                         $relationshipFileName = (string) $relationshipAttributes['Target'];
-                        $relationshipFilePath = dirname("$dir/$fileWorksheet") . '/' . $relationshipFileName;
+                        $relationshipFilePath = \dirname("$dir/$fileWorksheet") . '/' . $relationshipFileName;
                         $relationshipFilePath = File::realpath($relationshipFilePath);
 
                         if ($this->fileExistsInArchive($this->zip, $relationshipFilePath)) {
@@ -2177,7 +2177,7 @@ class Xlsx extends BaseReader
         }
     }
 
-    private static function extractStyles(?SimpleXMLElement $sxml, string $node1, string $node2): array
+    private static function extractStyles(?\SimpleXMLElement $sxml, string $node1, string $node2): array
     {
         $array = [];
         if ($sxml && $sxml->{$node1}->{$node2}) {
@@ -2189,7 +2189,7 @@ class Xlsx extends BaseReader
         return $array;
     }
 
-    private static function extractPalette(?SimpleXMLElement $sxml): array
+    private static function extractPalette(?\SimpleXMLElement $sxml): array
     {
         $array = [];
         if ($sxml && $sxml->colors->indexedColors) {

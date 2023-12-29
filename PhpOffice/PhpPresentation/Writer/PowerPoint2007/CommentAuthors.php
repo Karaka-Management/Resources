@@ -42,7 +42,7 @@ class CommentAuthors extends AbstractDecoratorWriter
                 if (!($oAuthor instanceof Author)) {
                     continue;
                 }
-                if (array_key_exists($oAuthor->getHashCode(), $arrayAuthors)) {
+                if (\array_key_exists($oAuthor->getHashCode(), $arrayAuthors)) {
                     continue;
                 }
                 $arrayAuthors[$oAuthor->getHashCode()] = $oAuthor;

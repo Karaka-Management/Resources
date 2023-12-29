@@ -24,7 +24,7 @@ use IteratorIterator;
 use PhpOffice\PhpPresentation\PhpPresentation;
 
 // @phpstan-ignore-next-line
-class Iterator extends IteratorIterator
+class Iterator extends \IteratorIterator
 {
     /**
      * Presentation to iterate.

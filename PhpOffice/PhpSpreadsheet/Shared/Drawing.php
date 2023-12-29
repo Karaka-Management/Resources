@@ -23,7 +23,7 @@ class Drawing
     /**
      * Convert EMU to pixels.
      *
-     * @param int|SimpleXMLElement $emuValue Value in EMU
+     * @param int|\SimpleXMLElement $emuValue Value in EMU
      *
      * @return int Value in pixels
      */
@@ -31,7 +31,7 @@ class Drawing
     {
         $emuValue = (int) $emuValue;
         if ($emuValue != 0) {
-            return (int) round($emuValue / 9525);
+            return (int) \round($emuValue / 9525);
         }
 
         return 0;
@@ -90,7 +90,7 @@ class Drawing
         }
 
         // Round pixels to closest integer
-        $colWidth = (int) round($colWidth);
+        $colWidth = (int) \round($colWidth);
 
         return $colWidth;
     }
@@ -117,7 +117,7 @@ class Drawing
     public static function pointsToPixels($pointValue)
     {
         if ($pointValue != 0) {
-            return (int) ceil($pointValue / 0.75);
+            return (int) \ceil($pointValue / 0.75);
         }
 
         return 0;
@@ -132,13 +132,13 @@ class Drawing
      */
     public static function degreesToAngle($degrees)
     {
-        return (int) round($degrees * 60000);
+        return (int) \round($degrees * 60000);
     }
 
     /**
      * Convert angle to degrees.
      *
-     * @param int|SimpleXMLElement $angle Angle
+     * @param int|\SimpleXMLElement $angle Angle
      *
      * @return int Degrees
      */
@@ -146,7 +146,7 @@ class Drawing
     {
         $angle = (int) $angle;
         if ($angle != 0) {
-            return (int) round($angle / 60000);
+            return (int) \round($angle / 60000);
         }
 
         return 0;
@@ -159,7 +159,7 @@ class Drawing
      *
      * @param string $bmpFilename Path to Windows DIB (BMP) image
      *
-     * @return GdImage|resource
+     * @return \GdImage|resource
      *
      * @deprecated 1.26 use Php function imagecreatefrombmp instead
      *
@@ -167,7 +167,7 @@ class Drawing
      */
     public static function imagecreatefrombmp($bmpFilename)
     {
-        $retVal = @imagecreatefrombmp($bmpFilename);
+        $retVal = @\imagecreatefrombmp($bmpFilename);
         if ($retVal === false) {
             throw new ReaderException("Unable to create image from $bmpFilename");
         }

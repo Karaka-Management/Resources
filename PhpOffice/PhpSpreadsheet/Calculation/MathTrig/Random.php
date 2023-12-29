@@ -17,7 +17,7 @@ class Random
      */
     public static function rand()
     {
-        return mt_rand(0, 10000000) / 10000000;
+        return \mt_rand(0, 10000000) / 10000000;
     }
 
     /**
@@ -34,7 +34,7 @@ class Random
      */
     public static function randBetween($min, $max)
     {
-        if (is_array($min) || is_array($max)) {
+        if (\is_array($min) || \is_array($max)) {
             return self::evaluateArrayArguments([self::class, __FUNCTION__], $min, $max);
         }
 
@@ -46,7 +46,7 @@ class Random
             return $e->getMessage();
         }
 
-        return mt_rand($min, $max);
+        return \mt_rand($min, $max);
     }
 
     /**
@@ -84,16 +84,16 @@ class Random
             return $e->getMessage();
         }
 
-        return array_chunk(
-            array_map(
+        return \array_chunk(
+            \array_map(
                 function () use ($min, $max, $wholeNumber) {
                     return $wholeNumber
-                        ? mt_rand((int) $min, (int) $max)
-                        : (mt_rand() / mt_getrandmax()) * ($max - $min) + $min;
+                        ? \mt_rand((int) $min, (int) $max)
+                        : (\mt_rand() / \mt_getrandmax()) * ($max - $min) + $min;
                 },
-                array_fill(0, $rows * $columns, $min)
+                \array_fill(0, $rows * $columns, $min)
             ),
-            max($columns, 1)
+            \max($columns, 1)
         );
     }
 }

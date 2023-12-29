@@ -65,7 +65,7 @@ class Cumulative
         $interest = 0;
         for ($per = $start; $per <= $end; ++$per) {
             $ipmt = Interest::payment($rate, $per, $periods, $presentValue, 0, $type);
-            if (is_string($ipmt)) {
+            if (\is_string($ipmt)) {
                 return $ipmt;
             }
 
@@ -130,7 +130,7 @@ class Cumulative
         $principal = 0;
         for ($per = $start; $per <= $end; ++$per) {
             $ppmt = Payments::interestPayment($rate, $per, $periods, $presentValue, 0, $type);
-            if (is_string($ppmt)) {
+            if (\is_string($ppmt)) {
                 return $ppmt;
             }
 

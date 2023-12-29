@@ -262,7 +262,7 @@ class Alignment extends Supervisor
      */
     public function setHorizontal(string $horizontalAlignment)
     {
-        $horizontalAlignment = strtolower($horizontalAlignment);
+        $horizontalAlignment = \strtolower($horizontalAlignment);
         if ($horizontalAlignment === self::HORIZONTAL_CENTER_CONTINUOUS_LC) {
             $horizontalAlignment = self::HORIZONTAL_CENTER_CONTINUOUS;
         }
@@ -300,7 +300,7 @@ class Alignment extends Supervisor
      */
     public function setVertical($verticalAlignment)
     {
-        $verticalAlignment = strtolower($verticalAlignment);
+        $verticalAlignment = \strtolower($verticalAlignment);
 
         if ($this->isSupervisor) {
             $styleArray = $this->getStyleArray(['vertical' => $verticalAlignment]);
@@ -517,7 +517,7 @@ class Alignment extends Supervisor
             return $this->getSharedComponent()->getHashCode();
         }
 
-        return md5(
+        return \md5(
             $this->horizontal .
             $this->vertical .
             $this->textRotation .

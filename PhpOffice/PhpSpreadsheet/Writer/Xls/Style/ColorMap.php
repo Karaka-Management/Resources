@@ -71,7 +71,7 @@ class ColorMap
     public static function lookup(Color $color, int $defaultIndex = 0x00): int
     {
         $colorRgb = $color->getRGB();
-        if (is_string($colorRgb) && array_key_exists("#{$colorRgb}", self::$colorMap)) {
+        if (\is_string($colorRgb) && \array_key_exists("#{$colorRgb}", self::$colorMap)) {
             return self::$colorMap["#{$colorRgb}"];
         }
 

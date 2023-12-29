@@ -791,9 +791,9 @@ class Roman
         $aValue %= 10;
         $result = self::THOUSANDS[$m] . self::HUNDREDS[$c] . self::TENS[$t] . self::ONES[$aValue];
         if ($style > 0) {
-            if (array_key_exists($origValue, self::VALUES)) {
+            if (\array_key_exists($origValue, self::VALUES)) {
                 $arr = self::VALUES[$origValue];
-                $idx = min($style, count($arr)) - 1;
+                $idx = \min($style, \count($arr)) - 1;
                 $result = $arr[$idx];
             }
         }
@@ -827,13 +827,13 @@ class Roman
      */
     public static function evaluate($aValue, $style = 0)
     {
-        if (is_array($aValue) || is_array($style)) {
+        if (\is_array($aValue) || \is_array($style)) {
             return self::evaluateArrayArguments([self::class, __FUNCTION__], $aValue, $style);
         }
 
         try {
             $aValue = Helpers::validateNumericNullBool($aValue);
-            if (is_bool($style)) {
+            if (\is_bool($style)) {
                 $style = $style ? 0 : 4;
             }
             $style = Helpers::validateNumericNullSubstitution($style, null);

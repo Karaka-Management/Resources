@@ -13,17 +13,17 @@ class FractionFormatter extends BaseFormatter
     {
         $format = self::stripQuotes($format);
         $value = (float) $value;
-        $absValue = abs($value);
+        $absValue = \abs($value);
 
         $sign = ($value < 0.0) ? '-' : '';
 
-        $integerPart = floor($absValue);
+        $integerPart = \floor($absValue);
 
         $decimalPart = self::getDecimal((string) $absValue);
         if ($decimalPart === '0') {
             return "{$sign}{$integerPart}";
         }
-        $decimalLength = strlen($decimalPart);
+        $decimalLength = \strlen($decimalPart);
         $decimalDivisor = 10 ** $decimalLength;
 
         /** @var float */
@@ -34,15 +34,15 @@ class FractionFormatter extends BaseFormatter
         $adjustedDecimalPart = $decimalPartx / $GCD;
         $adjustedDecimalDivisor = $decimalDivisor / $GCD;
 
-        if ((strpos($format, '0') !== false)) {
+        if ((\strpos($format, '0') !== false)) {
             return "{$sign}{$integerPart} {$adjustedDecimalPart}/{$adjustedDecimalDivisor}";
-        } elseif ((strpos($format, '#') !== false)) {
+        } elseif ((\strpos($format, '#') !== false)) {
             if ($integerPart == 0) {
                 return "{$sign}{$adjustedDecimalPart}/{$adjustedDecimalDivisor}";
             }
 
             return "{$sign}{$integerPart} {$adjustedDecimalPart}/{$adjustedDecimalDivisor}";
-        } elseif ((substr($format, 0, 3) == '? ?')) {
+        } elseif ((\substr($format, 0, 3) == '? ?')) {
             if ($integerPart == 0) {
                 $integerPart = '';
             }
@@ -58,7 +58,7 @@ class FractionFormatter extends BaseFormatter
     private static function getDecimal(string $value): string
     {
         $decimalPart = '0';
-        if (preg_match('/^\\d*[.](\\d*[1-9])0*$/', $value, $matches) === 1) {
+        if (\preg_match('/^\\d*[.](\\d*[1-9])0*$/', $value, $matches) === 1) {
             $decimalPart = $matches[1];
         }
 

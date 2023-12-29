@@ -10,10 +10,10 @@ class SheetViewOptions extends BaseParserClass
     /** @var Worksheet */
     private $worksheet;
 
-    /** @var ?SimpleXMLElement */
+    /** @var ?\SimpleXMLElement */
     private $worksheetXml;
 
-    public function __construct(Worksheet $workSheet, ?SimpleXMLElement $worksheetXml = null)
+    public function __construct(Worksheet $workSheet, ?\SimpleXMLElement $worksheetXml = null)
     {
         $this->worksheet = $workSheet;
         $this->worksheetXml = $worksheetXml;
@@ -42,14 +42,14 @@ class SheetViewOptions extends BaseParserClass
         }
     }
 
-    private function tabColor(SimpleXMLElement $sheetPr, Styles $styleReader): void
+    private function tabColor(\SimpleXMLElement $sheetPr, Styles $styleReader): void
     {
         if (isset($sheetPr->tabColor)) {
             $this->worksheet->getTabColor()->setARGB($styleReader->readColor($sheetPr->tabColor));
         }
     }
 
-    private function codeName(SimpleXMLElement $sheetPrx): void
+    private function codeName(\SimpleXMLElement $sheetPrx): void
     {
         $sheetPr = $sheetPrx->attributes() ?? [];
         if (isset($sheetPr['codeName'])) {
@@ -57,7 +57,7 @@ class SheetViewOptions extends BaseParserClass
         }
     }
 
-    private function outlines(SimpleXMLElement $sheetPr): void
+    private function outlines(\SimpleXMLElement $sheetPr): void
     {
         if (isset($sheetPr->outlinePr)) {
             $attr = $sheetPr->outlinePr->attributes() ?? [];
@@ -81,7 +81,7 @@ class SheetViewOptions extends BaseParserClass
         }
     }
 
-    private function pageSetup(SimpleXMLElement $sheetPr): void
+    private function pageSetup(\SimpleXMLElement $sheetPr): void
     {
         if (isset($sheetPr->pageSetUpPr)) {
             $attr = $sheetPr->pageSetUpPr->attributes() ?? [];
@@ -96,7 +96,7 @@ class SheetViewOptions extends BaseParserClass
         }
     }
 
-    private function sheetFormat(SimpleXMLElement $sheetFormatPrx): void
+    private function sheetFormat(\SimpleXMLElement $sheetFormatPrx): void
     {
         $sheetFormatPr = $sheetFormatPrx->attributes() ?? [];
         if (
@@ -121,7 +121,7 @@ class SheetViewOptions extends BaseParserClass
         }
     }
 
-    private function printOptions(SimpleXMLElement $printOptionsx): void
+    private function printOptions(\SimpleXMLElement $printOptionsx): void
     {
         $printOptions = $printOptionsx->attributes() ?? [];
         if (isset($printOptions['gridLinesSet']) && self::boolean((string) $printOptions['gridLinesSet'])) {

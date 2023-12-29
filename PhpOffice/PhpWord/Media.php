@@ -48,7 +48,7 @@ class Media
     public static function addElement($container, $mediaType, $source, ?Image $image = null)
     {
         // Assign unique media Id and initiate media container if none exists
-        $mediaId = md5($container . $source);
+        $mediaId = \md5($container . $source);
         if (!isset(self::$elements[$container])) {
             self::$elements[$container] = [];
         }
@@ -158,7 +158,7 @@ class Media
         // If header/footer, search for headerx and footerx where x is number
         if ($container == 'header' || $container == 'footer') {
             foreach (self::$elements as $key => $val) {
-                if (substr($key, 0, 6) == $container) {
+                if (\substr($key, 0, 6) == $container) {
                     $elements[$key] = $val;
                 }
             }

@@ -40,7 +40,7 @@ class Errors extends WizardAbstract implements WizardInterface
 
     protected function getExpression(): void
     {
-        $this->expression = sprintf(
+        $this->expression = \sprintf(
             self::EXPRESSIONS[$this->inverse ? Wizard::ERRORS : Wizard::NOT_ERRORS],
             $this->referenceCell
         );
@@ -84,7 +84,7 @@ class Errors extends WizardAbstract implements WizardInterface
      */
     public function __call($methodName, $arguments): self
     {
-        if (!array_key_exists($methodName, self::OPERATORS)) {
+        if (!\array_key_exists($methodName, self::OPERATORS)) {
             throw new Exception('Invalid Operation for Errors CF Rule Wizard');
         }
 

@@ -217,7 +217,7 @@ abstract class Pdf extends Html
      */
     public function setTempDir($temporaryDirectory)
     {
-        if (is_dir($temporaryDirectory)) {
+        if (\is_dir($temporaryDirectory)) {
             $this->tempDir = $temporaryDirectory;
         } else {
             throw new WriterException("Directory does not exist: $temporaryDirectory");

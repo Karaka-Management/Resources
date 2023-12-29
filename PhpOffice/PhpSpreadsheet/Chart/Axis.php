@@ -98,9 +98,9 @@ class Axis extends Properties
         $format = (string) $format_code;
         $this->axisNumber['format'] = $format;
         $this->axisNumber['source_linked'] = $sourceLinked;
-        if (is_bool($numeric)) {
+        if (\is_bool($numeric)) {
             $this->axisNumber['numeric'] = $numeric;
-        } elseif (in_array($format, self::NUMERIC_FORMAT, true)) {
+        } elseif (\in_array($format, self::NUMERIC_FORMAT, true)) {
             $this->axisNumber['numeric'] = true;
         }
     }

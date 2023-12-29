@@ -24,7 +24,7 @@ class InvalidClassException extends PhpPresentationException
 {
     public function __construct(string $class, string $error)
     {
-        parent::__construct(sprintf(
+        parent::__construct(\sprintf(
             'The class %s is invalid (%s)',
             $class,
             $error

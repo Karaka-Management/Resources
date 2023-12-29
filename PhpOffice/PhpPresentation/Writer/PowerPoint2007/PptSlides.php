@@ -59,7 +59,7 @@ class PptSlides extends AbstractSlide
             // Add background image slide
             $oBkgImage = $oSlide->getBackground();
             if ($oBkgImage instanceof Image) {
-                $this->oZip->addFromString('ppt/media/' . $oBkgImage->getIndexedFilename((string) $idx), file_get_contents($oBkgImage->getPath()));
+                $this->oZip->addFromString('ppt/media/' . $oBkgImage->getIndexedFilename((string) $idx), \file_get_contents($oBkgImage->getPath()));
             }
         }
 
@@ -206,10 +206,10 @@ class PptSlides extends AbstractSlide
                 // Hyperlink in table
                 if ($iterator->current() instanceof ShapeTable) {
                     // Rows
-                    $countRows = count($iterator->current()->getRows());
+                    $countRows = \count($iterator->current()->getRows());
                     for ($row = 0; $row < $countRows; ++$row) {
                         // Cells in rows
-                        $countCells = count($iterator->current()->getRow($row)->getCells());
+                        $countCells = \count($iterator->current()->getRow($row)->getCells());
                         for ($cell = 0; $cell < $countCells; ++$cell) {
                             $currentCell = $iterator->current()->getRow($row)->getCell($cell);
                             // Paragraphs in cell
@@ -282,10 +282,10 @@ class PptSlides extends AbstractSlide
                         // Hyperlink in table
                         if ($iterator2->current() instanceof ShapeTable) {
                             // Rows
-                            $countRows = count($iterator2->current()->getRows());
+                            $countRows = \count($iterator2->current()->getRows());
                             for ($row = 0; $row < $countRows; ++$row) {
                                 // Cells in rows
-                                $countCells = count($iterator2->current()->getRow($row)->getCells());
+                                $countCells = \count($iterator2->current()->getRow($row)->getCells());
                                 for ($cell = 0; $cell < $countCells; ++$cell) {
                                     $currentCell = $iterator2->current()->getRow($row)->getCell($cell);
                                     // Paragraphs in cell

@@ -68,7 +68,7 @@ class PhpPresentation
     /**
      * Collection of Master Slides.
      *
-     * @var array<int, SlideMaster>|ArrayObject<int, SlideMaster>
+     * @var array<int, SlideMaster>|\ArrayObject<int, SlideMaster>
      */
     protected $slideMasters;
 
@@ -184,10 +184,10 @@ class PhpPresentation
      */
     public function removeSlideByIndex(int $index = 0): self
     {
-        if ($index > count($this->slideCollection) - 1) {
-            throw new OutOfBoundsException(0, count($this->slideCollection) - 1, $index);
+        if ($index > \count($this->slideCollection) - 1) {
+            throw new OutOfBoundsException(0, \count($this->slideCollection) - 1, $index);
         }
-        array_splice($this->slideCollection, $index, 1);
+        \array_splice($this->slideCollection, $index, 1);
 
         return $this;
     }
@@ -201,8 +201,8 @@ class PhpPresentation
      */
     public function getSlide(int $index = 0): Slide
     {
-        if ($index > count($this->slideCollection) - 1) {
-            throw new OutOfBoundsException(0, count($this->slideCollection) - 1, $index);
+        if ($index > \count($this->slideCollection) - 1) {
+            throw new OutOfBoundsException(0, \count($this->slideCollection) - 1, $index);
         }
 
         return $this->slideCollection[$index];
@@ -240,7 +240,7 @@ class PhpPresentation
      */
     public function getSlideCount(): int
     {
-        return count($this->slideCollection);
+        return \count($this->slideCollection);
     }
 
     /**
@@ -262,8 +262,8 @@ class PhpPresentation
      */
     public function setActiveSlideIndex(int $index = 0): Slide
     {
-        if ($index > count($this->slideCollection) - 1) {
-            throw new OutOfBoundsException(0, count($this->slideCollection) - 1, $index);
+        if ($index > \count($this->slideCollection) - 1) {
+            throw new OutOfBoundsException(0, \count($this->slideCollection) - 1, $index);
         }
         $this->activeSlideIndex = $index;
 
@@ -320,7 +320,7 @@ class PhpPresentation
     {
         $copied = clone $this;
 
-        $slideCount = count($this->slideCollection);
+        $slideCount = \count($this->slideCollection);
         for ($i = 0; $i < $slideCount; ++$i) {
             $this->slideCollection[$i] = $this->slideCollection[$i]->copy();
             $this->slideCollection[$i]->rebindParent($this);
@@ -330,7 +330,7 @@ class PhpPresentation
     }
 
     /**
-     * @return array<int, Slide\SlideMaster>|ArrayObject<int, Slide\SlideMaster>
+     * @return array<int, Slide\SlideMaster>|\ArrayObject<int, Slide\SlideMaster>
      */
     public function getAllMasterSlides()
     {
@@ -338,11 +338,11 @@ class PhpPresentation
     }
 
     /**
-     * @param array<int, Slide\SlideMaster>|ArrayObject<int, Slide\SlideMaster> $slideMasters
+     * @param array<int, Slide\SlideMaster>|\ArrayObject<int, Slide\SlideMaster> $slideMasters
      */
     public function setAllMasterSlides($slideMasters = []): self
     {
-        if ($slideMasters instanceof ArrayObject || is_array($slideMasters)) {
+        if ($slideMasters instanceof \ArrayObject || \is_array($slideMasters)) {
             $this->slideMasters = $slideMasters;
         }
 

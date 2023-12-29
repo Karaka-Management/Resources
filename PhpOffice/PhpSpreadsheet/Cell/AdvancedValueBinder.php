@@ -22,7 +22,7 @@ class AdvancedValueBinder extends DefaultValueBinder implements IValueBinder
     {
         if ($value === null) {
             return parent::bindValue($cell, $value);
-        } elseif (is_string($value)) {
+        } elseif (\is_string($value)) {
             // sanitize UTF-8 strings
             $value = StringHelper::sanitizeUTF8($value);
         }
@@ -44,14 +44,14 @@ class AdvancedValueBinder extends DefaultValueBinder implements IValueBinder
             }
 
             // Check for fractions
-            if (preg_match('/^([+-]?)\s*(\d+)\s?\/\s*(\d+)$/', $value, $matches)) {
+            if (\preg_match('/^([+-]?)\s*(\d+)\s?\/\s*(\d+)$/', $value, $matches)) {
                 return $this->setProperFraction($matches, $cell);
-            } elseif (preg_match('/^([+-]?)(\d*) +(\d*)\s?\/\s*(\d*)$/', $value, $matches)) {
+            } elseif (\preg_match('/^([+-]?)(\d*) +(\d*)\s?\/\s*(\d*)$/', $value, $matches)) {
                 return $this->setImproperFraction($matches, $cell);
             }
 
             // Check for percentage
-            if (preg_match('/^\-?\d*\.?\d*\s?\%$/', $value)) {
+            if (\preg_match('/^\-?\d*\.?\d*\s?\%$/', $value)) {
                 return $this->setPercentage($value, $cell);
             }
 
@@ -59,20 +59,20 @@ class AdvancedValueBinder extends DefaultValueBinder implements IValueBinder
             $currencyCode = StringHelper::getCurrencyCode();
             $decimalSeparator = StringHelper::getDecimalSeparator();
             $thousandsSeparator = StringHelper::getThousandsSeparator();
-            if (preg_match('/^' . preg_quote($currencyCode, '/') . ' *(\d{1,3}(' . preg_quote($thousandsSeparator, '/') . '\d{3})*|(\d+))(' . preg_quote($decimalSeparator, '/') . '\d{2})?$/', $value)) {
+            if (\preg_match('/^' . \preg_quote($currencyCode, '/') . ' *(\d{1,3}(' . \preg_quote($thousandsSeparator, '/') . '\d{3})*|(\d+))(' . \preg_quote($decimalSeparator, '/') . '\d{2})?$/', $value)) {
                 // Convert value to number
-                $value = (float) trim(str_replace([$currencyCode, $thousandsSeparator, $decimalSeparator], ['', '', '.'], $value));
+                $value = (float) \trim(\str_replace([$currencyCode, $thousandsSeparator, $decimalSeparator], ['', '', '.'], $value));
                 $cell->setValueExplicit($value, DataType::TYPE_NUMERIC);
                 // Set style
                 $cell->getWorksheet()->getStyle($cell->getCoordinate())
                     ->getNumberFormat()->setFormatCode(
-                        str_replace('$', $currencyCode, NumberFormat::FORMAT_CURRENCY_USD_SIMPLE)
+                        \str_replace('$', $currencyCode, NumberFormat::FORMAT_CURRENCY_USD_SIMPLE)
                     );
 
                 return true;
-            } elseif (preg_match('/^\$ *(\d{1,3}(\,\d{3})*|(\d+))(\.\d{2})?$/', $value)) {
+            } elseif (\preg_match('/^\$ *(\d{1,3}(\,\d{3})*|(\d+))(\.\d{2})?$/', $value)) {
                 // Convert value to number
-                $value = (float) trim(str_replace(['$', ','], '', $value));
+                $value = (float) \trim(\str_replace(['$', ','], '', $value));
                 $cell->setValueExplicit($value, DataType::TYPE_NUMERIC);
                 // Set style
                 $cell->getWorksheet()->getStyle($cell->getCoordinate())
@@ -82,12 +82,12 @@ class AdvancedValueBinder extends DefaultValueBinder implements IValueBinder
             }
 
             // Check for time without seconds e.g. '9:45', '09:45'
-            if (preg_match('/^(\d|[0-1]\d|2[0-3]):[0-5]\d$/', $value)) {
+            if (\preg_match('/^(\d|[0-1]\d|2[0-3]):[0-5]\d$/', $value)) {
                 return $this->setTimeHoursMinutes($value, $cell);
             }
 
             // Check for time with seconds '9:45:59', '09:45:59'
-            if (preg_match('/^(\d|[0-1]\d|2[0-3]):[0-5]\d:[0-5]\d$/', $value)) {
+            if (\preg_match('/^(\d|[0-1]\d|2[0-3]):[0-5]\d:[0-5]\d$/', $value)) {
                 return $this->setTimeHoursMinutesSeconds($value, $cell);
             }
 
@@ -96,7 +96,7 @@ class AdvancedValueBinder extends DefaultValueBinder implements IValueBinder
                 // Convert value to number
                 $cell->setValueExplicit($d, DataType::TYPE_NUMERIC);
                 // Determine style. Either there is a time part or not. Look for ':'
-                if (strpos($value, ':') !== false) {
+                if (\strpos($value, ':') !== false) {
                     $formatCode = 'yyyy-mm-dd h:mm';
                 } else {
                     $formatCode = 'yyyy-mm-dd';
@@ -108,7 +108,7 @@ class AdvancedValueBinder extends DefaultValueBinder implements IValueBinder
             }
 
             // Check for newline character "\n"
-            if (strpos($value, "\n") !== false) {
+            if (\strpos($value, "\n") !== false) {
                 $cell->setValueExplicit($value, DataType::TYPE_STRING);
                 // Set style
                 $cell->getWorksheet()->getStyle($cell->getCoordinate())
@@ -132,8 +132,8 @@ class AdvancedValueBinder extends DefaultValueBinder implements IValueBinder
         $cell->setValueExplicit((float) $value, DataType::TYPE_NUMERIC);
 
         // Build the number format mask based on the size of the matched values
-        $dividend = str_repeat('?', strlen($matches[3]));
-        $divisor = str_repeat('?', strlen($matches[4]));
+        $dividend = \str_repeat('?', \strlen($matches[3]));
+        $divisor = \str_repeat('?', \strlen($matches[4]));
         $fractionMask = "# {$dividend}/{$divisor}";
         // Set style
         $cell->getWorksheet()->getStyle($cell->getCoordinate())
@@ -152,8 +152,8 @@ class AdvancedValueBinder extends DefaultValueBinder implements IValueBinder
         $cell->setValueExplicit((float) $value, DataType::TYPE_NUMERIC);
 
         // Build the number format mask based on the size of the matched values
-        $dividend = str_repeat('?', strlen($matches[2]));
-        $divisor = str_repeat('?', strlen($matches[3]));
+        $dividend = \str_repeat('?', \strlen($matches[2]));
+        $divisor = \str_repeat('?', \strlen($matches[3]));
         $fractionMask = "{$dividend}/{$divisor}";
         // Set style
         $cell->getWorksheet()->getStyle($cell->getCoordinate())
@@ -165,7 +165,7 @@ class AdvancedValueBinder extends DefaultValueBinder implements IValueBinder
     protected function setPercentage(string $value, Cell $cell): bool
     {
         // Convert value to number
-        $value = ((float) str_replace('%', '', $value)) / 100;
+        $value = ((float) \str_replace('%', '', $value)) / 100;
         $cell->setValueExplicit($value, DataType::TYPE_NUMERIC);
 
         // Set style
@@ -178,7 +178,7 @@ class AdvancedValueBinder extends DefaultValueBinder implements IValueBinder
     protected function setTimeHoursMinutes(string $value, Cell $cell): bool
     {
         // Convert value to number
-        [$hours, $minutes] = explode(':', $value);
+        [$hours, $minutes] = \explode(':', $value);
         $hours = (int) $hours;
         $minutes = (int) $minutes;
         $days = ($hours / 24) + ($minutes / 1440);
@@ -194,7 +194,7 @@ class AdvancedValueBinder extends DefaultValueBinder implements IValueBinder
     protected function setTimeHoursMinutesSeconds(string $value, Cell $cell): bool
     {
         // Convert value to number
-        [$hours, $minutes, $seconds] = explode(':', $value);
+        [$hours, $minutes, $seconds] = \explode(':', $value);
         $hours = (int) $hours;
         $minutes = (int) $minutes;
         $seconds = (int) $seconds;

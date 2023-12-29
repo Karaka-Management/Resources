@@ -33,7 +33,7 @@ class Drawing
      */
     public static function pixelsToEmu($pValue = 0)
     {
-        return round($pValue * 9525);
+        return \round($pValue * 9525);
     }
 
     /**
@@ -49,7 +49,7 @@ class Drawing
             return 0;
         }
 
-        return round($pValue / 9525);
+        return \round($pValue / 9525);
     }
 
     /**
@@ -134,7 +134,7 @@ class Drawing
      */
     public static function degreesToAngle($pValue = 0)
     {
-        return (int) round($pValue * 60000);
+        return (int) \round($pValue * 60000);
     }
 
     /**
@@ -150,7 +150,7 @@ class Drawing
             return 0;
         }
 
-        return round($pValue / 60000);
+        return \round($pValue / 60000);
     }
 
     /**
@@ -230,7 +230,7 @@ class Drawing
             return 0;
         }
 
-        return round($pValue / 15.873984);
+        return \round($pValue / 15.873984);
     }
 
     /**
@@ -243,20 +243,20 @@ class Drawing
     public static function htmlToRGB($pValue)
     {
         if ($pValue[0] == '#') {
-            $pValue = substr($pValue, 1);
+            $pValue = \substr($pValue, 1);
         }
 
-        if (strlen($pValue) == 6) {
+        if (\strlen($pValue) == 6) {
             [$colorR, $colorG, $colorB] = [$pValue[0] . $pValue[1], $pValue[2] . $pValue[3], $pValue[4] . $pValue[5]];
-        } elseif (strlen($pValue) == 3) {
+        } elseif (\strlen($pValue) == 3) {
             [$colorR, $colorG, $colorB] = [$pValue[0] . $pValue[0], $pValue[1] . $pValue[1], $pValue[2] . $pValue[2]];
         } else {
             return false;
         }
 
-        $colorR = hexdec($colorR);
-        $colorG = hexdec($colorG);
-        $colorB = hexdec($colorB);
+        $colorR = \hexdec($colorR);
+        $colorG = \hexdec($colorG);
+        $colorB = \hexdec($colorB);
 
         return [$colorR, $colorG, $colorB];
     }

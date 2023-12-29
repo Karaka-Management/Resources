@@ -31,7 +31,7 @@ class Replace
      */
     public static function replace($oldText, $start, $chars, $newText)
     {
-        if (is_array($oldText) || is_array($start) || is_array($chars) || is_array($newText)) {
+        if (\is_array($oldText) || \is_array($start) || \is_array($chars) || \is_array($newText)) {
             return self::evaluateArrayArguments([self::class, __FUNCTION__], $oldText, $start, $chars, $newText);
         }
 
@@ -72,7 +72,7 @@ class Replace
      */
     public static function substitute($text = '', $fromText = '', $toText = '', $instance = null)
     {
-        if (is_array($text) || is_array($fromText) || is_array($toText) || is_array($instance)) {
+        if (\is_array($text) || \is_array($fromText) || \is_array($toText) || \is_array($instance)) {
             return self::evaluateArrayArguments([self::class, __FUNCTION__], $text, $fromText, $toText, $instance);
         }
 
@@ -81,9 +81,9 @@ class Replace
             $fromText = Helpers::extractString($fromText, true);
             $toText = Helpers::extractString($toText, true);
             if ($instance === null) {
-                $returnValue = str_replace($fromText, $toText, $text);
+                $returnValue = \str_replace($fromText, $toText, $text);
             } else {
-                if (is_bool($instance)) {
+                if (\is_bool($instance)) {
                     if ($instance === false || Functions::getCompatibilityMode() !== Functions::COMPATIBILITY_OPENOFFICE) {
                         return ExcelError::Value();
                     }
@@ -106,7 +106,7 @@ class Replace
     {
         $pos = -1;
         while ($instance > 0) {
-            $pos = mb_strpos($text, $fromText, $pos + 1, 'UTF-8');
+            $pos = \mb_strpos($text, $fromText, $pos + 1, 'UTF-8');
             if ($pos === false) {
                 return $text;
             }

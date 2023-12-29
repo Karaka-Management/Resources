@@ -68,7 +68,7 @@ class Footer extends AbstractContainer
      */
     public function setType($value = self::AUTO): void
     {
-        if (!in_array($value, [self::AUTO, self::FIRST, self::EVEN])) {
+        if (!\in_array($value, [self::AUTO, self::FIRST, self::EVEN])) {
             $value = self::AUTO;
         }
         $this->type = $value;

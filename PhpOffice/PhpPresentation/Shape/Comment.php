@@ -47,7 +47,7 @@ class Comment extends AbstractShape implements ComparableInterface
     public function __construct()
     {
         parent::__construct();
-        $this->setDate(time());
+        $this->setDate(\time());
     }
 
     public function getAuthor(): ?Author

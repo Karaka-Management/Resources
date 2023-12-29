@@ -35,19 +35,19 @@ class Operations
     {
         $args = Functions::flattenArray($args);
 
-        if (count($args) == 0) {
+        if (\count($args) == 0) {
             return ExcelError::VALUE();
         }
 
-        $args = array_filter($args, function ($value) {
-            return $value !== null || (is_string($value) && trim($value) == '');
+        $args = \array_filter($args, function ($value) {
+            return $value !== null || (\is_string($value) && \trim($value) == '');
         });
 
         $returnValue = self::countTrueValues($args);
-        if (is_string($returnValue)) {
+        if (\is_string($returnValue)) {
             return $returnValue;
         }
-        $argCount = count($args);
+        $argCount = \count($args);
 
         return ($returnValue > 0) && ($returnValue == $argCount);
     }
@@ -76,16 +76,16 @@ class Operations
     {
         $args = Functions::flattenArray($args);
 
-        if (count($args) == 0) {
+        if (\count($args) == 0) {
             return ExcelError::VALUE();
         }
 
-        $args = array_filter($args, function ($value) {
-            return $value !== null || (is_string($value) && trim($value) == '');
+        $args = \array_filter($args, function ($value) {
+            return $value !== null || (\is_string($value) && \trim($value) == '');
         });
 
         $returnValue = self::countTrueValues($args);
-        if (is_string($returnValue)) {
+        if (\is_string($returnValue)) {
             return $returnValue;
         }
 
@@ -118,16 +118,16 @@ class Operations
     {
         $args = Functions::flattenArray($args);
 
-        if (count($args) == 0) {
+        if (\count($args) == 0) {
             return ExcelError::VALUE();
         }
 
-        $args = array_filter($args, function ($value) {
-            return $value !== null || (is_string($value) && trim($value) == '');
+        $args = \array_filter($args, function ($value) {
+            return $value !== null || (\is_string($value) && \trim($value) == '');
         });
 
         $returnValue = self::countTrueValues($args);
-        if (is_string($returnValue)) {
+        if (\is_string($returnValue)) {
             return $returnValue;
         }
 
@@ -158,12 +158,12 @@ class Operations
      */
     public static function NOT($logical = false)
     {
-        if (is_array($logical)) {
+        if (\is_array($logical)) {
             return self::evaluateSingleArgumentArray([self::class, __FUNCTION__], $logical);
         }
 
-        if (is_string($logical)) {
-            $logical = mb_strtoupper($logical, 'UTF-8');
+        if (\is_string($logical)) {
+            $logical = \mb_strtoupper($logical, 'UTF-8');
             if (($logical == 'TRUE') || ($logical == Calculation::getTRUE())) {
                 return false;
             } elseif (($logical == 'FALSE') || ($logical == Calculation::getFALSE())) {
@@ -185,12 +185,12 @@ class Operations
 
         foreach ($args as $arg) {
             // Is it a boolean value?
-            if (is_bool($arg)) {
+            if (\is_bool($arg)) {
                 $trueValueCount += $arg;
-            } elseif ((is_numeric($arg)) && (!is_string($arg))) {
+            } elseif ((\is_numeric($arg)) && (!\is_string($arg))) {
                 $trueValueCount += ((int) $arg != 0);
-            } elseif (is_string($arg)) {
-                $arg = mb_strtoupper($arg, 'UTF-8');
+            } elseif (\is_string($arg)) {
+                $arg = \mb_strtoupper($arg, 'UTF-8');
                 if (($arg == 'TRUE') || ($arg == Calculation::getTRUE())) {
                     $arg = true;
                 } elseif (($arg == 'FALSE') || ($arg == Calculation::getFALSE())) {

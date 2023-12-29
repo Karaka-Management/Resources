@@ -34,21 +34,21 @@ abstract class DatabaseAbstract
      */
     protected static function fieldExtract(array $database, $field): ?int
     {
-        $field = strtoupper(Functions::flattenSingleValue($field) ?? '');
+        $field = \strtoupper(Functions::flattenSingleValue($field) ?? '');
         if ($field === '') {
             return null;
         }
 
-        $fieldNames = array_map('strtoupper', array_shift($database));
-        if (is_numeric($field)) {
+        $fieldNames = \array_map('strtoupper', \array_shift($database));
+        if (\is_numeric($field)) {
             $field = (int) $field - 1;
-            if ($field < 0 || $field >= count($fieldNames)) {
+            if ($field < 0 || $field >= \count($fieldNames)) {
                 return null;
             }
 
             return $field;
         }
-        $key = array_search($field, array_values($fieldNames), true);
+        $key = \array_search($field, \array_values($fieldNames), true);
 
         return ($key !== false) ? (int) $key : null;
     }
@@ -73,8 +73,8 @@ abstract class DatabaseAbstract
      */
     protected static function filter(array $database, array $criteria): array
     {
-        $fieldNames = array_shift($database);
-        $criteriaNames = array_shift($criteria);
+        $fieldNames = \array_shift($database);
+        $criteriaNames = \array_shift($criteria);
 
         //    Convert the criteria into a set of AND/OR conditions with [:placeholders]
         $query = self::buildQuery($criteriaNames, $criteria);
@@ -92,7 +92,7 @@ abstract class DatabaseAbstract
         //    extract an array of values for the requested column
         $columnData = [];
         foreach ($database as $rowKey => $row) {
-            $keys = array_keys($row);
+            $keys = \array_keys($row);
             $key = $keys[$field] ?? null;
             $columnKey = $key ?? 'A';
             $columnData[$rowKey][$columnKey] = $row[$key] ?? $defaultReturnColumnValue;
@@ -114,14 +114,14 @@ abstract class DatabaseAbstract
             }
         }
 
-        $rowQuery = array_map(
+        $rowQuery = \array_map(
             function ($rowValue) {
-                return (count($rowValue) > 1) ? 'AND(' . implode(',', $rowValue) . ')' : ($rowValue[0] ?? '');
+                return (\count($rowValue) > 1) ? 'AND(' . \implode(',', $rowValue) . ')' : ($rowValue[0] ?? '');
             },
             $baseQuery
         );
 
-        return (count($rowQuery) > 1) ? 'OR(' . implode(',', $rowQuery) . ')' : ($rowQuery[0] ?? '');
+        return (\count($rowQuery) > 1) ? 'OR(' . \implode(',', $rowQuery) . ')' : ($rowQuery[0] ?? '');
     }
 
     /**
@@ -132,7 +132,7 @@ abstract class DatabaseAbstract
         $ifCondition = Functions::ifCondition($criterion);
 
         // Check for wildcard characters used in the condition
-        $result = preg_match('/(?<operator>[^"]*)(?<operand>".*[*?].*")/ui', $ifCondition, $matches);
+        $result = \preg_match('/(?<operator>[^"]*)(?<operand>".*[*?].*")/ui', $ifCondition, $matches);
         if ($result !== 1) {
             return "[:{$criterionName}]{$ifCondition}";
         }
@@ -173,20 +173,20 @@ abstract class DatabaseAbstract
      */
     private static function processCondition(string $criterion, array $fields, array $dataValues, string $conditions)
     {
-        $key = array_search($criterion, $fields, true);
+        $key = \array_search($criterion, $fields, true);
 
         $dataValue = 'NULL';
-        if (is_bool($dataValues[$key])) {
+        if (\is_bool($dataValues[$key])) {
             $dataValue = ($dataValues[$key]) ? 'TRUE' : 'FALSE';
         } elseif ($dataValues[$key] !== null) {
             $dataValue = $dataValues[$key];
             // escape quotes if we have a string containing quotes
-            if (is_string($dataValue) && strpos($dataValue, '"') !== false) {
-                $dataValue = str_replace('"', '""', $dataValue);
+            if (\is_string($dataValue) && \strpos($dataValue, '"') !== false) {
+                $dataValue = \str_replace('"', '""', $dataValue);
             }
-            $dataValue = (is_string($dataValue)) ? Calculation::wrapResult(strtoupper($dataValue)) : $dataValue;
+            $dataValue = (\is_string($dataValue)) ? Calculation::wrapResult(\strtoupper($dataValue)) : $dataValue;
         }
 
-        return str_replace('[:' . $criterion . ']', $dataValue, $conditions);
+        return \str_replace('[:' . $criterion . ']', $dataValue, $conditions);
     }
 }

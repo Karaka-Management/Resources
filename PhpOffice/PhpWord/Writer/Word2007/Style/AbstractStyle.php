@@ -96,7 +96,7 @@ abstract class AbstractStyle
         ];
         $unit = Settings::getMeasurementUnit();
         $factor = 1;
-        if (array_key_exists($unit, $factors) && $value != $default) {
+        if (\array_key_exists($unit, $factors) && $value != $default) {
             $factor = $factors[$unit];
         }
 
@@ -152,6 +152,6 @@ abstract class AbstractStyle
             }
         }
 
-        return trim($style);
+        return \trim($style);
     }
 }

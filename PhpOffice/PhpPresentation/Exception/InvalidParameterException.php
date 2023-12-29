@@ -24,7 +24,7 @@ class InvalidParameterException extends PhpPresentationException
 {
     public function __construct(string $parameter, string $value)
     {
-        parent::__construct(sprintf(
+        parent::__construct(\sprintf(
             'The parameter %s can\'t have the value "%s"',
             $parameter,
             $value

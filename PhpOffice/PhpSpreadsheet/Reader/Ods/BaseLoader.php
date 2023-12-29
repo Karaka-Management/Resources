@@ -23,5 +23,5 @@ abstract class BaseLoader
         $this->tableNs = $tableNs;
     }
 
-    abstract public function read(DOMElement $workbookData): void;
+    abstract public function read(\DOMElement $workbookData): void;
 }

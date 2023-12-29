@@ -34,6 +34,6 @@ class Bar3D extends AbstractTypeBar implements ComparableInterface
      */
     public function getHashCode(): string
     {
-        return md5(parent::getHashCode() . __CLASS__);
+        return \md5(parent::getHashCode() . __CLASS__);
     }
 }

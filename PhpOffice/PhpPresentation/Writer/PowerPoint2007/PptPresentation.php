@@ -50,7 +50,7 @@ class PptPresentation extends AbstractDecoratorWriter
         $relationId = 1;
         $slideMasterId = 2147483648;
 
-        $countMasterSlides = count($this->oPresentation->getAllMasterSlides());
+        $countMasterSlides = \count($this->oPresentation->getAllMasterSlides());
         for ($inc = 1; $inc <= $countMasterSlides; ++$inc) {
             // p:sldMasterId
             $objWriter->startElement('p:sldMasterId');

@@ -50,13 +50,13 @@ class DocPropsCore extends AbstractDecoratorWriter
         // dcterms:created
         $objWriter->startElement('dcterms:created');
         $objWriter->writeAttribute('xsi:type', 'dcterms:W3CDTF');
-        $objWriter->writeRaw(gmdate("Y-m-d\TH:i:s\Z", $this->oPresentation->getDocumentProperties()->getCreated()));
+        $objWriter->writeRaw(\gmdate("Y-m-d\TH:i:s\Z", $this->oPresentation->getDocumentProperties()->getCreated()));
         $objWriter->endElement();
 
         // dcterms:modified
         $objWriter->startElement('dcterms:modified');
         $objWriter->writeAttribute('xsi:type', 'dcterms:W3CDTF');
-        $objWriter->writeRaw(gmdate("Y-m-d\TH:i:s\Z", $this->oPresentation->getDocumentProperties()->getModified()));
+        $objWriter->writeRaw(\gmdate("Y-m-d\TH:i:s\Z", $this->oPresentation->getDocumentProperties()->getModified()));
         $objWriter->endElement();
 
         // dc:title

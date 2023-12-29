@@ -18,7 +18,7 @@ class Properties
         $this->spreadsheet = $spreadsheet;
     }
 
-    private function docPropertiesOld(SimpleXMLElement $gnmXML): void
+    private function docPropertiesOld(\SimpleXMLElement $gnmXML): void
     {
         $docProps = $this->spreadsheet->getProperties();
         foreach ($gnmXML->Summary->Item as $summaryItem) {
@@ -26,43 +26,43 @@ class Properties
             $propertyValue = $summaryItem->{'val-string'};
             switch ($propertyName) {
                 case 'title':
-                    $docProps->setTitle(trim($propertyValue));
+                    $docProps->setTitle(\trim($propertyValue));
 
                     break;
                 case 'comments':
-                    $docProps->setDescription(trim($propertyValue));
+                    $docProps->setDescription(\trim($propertyValue));
 
                     break;
                 case 'keywords':
-                    $docProps->setKeywords(trim($propertyValue));
+                    $docProps->setKeywords(\trim($propertyValue));
 
                     break;
                 case 'category':
-                    $docProps->setCategory(trim($propertyValue));
+                    $docProps->setCategory(\trim($propertyValue));
 
                     break;
                 case 'manager':
-                    $docProps->setManager(trim($propertyValue));
+                    $docProps->setManager(\trim($propertyValue));
 
                     break;
                 case 'author':
-                    $docProps->setCreator(trim($propertyValue));
-                    $docProps->setLastModifiedBy(trim($propertyValue));
+                    $docProps->setCreator(\trim($propertyValue));
+                    $docProps->setLastModifiedBy(\trim($propertyValue));
 
                     break;
                 case 'company':
-                    $docProps->setCompany(trim($propertyValue));
+                    $docProps->setCompany(\trim($propertyValue));
 
                     break;
             }
         }
     }
 
-    private function docPropertiesDC(SimpleXMLElement $officePropertyDC): void
+    private function docPropertiesDC(\SimpleXMLElement $officePropertyDC): void
     {
         $docProps = $this->spreadsheet->getProperties();
         foreach ($officePropertyDC as $propertyName => $propertyValue) {
-            $propertyValue = trim((string) $propertyValue);
+            $propertyValue = \trim((string) $propertyValue);
             switch ($propertyName) {
                 case 'title':
                     $docProps->setTitle($propertyValue);
@@ -90,13 +90,13 @@ class Properties
         }
     }
 
-    private function docPropertiesMeta(SimpleXMLElement $officePropertyMeta): void
+    private function docPropertiesMeta(\SimpleXMLElement $officePropertyMeta): void
     {
         $docProps = $this->spreadsheet->getProperties();
         foreach ($officePropertyMeta as $propertyName => $propertyValue) {
             if ($propertyValue !== null) {
                 $attributes = $propertyValue->attributes(Gnumeric::NAMESPACE_META);
-                $propertyValue = trim((string) $propertyValue);
+                $propertyValue = \trim((string) $propertyValue);
                 switch ($propertyName) {
                     case 'keyword':
                         $docProps->setKeywords($propertyValue);
@@ -114,7 +114,7 @@ class Properties
                         break;
                     case 'user-defined':
                         if ($attributes) {
-                            [, $attrName] = explode(':', (string) $attributes['name']);
+                            [, $attrName] = \explode(':', (string) $attributes['name']);
                             $this->userDefinedProperties($attrName, $propertyValue);
                         }
 
@@ -143,7 +143,7 @@ class Properties
         }
     }
 
-    public function readProperties(SimpleXMLElement $xml, SimpleXMLElement $gnmXML): void
+    public function readProperties(\SimpleXMLElement $xml, \SimpleXMLElement $gnmXML): void
     {
         $officeXML = $xml->children(Gnumeric::NAMESPACE_OFFICE);
         if (!empty($officeXML)) {

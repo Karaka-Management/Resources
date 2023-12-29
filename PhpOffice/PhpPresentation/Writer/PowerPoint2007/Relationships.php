@@ -68,10 +68,10 @@ class Relationships extends AbstractDecoratorWriter
         $idxRelation = 5;
         // Thumbnail
         if ($this->getPresentation()->getPresentationProperties()->getThumbnailPath()) {
-            $pathThumbnail = file_get_contents($this->getPresentation()->getPresentationProperties()->getThumbnailPath());
-            $gdImage = imagecreatefromstring($pathThumbnail);
+            $pathThumbnail = \file_get_contents($this->getPresentation()->getPresentationProperties()->getThumbnailPath());
+            $gdImage = \imagecreatefromstring($pathThumbnail);
             if ($gdImage) {
-                imagedestroy($gdImage);
+                \imagedestroy($gdImage);
                 // Relationship docProps/thumbnail.jpeg
                 $this->writeRelationship($objWriter, $idxRelation, 'http://schemas.openxmlformats.org/package/2006/relationships/metadata/thumbnail', 'docProps/thumbnail.jpeg');
             }

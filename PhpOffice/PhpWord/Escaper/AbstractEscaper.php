@@ -33,7 +33,7 @@ abstract class AbstractEscaper implements EscaperInterface
 
     public function escape($input)
     {
-        if (is_array($input)) {
+        if (\is_array($input)) {
             foreach ($input as &$item) {
                 $item = $this->escapeSingleValue($item);
             }

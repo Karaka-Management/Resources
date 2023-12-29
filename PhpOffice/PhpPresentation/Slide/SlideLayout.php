@@ -71,7 +71,7 @@ class SlideLayout extends AbstractSlide implements ComparableInterface, ShapeCon
         // Shape collection
         $this->shapeCollection = new \ArrayObject();
         // Set identifier
-        $this->identifier = md5(rand(0, 9999) . time());
+        $this->identifier = \md5(\rand(0, 9999) . \time());
         // Set a basic colorMap
         $this->colorMap = new ColorMap();
     }

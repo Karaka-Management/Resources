@@ -38,25 +38,25 @@ class ConditionalFormattingRuleExtension
 
     private function generateUuid()
     {
-        $chars = str_split('xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx');
+        $chars = \str_split('xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx');
 
         foreach ($chars as $i => $char) {
             if ($char === 'x') {
-                $chars[$i] = dechex(random_int(0, 15));
+                $chars[$i] = \dechex(\random_int(0, 15));
             } elseif ($char === 'y') {
-                $chars[$i] = dechex(random_int(8, 11));
+                $chars[$i] = \dechex(\random_int(8, 11));
             }
         }
 
-        return implode('', /** @scrutinizer ignore-type */ $chars);
+        return \implode('', /** @scrutinizer ignore-type */ $chars);
     }
 
     public static function parseExtLstXml($extLstXml)
     {
         $conditionalFormattingRuleExtensions = [];
         $conditionalFormattingRuleExtensionXml = null;
-        if ($extLstXml instanceof SimpleXMLElement) {
-            foreach ((count($extLstXml) > 0 ? $extLstXml : [$extLstXml]) as $extLst) {
+        if ($extLstXml instanceof \SimpleXMLElement) {
+            foreach ((\count($extLstXml) > 0 ? $extLstXml : [$extLstXml]) as $extLst) {
                 //this uri is conditionalFormattings
                 //https://docs.microsoft.com/en-us/openspecs/office_standards/ms-xlsx/07d607af-5618-4ca2-b683-6a78dc0d9627
                 if (isset($extLst->ext['uri']) && (string) $extLst->ext['uri'] === '{78C0D931-6437-407d-A8EE-F0AAD7539E65}') {
@@ -93,7 +93,7 @@ class ConditionalFormattingRuleExtension
 
     private static function parseExtDataBarAttributesFromXml(
         ConditionalDataBarExtension $extDataBarObj,
-        SimpleXMLElement $dataBarXml
+        \SimpleXMLElement $dataBarXml
     ): void {
         $dataBarAttribute = $dataBarXml->attributes();
         if ($dataBarAttribute->minLength) {
@@ -119,7 +119,7 @@ class ConditionalFormattingRuleExtension
         }
     }
 
-    private static function parseExtDataBarElementChildrenFromXml(ConditionalDataBarExtension $extDataBarObj, SimpleXMLElement $dataBarXml, $ns): void
+    private static function parseExtDataBarElementChildrenFromXml(ConditionalDataBarExtension $extDataBarObj, \SimpleXMLElement $dataBarXml, $ns): void
     {
         if ($dataBarXml->borderColor) {
             $extDataBarObj->setBorderColor((string) $dataBarXml->borderColor->attributes()['rgb']);

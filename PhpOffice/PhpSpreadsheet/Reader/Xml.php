@@ -46,7 +46,7 @@ class Xml extends BaseReader
 
     public static function xmlMappings(): array
     {
-        return array_merge(
+        return \array_merge(
             Style\Fill::FILL_MAPPINGS,
             Style\Border::BORDER_MAPPINGS
         );
@@ -73,7 +73,7 @@ class Xml extends BaseReader
         ];
 
         // Open file
-        $data = file_get_contents($filename);
+        $data = \file_get_contents($filename);
 
         // Why?
         //$data = str_replace("'", '"', $data); // fix headers with single quote
@@ -81,7 +81,7 @@ class Xml extends BaseReader
         $valid = true;
         foreach ($signature as $match) {
             // every part of the signature must be present
-            if (strpos($data, $match) === false) {
+            if (\strpos($data, $match) === false) {
                 $valid = false;
 
                 break;
@@ -89,11 +89,11 @@ class Xml extends BaseReader
         }
 
         //    Retrieve charset encoding
-        if (preg_match('/<?xml.*encoding=[\'"](.*?)[\'"].*?>/m', $data, $matches)) {
-            $charSet = strtoupper($matches[1]);
-            if (preg_match('/^ISO-8859-\d[\dL]?$/i', $charSet) === 1) {
+        if (\preg_match('/<?xml.*encoding=[\'"](.*?)[\'"].*?>/m', $data, $matches)) {
+            $charSet = \strtoupper($matches[1]);
+            if (\preg_match('/^ISO-8859-\d[\dL]?$/i', $charSet) === 1) {
                 $data = StringHelper::convertEncoding($data, 'UTF-8', $charSet);
-                $data = (string) preg_replace('/(<?xml.*encoding=[\'"]).*?([\'"].*?>)/um', '$1' . 'UTF-8' . '$2', $data, 1);
+                $data = (string) \preg_replace('/(<?xml.*encoding=[\'"]).*?([\'"].*?>)/um', '$1' . 'UTF-8' . '$2', $data, 1);
             }
         }
         $this->fileContents = $data;
@@ -106,13 +106,13 @@ class Xml extends BaseReader
      *
      * @param string $filename
      *
-     * @return false|SimpleXMLElement
+     * @return false|\SimpleXMLElement
      */
     public function trySimpleXMLLoadString($filename)
     {
         try {
-            $xml = simplexml_load_string(
-                $this->securityScanner->scan($this->fileContents ?: file_get_contents($filename)),
+            $xml = \simplexml_load_string(
+                $this->securityScanner->scan($this->fileContents ?: \file_get_contents($filename)),
                 'SimpleXMLElement',
                 Settings::getLibXmlLoaderOptions()
             );
@@ -205,7 +205,7 @@ class Xml extends BaseReader
 
                     foreach ($rowData->Cell as $cell) {
                         if (isset($cell->Data)) {
-                            $tmpInfo['lastColumnIndex'] = max($tmpInfo['lastColumnIndex'], $columnIndex);
+                            $tmpInfo['lastColumnIndex'] = \max($tmpInfo['lastColumnIndex'], $columnIndex);
                             $rowHasData = true;
                         }
 
@@ -215,7 +215,7 @@ class Xml extends BaseReader
                     ++$rowIndex;
 
                     if ($rowHasData) {
-                        $tmpInfo['totalRows'] = max($tmpInfo['totalRows'], $rowIndex);
+                        $tmpInfo['totalRows'] = \max($tmpInfo['totalRows'], $rowIndex);
                     }
                 }
             }
@@ -271,14 +271,14 @@ class Xml extends BaseReader
         $worksheetID = 0;
         $xml_ss = $xml->children($namespaces['ss']);
 
-        /** @var null|SimpleXMLElement $worksheetx */
+        /** @var null|\SimpleXMLElement $worksheetx */
         foreach ($xml_ss->Worksheet as $worksheetx) {
-            $worksheet = $worksheetx ?? new SimpleXMLElement('<xml></xml>');
+            $worksheet = $worksheetx ?? new \SimpleXMLElement('<xml></xml>');
             $worksheet_ss = self::getAttributes($worksheet, $namespaces['ss']);
 
             if (
                 isset($this->loadSheetsOnly, $worksheet_ss['Name']) &&
-                (!in_array($worksheet_ss['Name'], /** @scrutinizer ignore-type */ $this->loadSheetsOnly))
+                (!\in_array($worksheet_ss['Name'], /** @scrutinizer ignore-type */ $this->loadSheetsOnly))
             ) {
                 continue;
             }
@@ -303,7 +303,7 @@ class Xml extends BaseReader
                     $definedValue = (string) $definedName_ss['RefersTo'];
                     $convertedValue = AddressHelper::convertFormulaToA1($definedValue);
                     if ($convertedValue[0] === '=') {
-                        $convertedValue = substr($convertedValue, 1);
+                        $convertedValue = \substr($convertedValue, 1);
                     }
                     $spreadsheet->addDefinedName(DefinedName::createInstance($name, $spreadsheet->getActiveSheet(), $convertedValue, true));
                 }
@@ -398,7 +398,7 @@ class Xml extends BaseReader
                                     case 'Number':
                                         $type = DataType::TYPE_NUMERIC;
                                         $cellValue = (float) $cellValue;
-                                        if (floor($cellValue) == $cellValue) {
+                                        if (\floor($cellValue) == $cellValue) {
                                             $cellValue = (int) $cellValue;
                                         }
 
@@ -410,7 +410,7 @@ class Xml extends BaseReader
                                         break;
                                     case 'DateTime':
                                         $type = DataType::TYPE_NUMERIC;
-                                        $dateTime = new DateTime($cellValue, new DateTimeZone('UTC'));
+                                        $dateTime = new \DateTime($cellValue, new \DateTimeZone('UTC'));
                                         $cellValue = Date::PHPToExcel($dateTime);
 
                                         break;
@@ -485,7 +485,7 @@ class Xml extends BaseReader
                 $definedValue = (string) $definedName_ss['RefersTo'];
                 $convertedValue = AddressHelper::convertFormulaToA1($definedValue);
                 if ($convertedValue[0] === '=') {
-                    $convertedValue = substr($convertedValue, 1);
+                    $convertedValue = \substr($convertedValue, 1);
                 }
                 $spreadsheet->addDefinedName(DefinedName::createInstance($name, $activeWorksheet, $convertedValue));
             }
@@ -496,7 +496,7 @@ class Xml extends BaseReader
     }
 
     protected function parseCellComment(
-        SimpleXMLElement $comment,
+        \SimpleXMLElement $comment,
         array $namespaces,
         Spreadsheet $spreadsheet,
         string $columnID,
@@ -509,7 +509,7 @@ class Xml extends BaseReader
         }
 
         $node = $comment->Data->asXML();
-        $annotation = strip_tags((string) $node);
+        $annotation = \strip_tags((string) $node);
         $spreadsheet->getActiveSheet()->getComment($columnID . $rowID)
             ->setAuthor($author)
             ->setText($this->parseRichText($annotation));
@@ -524,10 +524,10 @@ class Xml extends BaseReader
         return $value;
     }
 
-    private static function getAttributes(?SimpleXMLElement $simple, string $node): SimpleXMLElement
+    private static function getAttributes(?\SimpleXMLElement $simple, string $node): \SimpleXMLElement
     {
         return ($simple === null)
-            ? new SimpleXMLElement('<xml></xml>')
-            : ($simple->attributes($node) ?? new SimpleXMLElement('<xml></xml>'));
+            ? new \SimpleXMLElement('<xml></xml>')
+            : ($simple->attributes($node) ?? new \SimpleXMLElement('<xml></xml>'));
     }
 }

@@ -199,7 +199,7 @@ class NumberFormat extends Supervisor
         if ($this->isSupervisor) {
             return $this->getSharedComponent()->getFormatCode();
         }
-        if (is_int($this->builtInFormatCode)) {
+        if (\is_int($this->builtInFormatCode)) {
             return self::builtInFormatCode($this->builtInFormatCode);
         }
 
@@ -363,7 +363,7 @@ class NumberFormat extends Supervisor
             self::$builtInFormats[58] = '[$-411]ggge"年"m"月"d"日"';
 
             // Flip array (for faster lookups)
-            self::$flippedBuiltInFormats = array_flip(self::$builtInFormats);
+            self::$flippedBuiltInFormats = \array_flip(self::$builtInFormats);
         }
     }
 
@@ -403,7 +403,7 @@ class NumberFormat extends Supervisor
         self::fillBuiltInFormatCodes();
 
         // Lookup format code
-        if (array_key_exists($formatCodeIndex, self::$flippedBuiltInFormats)) {
+        if (\array_key_exists($formatCodeIndex, self::$flippedBuiltInFormats)) {
             return self::$flippedBuiltInFormats[$formatCodeIndex];
         }
 
@@ -421,7 +421,7 @@ class NumberFormat extends Supervisor
             return $this->getSharedComponent()->getHashCode();
         }
 
-        return md5(
+        return \md5(
             $this->formatCode .
             $this->builtInFormatCode .
             __CLASS__

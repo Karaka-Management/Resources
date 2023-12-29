@@ -25,9 +25,9 @@ class NewtonRaphson
         $x = $xNew = 1;
         $i = 0;
 
-        while ((abs($dx) > Functions::PRECISION) && ($i++ < self::MAX_ITERATIONS)) {
+        while ((\abs($dx) > Functions::PRECISION) && ($i++ < self::MAX_ITERATIONS)) {
             // Apply Newton-Raphson step
-            $result = call_user_func($this->callback, $x);
+            $result = \call_user_func($this->callback, $x);
             $error = $result - $probability;
 
             if ($error == 0.0) {

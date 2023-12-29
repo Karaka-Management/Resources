@@ -20,7 +20,7 @@ class Erf
      *    Note: In Excel 2007 or earlier, if you input a negative value for the upper or lower bound arguments,
      *            the function would return a #NUM! error. However, in Excel 2010, the function algorithm was
      *            improved, so that it can now calculate the function for both positive and negative ranges.
-     *            PhpSpreadsheet follows Excel 2010 behaviour, and accepts negative arguments.
+     *            PhpSpreadsheet follows Excel 2010 behavior, and accepts negative arguments.
      *
      *    Excel Function:
      *        ERF(lower[,upper])
@@ -37,15 +37,15 @@ class Erf
      */
     public static function ERF($lower, $upper = null)
     {
-        if (is_array($lower) || is_array($upper)) {
+        if (\is_array($lower) || \is_array($upper)) {
             return self::evaluateArrayArguments([self::class, __FUNCTION__], $lower, $upper);
         }
 
-        if (is_numeric($lower)) {
+        if (\is_numeric($lower)) {
             if ($upper === null) {
                 return self::erfValue($lower);
             }
-            if (is_numeric($upper)) {
+            if (\is_numeric($upper)) {
                 return self::erfValue($upper) - self::erfValue($lower);
             }
         }
@@ -70,7 +70,7 @@ class Erf
      */
     public static function ERFPRECISE($limit)
     {
-        if (is_array($limit)) {
+        if (\is_array($limit)) {
             return self::evaluateSingleArgumentArray([self::class, __FUNCTION__], $limit);
         }
 
@@ -82,7 +82,7 @@ class Erf
     //
     public static function erfValue($value)
     {
-        if (abs($value) > 2.2) {
+        if (\abs($value) > 2.2) {
             return 1 - ErfC::ERFC($value);
         }
         $sum = $term = $value;
@@ -98,7 +98,7 @@ class Erf
             if ($sum == 0.0) {
                 break;
             }
-        } while (abs($term / $sum) > Functions::PRECISION);
+        } while (\abs($term / $sum) > Functions::PRECISION);
 
         return self::$twoSqrtPi * $sum;
     }

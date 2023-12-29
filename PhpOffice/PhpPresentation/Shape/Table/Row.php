@@ -89,7 +89,7 @@ class Row implements ComparableInterface
         if (!isset($this->cells[$cell])) {
             throw new OutOfBoundsException(
                 0,
-                (count($this->cells) - 1) < 0 ? count($this->cells) - 1 : 0,
+                (\count($this->cells) - 1) < 0 ? \count($this->cells) - 1 : 0,
                 $cell
             );
         }
@@ -137,7 +137,7 @@ class Row implements ComparableInterface
 
         throw new OutOfBoundsException(
             0,
-            (count($this->cells) - 1) < 0 ? count($this->cells) - 1 : 0,
+            (\count($this->cells) - 1) < 0 ? \count($this->cells) - 1 : 0,
             $this->activeCellIndex
         );
     }
@@ -200,7 +200,7 @@ class Row implements ComparableInterface
             $hashElements .= $cell->getHashCode();
         }
 
-        return md5($hashElements . $this->fill->getHashCode() . $this->height . __CLASS__);
+        return \md5($hashElements . $this->fill->getHashCode() . $this->height . __CLASS__);
     }
 
     /**

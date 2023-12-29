@@ -159,7 +159,7 @@ class Hyperlink
      */
     public function isInternal(): bool
     {
-        return false !== strpos($this->url, 'ppaction://');
+        return false !== \strpos($this->url, 'ppaction://');
     }
 
     /**
@@ -169,7 +169,7 @@ class Hyperlink
      */
     public function getHashCode(): string
     {
-        return md5($this->url . $this->tooltip . __CLASS__);
+        return \md5($this->url . $this->tooltip . __CLASS__);
     }
 
     /**

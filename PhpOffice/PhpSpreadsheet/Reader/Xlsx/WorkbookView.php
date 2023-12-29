@@ -20,7 +20,7 @@ class WorkbookView
     /**
      * @param mixed $mainNS
      */
-    public function viewSettings(SimpleXMLElement $xmlWorkbook, $mainNS, array $mapSheetId, bool $readDataOnly): void
+    public function viewSettings(\SimpleXMLElement $xmlWorkbook, $mainNS, array $mapSheetId, bool $readDataOnly): void
     {
         if ($this->spreadsheet->getSheetCount() == 0) {
             $this->spreadsheet->createSheet();
@@ -52,14 +52,14 @@ class WorkbookView
     /**
      * @param mixed $value
      */
-    public static function testSimpleXml($value): SimpleXMLElement
+    public static function testSimpleXml($value): \SimpleXMLElement
     {
-        return ($value instanceof SimpleXMLElement)
+        return ($value instanceof \SimpleXMLElement)
             ? $value
-            : new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><root></root>');
+            : new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><root></root>');
     }
 
-    public static function getAttributes(?SimpleXMLElement $value, string $ns = ''): SimpleXMLElement
+    public static function getAttributes(?\SimpleXMLElement $value, string $ns = ''): \SimpleXMLElement
     {
         return self::testSimpleXml($value === null ? $value : $value->attributes($ns));
     }
@@ -87,7 +87,7 @@ class WorkbookView
         return (bool) $xsdBoolean;
     }
 
-    private function horizontalScroll(SimpleXMLElement $workbookViewAttributes): void
+    private function horizontalScroll(\SimpleXMLElement $workbookViewAttributes): void
     {
         if (isset($workbookViewAttributes->showHorizontalScroll)) {
             $showHorizontalScroll = (string) $workbookViewAttributes->showHorizontalScroll;
@@ -95,7 +95,7 @@ class WorkbookView
         }
     }
 
-    private function verticalScroll(SimpleXMLElement $workbookViewAttributes): void
+    private function verticalScroll(\SimpleXMLElement $workbookViewAttributes): void
     {
         if (isset($workbookViewAttributes->showVerticalScroll)) {
             $showVerticalScroll = (string) $workbookViewAttributes->showVerticalScroll;
@@ -103,7 +103,7 @@ class WorkbookView
         }
     }
 
-    private function sheetTabs(SimpleXMLElement $workbookViewAttributes): void
+    private function sheetTabs(\SimpleXMLElement $workbookViewAttributes): void
     {
         if (isset($workbookViewAttributes->showSheetTabs)) {
             $showSheetTabs = (string) $workbookViewAttributes->showSheetTabs;
@@ -111,7 +111,7 @@ class WorkbookView
         }
     }
 
-    private function minimized(SimpleXMLElement $workbookViewAttributes): void
+    private function minimized(\SimpleXMLElement $workbookViewAttributes): void
     {
         if (isset($workbookViewAttributes->minimized)) {
             $minimized = (string) $workbookViewAttributes->minimized;
@@ -119,7 +119,7 @@ class WorkbookView
         }
     }
 
-    private function autoFilterDateGrouping(SimpleXMLElement $workbookViewAttributes): void
+    private function autoFilterDateGrouping(\SimpleXMLElement $workbookViewAttributes): void
     {
         if (isset($workbookViewAttributes->autoFilterDateGrouping)) {
             $autoFilterDateGrouping = (string) $workbookViewAttributes->autoFilterDateGrouping;
@@ -127,7 +127,7 @@ class WorkbookView
         }
     }
 
-    private function firstSheet(SimpleXMLElement $workbookViewAttributes): void
+    private function firstSheet(\SimpleXMLElement $workbookViewAttributes): void
     {
         if (isset($workbookViewAttributes->firstSheet)) {
             $firstSheet = (string) $workbookViewAttributes->firstSheet;
@@ -135,7 +135,7 @@ class WorkbookView
         }
     }
 
-    private function visibility(SimpleXMLElement $workbookViewAttributes): void
+    private function visibility(\SimpleXMLElement $workbookViewAttributes): void
     {
         if (isset($workbookViewAttributes->visibility)) {
             $visibility = (string) $workbookViewAttributes->visibility;
@@ -143,7 +143,7 @@ class WorkbookView
         }
     }
 
-    private function tabRatio(SimpleXMLElement $workbookViewAttributes): void
+    private function tabRatio(\SimpleXMLElement $workbookViewAttributes): void
     {
         if (isset($workbookViewAttributes->tabRatio)) {
             $tabRatio = (string) $workbookViewAttributes->tabRatio;

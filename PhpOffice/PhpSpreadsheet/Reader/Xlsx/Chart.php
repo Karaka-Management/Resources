@@ -39,7 +39,7 @@ class Chart
      *
      * @return null|bool|float|int|string
      */
-    private static function getAttribute(SimpleXMLElement $component, $name, $format)
+    private static function getAttribute(\SimpleXMLElement $component, $name, $format)
     {
         $attributes = $component->attributes();
         if (@isset($attributes[$name])) {
@@ -64,7 +64,7 @@ class Chart
      *
      * @return \PhpOffice\PhpSpreadsheet\Chart\Chart
      */
-    public function readChart(SimpleXMLElement $chartElements, $chartName)
+    public function readChart(\SimpleXMLElement $chartElements, $chartName)
     {
         $chartElementsC = $chartElements->children($this->cNamespace);
 
@@ -379,26 +379,26 @@ class Chart
             $chart->setNoFill(true);
         }
         $chart->setRoundedCorners($roundedCorners);
-        if (is_bool($autoTitleDeleted)) {
+        if (\is_bool($autoTitleDeleted)) {
             $chart->setAutoTitleDeleted($autoTitleDeleted);
         }
-        if (is_int($rotX)) {
+        if (\is_int($rotX)) {
             $chart->setRotX($rotX);
         }
-        if (is_int($rotY)) {
+        if (\is_int($rotY)) {
             $chart->setRotY($rotY);
         }
-        if (is_int($rAngAx)) {
+        if (\is_int($rAngAx)) {
             $chart->setRAngAx($rAngAx);
         }
-        if (is_int($perspective)) {
+        if (\is_int($perspective)) {
             $chart->setPerspective($perspective);
         }
 
         return $chart;
     }
 
-    private function chartTitle(SimpleXMLElement $titleDetails): Title
+    private function chartTitle(\SimpleXMLElement $titleDetails): Title
     {
         $caption = [];
         $titleLayout = null;
@@ -435,7 +435,7 @@ class Chart
         return new Title($caption, $titleLayout);
     }
 
-    private function chartLayoutDetails(SimpleXMLElement $chartDetail): ?Layout
+    private function chartLayoutDetails(\SimpleXMLElement $chartDetail): ?Layout
     {
         if (!isset($chartDetail->manualLayout)) {
             return null;
@@ -453,7 +453,7 @@ class Chart
         return new Layout($layout);
     }
 
-    private function chartDataSeries(SimpleXMLElement $chartDetail, string $plotType): DataSeries
+    private function chartDataSeries(\SimpleXMLElement $chartDetail, string $plotType): DataSeries
     {
         $multiSeriesType = null;
         $smoothLine = false;
@@ -499,7 +499,7 @@ class Chart
                                 $children = $seriesDetail->children($this->aNamespace);
                                 if (isset($children->ln)) {
                                     $ln = $children->ln;
-                                    if (is_countable($ln->noFill) && count($ln->noFill) === 1) {
+                                    if (\is_countable($ln->noFill) && \count($ln->noFill) === 1) {
                                         $noFill = true;
                                     }
                                     $lineStyle = new GridLines();
@@ -565,7 +565,7 @@ class Chart
                             case 'marker':
                                 $marker = self::getAttribute($seriesDetail->symbol, 'val', 'string');
                                 $pointSize = self::getAttribute($seriesDetail->size, 'val', 'string');
-                                $pointSize = is_numeric($pointSize) ? ((int) $pointSize) : null;
+                                $pointSize = \is_numeric($pointSize) ? ((int) $pointSize) : null;
                                 if (isset($seriesDetail->spPr)) {
                                     $children = $seriesDetail->spPr->children($this->aNamespace);
                                     if (isset($children->solidFill)) {
@@ -722,7 +722,7 @@ class Chart
     /**
      * @return mixed
      */
-    private function chartDataSeriesValueSet(SimpleXMLElement $seriesDetail, ?string $marker = null, ?ChartColor $fillColor = null, ?string $pointSize = null)
+    private function chartDataSeriesValueSet(\SimpleXMLElement $seriesDetail, ?string $marker = null, ?ChartColor $fillColor = null, ?string $pointSize = null)
     {
         if (isset($seriesDetail->strRef)) {
             $seriesSource = (string) $seriesDetail->strRef->f;
@@ -786,7 +786,7 @@ class Chart
         return null;
     }
 
-    private function chartDataSeriesValues(SimpleXMLElement $seriesValueSet, string $dataType = 'n'): array
+    private function chartDataSeriesValues(\SimpleXMLElement $seriesValueSet, string $dataType = 'n'): array
     {
         $seriesVal = [];
         $formatCode = '';
@@ -824,7 +824,7 @@ class Chart
         ];
     }
 
-    private function chartDataSeriesValuesMultiLevel(SimpleXMLElement $seriesValueSet, string $dataType = 'n'): array
+    private function chartDataSeriesValuesMultiLevel(\SimpleXMLElement $seriesValueSet, string $dataType = 'n'): array
     {
         $seriesVal = [];
         $formatCode = '';
@@ -864,7 +864,7 @@ class Chart
         ];
     }
 
-    private function parseRichText(SimpleXMLElement $titleDetailPart): RichText
+    private function parseRichText(\SimpleXMLElement $titleDetailPart): RichText
     {
         $value = new RichText();
         $defaultFontSize = null;
@@ -1006,8 +1006,8 @@ class Chart
             }
 
             $fontSize = $fontSize ?? $defaultFontSize;
-            if (is_int($fontSize)) {
-                $objText->getFont()->setSize(floor($fontSize / 100));
+            if (\is_int($fontSize)) {
+                $objText->getFont()->setSize(\floor($fontSize / 100));
                 $fontFound = true;
             } else {
                 $objText->getFont()->setSize(null, true);
@@ -1078,7 +1078,7 @@ class Chart
     }
 
     /**
-     * @param ?SimpleXMLElement $chartDetail
+     * @param ?\SimpleXMLElement $chartDetail
      */
     private function readChartAttributes($chartDetail): array
     {
@@ -1171,7 +1171,7 @@ class Chart
         }
     }
 
-    private function readEffects(SimpleXMLElement $chartDetail, ?ChartProperties $chartObject): void
+    private function readEffects(\SimpleXMLElement $chartDetail, ?ChartProperties $chartObject): void
     {
         if (!isset($chartObject, $chartDetail->spPr)) {
             return;
@@ -1189,7 +1189,7 @@ class Chart
         if (isset($sppr->effectLst->softEdge)) {
             /** @var string */
             $softEdgeSize = self::getAttribute($sppr->effectLst->softEdge, 'rad', 'string');
-            if (is_numeric($softEdgeSize)) {
+            if (\is_numeric($softEdgeSize)) {
                 $chartObject->setSoftEdges((float) ChartProperties::xmlToPoints($softEdgeSize));
             }
         }
@@ -1205,19 +1205,19 @@ class Chart
         if ($type !== '') {
             /** @var string */
             $blur = self::getAttribute($sppr->effectLst->$type, 'blurRad', 'string');
-            $blur = is_numeric($blur) ? ChartProperties::xmlToPoints($blur) : null;
+            $blur = \is_numeric($blur) ? ChartProperties::xmlToPoints($blur) : null;
             /** @var string */
             $dist = self::getAttribute($sppr->effectLst->$type, 'dist', 'string');
-            $dist = is_numeric($dist) ? ChartProperties::xmlToPoints($dist) : null;
+            $dist = \is_numeric($dist) ? ChartProperties::xmlToPoints($dist) : null;
             /** @var string */
             $direction = self::getAttribute($sppr->effectLst->$type, 'dir', 'string');
-            $direction = is_numeric($direction) ? ChartProperties::xmlToAngle($direction) : null;
+            $direction = \is_numeric($direction) ? ChartProperties::xmlToAngle($direction) : null;
             $algn = self::getAttribute($sppr->effectLst->$type, 'algn', 'string');
             $rot = self::getAttribute($sppr->effectLst->$type, 'rotWithShape', 'string');
             $size = [];
             foreach (['sx', 'sy'] as $sizeType) {
                 $sizeValue = self::getAttribute($sppr->effectLst->$type, $sizeType, 'string');
-                if (is_numeric($sizeValue)) {
+                if (\is_numeric($sizeValue)) {
                     $size[$sizeType] = ChartProperties::xmlToTenthOfPercent((string) $sizeValue);
                 } else {
                     $size[$sizeType] = null;
@@ -1225,7 +1225,7 @@ class Chart
             }
             foreach (['kx', 'ky'] as $sizeType) {
                 $sizeValue = self::getAttribute($sppr->effectLst->$type, $sizeType, 'string');
-                if (is_numeric($sizeValue)) {
+                if (\is_numeric($sizeValue)) {
                     $size[$sizeType] = ChartProperties::xmlToAngle((string) $sizeValue);
                 } else {
                     $size[$sizeType] = null;
@@ -1249,7 +1249,7 @@ class Chart
         'innerShdw',
     ];
 
-    private function readColor(SimpleXMLElement $colorXml): array
+    private function readColor(\SimpleXMLElement $colorXml): array
     {
         $result = [
             'type' => null,
@@ -1264,14 +1264,14 @@ class Chart
                 if (isset($colorXml->$type->alpha)) {
                     /** @var string */
                     $alpha = self::getAttribute($colorXml->$type->alpha, 'val', 'string');
-                    if (is_numeric($alpha)) {
+                    if (\is_numeric($alpha)) {
                         $result['alpha'] = ChartColor::alphaFromXml($alpha);
                     }
                 }
                 if (isset($colorXml->$type->lumMod)) {
                     /** @var string */
                     $brightness = self::getAttribute($colorXml->$type->lumMod, 'val', 'string');
-                    if (is_numeric($brightness)) {
+                    if (\is_numeric($brightness)) {
                         $result['brightness'] = ChartColor::alphaFromXml($brightness);
                     }
                 }
@@ -1283,7 +1283,7 @@ class Chart
         return $result;
     }
 
-    private function readLineStyle(SimpleXMLElement $chartDetail, ?ChartProperties $chartObject): void
+    private function readLineStyle(\SimpleXMLElement $chartDetail, ?ChartProperties $chartObject): void
     {
         if (!isset($chartObject, $chartDetail->spPr)) {
             return;
@@ -1296,7 +1296,7 @@ class Chart
         $lineWidth = null;
         /** @var string */
         $lineWidthTemp = self::getAttribute($sppr->ln, 'w', 'string');
-        if (is_numeric($lineWidthTemp)) {
+        if (\is_numeric($lineWidthTemp)) {
             $lineWidth = ChartProperties::xmlToPoints($lineWidthTemp);
         }
         /** @var string */
@@ -1345,7 +1345,7 @@ class Chart
         $chartObject->getLineColor()->setColorPropertiesArray($colorArray);
     }
 
-    private function setAxisProperties(SimpleXMLElement $chartDetail, ?Axis $whichAxis): void
+    private function setAxisProperties(\SimpleXMLElement $chartDetail, ?Axis $whichAxis): void
     {
         if (!isset($whichAxis)) {
             return;
@@ -1410,7 +1410,7 @@ class Chart
             if (isset($children->bodyPr)) {
                 /** @var string */
                 $textRotation = self::getAttribute($children->bodyPr, 'rot', 'string');
-                if (is_numeric($textRotation)) {
+                if (\is_numeric($textRotation)) {
                     $whichAxis->setAxisOption('textRotation', (string) ChartProperties::xmlToAngle($textRotation));
                 }
             }

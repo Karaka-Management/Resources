@@ -58,7 +58,7 @@ class Comment extends TrackChange
      * Create a new Comment Element.
      *
      * @param string $author
-     * @param null|DateTime $date
+     * @param null|\DateTime $date
      * @param string $initials
      */
     public function __construct($author, $date = null, $initials = null)

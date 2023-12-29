@@ -23,7 +23,7 @@ class Secant
      */
     public static function sec($angle)
     {
-        if (is_array($angle)) {
+        if (\is_array($angle)) {
             return self::evaluateSingleArgumentArray([self::class, __FUNCTION__], $angle);
         }
 
@@ -33,7 +33,7 @@ class Secant
             return $e->getMessage();
         }
 
-        return Helpers::verySmallDenominator(1.0, cos($angle));
+        return Helpers::verySmallDenominator(1.0, \cos($angle));
     }
 
     /**
@@ -49,7 +49,7 @@ class Secant
      */
     public static function sech($angle)
     {
-        if (is_array($angle)) {
+        if (\is_array($angle)) {
             return self::evaluateSingleArgumentArray([self::class, __FUNCTION__], $angle);
         }
 
@@ -59,6 +59,6 @@ class Secant
             return $e->getMessage();
         }
 
-        return Helpers::verySmallDenominator(1.0, cosh($angle));
+        return Helpers::verySmallDenominator(1.0, \cosh($angle));
     }
 }

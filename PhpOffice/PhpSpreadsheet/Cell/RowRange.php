@@ -37,8 +37,8 @@ class RowRange implements AddressRange
     private function validateFromTo(int $from, int $to): void
     {
         // Identify actual top and bottom values (in case we've been given bottom and top)
-        $this->from = min($from, $to);
-        $this->to = max($from, $to);
+        $this->from = \min($from, $to);
+        $this->to = \max($from, $to);
     }
 
     public function from(): int
@@ -83,7 +83,7 @@ class RowRange implements AddressRange
     public function __toString(): string
     {
         if ($this->worksheet !== null) {
-            $title = str_replace("'", "''", $this->worksheet->getTitle());
+            $title = \str_replace("'", "''", $this->worksheet->getTitle());
 
             return "'{$title}'!{$this->from}:{$this->to}";
         }

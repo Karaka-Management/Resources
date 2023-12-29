@@ -41,7 +41,7 @@ class Border extends StyleBase
         ],
     ];
 
-    public function parseStyle(SimpleXMLElement $styleData, array $namespaces): array
+    public function parseStyle(\SimpleXMLElement $styleData, array $namespaces): array
     {
         $style = [];
 
@@ -51,7 +51,7 @@ class Border extends StyleBase
             $borderAttributes = self::getAttributes($borderStyle, $namespaces['ss']);
             $thisBorder = [];
             $styleType = (string) $borderAttributes->Weight;
-            $styleType .= strtolower((string) $borderAttributes->LineStyle);
+            $styleType .= \strtolower((string) $borderAttributes->LineStyle);
             $thisBorder['borderStyle'] = self::BORDER_MAPPINGS['borderStyle'][$styleType] ?? BorderStyle::BORDER_NONE;
 
             foreach ($borderAttributes as $borderStyleKey => $borderStyleValuex) {
@@ -63,7 +63,7 @@ class Border extends StyleBase
 
                         break;
                     case 'Color':
-                        $borderColour = substr($borderStyleValue, 1);
+                        $borderColour = \substr($borderStyleValue, 1);
                         $thisBorder['color']['rgb'] = $borderColour;
 
                         break;
@@ -83,9 +83,9 @@ class Border extends StyleBase
 
     protected function parsePosition(string $borderStyleValue, string $diagonalDirection): array
     {
-        $borderStyleValue = strtolower($borderStyleValue);
+        $borderStyleValue = \strtolower($borderStyleValue);
 
-        if (in_array($borderStyleValue, self::BORDER_POSITIONS)) {
+        if (\in_array($borderStyleValue, self::BORDER_POSITIONS)) {
             $borderPosition = $borderStyleValue;
         } elseif ($borderStyleValue === 'diagonalleft') {
             $diagonalDirection = $diagonalDirection ? Borders::DIAGONAL_BOTH : Borders::DIAGONAL_DOWN;

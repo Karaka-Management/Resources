@@ -16,14 +16,14 @@ class AutoFilter
     private $parent;
 
     /**
-     * @var SimpleXMLElement
+     * @var \SimpleXMLElement
      */
     private $worksheetXml;
 
     /**
      * @param Table|Worksheet $parent
      */
-    public function __construct($parent, SimpleXMLElement $worksheetXml)
+    public function __construct($parent, \SimpleXMLElement $worksheetXml)
     {
         $this->parent = $parent;
         $this->worksheetXml = $worksheetXml;
@@ -32,13 +32,13 @@ class AutoFilter
     public function load(): void
     {
         // Remove all "$" in the auto filter range
-        $autoFilterRange = (string) preg_replace('/\$/', '', $this->worksheetXml->autoFilter['ref'] ?? '');
-        if (strpos($autoFilterRange, ':') !== false) {
+        $autoFilterRange = (string) \preg_replace('/\$/', '', $this->worksheetXml->autoFilter['ref'] ?? '');
+        if (\strpos($autoFilterRange, ':') !== false) {
             $this->readAutoFilter($autoFilterRange, $this->worksheetXml);
         }
     }
 
-    private function readAutoFilter(string $autoFilterRange, SimpleXMLElement $xmlSheet): void
+    private function readAutoFilter(string $autoFilterRange, \SimpleXMLElement $xmlSheet): void
     {
         $autoFilter = $this->parent->getAutoFilter();
         $autoFilter->setRange($autoFilterRange);
@@ -74,7 +74,7 @@ class AutoFilter
         $autoFilter->setEvaluated(true);
     }
 
-    private function readDateRangeAutoFilter(SimpleXMLElement $filters, Column $column): void
+    private function readDateRangeAutoFilter(\SimpleXMLElement $filters, Column $column): void
     {
         foreach ($filters->dateGroupItem as $dateGroupItem) {
             //    Operator is undefined, but always treated as EQUAL
@@ -93,7 +93,7 @@ class AutoFilter
         }
     }
 
-    private function readCustomAutoFilter(?SimpleXMLElement $filterColumn, Column $column): void
+    private function readCustomAutoFilter(?\SimpleXMLElement $filterColumn, Column $column): void
     {
         if (isset($filterColumn, $filterColumn->customFilters)) {
             $column->setFilterType(Column::AUTOFILTER_FILTERTYPE_CUSTOMFILTER);
@@ -112,7 +112,7 @@ class AutoFilter
         }
     }
 
-    private function readDynamicAutoFilter(?SimpleXMLElement $filterColumn, Column $column): void
+    private function readDynamicAutoFilter(?\SimpleXMLElement $filterColumn, Column $column): void
     {
         if (isset($filterColumn, $filterColumn->dynamicFilter)) {
             $column->setFilterType(Column::AUTOFILTER_FILTERTYPE_DYNAMICFILTER);
@@ -134,7 +134,7 @@ class AutoFilter
         }
     }
 
-    private function readTopTenAutoFilter(?SimpleXMLElement $filterColumn, Column $column): void
+    private function readTopTenAutoFilter(?\SimpleXMLElement $filterColumn, Column $column): void
     {
         if (isset($filterColumn, $filterColumn->top10)) {
             $column->setFilterType(Column::AUTOFILTER_FILTERTYPE_TOPTENFILTER);

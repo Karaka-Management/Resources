@@ -39,7 +39,7 @@ class Field extends Text
             return;
         }
 
-        $type = strtolower($element->getType());
+        $type = \strtolower($element->getType());
         switch ($type) {
             case 'date':
             case 'page':
@@ -55,9 +55,9 @@ class Field extends Text
         $xmlWriter = $this->getXmlWriter();
 
         $xmlWriter->startElement('text:span');
-        if (method_exists($element, 'getFontStyle')) {
+        if (\method_exists($element, 'getFontStyle')) {
             $fstyle = $element->getFontStyle();
-            if (is_string($fstyle)) {
+            if (\is_string($fstyle)) {
                 $xmlWriter->writeAttribute('text:style-name', $fstyle);
             }
         }

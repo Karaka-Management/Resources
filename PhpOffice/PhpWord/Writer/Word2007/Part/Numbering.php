@@ -68,7 +68,7 @@ class Numbering extends AbstractPart
                 $xmlWriter->writeAttribute('w:val', $style->getType());
                 $xmlWriter->endElement(); // w:multiLevelType
 
-                if (is_array($levels)) {
+                if (\is_array($levels)) {
                     foreach ($levels as $level) {
                         $this->writeLevel($xmlWriter, $level);
                     }
@@ -190,6 +190,6 @@ class Numbering extends AbstractPart
      */
     private function getRandomHexNumber($length = 8)
     {
-        return strtoupper(substr(md5(mt_rand()), 0, $length));
+        return \strtoupper(\substr(\md5(\mt_rand()), 0, $length));
     }
 }

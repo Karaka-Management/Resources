@@ -13,20 +13,20 @@ abstract class ConvertBase
 
     protected static function validateValue($value): string
     {
-        if (is_bool($value)) {
+        if (\is_bool($value)) {
             if (Functions::getCompatibilityMode() !== Functions::COMPATIBILITY_OPENOFFICE) {
                 throw new Exception(ExcelError::VALUE());
             }
             $value = (int) $value;
         }
 
-        if (is_numeric($value)) {
+        if (\is_numeric($value)) {
             if (Functions::getCompatibilityMode() == Functions::COMPATIBILITY_GNUMERIC) {
-                $value = floor((float) $value);
+                $value = \floor((float) $value);
             }
         }
 
-        return strtoupper((string) $value);
+        return \strtoupper((string) $value);
     }
 
     protected static function validatePlaces($places = null): ?int
@@ -35,7 +35,7 @@ abstract class ConvertBase
             return $places;
         }
 
-        if (is_numeric($places)) {
+        if (\is_numeric($places)) {
             if ($places < 0 || $places > 10) {
                 throw new Exception(ExcelError::NAN());
             }
@@ -57,13 +57,13 @@ abstract class ConvertBase
     protected static function nbrConversionFormat(string $value, ?int $places): string
     {
         if ($places !== null) {
-            if (strlen($value) <= $places) {
-                return substr(str_pad($value, $places, '0', STR_PAD_LEFT), -10);
+            if (\strlen($value) <= $places) {
+                return \substr(\str_pad($value, $places, '0', STR_PAD_LEFT), -10);
             }
 
             return ExcelError::NAN();
         }
 
-        return substr($value, -10);
+        return \substr($value, -10);
     }
 }

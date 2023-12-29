@@ -7,12 +7,12 @@ use DOMNode;
 
 class AutoFilter extends BaseLoader
 {
-    public function read(DOMElement $workbookData): void
+    public function read(\DOMElement $workbookData): void
     {
         $this->readAutoFilters($workbookData);
     }
 
-    protected function readAutoFilters(DOMElement $workbookData): void
+    protected function readAutoFilters(\DOMElement $workbookData): void
     {
         $databases = $workbookData->getElementsByTagNameNS($this->tableNs, 'database-ranges');
 
@@ -27,7 +27,7 @@ class AutoFilter extends BaseLoader
         }
     }
 
-    protected function getAttributeValue(?DOMNode $node, string $attributeName): ?string
+    protected function getAttributeValue(?\DOMNode $node, string $attributeName): ?string
     {
         if ($node !== null && $node->attributes !== null) {
             $attribute = $node->attributes->getNamedItemNS(

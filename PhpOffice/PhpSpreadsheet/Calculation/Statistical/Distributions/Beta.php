@@ -39,7 +39,7 @@ class Beta
      */
     public static function distribution($value, $alpha, $beta, $rMin = 0.0, $rMax = 1.0)
     {
-        if (is_array($value) || is_array($alpha) || is_array($beta) || is_array($rMin) || is_array($rMax)) {
+        if (\is_array($value) || \is_array($alpha) || \is_array($beta) || \is_array($rMin) || \is_array($rMax)) {
             return self::evaluateArrayArguments([self::class, __FUNCTION__], $value, $alpha, $beta, $rMin, $rMax);
         }
 
@@ -93,7 +93,7 @@ class Beta
      */
     public static function inverse($probability, $alpha, $beta, $rMin = 0.0, $rMax = 1.0)
     {
-        if (is_array($probability) || is_array($alpha) || is_array($beta) || is_array($rMin) || is_array($rMax)) {
+        if (\is_array($probability) || \is_array($alpha) || \is_array($beta) || \is_array($rMin) || \is_array($rMax)) {
             return self::evaluateArrayArguments([self::class, __FUNCTION__], $probability, $alpha, $beta, $rMin, $rMax);
         }
 
@@ -148,7 +148,7 @@ class Beta
             return ExcelError::NA();
         }
 
-        return round($rMin + $guess * ($rMax - $rMin), 12);
+        return \round($rMin + $guess * ($rMax - $rMin), 12);
     }
 
     /**
@@ -175,7 +175,7 @@ class Beta
             return 0.0;
         }
 
-        $beta_gam = exp((0 - self::logBeta($p, $q)) + $p * log($x) + $q * log(1.0 - $x));
+        $beta_gam = \exp((0 - self::logBeta($p, $q)) + $p * \log($x) + $q * \log(1.0 - $x));
         if ($x < ($p + 1.0) / ($p + $q + 2.0)) {
             return $beta_gam * self::betaFraction($x, $p, $q) / $p;
         }
@@ -228,36 +228,36 @@ class Beta
         $p_plus = $p + 1.0;
         $p_minus = $p - 1.0;
         $h = 1.0 - $sum_pq * $x / $p_plus;
-        if (abs($h) < self::XMININ) {
+        if (\abs($h) < self::XMININ) {
             $h = self::XMININ;
         }
         $h = 1.0 / $h;
         $frac = $h;
         $m = 1;
         $delta = 0.0;
-        while ($m <= self::MAX_ITERATIONS && abs($delta - 1.0) > Functions::PRECISION) {
+        while ($m <= self::MAX_ITERATIONS && \abs($delta - 1.0) > Functions::PRECISION) {
             $m2 = 2 * $m;
             // even index for d
             $d = $m * ($q - $m) * $x / (($p_minus + $m2) * ($p + $m2));
             $h = 1.0 + $d * $h;
-            if (abs($h) < self::XMININ) {
+            if (\abs($h) < self::XMININ) {
                 $h = self::XMININ;
             }
             $h = 1.0 / $h;
             $c = 1.0 + $d / $c;
-            if (abs($c) < self::XMININ) {
+            if (\abs($c) < self::XMININ) {
                 $c = self::XMININ;
             }
             $frac *= $h * $c;
             // odd index for d
             $d = -($p + $m) * ($sum_pq + $m) * $x / (($p + $m2) * ($p_plus + $m2));
             $h = 1.0 + $d * $h;
-            if (abs($h) < self::XMININ) {
+            if (\abs($h) < self::XMININ) {
                 $h = self::XMININ;
             }
             $h = 1.0 / $h;
             $c = 1.0 + $d / $c;
-            if (abs($c) < self::XMININ) {
+            if (\abs($c) < self::XMININ) {
                 $c = self::XMININ;
             }
             $delta = $h * $c;

@@ -107,10 +107,10 @@ class Table
      */
     public function setName(string $name): self
     {
-        $name = trim($name);
+        $name = \trim($name);
 
         if (!empty($name)) {
-            if (strlen($name) === 1 && in_array($name, ['C', 'c', 'R', 'r'])) {
+            if (\strlen($name) === 1 && \in_array($name, ['C', 'c', 'R', 'r'])) {
                 throw new PhpSpreadsheetException('The table name is invalid');
             }
             if (StringHelper::countCharacters($name) > 255) {
@@ -118,15 +118,15 @@ class Table
             }
             // Check for A1 or R1C1 cell reference notation
             if (
-                preg_match(Coordinate::A1_COORDINATE_REGEX, $name) ||
-                preg_match('/^R\[?\-?[0-9]*\]?C\[?\-?[0-9]*\]?$/i', $name)
+                \preg_match(Coordinate::A1_COORDINATE_REGEX, $name) ||
+                \preg_match('/^R\[?\-?[0-9]*\]?C\[?\-?[0-9]*\]?$/i', $name)
             ) {
                 throw new PhpSpreadsheetException('The table name can\'t be the same as a cell reference');
             }
-            if (!preg_match('/^[\p{L}_\\\\]/iu', $name)) {
+            if (!\preg_match('/^[\p{L}_\\\\]/iu', $name)) {
                 throw new PhpSpreadsheetException('The table name must begin a name with a letter, an underscore character (_), or a backslash (\)');
             }
-            if (!preg_match('/^[\p{L}_\\\\][\p{L}\p{M}0-9\._]+$/iu', $name)) {
+            if (!\preg_match('/^[\p{L}_\\\\][\p{L}\p{M}0-9\._]+$/iu', $name)) {
                 throw new PhpSpreadsheetException('The table name contains invalid characters');
             }
 
@@ -180,14 +180,14 @@ class Table
 
     private function updateStructuredReferencesInCells(Worksheet $worksheet, string $newName): void
     {
-        $pattern = '/' . preg_quote($this->name) . '\[/mui';
+        $pattern = '/' . \preg_quote($this->name) . '\[/mui';
 
         foreach ($worksheet->getCoordinates(false) as $coordinate) {
             $cell = $worksheet->getCell($coordinate);
             if ($cell->getDataType() === DataType::TYPE_FORMULA) {
                 $formula = $cell->getValue();
-                if (preg_match($pattern, $formula) === 1) {
-                    $formula = preg_replace($pattern, "{$newName}[", $formula);
+                if (\preg_match($pattern, $formula) === 1) {
+                    $formula = \preg_replace($pattern, "{$newName}[", $formula);
                     $cell->setValueExplicit($formula, DataType::TYPE_FORMULA);
                 }
             }
@@ -196,12 +196,12 @@ class Table
 
     private function updateStructuredReferencesInNamedFormulae(Spreadsheet $spreadsheet, string $newName): void
     {
-        $pattern = '/' . preg_quote($this->name) . '\[/mui';
+        $pattern = '/' . \preg_quote($this->name) . '\[/mui';
 
         foreach ($spreadsheet->getNamedFormulae() as $namedFormula) {
             $formula = $namedFormula->getValue();
-            if (preg_match($pattern, $formula) === 1) {
-                $formula = preg_replace($pattern, "{$newName}[", $formula);
+            if (\preg_match($pattern, $formula) === 1) {
+                $formula = \preg_replace($pattern, "{$newName}[", $formula);
                 $namedFormula->setValue($formula); // @phpstan-ignore-line
             }
         }
@@ -293,7 +293,7 @@ class Table
             return $this;
         }
 
-        if (strpos($range, ':') === false) {
+        if (\strpos($range, ':') === false) {
             throw new PhpSpreadsheetException('Table must be set on a range of cells.');
         }
 
@@ -324,7 +324,7 @@ class Table
     {
         if ($this->workSheet !== null) {
             $thisrange = $this->range;
-            $range = (string) preg_replace('/\\d+$/', (string) $this->workSheet->getHighestRow(), $thisrange);
+            $range = (string) \preg_replace('/\\d+$/', (string) $this->workSheet->getHighestRow(), $thisrange);
             if ($range !== $thisrange) {
                 $this->setRange($range);
             }
@@ -446,22 +446,22 @@ class Table
      */
     public function setColumn($columnObjectOrString): self
     {
-        if ((is_string($columnObjectOrString)) && (!empty($columnObjectOrString))) {
+        if ((\is_string($columnObjectOrString)) && (!empty($columnObjectOrString))) {
             $column = $columnObjectOrString;
-        } elseif (is_object($columnObjectOrString) && ($columnObjectOrString instanceof Table\Column)) {
+        } elseif (\is_object($columnObjectOrString) && ($columnObjectOrString instanceof Table\Column)) {
             $column = $columnObjectOrString->getColumnIndex();
         } else {
             throw new PhpSpreadsheetException('Column is not within the table range.');
         }
         $this->isColumnInRange($column);
 
-        if (is_string($columnObjectOrString)) {
+        if (\is_string($columnObjectOrString)) {
             $this->columns[$columnObjectOrString] = new Table\Column($columnObjectOrString, $this);
         } else {
             $columnObjectOrString->setTable($this);
             $this->columns[$column] = $columnObjectOrString;
         }
-        ksort($this->columns);
+        \ksort($this->columns);
 
         return $this;
     }
@@ -494,8 +494,8 @@ class Table
      */
     public function shiftColumn($fromColumn, $toColumn): self
     {
-        $fromColumn = strtoupper($fromColumn);
-        $toColumn = strtoupper($toColumn);
+        $fromColumn = \strtoupper($fromColumn);
+        $toColumn = \strtoupper($toColumn);
 
         if (($fromColumn !== null) && (isset($this->columns[$fromColumn])) && ($toColumn !== null)) {
             $this->columns[$fromColumn]->setTable();
@@ -504,7 +504,7 @@ class Table
             $this->columns[$toColumn]->setTable($this);
             unset($this->columns[$fromColumn]);
 
-            ksort($this->columns);
+            \ksort($this->columns);
         }
 
         return $this;
@@ -551,16 +551,16 @@ class Table
      */
     public function __clone()
     {
-        $vars = get_object_vars($this);
+        $vars = \get_object_vars($this);
         foreach ($vars as $key => $value) {
-            if (is_object($value)) {
+            if (\is_object($value)) {
                 if ($key === 'workSheet') {
                     //    Detach from worksheet
                     $this->{$key} = null;
                 } else {
                     $this->{$key} = clone $value;
                 }
-            } elseif ((is_array($value)) && ($key === 'columns')) {
+            } elseif ((\is_array($value)) && ($key === 'columns')) {
                 //    The columns array of \PhpOffice\PhpSpreadsheet\Worksheet\Worksheet\Table objects
                 $this->{$key} = [];
                 foreach ($value as $k => $v) {

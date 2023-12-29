@@ -28,7 +28,7 @@ class ComplexFunctions
      */
     public static function IMABS($complexNumber)
     {
-        if (is_array($complexNumber)) {
+        if (\is_array($complexNumber)) {
             return self::evaluateSingleArgumentArray([self::class, __FUNCTION__], $complexNumber);
         }
 
@@ -59,7 +59,7 @@ class ComplexFunctions
      */
     public static function IMARGUMENT($complexNumber)
     {
-        if (is_array($complexNumber)) {
+        if (\is_array($complexNumber)) {
             return self::evaluateSingleArgumentArray([self::class, __FUNCTION__], $complexNumber);
         }
 
@@ -93,7 +93,7 @@ class ComplexFunctions
      */
     public static function IMCONJUGATE($complexNumber)
     {
-        if (is_array($complexNumber)) {
+        if (\is_array($complexNumber)) {
             return self::evaluateSingleArgumentArray([self::class, __FUNCTION__], $complexNumber);
         }
 
@@ -123,7 +123,7 @@ class ComplexFunctions
      */
     public static function IMCOS($complexNumber)
     {
-        if (is_array($complexNumber)) {
+        if (\is_array($complexNumber)) {
             return self::evaluateSingleArgumentArray([self::class, __FUNCTION__], $complexNumber);
         }
 
@@ -153,7 +153,7 @@ class ComplexFunctions
      */
     public static function IMCOSH($complexNumber)
     {
-        if (is_array($complexNumber)) {
+        if (\is_array($complexNumber)) {
             return self::evaluateSingleArgumentArray([self::class, __FUNCTION__], $complexNumber);
         }
 
@@ -183,7 +183,7 @@ class ComplexFunctions
      */
     public static function IMCOT($complexNumber)
     {
-        if (is_array($complexNumber)) {
+        if (\is_array($complexNumber)) {
             return self::evaluateSingleArgumentArray([self::class, __FUNCTION__], $complexNumber);
         }
 
@@ -213,7 +213,7 @@ class ComplexFunctions
      */
     public static function IMCSC($complexNumber)
     {
-        if (is_array($complexNumber)) {
+        if (\is_array($complexNumber)) {
             return self::evaluateSingleArgumentArray([self::class, __FUNCTION__], $complexNumber);
         }
 
@@ -243,7 +243,7 @@ class ComplexFunctions
      */
     public static function IMCSCH($complexNumber)
     {
-        if (is_array($complexNumber)) {
+        if (\is_array($complexNumber)) {
             return self::evaluateSingleArgumentArray([self::class, __FUNCTION__], $complexNumber);
         }
 
@@ -273,7 +273,7 @@ class ComplexFunctions
      */
     public static function IMSIN($complexNumber)
     {
-        if (is_array($complexNumber)) {
+        if (\is_array($complexNumber)) {
             return self::evaluateSingleArgumentArray([self::class, __FUNCTION__], $complexNumber);
         }
 
@@ -303,7 +303,7 @@ class ComplexFunctions
      */
     public static function IMSINH($complexNumber)
     {
-        if (is_array($complexNumber)) {
+        if (\is_array($complexNumber)) {
             return self::evaluateSingleArgumentArray([self::class, __FUNCTION__], $complexNumber);
         }
 
@@ -333,7 +333,7 @@ class ComplexFunctions
      */
     public static function IMSEC($complexNumber)
     {
-        if (is_array($complexNumber)) {
+        if (\is_array($complexNumber)) {
             return self::evaluateSingleArgumentArray([self::class, __FUNCTION__], $complexNumber);
         }
 
@@ -363,7 +363,7 @@ class ComplexFunctions
      */
     public static function IMSECH($complexNumber)
     {
-        if (is_array($complexNumber)) {
+        if (\is_array($complexNumber)) {
             return self::evaluateSingleArgumentArray([self::class, __FUNCTION__], $complexNumber);
         }
 
@@ -393,7 +393,7 @@ class ComplexFunctions
      */
     public static function IMTAN($complexNumber)
     {
-        if (is_array($complexNumber)) {
+        if (\is_array($complexNumber)) {
             return self::evaluateSingleArgumentArray([self::class, __FUNCTION__], $complexNumber);
         }
 
@@ -423,7 +423,7 @@ class ComplexFunctions
      */
     public static function IMSQRT($complexNumber)
     {
-        if (is_array($complexNumber)) {
+        if (\is_array($complexNumber)) {
             return self::evaluateSingleArgumentArray([self::class, __FUNCTION__], $complexNumber);
         }
 
@@ -458,7 +458,7 @@ class ComplexFunctions
      */
     public static function IMLN($complexNumber)
     {
-        if (is_array($complexNumber)) {
+        if (\is_array($complexNumber)) {
             return self::evaluateSingleArgumentArray([self::class, __FUNCTION__], $complexNumber);
         }
 
@@ -492,7 +492,7 @@ class ComplexFunctions
      */
     public static function IMLOG10($complexNumber)
     {
-        if (is_array($complexNumber)) {
+        if (\is_array($complexNumber)) {
             return self::evaluateSingleArgumentArray([self::class, __FUNCTION__], $complexNumber);
         }
 
@@ -526,7 +526,7 @@ class ComplexFunctions
      */
     public static function IMLOG2($complexNumber)
     {
-        if (is_array($complexNumber)) {
+        if (\is_array($complexNumber)) {
             return self::evaluateSingleArgumentArray([self::class, __FUNCTION__], $complexNumber);
         }
 
@@ -560,7 +560,7 @@ class ComplexFunctions
      */
     public static function IMEXP($complexNumber)
     {
-        if (is_array($complexNumber)) {
+        if (\is_array($complexNumber)) {
             return self::evaluateSingleArgumentArray([self::class, __FUNCTION__], $complexNumber);
         }
 
@@ -592,7 +592,7 @@ class ComplexFunctions
      */
     public static function IMPOWER($complexNumber, $realNumber)
     {
-        if (is_array($complexNumber) || is_array($realNumber)) {
+        if (\is_array($complexNumber) || \is_array($realNumber)) {
             return self::evaluateArrayArguments([self::class, __FUNCTION__], $complexNumber, $realNumber);
         }
 
@@ -602,7 +602,7 @@ class ComplexFunctions
             return ExcelError::NAN();
         }
 
-        if (!is_numeric($realNumber)) {
+        if (!\is_numeric($realNumber)) {
             return ExcelError::VALUE();
         }
 

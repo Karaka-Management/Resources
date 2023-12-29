@@ -13,7 +13,7 @@ class Style
      */
     protected $styles = [];
 
-    public function parseStyles(SimpleXMLElement $xml, array $namespaces): array
+    public function parseStyles(\SimpleXMLElement $xml, array $namespaces): array
     {
         if (!isset($xml->Styles)) {
             return [];
@@ -33,7 +33,7 @@ class Style
             $alignment = $border = $font = $fill = $numberFormat = [];
 
             foreach ($style as $styleType => $styleDatax) {
-                $styleData = $styleDatax ?? new SimpleXMLElement('<xml></xml>');
+                $styleData = $styleDatax ?? new \SimpleXMLElement('<xml></xml>');
                 $styleAttributes = $styleData->attributes($namespaces['ss']);
 
                 switch ($styleType) {
@@ -68,16 +68,16 @@ class Style
                 }
             }
 
-            $this->styles[$styleID] = array_merge($alignment, $border, $font, $fill, $numberFormat);
+            $this->styles[$styleID] = \array_merge($alignment, $border, $font, $fill, $numberFormat);
         }
 
         return $this->styles;
     }
 
-    protected static function getAttributes(?SimpleXMLElement $simple, string $node): SimpleXMLElement
+    protected static function getAttributes(?\SimpleXMLElement $simple, string $node): \SimpleXMLElement
     {
         return ($simple === null)
-            ? new SimpleXMLElement('<xml></xml>')
-            : ($simple->attributes($node) ?? new SimpleXMLElement('<xml></xml>'));
+            ? new \SimpleXMLElement('<xml></xml>')
+            : ($simple->attributes($node) ?? new \SimpleXMLElement('<xml></xml>'));
     }
 }

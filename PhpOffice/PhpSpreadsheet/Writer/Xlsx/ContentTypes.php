@@ -101,7 +101,7 @@ class ContentTypes extends WriterPart
         $chart = 1;
         for ($i = 0; $i < $sheetCount; ++$i) {
             $drawings = $spreadsheet->getSheet($i)->getDrawingCollection();
-            $drawingCount = count($drawings);
+            $drawingCount = \count($drawings);
             $chartCount = ($includeCharts) ? $spreadsheet->getSheet($i)->getChartCount() : 0;
             $hasUnparsedDrawing = isset($unparsedLoadedData['sheets'][$spreadsheet->getSheet($i)->getCodeName()]['drawingOriginalIds']);
 
@@ -120,7 +120,7 @@ class ContentTypes extends WriterPart
 
         // Comments
         for ($i = 0; $i < $sheetCount; ++$i) {
-            if (count($spreadsheet->getSheet($i)->getComments()) > 0) {
+            if (\count($spreadsheet->getSheet($i)->getComments()) > 0) {
                 $this->writeOverrideContentType($objWriter, '/xl/comments' . ($i + 1) . '.xml', 'application/vnd.openxmlformats-officedocument.spreadsheetml.comments+xml');
             }
         }
@@ -133,11 +133,11 @@ class ContentTypes extends WriterPart
             $mimeType = '';
 
             if ($this->getParentWriter()->getDrawingHashTable()->getByIndex($i) instanceof \PhpOffice\PhpSpreadsheet\Worksheet\Drawing) {
-                $extension = strtolower($this->getParentWriter()->getDrawingHashTable()->getByIndex($i)->getExtension());
+                $extension = \strtolower($this->getParentWriter()->getDrawingHashTable()->getByIndex($i)->getExtension());
                 $mimeType = $this->getImageMimeType($this->getParentWriter()->getDrawingHashTable()->getByIndex($i)->getPath());
             } elseif ($this->getParentWriter()->getDrawingHashTable()->getByIndex($i) instanceof MemoryDrawing) {
-                $extension = strtolower($this->getParentWriter()->getDrawingHashTable()->getByIndex($i)->getMimeType());
-                $extension = explode('/', $extension);
+                $extension = \strtolower($this->getParentWriter()->getDrawingHashTable()->getByIndex($i)->getMimeType());
+                $extension = \explode('/', $extension);
                 $extension = $extension[1];
 
                 $mimeType = $this->getParentWriter()->getDrawingHashTable()->getByIndex($i)->getMimeType();
@@ -152,7 +152,7 @@ class ContentTypes extends WriterPart
         if ($spreadsheet->hasRibbonBinObjects()) {
             // Some additional objects in the ribbon ?
             // we need to write "Extension" but not already write for media content
-            $tabRibbonTypes = array_diff($spreadsheet->getRibbonBinObjects('types') ?? [], array_keys($aMediaContentTypes));
+            $tabRibbonTypes = \array_diff($spreadsheet->getRibbonBinObjects('types') ?? [], \array_keys($aMediaContentTypes));
             foreach ($tabRibbonTypes as $aRibbonType) {
                 $mimeType = 'image/.' . $aRibbonType; //we wrote $mimeType like customUI Editor
                 $this->writeDefaultContentType($objWriter, $aRibbonType, $mimeType);
@@ -160,24 +160,24 @@ class ContentTypes extends WriterPart
         }
         $sheetCount = $spreadsheet->getSheetCount();
         for ($i = 0; $i < $sheetCount; ++$i) {
-            if (count($spreadsheet->getSheet($i)->getHeaderFooter()->getImages()) > 0) {
+            if (\count($spreadsheet->getSheet($i)->getHeaderFooter()->getImages()) > 0) {
                 foreach ($spreadsheet->getSheet($i)->getHeaderFooter()->getImages() as $image) {
-                    if (!isset($aMediaContentTypes[strtolower($image->getExtension())])) {
-                        $aMediaContentTypes[strtolower($image->getExtension())] = $this->getImageMimeType($image->getPath());
+                    if (!isset($aMediaContentTypes[\strtolower($image->getExtension())])) {
+                        $aMediaContentTypes[\strtolower($image->getExtension())] = $this->getImageMimeType($image->getPath());
 
-                        $this->writeDefaultContentType($objWriter, strtolower($image->getExtension()), $aMediaContentTypes[strtolower($image->getExtension())]);
+                        $this->writeDefaultContentType($objWriter, \strtolower($image->getExtension()), $aMediaContentTypes[\strtolower($image->getExtension())]);
                     }
                 }
             }
 
-            if (count($spreadsheet->getSheet($i)->getComments()) > 0) {
+            if (\count($spreadsheet->getSheet($i)->getComments()) > 0) {
                 foreach ($spreadsheet->getSheet($i)->getComments() as $comment) {
                     if (!$comment->hasBackgroundImage()) {
                         continue;
                     }
 
                     $bgImage = $comment->getBackgroundImage();
-                    $bgImageExtentionKey = strtolower($bgImage->getImageFileExtensionForSave(false));
+                    $bgImageExtentionKey = \strtolower($bgImage->getImageFileExtensionForSave(false));
 
                     if (!isset($aMediaContentTypes[$bgImageExtentionKey])) {
                         $aMediaContentTypes[$bgImageExtentionKey] = $bgImage->getImageMimeType();
@@ -218,9 +218,9 @@ class ContentTypes extends WriterPart
     private function getImageMimeType($filename)
     {
         if (File::fileExists($filename)) {
-            $image = getimagesize($filename);
+            $image = \getimagesize($filename);
 
-            return image_type_to_mime_type((is_array($image) && count($image) >= 3) ? $image[2] : 0);
+            return \image_type_to_mime_type((\is_array($image) && \count($image) >= 3) ? $image[2] : 0);
         }
 
         throw new WriterException("File $filename does not exist");

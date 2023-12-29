@@ -34,8 +34,8 @@ class Field extends Text
             return;
         }
 
-        $methodName = 'write' . ucfirst(strtolower($element->getType()));
-        if (method_exists($this, $methodName)) {
+        $methodName = 'write' . \ucfirst(\strtolower($element->getType()));
+        if (\method_exists($this, $methodName)) {
             $this->$methodName($element);
         } else {
             $this->writeDefault($element);
@@ -55,7 +55,7 @@ class Field extends Text
 
         $instruction = ' ' . $element->getType() . ' ';
         if ($element->getText() != null) {
-            if (is_string($element->getText())) {
+            if (\is_string($element->getText())) {
                 $instruction .= '"' . $element->getText() . '" ';
                 $instruction .= $this->buildPropertiesAndOptions($element);
             } else {
@@ -103,7 +103,7 @@ class Field extends Text
         $xmlWriter->startElement('w:noProof');
         $xmlWriter->endElement(); // w:noProof
         $xmlWriter->endElement(); // w:rPr
-        $xmlWriter->writeElement('w:t', $element->getText() != null && is_string($element->getText()) ? $element->getText() : '1');
+        $xmlWriter->writeElement('w:t', $element->getText() != null && \is_string($element->getText()) ? $element->getText() : '1');
         $xmlWriter->endElement(); // w:r
 
         $xmlWriter->startElement('w:r');
@@ -132,7 +132,7 @@ class Field extends Text
         $xmlWriter->endElement(); // w:r
 
         $instruction = ' ' . $element->getType() . ' ' . $this->buildPropertiesAndOptions($element);
-        if (is_string($element->getText())) {
+        if (\is_string($element->getText())) {
             $instruction .= $element->getText() . ' ';
         }
 

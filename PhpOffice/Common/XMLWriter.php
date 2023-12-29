@@ -59,11 +59,11 @@ class XMLWriter extends \XMLWriter
         if ($pTemporaryStorage == self::STORAGE_MEMORY) {
             $this->openMemory();
         } else {
-            if ($pTemporaryStorageDir && !is_dir($pTemporaryStorageDir)) {
-                $pTemporaryStorageDir = sys_get_temp_dir();
+            if ($pTemporaryStorageDir && !\is_dir($pTemporaryStorageDir)) {
+                $pTemporaryStorageDir = \sys_get_temp_dir();
             }
             // Create temporary filename
-            $this->tempFileName = @tempnam($pTemporaryStorageDir, 'xml');
+            $this->tempFileName = @\tempnam($pTemporaryStorageDir, 'xml');
 
             // Open storage
             $this->openUri($this->tempFileName);
@@ -87,7 +87,7 @@ class XMLWriter extends \XMLWriter
         if (empty($this->tempFileName)) {
             return;
         }
-        if (PHP_OS != 'WINNT' && @unlink($this->tempFileName) === false) {
+        if (PHP_OS != 'WINNT' && @\unlink($this->tempFileName) === false) {
             throw new \Exception('The file ' . $this->tempFileName . ' could not be deleted.');
         }
     }
@@ -105,7 +105,7 @@ class XMLWriter extends \XMLWriter
 
         $this->flush();
 
-        return file_get_contents($this->tempFileName);
+        return \file_get_contents($this->tempFileName);
     }
 
     /**
@@ -124,7 +124,7 @@ class XMLWriter extends \XMLWriter
     public function writeElementBlock(string $element, $attributes, string $value = null)
     {
         $this->startElement($element);
-        if (!is_array($attributes)) {
+        if (!\is_array($attributes)) {
             $attributes = [$attributes => $value];
         }
         foreach ($attributes as $attribute => $value) {
@@ -146,7 +146,7 @@ class XMLWriter extends \XMLWriter
     public function writeElementIf(bool $condition, string $element, ?string $attribute = null, $value = null)
     {
         if ($condition) {
-            if (is_null($attribute)) {
+            if (\is_null($attribute)) {
                 $this->writeElement($element, $value);
             } else {
                 $this->startElement($element);
@@ -180,8 +180,8 @@ class XMLWriter extends \XMLWriter
      */
     public function writeAttribute($name, $value): bool
     {
-        if (is_float($value)) {
-            $value = json_encode($value);
+        if (\is_float($value)) {
+            $value = \json_encode($value);
         }
 
         return parent::writeAttribute($name, $value ?? '');

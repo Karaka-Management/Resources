@@ -87,6 +87,6 @@ class BreakElement implements TextElementInterface
      */
     public function getHashCode(): string
     {
-        return md5(__CLASS__);
+        return \md5(__CLASS__);
     }
 }

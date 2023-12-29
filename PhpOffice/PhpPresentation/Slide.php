@@ -79,13 +79,13 @@ class Slide extends AbstractSlide implements ComparableInterface, ShapeContainer
         // Shape collection
         $this->shapeCollection = new \ArrayObject();
         // Set identifier
-        $this->identifier = md5(rand(0, 9999) . time());
+        $this->identifier = \md5(\rand(0, 9999) . \time());
         // Set Slide Layout
         if ($this->parent instanceof PhpPresentation) {
             $arrayMasterSlides = $this->parent->getAllMasterSlides();
-            $oMasterSlide = reset($arrayMasterSlides);
+            $oMasterSlide = \reset($arrayMasterSlides);
             $arraySlideLayouts = $oMasterSlide->getAllSlideLayouts();
-            $oSlideLayout = reset($arraySlideLayouts);
+            $oSlideLayout = \reset($arraySlideLayouts);
             $this->setSlideLayout($oSlideLayout);
         }
         // Set note
@@ -153,7 +153,7 @@ class Slide extends AbstractSlide implements ComparableInterface, ShapeContainer
 
     public function setNote(Note $note = null): self
     {
-        $this->slideNote = (is_null($note) ? new Note() : $note);
+        $this->slideNote = (\is_null($note) ? new Note() : $note);
         $this->slideNote->setParent($this);
 
         return $this;

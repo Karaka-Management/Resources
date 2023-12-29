@@ -34,7 +34,7 @@ class Generic extends AbstractStyle
         $style = $this->getStyle();
         $css = [];
 
-        if (is_array($style) && !empty($style)) {
+        if (\is_array($style) && !empty($style)) {
             $css = $style;
         }
 

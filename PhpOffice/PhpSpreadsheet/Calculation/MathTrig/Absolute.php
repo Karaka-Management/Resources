@@ -22,7 +22,7 @@ class Absolute
      */
     public static function evaluate($number)
     {
-        if (is_array($number)) {
+        if (\is_array($number)) {
             return self::evaluateSingleArgumentArray([self::class, __FUNCTION__], $number);
         }
 
@@ -32,6 +32,6 @@ class Absolute
             return $e->getMessage();
         }
 
-        return abs($number);
+        return \abs($number);
     }
 }

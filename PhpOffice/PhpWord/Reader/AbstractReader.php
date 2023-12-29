@@ -77,12 +77,12 @@ abstract class AbstractReader implements ReaderInterface
     protected function openFile($filename)
     {
         // Check if file exists
-        if (!file_exists($filename) || !is_readable($filename)) {
+        if (!\file_exists($filename) || !\is_readable($filename)) {
             throw new Exception("Could not open $filename for reading! File does not exist.");
         }
 
         // Open file
-        $this->fileHandle = fopen($filename, 'rb');
+        $this->fileHandle = \fopen($filename, 'rb');
         if ($this->fileHandle === false) {
             throw new Exception("Could not open file $filename for reading.");
         }
@@ -103,8 +103,8 @@ abstract class AbstractReader implements ReaderInterface
         } catch (Exception $e) {
             return false;
         }
-        if (is_resource($this->fileHandle)) {
-            fclose($this->fileHandle);
+        if (\is_resource($this->fileHandle)) {
+            \fclose($this->fileHandle);
         }
 
         return true;

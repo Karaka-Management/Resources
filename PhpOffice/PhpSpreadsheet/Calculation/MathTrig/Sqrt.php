@@ -22,7 +22,7 @@ class Sqrt
      */
     public static function sqrt($number)
     {
-        if (is_array($number)) {
+        if (\is_array($number)) {
             return self::evaluateSingleArgumentArray([self::class, __FUNCTION__], $number);
         }
 
@@ -32,7 +32,7 @@ class Sqrt
             return $e->getMessage();
         }
 
-        return Helpers::numberOrNan(sqrt($number));
+        return Helpers::numberOrNan(\sqrt($number));
     }
 
     /**
@@ -48,7 +48,7 @@ class Sqrt
      */
     public static function pi($number)
     {
-        if (is_array($number)) {
+        if (\is_array($number)) {
             return self::evaluateSingleArgumentArray([self::class, __FUNCTION__], $number);
         }
 
@@ -59,6 +59,6 @@ class Sqrt
             return $e->getMessage();
         }
 
-        return sqrt($number * M_PI);
+        return \sqrt($number * M_PI);
     }
 }

@@ -64,7 +64,7 @@ interface IWriter
      * Save PhpSpreadsheet to file.
      *
      * @param resource|string $filename Name of the file to save
-     * @param int $flags Flags that can change the behaviour of the Writer:
+     * @param int $flags Flags that can change the behavior of the Writer:
      *            self::SAVE_WITH_CHARTS                Save any charts that are defined (if the Writer supports Charts)
      *            self::DISABLE_PRECALCULATE_FORMULAE   Don't Precalculate formulae before saving the file
      *

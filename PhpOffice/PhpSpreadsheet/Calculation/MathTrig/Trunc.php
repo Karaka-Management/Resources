@@ -25,7 +25,7 @@ class Trunc
      */
     public static function evaluate($value = 0, $digits = 0)
     {
-        if (is_array($value) || is_array($digits)) {
+        if (\is_array($value) || \is_array($digits)) {
             return self::evaluateArrayArguments([self::class, __FUNCTION__], $value, $digits);
         }
 
@@ -36,12 +36,12 @@ class Trunc
             return $e->getMessage();
         }
 
-        $digits = floor($digits);
+        $digits = \floor($digits);
 
         // Truncate
         $adjust = 10 ** $digits;
 
-        if (($digits > 0) && (rtrim((string) (int) ((abs($value) - abs((int) $value)) * $adjust), '0') < $adjust / 10)) {
+        if (($digits > 0) && (\rtrim((string) (int) ((\abs($value) - \abs((int) $value)) * $adjust), '0') < $adjust / 10)) {
             return $value;
         }
 

@@ -18,13 +18,13 @@ class Properties
         $this->spreadsheet = $spreadsheet;
     }
 
-    public function readProperties(SimpleXMLElement $xml, array $namespaces): void
+    public function readProperties(\SimpleXMLElement $xml, array $namespaces): void
     {
         $this->readStandardProperties($xml);
         $this->readCustomProperties($xml, $namespaces);
     }
 
-    protected function readStandardProperties(SimpleXMLElement $xml): void
+    protected function readStandardProperties(\SimpleXMLElement $xml): void
     {
         if (isset($xml->DocumentProperties[0])) {
             $docProps = $this->spreadsheet->getProperties();
@@ -37,14 +37,14 @@ class Properties
         }
     }
 
-    protected function readCustomProperties(SimpleXMLElement $xml, array $namespaces): void
+    protected function readCustomProperties(\SimpleXMLElement $xml, array $namespaces): void
     {
         if (isset($xml->CustomDocumentProperties)) {
             $docProps = $this->spreadsheet->getProperties();
 
             foreach ($xml->CustomDocumentProperties[0] as $propertyName => $propertyValue) {
                 $propertyAttributes = self::getAttributes($propertyValue, $namespaces['dt']);
-                $propertyName = (string) preg_replace_callback('/_x([0-9a-f]{4})_/i', [$this, 'hex2str'], $propertyName);
+                $propertyName = (string) \preg_replace_callback('/_x([0-9a-f]{4})_/i', [$this, 'hex2str'], $propertyName);
 
                 $this->processCustomProperty($docProps, $propertyName, $propertyValue, $propertyAttributes);
             }
@@ -107,15 +107,15 @@ class Properties
     protected function processCustomProperty(
         DocumentProperties $docProps,
         string $propertyName,
-        ?SimpleXMLElement $propertyValue,
-        SimpleXMLElement $propertyAttributes
+        ?\SimpleXMLElement $propertyValue,
+        \SimpleXMLElement $propertyAttributes
     ): void {
         $propertyType = DocumentProperties::PROPERTY_TYPE_UNKNOWN;
 
         switch ((string) $propertyAttributes) {
             case 'string':
                 $propertyType = DocumentProperties::PROPERTY_TYPE_STRING;
-                $propertyValue = trim((string) $propertyValue);
+                $propertyValue = \trim((string) $propertyValue);
 
                 break;
             case 'boolean':
@@ -135,7 +135,7 @@ class Properties
                 break;
             case 'dateTime.tz':
                 $propertyType = DocumentProperties::PROPERTY_TYPE_DATE;
-                $propertyValue = trim((string) $propertyValue);
+                $propertyValue = \trim((string) $propertyValue);
 
                 break;
         }
@@ -145,13 +145,13 @@ class Properties
 
     protected function hex2str(array $hex): string
     {
-        return mb_chr((int) hexdec($hex[1]), 'UTF-8');
+        return \mb_chr((int) \hexdec($hex[1]), 'UTF-8');
     }
 
-    private static function getAttributes(?SimpleXMLElement $simple, string $node): SimpleXMLElement
+    private static function getAttributes(?\SimpleXMLElement $simple, string $node): \SimpleXMLElement
     {
         return ($simple === null)
-            ? new SimpleXMLElement('<xml></xml>')
-            : ($simple->attributes($node) ?? new SimpleXMLElement('<xml></xml>'));
+            ? new \SimpleXMLElement('<xml></xml>')
+            : ($simple->attributes($node) ?? new \SimpleXMLElement('<xml></xml>'));
     }
 }

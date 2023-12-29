@@ -33,7 +33,7 @@ class Fill extends StyleBase
         ],
     ];
 
-    public function parseStyle(SimpleXMLElement $styleAttributes): array
+    public function parseStyle(\SimpleXMLElement $styleAttributes): array
     {
         $style = [];
 
@@ -41,16 +41,16 @@ class Fill extends StyleBase
             $styleAttributeValue = (string) $styleAttributeValuex;
             switch ($styleAttributeKey) {
                 case 'Color':
-                    $style['fill']['endColor']['rgb'] = substr($styleAttributeValue, 1);
-                    $style['fill']['startColor']['rgb'] = substr($styleAttributeValue, 1);
+                    $style['fill']['endColor']['rgb'] = \substr($styleAttributeValue, 1);
+                    $style['fill']['startColor']['rgb'] = \substr($styleAttributeValue, 1);
 
                     break;
                 case 'PatternColor':
-                    $style['fill']['startColor']['rgb'] = substr($styleAttributeValue, 1);
+                    $style['fill']['startColor']['rgb'] = \substr($styleAttributeValue, 1);
 
                     break;
                 case 'Pattern':
-                    $lcStyleAttributeValue = strtolower((string) $styleAttributeValue);
+                    $lcStyleAttributeValue = \strtolower((string) $styleAttributeValue);
                     $style['fill']['fillType']
                         = self::FILL_MAPPINGS['fillType'][$lcStyleAttributeValue] ?? FillStyles::FILL_NONE;
 

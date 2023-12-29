@@ -90,10 +90,10 @@ final class FootnoteProperties
             self::POSITION_DOC_END,
         ];
 
-        if (in_array($pos, $position)) {
+        if (\in_array($pos, $position)) {
             $this->pos = $pos;
         } else {
-            throw new InvalidArgumentException('Invalid value, on of ' . implode(', ', $position) . ' possible');
+            throw new \InvalidArgumentException('Invalid value, on of ' . \implode(', ', $position) . ' possible');
         }
 
         return $this;
@@ -173,10 +173,10 @@ final class FootnoteProperties
             self::RESTART_NUMBER_EACH_PAGE,
         ];
 
-        if (in_array($numRestart, $restartNumbers)) {
+        if (\in_array($numRestart, $restartNumbers)) {
             $this->numRestart = $numRestart;
         } else {
-            throw new InvalidArgumentException('Invalid value, on of ' . implode(', ', $restartNumbers) . ' possible');
+            throw new \InvalidArgumentException('Invalid value, on of ' . \implode(', ', $restartNumbers) . ' possible');
         }
 
         return $this;

@@ -53,7 +53,7 @@ class Title extends AbstractElement
             $xmlWriter->writeAttribute('text:style-name', 'Title');
         }
         $text = $element->getText();
-        if (is_string($text)) {
+        if (\is_string($text)) {
             $this->writeText($text);
         } elseif ($text instanceof \PhpOffice\PhpWord\Element\AbstractContainer) {
             $containerWriter = new Container($xmlWriter, $text);

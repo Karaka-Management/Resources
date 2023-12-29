@@ -31,7 +31,7 @@ class StudentT
      */
     public static function distribution($value, $degrees, $tails)
     {
-        if (is_array($value) || is_array($degrees) || is_array($tails)) {
+        if (\is_array($value) || \is_array($degrees) || \is_array($tails)) {
             return self::evaluateArrayArguments([self::class, __FUNCTION__], $value, $degrees, $tails);
         }
 
@@ -66,7 +66,7 @@ class StudentT
      */
     public static function inverse($probability, $degrees)
     {
-        if (is_array($probability) || is_array($degrees)) {
+        if (\is_array($probability) || \is_array($degrees)) {
             return self::evaluateArrayArguments([self::class, __FUNCTION__], $probability, $degrees);
         }
 
@@ -105,9 +105,9 @@ class StudentT
         //    Algorithms", editied by P Griffiths and I D Hill (1985; Ellis
         //    Horwood Ltd.; W. Sussex, England).
         $tterm = $degrees;
-        $ttheta = atan2($value, sqrt($tterm));
-        $tc = cos($ttheta);
-        $ts = sin($ttheta);
+        $ttheta = \atan2($value, \sqrt($tterm));
+        $tc = \cos($ttheta);
+        $ts = \sin($ttheta);
 
         if (($degrees % 2) === 1) {
             $ti = 3;
@@ -131,9 +131,9 @@ class StudentT
 
         $tValue = 0.5 * (1 + $tsum);
         if ($tails == 1) {
-            return 1 - abs($tValue);
+            return 1 - \abs($tValue);
         }
 
-        return 1 - abs((1 - $tValue) - $tValue);
+        return 1 - \abs((1 - $tValue) - $tValue);
     }
 }

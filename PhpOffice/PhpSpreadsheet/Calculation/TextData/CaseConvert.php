@@ -23,7 +23,7 @@ class CaseConvert
      */
     public static function lower($mixedCaseValue)
     {
-        if (is_array($mixedCaseValue)) {
+        if (\is_array($mixedCaseValue)) {
             return self::evaluateSingleArgumentArray([self::class, __FUNCTION__], $mixedCaseValue);
         }
 
@@ -46,7 +46,7 @@ class CaseConvert
      */
     public static function upper($mixedCaseValue)
     {
-        if (is_array($mixedCaseValue)) {
+        if (\is_array($mixedCaseValue)) {
             return self::evaluateSingleArgumentArray([self::class, __FUNCTION__], $mixedCaseValue);
         }
 
@@ -69,7 +69,7 @@ class CaseConvert
      */
     public static function proper($mixedCaseValue)
     {
-        if (is_array($mixedCaseValue)) {
+        if (\is_array($mixedCaseValue)) {
             return self::evaluateSingleArgumentArray([self::class, __FUNCTION__], $mixedCaseValue);
         }
 

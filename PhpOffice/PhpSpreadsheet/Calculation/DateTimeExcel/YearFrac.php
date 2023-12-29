@@ -45,7 +45,7 @@ class YearFrac
      */
     public static function fraction($startDate, $endDate, $method = 0)
     {
-        if (is_array($startDate) || is_array($endDate) || is_array($method)) {
+        if (\is_array($startDate) || \is_array($endDate) || \is_array($method)) {
             return self::evaluateArrayArguments([self::class, __FUNCTION__], $startDate, $endDate, $method);
         }
 
@@ -55,8 +55,8 @@ class YearFrac
             $eDate = Helpers::getDateValue($endDate);
             $sDate = self::excelBug($sDate, $startDate, $endDate, $method);
             $eDate = self::excelBug($eDate, $endDate, $startDate, $method);
-            $startDate = min($sDate, $eDate);
-            $endDate = max($sDate, $eDate);
+            $startDate = \min($sDate, $eDate);
+            $endDate = \max($sDate, $eDate);
         } catch (Exception $e) {
             return $e->getMessage();
         }

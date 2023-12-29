@@ -71,7 +71,7 @@ class Amortization
         }
 
         $yearFracx = DateTimeExcel\YearFrac::fraction($purchased, $firstPeriod, $basis);
-        if (is_string($yearFracx)) {
+        if (\is_string($yearFracx)) {
             return $yearFracx;
         }
         /** @var float */
@@ -80,19 +80,19 @@ class Amortization
         $amortiseCoeff = self::getAmortizationCoefficient($rate);
 
         $rate *= $amortiseCoeff;
-        $fNRate = round($yearFrac * $rate * $cost, 0);
+        $fNRate = \round($yearFrac * $rate * $cost, 0);
         $cost -= $fNRate;
         $fRest = $cost - $salvage;
 
         for ($n = 0; $n < $period; ++$n) {
-            $fNRate = round($rate * $cost, 0);
+            $fNRate = \round($rate * $cost, 0);
             $fRest -= $fNRate;
 
             if ($fRest < 0.0) {
                 switch ($period - $n) {
                     case 0:
                     case 1:
-                        return round($cost * 0.5, 0);
+                        return \round($cost * 0.5, 0);
                     default:
                         return 0.0;
                 }
@@ -164,7 +164,7 @@ class Amortization
         //    Note, quirky variation for leap years on the YEARFRAC for this function
         $purchasedYear = DateTimeExcel\DateParts::year($purchased);
         $yearFracx = DateTimeExcel\YearFrac::fraction($purchased, $firstPeriod, $basis);
-        if (is_string($yearFracx)) {
+        if (\is_string($yearFracx)) {
             return $yearFracx;
         }
         /** @var float */

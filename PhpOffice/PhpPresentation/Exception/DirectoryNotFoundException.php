@@ -24,7 +24,7 @@ class DirectoryNotFoundException extends PhpPresentationException
 {
     public function __construct(string $path)
     {
-        parent::__construct(sprintf(
+        parent::__construct(\sprintf(
             'The directory %s doesn\'t exist',
             $path
         ));

@@ -68,7 +68,7 @@ class Gd extends AbstractDrawingAdapter
     public function __construct()
     {
         parent::__construct();
-        $this->uniqueName = md5(rand(0, 9999) . time() . rand(0, 9999));
+        $this->uniqueName = \md5(\rand(0, 9999) . \time() . \rand(0, 9999));
     }
 
     /**
@@ -92,10 +92,10 @@ class Gd extends AbstractDrawingAdapter
     {
         $this->imageResource = $value;
 
-        if (!is_null($this->imageResource)) {
+        if (!\is_null($this->imageResource)) {
             // Get width/height
-            $this->width = imagesx($this->imageResource);
-            $this->height = imagesy($this->imageResource);
+            $this->width = \imagesx($this->imageResource);
+            $this->height = \imagesy($this->imageResource);
         }
 
         return $this;
@@ -149,22 +149,22 @@ class Gd extends AbstractDrawingAdapter
 
     public function getContents(): string
     {
-        ob_start();
+        \ob_start();
         if (self::MIMETYPE_DEFAULT === $this->getMimeType()) {
-            imagealphablending($this->getImageResource(), false);
-            imagesavealpha($this->getImageResource(), true);
+            \imagealphablending($this->getImageResource(), false);
+            \imagesavealpha($this->getImageResource(), true);
         }
-        call_user_func($this->getRenderingFunction(), $this->getImageResource());
-        $imageContents = ob_get_contents();
-        ob_end_clean();
+        \call_user_func($this->getRenderingFunction(), $this->getImageResource());
+        $imageContents = \ob_get_contents();
+        \ob_end_clean();
 
         return $imageContents;
     }
 
     public function getExtension(): string
     {
-        $extension = strtolower($this->getMimeType());
-        $extension = explode('/', $extension);
+        $extension = \strtolower($this->getMimeType());
+        $extension = \explode('/', $extension);
         $extension = $extension[1];
 
         return $extension;

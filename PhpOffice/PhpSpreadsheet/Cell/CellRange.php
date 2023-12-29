@@ -25,10 +25,10 @@ class CellRange implements AddressRange
     private function validateFromTo(CellAddress $from, CellAddress $to): void
     {
         // Identify actual top-left and bottom-right values (in case we've been given top-right and bottom-left)
-        $firstColumn = min($from->columnId(), $to->columnId());
-        $firstRow = min($from->rowId(), $to->rowId());
-        $lastColumn = max($from->columnId(), $to->columnId());
-        $lastRow = max($from->rowId(), $to->rowId());
+        $firstColumn = \min($from->columnId(), $to->columnId());
+        $firstRow = \min($from->rowId(), $to->rowId());
+        $lastColumn = \max($from->columnId(), $to->columnId());
+        $lastRow = \max($from->rowId(), $to->rowId());
 
         $fromWorksheet = $from->worksheet();
         $toWorksheet = $to->worksheet();

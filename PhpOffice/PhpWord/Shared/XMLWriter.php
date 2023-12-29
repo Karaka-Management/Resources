@@ -62,11 +62,11 @@ class XMLWriter extends \XMLWriter
         if ($pTemporaryStorage == self::STORAGE_MEMORY) {
             $this->openMemory();
         } else {
-            if (!$pTemporaryStorageDir || !is_dir($pTemporaryStorageDir)) {
-                $pTemporaryStorageDir = sys_get_temp_dir();
+            if (!$pTemporaryStorageDir || !\is_dir($pTemporaryStorageDir)) {
+                $pTemporaryStorageDir = \sys_get_temp_dir();
             }
             // Create temporary filename
-            $this->tempFileName = @tempnam($pTemporaryStorageDir, 'xml');
+            $this->tempFileName = @\tempnam($pTemporaryStorageDir, 'xml');
 
             // Open storage
             $this->openUri($this->tempFileName);
@@ -90,8 +90,8 @@ class XMLWriter extends \XMLWriter
         if (empty($this->tempFileName)) {
             return;
         }
-        if (PHP_OS != 'WINNT' && @unlink($this->tempFileName) === false) {
-            throw new Exception('The file ' . $this->tempFileName . ' could not be deleted.');
+        if (PHP_OS != 'WINNT' && @\unlink($this->tempFileName) === false) {
+            throw new \Exception('The file ' . $this->tempFileName . ' could not be deleted.');
         }
     }
 
@@ -108,7 +108,7 @@ class XMLWriter extends \XMLWriter
 
         $this->flush();
 
-        return file_get_contents($this->tempFileName);
+        return \file_get_contents($this->tempFileName);
     }
 
     /**
@@ -125,7 +125,7 @@ class XMLWriter extends \XMLWriter
     public function writeElementBlock($element, $attributes, $value = null): void
     {
         $this->startElement($element);
-        if (!is_array($attributes)) {
+        if (!\is_array($attributes)) {
             $attributes = [$attributes => $value];
         }
         foreach ($attributes as $attribute => $value) {
@@ -175,11 +175,11 @@ class XMLWriter extends \XMLWriter
      *
      * @return bool
      */
-    #[ReturnTypeWillChange]
+    #[\ReturnTypeWillChange]
     public function writeAttribute($name, $value)
     {
-        if (is_float($value)) {
-            $value = json_encode($value);
+        if (\is_float($value)) {
+            $value = \json_encode($value);
         }
 
         return parent::writeAttribute($name, $value ?? '');

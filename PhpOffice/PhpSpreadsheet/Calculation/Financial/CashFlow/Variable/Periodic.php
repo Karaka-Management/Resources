@@ -33,7 +33,7 @@ class Periodic
      */
     public static function rate($values, $guess = 0.1)
     {
-        if (!is_array($values)) {
+        if (!\is_array($values)) {
             return ExcelError::VALUE();
         }
         $values = Functions::flattenArray($values);
@@ -48,7 +48,7 @@ class Periodic
             if (($f1 * $f2) < 0.0) {
                 break;
             }
-            if (abs($f1) < abs($f2)) {
+            if (\abs($f1) < \abs($f2)) {
                 $f1 = self::presentValue($x1 += 1.6 * ($x1 - $x2), $values);
             } else {
                 $f2 = self::presentValue($x2 += 1.6 * ($x2 - $x1), $values);
@@ -74,7 +74,7 @@ class Periodic
             if ($f_mid <= 0.0) {
                 $rtb = $x_mid;
             }
-            if ((abs($f_mid) < self::FINANCIAL_PRECISION) || (abs($dx) < self::FINANCIAL_PRECISION)) {
+            if ((\abs($f_mid) < self::FINANCIAL_PRECISION) || (\abs($dx) < self::FINANCIAL_PRECISION)) {
                 return $x_mid;
             }
         }
@@ -101,13 +101,13 @@ class Periodic
      */
     public static function modifiedRate($values, $financeRate, $reinvestmentRate)
     {
-        if (!is_array($values)) {
+        if (!\is_array($values)) {
             return ExcelError::DIV0();
         }
         $values = Functions::flattenArray($values);
         $financeRate = Functions::flattenSingleValue($financeRate);
         $reinvestmentRate = Functions::flattenSingleValue($reinvestmentRate);
-        $n = count($values);
+        $n = \count($values);
 
         $rr = 1.0 + $reinvestmentRate;
         $fr = 1.0 + $financeRate;
@@ -128,7 +128,7 @@ class Periodic
         $mirr = ((-$npvPos * $rr ** $n)
                 / ($npvNeg * ($rr))) ** (1.0 / ($n - 1)) - 1.0;
 
-        return is_finite($mirr) ? $mirr : ExcelError::NAN();
+        return \is_finite($mirr) ? $mirr : ExcelError::NAN();
     }
 
     /**
@@ -155,10 +155,10 @@ class Periodic
         $aArgs = Functions::flattenArray($args);
 
         // Calculate
-        $countArgs = count($aArgs);
+        $countArgs = \count($aArgs);
         for ($i = 1; $i <= $countArgs; ++$i) {
             // Is it a numeric value?
-            if (is_numeric($aArgs[$i - 1])) {
+            if (\is_numeric($aArgs[$i - 1])) {
                 $returnValue += $aArgs[$i - 1] / (1 + $rate) ** $i;
             }
         }

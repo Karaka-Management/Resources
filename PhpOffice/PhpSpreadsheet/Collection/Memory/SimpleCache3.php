@@ -79,13 +79,13 @@ class SimpleCache3 implements CacheInterface
      */
     public function has($key): bool
     {
-        return array_key_exists($key, $this->cache);
+        return \array_key_exists($key, $this->cache);
     }
 
     /**
      * @param string                 $key
      * @param mixed                  $value
-     * @param null|DateInterval|int $ttl
+     * @param null|\DateInterval|int $ttl
      */
     public function set($key, $value, $ttl = null): bool
     {
@@ -96,7 +96,7 @@ class SimpleCache3 implements CacheInterface
 
     /**
      * @param iterable               $values
-     * @param null|DateInterval|int $ttl
+     * @param null|\DateInterval|int $ttl
      */
     public function setMultiple($values, $ttl = null): bool
     {

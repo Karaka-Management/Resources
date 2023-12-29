@@ -53,7 +53,7 @@ class Dollar
      */
     public static function decimal($fractionalDollar = null, $fraction = 0)
     {
-        if (is_array($fractionalDollar) || is_array($fraction)) {
+        if (\is_array($fractionalDollar) || \is_array($fraction)) {
             return self::evaluateArrayArguments([self::class, __FUNCTION__], $fractionalDollar, $fraction);
         }
 
@@ -74,10 +74,10 @@ class Dollar
             return ExcelError::DIV0();
         }
 
-        $dollars = ($fractionalDollar < 0) ? ceil($fractionalDollar) : floor($fractionalDollar);
-        $cents = fmod($fractionalDollar, 1.0);
+        $dollars = ($fractionalDollar < 0) ? \ceil($fractionalDollar) : \floor($fractionalDollar);
+        $cents = \fmod($fractionalDollar, 1.0);
         $cents /= $fraction;
-        $cents *= 10 ** ceil(log10($fraction));
+        $cents *= 10 ** \ceil(\log10($fraction));
 
         return $dollars + $cents;
     }
@@ -101,7 +101,7 @@ class Dollar
      */
     public static function fractional($decimalDollar = null, $fraction = 0)
     {
-        if (is_array($decimalDollar) || is_array($fraction)) {
+        if (\is_array($decimalDollar) || \is_array($fraction)) {
             return self::evaluateArrayArguments([self::class, __FUNCTION__], $decimalDollar, $fraction);
         }
 
@@ -122,10 +122,10 @@ class Dollar
             return ExcelError::DIV0();
         }
 
-        $dollars = ($decimalDollar < 0.0) ? ceil($decimalDollar) : floor($decimalDollar);
-        $cents = fmod($decimalDollar, 1);
+        $dollars = ($decimalDollar < 0.0) ? \ceil($decimalDollar) : \floor($decimalDollar);
+        $cents = \fmod($decimalDollar, 1);
         $cents *= $fraction;
-        $cents *= 10 ** (-ceil(log10($fraction)));
+        $cents *= 10 ** (-\ceil(\log10($fraction)));
 
         return $dollars + $cents;
     }

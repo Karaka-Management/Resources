@@ -184,13 +184,13 @@ class Styles extends AbstractDecoratorWriter
     {
         $oFill = $shape->getFill();
         if (Fill::FILL_GRADIENT_LINEAR == $oFill->getFillType() || Fill::FILL_GRADIENT_PATH == $oFill->getFillType()) {
-            if (!in_array($oFill->getHashCode(), $this->arrayGradient)) {
+            if (!\in_array($oFill->getHashCode(), $this->arrayGradient)) {
                 $this->writeGradientFill($objWriter, $oFill);
             }
         }
         $oBorder = $shape->getBorder();
         if (Border::DASH_SOLID != $oBorder->getDashStyle()) {
-            if (!in_array($oBorder->getDashStyle(), $this->arrayStrokeDash)) {
+            if (!\in_array($oBorder->getDashStyle(), $this->arrayStrokeDash)) {
                 $objWriter->startElement('draw:stroke-dash');
                 $objWriter->writeAttribute('draw:name', 'strokeDash_' . $oBorder->getDashStyle());
                 $objWriter->writeAttribute('draw:style', 'rect');
@@ -270,7 +270,7 @@ class Styles extends AbstractDecoratorWriter
         foreach ($shape->getRows() as $row) {
             foreach ($row->getCells() as $cell) {
                 if (Fill::FILL_GRADIENT_LINEAR == $cell->getFill()->getFillType()) {
-                    if (!in_array($cell->getFill()->getHashCode(), $this->arrayGradient)) {
+                    if (!\in_array($cell->getFill()->getHashCode(), $this->arrayGradient)) {
                         $this->writeGradientFill($objWriter, $cell->getFill());
                     }
                 }
@@ -319,7 +319,7 @@ class Styles extends AbstractDecoratorWriter
     {
         $objWriter->startElement('draw:fill-image');
         $objWriter->writeAttribute('draw:name', 'background_' . (string) $numSlide);
-        $objWriter->writeAttribute('xlink:href', 'Pictures/' . str_replace(' ', '_', $oBkgImage->getIndexedFilename((string) $numSlide)));
+        $objWriter->writeAttribute('xlink:href', 'Pictures/' . \str_replace(' ', '_', $oBkgImage->getIndexedFilename((string) $numSlide)));
         $objWriter->writeAttribute('xlink:type', 'simple');
         $objWriter->writeAttribute('xlink:show', 'embed');
         $objWriter->writeAttribute('xlink:actuate', 'onLoad');

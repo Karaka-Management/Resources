@@ -29,7 +29,7 @@ class Percentiles
         $aArgs = Functions::flattenArray($args);
 
         // Calculate
-        $entry = array_pop($aArgs);
+        $entry = \array_pop($aArgs);
 
         try {
             $entry = StatisticalValidations::validateFloat($entry);
@@ -42,12 +42,12 @@ class Percentiles
         }
 
         $mArgs = self::percentileFilterValues($aArgs);
-        $mValueCount = count($mArgs);
+        $mValueCount = \count($mArgs);
         if ($mValueCount > 0) {
-            sort($mArgs);
+            \sort($mArgs);
             $count = Counts::COUNT($mArgs);
             $index = $entry * ($count - 1);
-            $iBase = floor($index);
+            $iBase = \floor($index);
             if ($index == $iBase) {
                 return $mArgs[$index];
             }
@@ -88,18 +88,18 @@ class Percentiles
         }
 
         $valueSet = self::rankFilterValues($valueSet);
-        $valueCount = count($valueSet);
+        $valueCount = \count($valueSet);
         if ($valueCount == 0) {
             return ExcelError::NA();
         }
-        sort($valueSet, SORT_NUMERIC);
+        \sort($valueSet, SORT_NUMERIC);
 
         $valueAdjustor = $valueCount - 1;
         if (($value < $valueSet[0]) || ($value > $valueSet[$valueAdjustor])) {
             return ExcelError::NA();
         }
 
-        $pos = array_search($value, $valueSet);
+        $pos = \array_search($value, $valueSet);
         if ($pos === false) {
             $pos = 0;
             $testValue = $valueSet[0];
@@ -110,7 +110,7 @@ class Percentiles
             $pos += (($value - $valueSet[$pos]) / ($testValue - $valueSet[$pos]));
         }
 
-        return round($pos / $valueAdjustor, $significance);
+        return \round($pos / $valueAdjustor, $significance);
     }
 
     /**
@@ -128,7 +128,7 @@ class Percentiles
     public static function QUARTILE(...$args)
     {
         $aArgs = Functions::flattenArray($args);
-        $entry = array_pop($aArgs);
+        $entry = \array_pop($aArgs);
 
         try {
             $entry = StatisticalValidations::validateFloat($entry);
@@ -136,7 +136,7 @@ class Percentiles
             return $e->getMessage();
         }
 
-        $entry = floor($entry);
+        $entry = \floor($entry);
         $entry /= 4;
         if (($entry < 0) || ($entry > 1)) {
             return ExcelError::NAN();
@@ -171,12 +171,12 @@ class Percentiles
 
         $valueSet = self::rankFilterValues($valueSet);
         if ($order === self::RANK_SORT_DESCENDING) {
-            rsort($valueSet, SORT_NUMERIC);
+            \rsort($valueSet, SORT_NUMERIC);
         } else {
-            sort($valueSet, SORT_NUMERIC);
+            \sort($valueSet, SORT_NUMERIC);
         }
 
-        $pos = array_search($value, $valueSet);
+        $pos = \array_search($value, $valueSet);
         if ($pos === false) {
             return ExcelError::NA();
         }
@@ -186,20 +186,20 @@ class Percentiles
 
     protected static function percentileFilterValues(array $dataSet)
     {
-        return array_filter(
+        return \array_filter(
             $dataSet,
             function ($value): bool {
-                return is_numeric($value) && !is_string($value);
+                return \is_numeric($value) && !\is_string($value);
             }
         );
     }
 
     protected static function rankFilterValues(array $dataSet)
     {
-        return array_filter(
+        return \array_filter(
             $dataSet,
             function ($value): bool {
-                return is_numeric($value);
+                return \is_numeric($value);
             }
         );
     }

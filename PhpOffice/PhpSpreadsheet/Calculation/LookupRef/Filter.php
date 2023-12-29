@@ -15,7 +15,7 @@ class Filter
      */
     public static function filter($lookupArray, $matchArray, $ifEmpty = null)
     {
-        if (!is_array($matchArray)) {
+        if (!\is_array($matchArray)) {
             return ExcelError::VALUE();
         }
 
@@ -29,29 +29,29 @@ class Filter
             return $ifEmpty ?? ExcelError::CALC();
         }
 
-        return array_values(array_map('array_values', $result));
+        return \array_values(\array_map('array_values', $result));
     }
 
     private static function enumerateArrayKeys(array $sortArray): array
     {
-        array_walk(
+        \array_walk(
             $sortArray,
             function (&$columns): void {
-                if (is_array($columns)) {
-                    $columns = array_values($columns);
+                if (\is_array($columns)) {
+                    $columns = \array_values($columns);
                 }
             }
         );
 
-        return array_values($sortArray);
+        return \array_values($sortArray);
     }
 
     private static function filterByRow(array $lookupArray, array $matchArray): array
     {
-        $matchArray = array_values(array_column($matchArray, 0));
+        $matchArray = \array_values(\array_column($matchArray, 0));
 
-        return array_filter(
-            array_values($lookupArray),
+        return \array_filter(
+            \array_values($lookupArray),
             function ($index) use ($matchArray): bool {
                 return (bool) $matchArray[$index];
             },
@@ -63,11 +63,11 @@ class Filter
     {
         $lookupArray = Matrix::transpose($lookupArray);
 
-        if (count($matchArray) === 1) {
-            $matchArray = array_pop($matchArray);
+        if (\count($matchArray) === 1) {
+            $matchArray = \array_pop($matchArray);
         }
 
-        array_walk(
+        \array_walk(
             $matchArray,
             function (&$value): void {
                 $value = [$value];

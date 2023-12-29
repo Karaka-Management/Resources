@@ -20,7 +20,7 @@ class ErrorValue
      */
     public static function isErr($value = '')
     {
-        if (is_array($value)) {
+        if (\is_array($value)) {
             return self::evaluateSingleArgumentArray([self::class, __FUNCTION__], $value);
         }
 
@@ -39,15 +39,15 @@ class ErrorValue
      */
     public static function isError($value = '')
     {
-        if (is_array($value)) {
+        if (\is_array($value)) {
             return self::evaluateSingleArgumentArray([self::class, __FUNCTION__], $value);
         }
 
-        if (!is_string($value)) {
+        if (!\is_string($value)) {
             return false;
         }
 
-        return in_array($value, ExcelError::ERROR_CODES, true);
+        return \in_array($value, ExcelError::ERROR_CODES, true);
     }
 
     /**
@@ -62,7 +62,7 @@ class ErrorValue
      */
     public static function isNa($value = '')
     {
-        if (is_array($value)) {
+        if (\is_array($value)) {
             return self::evaluateSingleArgumentArray([self::class, __FUNCTION__], $value);
         }
 

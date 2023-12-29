@@ -138,7 +138,7 @@ abstract class BestFit
     public function getSlope($dp = 0)
     {
         if ($dp != 0) {
-            return round($this->slope, $dp);
+            return \round($this->slope, $dp);
         }
 
         return $this->slope;
@@ -154,7 +154,7 @@ abstract class BestFit
     public function getSlopeSE($dp = 0)
     {
         if ($dp != 0) {
-            return round($this->slopeSE, $dp);
+            return \round($this->slopeSE, $dp);
         }
 
         return $this->slopeSE;
@@ -170,7 +170,7 @@ abstract class BestFit
     public function getIntersect($dp = 0)
     {
         if ($dp != 0) {
-            return round($this->intersect, $dp);
+            return \round($this->intersect, $dp);
         }
 
         return $this->intersect;
@@ -186,7 +186,7 @@ abstract class BestFit
     public function getIntersectSE($dp = 0)
     {
         if ($dp != 0) {
-            return round($this->intersectSE, $dp);
+            return \round($this->intersectSE, $dp);
         }
 
         return $this->intersectSE;
@@ -202,7 +202,7 @@ abstract class BestFit
     public function getGoodnessOfFit($dp = 0)
     {
         if ($dp != 0) {
-            return round($this->goodnessOfFit, $dp);
+            return \round($this->goodnessOfFit, $dp);
         }
 
         return $this->goodnessOfFit;
@@ -218,7 +218,7 @@ abstract class BestFit
     public function getGoodnessOfFitPercent($dp = 0)
     {
         if ($dp != 0) {
-            return round($this->goodnessOfFit * 100, $dp);
+            return \round($this->goodnessOfFit * 100, $dp);
         }
 
         return $this->goodnessOfFit * 100;
@@ -234,7 +234,7 @@ abstract class BestFit
     public function getStdevOfResiduals($dp = 0)
     {
         if ($dp != 0) {
-            return round($this->stdevOfResiduals, $dp);
+            return \round($this->stdevOfResiduals, $dp);
         }
 
         return $this->stdevOfResiduals;
@@ -248,7 +248,7 @@ abstract class BestFit
     public function getSSRegression($dp = 0)
     {
         if ($dp != 0) {
-            return round($this->SSRegression, $dp);
+            return \round($this->SSRegression, $dp);
         }
 
         return $this->SSRegression;
@@ -262,7 +262,7 @@ abstract class BestFit
     public function getSSResiduals($dp = 0)
     {
         if ($dp != 0) {
-            return round($this->SSResiduals, $dp);
+            return \round($this->SSResiduals, $dp);
         }
 
         return $this->SSResiduals;
@@ -276,7 +276,7 @@ abstract class BestFit
     public function getDFResiduals($dp = 0)
     {
         if ($dp != 0) {
-            return round($this->DFResiduals, $dp);
+            return \round($this->DFResiduals, $dp);
         }
 
         return $this->DFResiduals;
@@ -290,7 +290,7 @@ abstract class BestFit
     public function getF($dp = 0)
     {
         if ($dp != 0) {
-            return round($this->f, $dp);
+            return \round($this->f, $dp);
         }
 
         return $this->f;
@@ -304,7 +304,7 @@ abstract class BestFit
     public function getCovariance($dp = 0)
     {
         if ($dp != 0) {
-            return round($this->covariance, $dp);
+            return \round($this->covariance, $dp);
         }
 
         return $this->covariance;
@@ -318,7 +318,7 @@ abstract class BestFit
     public function getCorrelation($dp = 0)
     {
         if ($dp != 0) {
-            return round($this->correlation, $dp);
+            return \round($this->correlation, $dp);
         }
 
         return $this->correlation;
@@ -370,7 +370,7 @@ abstract class BestFit
         if ($this->DFResiduals == 0.0) {
             $this->stdevOfResiduals = 0.0;
         } else {
-            $this->stdevOfResiduals = sqrt($SSres / $this->DFResiduals);
+            $this->stdevOfResiduals = \sqrt($SSres / $this->DFResiduals);
         }
         // Scrutinizer thinks $SSres == $SStot is always true. It is wrong.
         if ($SStot == self::$scrutinizerZeroPointZero || self::scrutinizerLooseCompare($SSres, $SStot)) {
@@ -381,9 +381,9 @@ abstract class BestFit
 
         $this->SSRegression = $this->goodnessOfFit * $SStot;
         $this->covariance = $SScov / $this->valueCount;
-        $this->correlation = ($this->valueCount * $sumXY - $sumX * $sumY) / sqrt(($this->valueCount * $sumX2 - $sumX ** 2) * ($this->valueCount * $sumY2 - $sumY ** 2));
-        $this->slopeSE = $this->stdevOfResiduals / sqrt($SSsex);
-        $this->intersectSE = $this->stdevOfResiduals * sqrt(1 / ($this->valueCount - ($sumX * $sumX) / $sumX2));
+        $this->correlation = ($this->valueCount * $sumXY - $sumX * $sumY) / \sqrt(($this->valueCount * $sumX2 - $sumX ** 2) * ($this->valueCount * $sumY2 - $sumY ** 2));
+        $this->slopeSE = $this->stdevOfResiduals / \sqrt($SSsex);
+        $this->intersectSE = $this->stdevOfResiduals * \sqrt(1 / ($this->valueCount - ($sumX * $sumX) / $sumX2));
         if ($this->SSResiduals != 0.0) {
             if ($this->DFResiduals == 0.0) {
                 $this->f = 0.0;
@@ -401,8 +401,8 @@ abstract class BestFit
 
     private function sumSquares(array $values)
     {
-        return array_sum(
-            array_map(
+        return \array_sum(
+            \array_map(
                 function ($value) {
                     return $value ** 2;
                 },
@@ -418,8 +418,8 @@ abstract class BestFit
     protected function leastSquareFit(array $yValues, array $xValues, bool $const): void
     {
         // calculate sums
-        $sumValuesX = array_sum($xValues);
-        $sumValuesY = array_sum($yValues);
+        $sumValuesX = \array_sum($xValues);
+        $sumValuesY = \array_sum($yValues);
         $meanValueX = $sumValuesX / $this->valueCount;
         $meanValueY = $sumValuesY / $this->valueCount;
         $sumSquaresX = $this->sumSquares($xValues);
@@ -456,12 +456,12 @@ abstract class BestFit
     public function __construct($yValues, $xValues = [])
     {
         //    Calculate number of points
-        $yValueCount = count($yValues);
-        $xValueCount = count($xValues);
+        $yValueCount = \count($yValues);
+        $xValueCount = \count($xValues);
 
         //    Define X Values if necessary
         if ($xValueCount === 0) {
-            $xValues = range(1, $yValueCount);
+            $xValues = \range(1, $yValueCount);
         } elseif ($yValueCount !== $xValueCount) {
             //    Ensure both arrays of points are the same size
             $this->error = true;

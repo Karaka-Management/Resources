@@ -41,10 +41,10 @@ class RTF extends AbstractReader implements ReaderInterface
 
         if ($this->canRead($docFile)) {
             $doc = new Document();
-            $doc->rtf = file_get_contents($docFile);
+            $doc->rtf = \file_get_contents($docFile);
             $doc->read($phpWord);
         } else {
-            throw new Exception("Cannot read {$docFile}.");
+            throw new \Exception("Cannot read {$docFile}.");
         }
 
         return $phpWord;

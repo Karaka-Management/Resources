@@ -22,7 +22,7 @@ class CharacterConvert
      */
     public static function character($character)
     {
-        if (is_array($character)) {
+        if (\is_array($character)) {
             return self::evaluateSingleArgumentArray([self::class, __FUNCTION__], $character);
         }
 
@@ -31,7 +31,7 @@ class CharacterConvert
         if ($character < $min || $character > 255) {
             return ExcelError::VALUE();
         }
-        $result = iconv('UCS-4LE', 'UTF-8', pack('V', $character));
+        $result = \iconv('UCS-4LE', 'UTF-8', \pack('V', $character));
 
         return ($result === false) ? '' : $result;
     }
@@ -48,7 +48,7 @@ class CharacterConvert
      */
     public static function code($characters)
     {
-        if (is_array($characters)) {
+        if (\is_array($characters)) {
             return self::evaluateSingleArgumentArray([self::class, __FUNCTION__], $characters);
         }
 
@@ -58,8 +58,8 @@ class CharacterConvert
         }
 
         $character = $characters;
-        if (mb_strlen($characters, 'UTF-8') > 1) {
-            $character = mb_substr($characters, 0, 1, 'UTF-8');
+        if (\mb_strlen($characters, 'UTF-8') > 1) {
+            $character = \mb_substr($characters, 0, 1, 'UTF-8');
         }
 
         return self::unicodeToOrd($character);
@@ -68,10 +68,10 @@ class CharacterConvert
     private static function unicodeToOrd(string $character): int
     {
         $retVal = 0;
-        $iconv = iconv('UTF-8', 'UCS-4LE', $character);
+        $iconv = \iconv('UTF-8', 'UCS-4LE', $character);
         if ($iconv !== false) {
-            $result = unpack('V', $iconv);
-            if (is_array($result) && isset($result[1])) {
+            $result = \unpack('V', $iconv);
+            if (\is_array($result) && isset($result[1])) {
                 $retVal = $result[1];
             }
         }
