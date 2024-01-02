@@ -401,6 +401,7 @@ class PowerPoint97 implements ReaderInterface
             throw new FileNotFoundException($pFilename);
         }
 
+        /*
         try {
             // Use ParseXL for the hard work.
             $ole = new OLERead();
@@ -411,6 +412,11 @@ class PowerPoint97 implements ReaderInterface
         } catch (\Exception $e) {
             return false;
         }
+        */
+
+        $ole = new OLERead();
+
+        return $ole->read($pFilename);
     }
 
     /**

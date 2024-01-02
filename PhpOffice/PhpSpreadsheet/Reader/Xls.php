@@ -432,6 +432,13 @@ class Xls extends BaseReader
             return false;
         }
 
+        // Use ParseXL for the hard work.
+        $ole = new OLERead();
+
+        // get excel data
+        return $ole->read($filename);
+
+        /*
         try {
             // Use ParseXL for the hard work.
             $ole = new OLERead();
@@ -443,6 +450,7 @@ class Xls extends BaseReader
         } catch (PhpSpreadsheetException $e) {
             return false;
         }
+        */
     }
 
     public function setCodepage(string $codepage): void
