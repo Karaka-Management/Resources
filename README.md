@@ -16,6 +16,7 @@ flowchart TD
     Text-->spacemono
     JS-->LayoutStyles([Layout & Styles])
     LayoutStyles-->HighlightJS
+    LayoutStyles-->Katex
     JS-->Codes
     JS-->Charting
     JS-->PDF
