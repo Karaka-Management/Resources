@@ -68,3 +68,4 @@ flowchart TD
 
 * Added global namespacing to many function calls in tcpdf.pdf
 * Simplified the constant definition and definition checks in config.php and similar files
+* Added more caching for font calculations
