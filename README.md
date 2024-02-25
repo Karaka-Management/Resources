@@ -9,8 +9,13 @@ flowchart TD
     Icon-->LineIcons
     Icon-->LinearIcons([LinearIcons])
     Icon-->FontAwesome([FontAwesome])
+    Icon-->GoogleIcons([GoogleIcons])
     Fonts-->Text
     Text-->Roboto
+    Text-->Lato
+    Text-->spacemono
+    JS-->LayoutStyles([Layout & Styles])
+    LayoutStyles-->HighlightJS
     JS-->Codes
     JS-->Charting
     JS-->PDF
