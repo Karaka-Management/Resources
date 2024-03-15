@@ -9,8 +9,14 @@ flowchart TD
     Icon-->LineIcons
     Icon-->LinearIcons([LinearIcons])
     Icon-->FontAwesome([FontAwesome])
+    Icon-->GoogleIcons([GoogleIcons])
     Fonts-->Text
     Text-->Roboto
+    Text-->Lato
+    Text-->spacemono
+    JS-->LayoutStyles([Layout & Styles])
+    LayoutStyles-->HighlightJS
+    LayoutStyles-->Katex
     JS-->Codes
     JS-->Charting
     JS-->PDF
@@ -62,3 +68,4 @@ flowchart TD
 
 * Added global namespacing to many function calls in tcpdf.pdf
 * Simplified the constant definition and definition checks in config.php and similar files
+* Added more caching for font calculations
