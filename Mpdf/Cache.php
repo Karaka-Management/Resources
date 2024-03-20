@@ -91,7 +91,7 @@ class Cache
 		/** @var \DirectoryIterator $item */
 		foreach ($iterator as $item) {
 			if (!$item->isDot()
-					&& $item->isFile()
+					&& \is_file($item->getPathname())
 					&& !$this->isDotFile($item)
 					&& $this->isOld($item)) {
 				unlink($item->getPathname());
