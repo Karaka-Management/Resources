@@ -13,28 +13,28 @@
 
 /**
  * Class: OpenLayers.Format.GeoRSS
- * Read/write GeoRSS parser. Create a new instance with the 
+ * Read/write GeoRSS parser. Create a new instance with the
  *     <OpenLayers.Format.GeoRSS> constructor.
  *
  * Inherits from:
  *  - <OpenLayers.Format.XML>
  */
 OpenLayers.Format.GeoRSS = OpenLayers.Class(OpenLayers.Format.XML, {
-    
+
     /**
      * APIProperty: rssns
      * {String} RSS namespace to use. Defaults to
      *   "http://backend.userland.com/rss2"
      */
     rssns: "http://backend.userland.com/rss2",
-    
+
     /**
      * APIProperty: featurens
      * {String} Feature Attributes namespace.  Defaults to
      *    "http://mapserver.gis.umn.edu/mapserver"
      */
     featureNS: "http://mapserver.gis.umn.edu/mapserver",
-    
+
     /**
      * APIProperty: georssns
      * {String} GeoRSS namespace to use.  Defaults to
@@ -48,19 +48,19 @@ OpenLayers.Format.GeoRSS = OpenLayers.Class(OpenLayers.Format.XML, {
      *     "http://www.w3.org/2003/01/geo/wgs84_pos#"
      */
     geons: "http://www.w3.org/2003/01/geo/wgs84_pos#",
-    
+
     /**
      * APIProperty: featureTitle
      * {String} Default title for features.  Defaults to "Untitled"
      */
     featureTitle: "Untitled",
-    
+
     /**
      * APIProperty: featureDescription
      * {String} Default description for features.  Defaults to "No Description"
      */
     featureDescription: "No Description",
-    
+
     /**
      * Property: gmlParse
      * {Object} GML Format object for parsing features
@@ -71,10 +71,10 @@ OpenLayers.Format.GeoRSS = OpenLayers.Class(OpenLayers.Format.XML, {
     /**
      * APIProperty: xy
      * {Boolean} Order of the GML coordinate: true:(x,y) or false:(y,x)
-     * For GeoRSS the default is (y,x), therefore: false
-     */ 
+     * For GeoRSS the default is (y,x), therefor: false
+     */
     xy: false,
-    
+
     /**
      * Constructor: OpenLayers.Format.GeoRSS
      * Create a new parser for GeoRSS.
@@ -83,7 +83,7 @@ OpenLayers.Format.GeoRSS = OpenLayers.Class(OpenLayers.Format.XML, {
      * options - {Object} An optional object whose properties will be set on
      *     this instance.
      */
-    
+
     /**
      * Method: createGeometryFromItem
      * Return a geometry from a GeoRSS Item.
@@ -98,18 +98,18 @@ OpenLayers.Format.GeoRSS = OpenLayers.Class(OpenLayers.Format.XML, {
         var point = this.getElementsByTagNameNS(item, this.georssns, "point");
         var lat = this.getElementsByTagNameNS(item, this.geons, 'lat');
         var lon = this.getElementsByTagNameNS(item, this.geons, 'long');
-        
+
         var line = this.getElementsByTagNameNS(item,
                                                 this.georssns,
                                                 "line");
         var polygon = this.getElementsByTagNameNS(item,
                                                 this.georssns,
                                                 "polygon");
-        var where = this.getElementsByTagNameNS(item, 
-                                                this.georssns, 
+        var where = this.getElementsByTagNameNS(item,
+                                                this.georssns,
                                                 "where");
-        var box = this.getElementsByTagNameNS(item, 
-                                              this.georssns, 
+        var box = this.getElementsByTagNameNS(item,
+                                              this.georssns,
                                               "box");
 
         if (point.length > 0 || (lat.length > 0 && lon.length > 0)) {
@@ -124,29 +124,29 @@ OpenLayers.Format.GeoRSS = OpenLayers.Class(OpenLayers.Format.XML, {
             } else {
                 location = [parseFloat(lat[0].firstChild.nodeValue),
                                 parseFloat(lon[0].firstChild.nodeValue)];
-            }    
+            }
 
             var geometry = new OpenLayers.Geometry.Point(location[1], location[0]);
-              
+
         } else if (line.length > 0) {
             var coords = OpenLayers.String.trim(this.getChildValue(line[0])).split(/\s+/);
-            var components = []; 
+            var components = [];
             var point;
             for (var i=0, len=coords.length; i<len; i+=2) {
                 point = new OpenLayers.Geometry.Point(coords[i+1], coords[i]);
                 components.push(point);
             }
             geometry = new OpenLayers.Geometry.LineString(components);
-        } else if (polygon.length > 0) { 
+        } else if (polygon.length > 0) {
             var coords = OpenLayers.String.trim(this.getChildValue(polygon[0])).split(/\s+/);
-            var components = []; 
+            var components = [];
             var point;
             for (var i=0, len=coords.length; i<len; i+=2) {
                 point = new OpenLayers.Geometry.Point(coords[i+1], coords[i]);
                 components.push(point);
             }
             geometry = new OpenLayers.Geometry.Polygon([new OpenLayers.Geometry.LinearRing(components)]);
-        } else if (where.length > 0) { 
+        } else if (where.length > 0) {
             if (!this.gmlParser) {
               this.gmlParser = new OpenLayers.Format.GML({'xy': this.xy});
             }
@@ -170,14 +170,14 @@ OpenLayers.Format.GeoRSS = OpenLayers.Class(OpenLayers.Format.XML, {
             }
             geometry = new OpenLayers.Geometry.Polygon([new OpenLayers.Geometry.LinearRing(components)]);
         }
-        
+
         if (geometry && this.internalProjection && this.externalProjection) {
-            geometry.transform(this.externalProjection, 
+            geometry.transform(this.externalProjection,
                                this.internalProjection);
         }
 
         return geometry;
-    },        
+    },
 
     /**
      * Method: createFeatureFromItem
@@ -191,10 +191,10 @@ OpenLayers.Format.GeoRSS = OpenLayers.Class(OpenLayers.Format.XML, {
      */
     createFeatureFromItem: function(item) {
         var geometry = this.createGeometryFromItem(item);
-     
+
         /* Provide defaults for title and description */
         var title = this._getChildValue(item, "*", "title", this.featureTitle);
-       
+
         /* First try RSS descriptions, then Atom summaries */
         var description = this._getChildValue(
             item, "*", "description",
@@ -213,7 +213,7 @@ OpenLayers.Format.GeoRSS = OpenLayers.Class(OpenLayers.Format.XML, {
         }
 
         var id = this._getChildValue(item, "*", "id", null);
-        
+
         var data = {
             "title": title,
             "description": description,
@@ -222,8 +222,8 @@ OpenLayers.Format.GeoRSS = OpenLayers.Class(OpenLayers.Format.XML, {
         var feature = new OpenLayers.Feature.Vector(geometry, data);
         feature.fid = id;
         return feature;
-    },        
-    
+    },
+
     /**
      * Method: _getChildValue
      *
@@ -248,19 +248,19 @@ OpenLayers.Format.GeoRSS = OpenLayers.Class(OpenLayers.Format.XML, {
         }
         return value;
     },
-    
+
     /**
      * APIMethod: read
      * Return a list of features from a GeoRSS doc
      *
      * Parameters:
-     * doc - {Element} 
+     * doc - {Element}
      *
      * Returns:
      * {Array(<OpenLayers.Feature.Vector>)}
      */
     read: function(doc) {
-        if (typeof doc == "string") { 
+        if (typeof doc == "string") {
             doc = OpenLayers.Format.XML.prototype.read.apply(this, [doc]);
         }
 
@@ -270,7 +270,7 @@ OpenLayers.Format.GeoRSS = OpenLayers.Class(OpenLayers.Format.XML, {
         if (itemlist.length == 0) {
             itemlist = this.getElementsByTagNameNS(doc, '*', 'entry');
         }
-        
+
         var numItems = itemlist.length;
         var features = new Array(numItems);
         for(var i=0; i<numItems; i++) {
@@ -278,13 +278,13 @@ OpenLayers.Format.GeoRSS = OpenLayers.Class(OpenLayers.Format.XML, {
         }
         return features;
     },
-    
+
 
     /**
      * APIMethod: write
-     * Accept Feature Collection, and return a string. 
-     * 
-     * Parameters: 
+     * Accept Feature Collection, and return a string.
+     *
+     * Parameters:
      * features - {Array(<OpenLayers.Feature.Vector>)} List of features to serialize into a string.
      */
     write: function(features) {
@@ -303,9 +303,9 @@ OpenLayers.Format.GeoRSS = OpenLayers.Class(OpenLayers.Format.XML, {
     /**
      * Method: createFeatureXML
      * Accept an <OpenLayers.Feature.Vector>, and build a geometry for it.
-     * 
+     *
      * Parameters:
-     * feature - {<OpenLayers.Feature.Vector>} 
+     * feature - {<OpenLayers.Feature.Vector>}
      *
      * Returns:
      * {DOMElement}
@@ -323,26 +323,26 @@ OpenLayers.Format.GeoRSS = OpenLayers.Class(OpenLayers.Format.XML, {
             var linkNode = this.createElementNS(this.rssns, "link");
             linkNode.appendChild(this.createTextNode(feature.attributes.link));
             featureNode.appendChild(linkNode);
-        }    
+        }
         for(var attr in feature.attributes) {
-            if (attr == "link" || attr == "title" || attr == "description") { continue; } 
-            var attrText = this.createTextNode(feature.attributes[attr]); 
+            if (attr == "link" || attr == "title" || attr == "description") { continue; }
+            var attrText = this.createTextNode(feature.attributes[attr]);
             var nodename = attr;
             if (attr.search(":") != -1) {
                 nodename = attr.split(":")[1];
-            }    
+            }
             var attrContainer = this.createElementNS(this.featureNS, "feature:"+nodename);
             attrContainer.appendChild(attrText);
             featureNode.appendChild(attrContainer);
-        }    
+        }
         featureNode.appendChild(geometryNode);
         return featureNode;
-    },    
-    
-    /** 
+    },
+
+    /**
      * Method: buildGeometryNode
      * builds a GeoRSS node with a given geometry
-     * 
+     *
      * Parameters:
      * geometry - {<OpenLayers.Geometry>}
      *
@@ -352,20 +352,20 @@ OpenLayers.Format.GeoRSS = OpenLayers.Class(OpenLayers.Format.XML, {
     buildGeometryNode: function(geometry) {
         if (this.internalProjection && this.externalProjection) {
             geometry = geometry.clone();
-            geometry.transform(this.internalProjection, 
+            geometry.transform(this.internalProjection,
                                this.externalProjection);
         }
         var node;
         // match Polygon
         if (geometry.CLASS_NAME == "OpenLayers.Geometry.Polygon") {
             node = this.createElementNS(this.georssns, 'georss:polygon');
-            
+
             node.appendChild(this.buildCoordinatesNode(geometry.components[0]));
         }
         // match LineString
         else if (geometry.CLASS_NAME == "OpenLayers.Geometry.LineString") {
             node = this.createElementNS(this.georssns, 'georss:line');
-            
+
             node.appendChild(this.buildCoordinatesNode(geometry));
         }
         // match Point
@@ -374,19 +374,19 @@ OpenLayers.Format.GeoRSS = OpenLayers.Class(OpenLayers.Format.XML, {
             node.appendChild(this.buildCoordinatesNode(geometry));
         } else {
             throw "Couldn't parse " + geometry.CLASS_NAME;
-        }  
-        return node;         
+        }
+        return node;
     },
-    
-    /** 
+
+    /**
      * Method: buildCoordinatesNode
-     * 
+     *
      * Parameters:
      * geometry - {<OpenLayers.Geometry>}
      */
     buildCoordinatesNode: function(geometry) {
         var points = null;
-        
+
         if (geometry.components) {
             points = geometry.components;
         }
@@ -405,5 +405,5 @@ OpenLayers.Format.GeoRSS = OpenLayers.Class(OpenLayers.Format.XML, {
         return this.createTextNode(path);
     },
 
-    CLASS_NAME: "OpenLayers.Format.GeoRSS" 
-});     
+    CLASS_NAME: "OpenLayers.Format.GeoRSS"
+});
