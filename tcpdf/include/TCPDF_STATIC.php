@@ -905,7 +905,7 @@ class TCPDF_STATIC {
 		if (isset($prop['doNotSpellCheck']) && ($prop['doNotSpellCheck'] === 'true')) {
 			$ff += 1 << 22;
 		}
-		// doNotScroll: If true, the text field does not scroll and the user, therefore, is limited by the rectangular region designed for the field.
+		// doNotScroll: If true, the text field does not scroll and the user, therefor, is limited by the rectangular region designed for the field.
 		if (isset($prop['doNotScroll']) && ($prop['doNotScroll'] === 'true')) {
 			$ff += 1 << 23;
 		}
