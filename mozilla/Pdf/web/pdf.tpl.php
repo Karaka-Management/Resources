@@ -73,7 +73,7 @@ See https://github.com/adobe-type-tools/cmap-resources
   </head>
 
   <body tabindex="1" class="loadingInProgress">
-    <div id="contentSpinner" class="spinner-1"></div>
+    <div id="contentSpinner" class="spinner spinner-1"></div>
     <div id="outerContainer">
 
       <div id="sidebarContainer">
