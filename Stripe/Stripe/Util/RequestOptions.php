@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Stripe\Util;
 
@@ -22,13 +22,13 @@ class RequestOptions
     public $apiBase;
 
     /**
-     * @param null|string $key
+     * @param null|string           $key
      * @param array<string, string> $headers
-     * @param null|string $base
+     * @param null|string           $base
      */
     public function __construct($key = null, $headers = [], $base = null)
     {
-        $this->apiKey = $key;
+        $this->apiKey  = $key;
         $this->headers = $headers;
         $this->apiBase = $base;
     }
@@ -39,7 +39,7 @@ class RequestOptions
     public function __debugInfo()
     {
         return [
-            'apiKey' => $this->redactedApiKey(),
+            'apiKey'  => $this->redactedApiKey(),
             'headers' => $this->headers,
             'apiBase' => $this->apiBase,
         ];
@@ -50,17 +50,17 @@ class RequestOptions
      * object.
      *
      * @param null|array|RequestOptions|string $options a key => value array
-     * @param bool $strict when true, forbid string form and arbitrary keys in array form
+     * @param bool                             $strict  when true, forbid string form and arbitrary keys in array form
      *
      * @return RequestOptions
      */
     public function merge($options, $strict = false)
     {
         $other_options = self::parse($options, $strict);
-        if (null === $other_options->apiKey) {
+        if ($other_options->apiKey === null) {
             $other_options->apiKey = $this->apiKey;
         }
-        if (null === $other_options->apiBase) {
+        if ($other_options->apiBase === null) {
             $other_options->apiBase = $this->apiBase;
         }
         $other_options->headers = \array_merge($this->headers, $other_options->headers);
@@ -71,7 +71,7 @@ class RequestOptions
     /**
      * Discards all headers that we don't want to persist across requests.
      */
-    public function discardNonPersistentHeaders()
+    public function discardNonPersistentHeaders() : void
     {
         foreach ($this->headers as $k => $v) {
             if (!\in_array($k, self::$HEADERS_TO_PERSIST, true)) {
@@ -84,7 +84,7 @@ class RequestOptions
      * Unpacks an options array into an RequestOptions object.
      *
      * @param null|array|RequestOptions|string $options a key => value array
-     * @param bool $strict when true, forbid string form and arbitrary keys in array form
+     * @param bool                             $strict  when true, forbid string form and arbitrary keys in array form
      *
      * @throws \Stripe\Exception\InvalidArgumentException
      *
@@ -96,8 +96,8 @@ class RequestOptions
             return clone $options;
         }
 
-        if (null === $options) {
-            return new RequestOptions(null, [], null);
+        if ($options === null) {
+            return new self(null, [], null);
         }
 
         if (\is_string($options)) {
@@ -108,13 +108,13 @@ class RequestOptions
                 throw new \Stripe\Exception\InvalidArgumentException($message);
             }
 
-            return new RequestOptions($options, [], null);
+            return new self($options, [], null);
         }
 
         if (\is_array($options)) {
             $headers = [];
-            $key = null;
-            $base = null;
+            $key     = null;
+            $base    = null;
 
             if (\array_key_exists('api_key', $options)) {
                 $key = $options['api_key'];
@@ -143,7 +143,7 @@ class RequestOptions
                 throw new \Stripe\Exception\InvalidArgumentException($message);
             }
 
-            return new RequestOptions($key, $headers, $base);
+            return new self($key, $headers, $base);
         }
 
         $message = 'The second argument to Stripe API method calls is an '
@@ -157,12 +157,12 @@ class RequestOptions
     /** @return string */
     private function redactedApiKey()
     {
-        if (null === $this->apiKey) {
+        if ($this->apiKey === null) {
             return '';
         }
 
-        $pieces = \explode('_', $this->apiKey, 3);
-        $last = \array_pop($pieces);
+        $pieces       = \explode('_', $this->apiKey, 3);
+        $last         = \array_pop($pieces);
         $redactedLast = \strlen($last) > 4
             ? (\str_repeat('*', \strlen($last) - 4) . \substr($last, -4))
             : $last;

@@ -1,8 +1,8 @@
 #!/usr/bin/env php
-<?php
+<?php declare(strict_types=1);
 \chdir(__DIR__);
 
-$autoload = (int) $argv[1];
+$autoload     = (int) $argv[1];
 $returnStatus = null;
 
 if (!$autoload) {
@@ -14,12 +14,12 @@ if (!$autoload) {
 }
 
 \passthru('composer update', $returnStatus);
-if (0 !== $returnStatus) {
+if ($returnStatus !== 0) {
     exit(1);
 }
 
 $config = $autoload ? 'phpunit.xml' : 'phpunit.no_autoload.xml';
 \passthru("./vendor/bin/phpunit -c {$config}", $returnStatus);
-if (0 !== $returnStatus) {
+if ($returnStatus !== 0) {
     exit(1);
 }

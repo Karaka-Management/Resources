@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 // File generated from our OpenAPI spec
 
@@ -11,7 +11,7 @@ class TransferService extends \Stripe\Service\AbstractService
      * are returned in sorted order, with the most recently created transfers appearing
      * first.
      *
-     * @param null|array $params
+     * @param null|array                             $params
      * @param null|array|\Stripe\Util\RequestOptions $opts
      *
      * @throws \Stripe\Exception\ApiErrorException if the request fails
@@ -30,8 +30,8 @@ class TransferService extends \Stripe\Service\AbstractService
      * <code>limit</code> and <code>starting_after</code> parameters to page through
      * additional reversals.
      *
-     * @param string $parentId
-     * @param null|array $params
+     * @param string                                 $parentId
+     * @param null|array                             $params
      * @param null|array|\Stripe\Util\RequestOptions $opts
      *
      * @throws \Stripe\Exception\ApiErrorException if the request fails
@@ -48,7 +48,7 @@ class TransferService extends \Stripe\Service\AbstractService
      * transfer object. Your <a href="#balance">Stripe balance</a> must be able to
      * cover the transfer amount, or you’ll receive an “Insufficient Funds” error.
      *
-     * @param null|array $params
+     * @param null|array                             $params
      * @param null|array|\Stripe\Util\RequestOptions $opts
      *
      * @throws \Stripe\Exception\ApiErrorException if the request fails
@@ -70,8 +70,8 @@ class TransferService extends \Stripe\Service\AbstractService
      * return an error when called on an already-reversed transfer, or when trying to
      * reverse more money than is left on a transfer.
      *
-     * @param string $parentId
-     * @param null|array $params
+     * @param string                                 $parentId
+     * @param null|array                             $params
      * @param null|array|\Stripe\Util\RequestOptions $opts
      *
      * @throws \Stripe\Exception\ApiErrorException if the request fails
@@ -88,8 +88,8 @@ class TransferService extends \Stripe\Service\AbstractService
      * from either a transfer creation request or the transfer list, and Stripe will
      * return the corresponding transfer information.
      *
-     * @param string $id
-     * @param null|array $params
+     * @param string                                 $id
+     * @param null|array                             $params
      * @param null|array|\Stripe\Util\RequestOptions $opts
      *
      * @throws \Stripe\Exception\ApiErrorException if the request fails
@@ -106,9 +106,9 @@ class TransferService extends \Stripe\Service\AbstractService
      * transfer object, but you can also retrieve details about a specific reversal
      * stored on the transfer.
      *
-     * @param string $parentId
-     * @param string $id
-     * @param null|array $params
+     * @param string                                 $parentId
+     * @param string                                 $id
+     * @param null|array                             $params
      * @param null|array|\Stripe\Util\RequestOptions $opts
      *
      * @throws \Stripe\Exception\ApiErrorException if the request fails
@@ -126,8 +126,8 @@ class TransferService extends \Stripe\Service\AbstractService
      *
      * This request accepts only metadata as an argument.
      *
-     * @param string $id
-     * @param null|array $params
+     * @param string                                 $id
+     * @param null|array                             $params
      * @param null|array|\Stripe\Util\RequestOptions $opts
      *
      * @throws \Stripe\Exception\ApiErrorException if the request fails
@@ -145,9 +145,9 @@ class TransferService extends \Stripe\Service\AbstractService
      *
      * This request only accepts metadata and description as arguments.
      *
-     * @param string $parentId
-     * @param string $id
-     * @param null|array $params
+     * @param string                                 $parentId
+     * @param string                                 $id
+     * @param null|array                             $params
      * @param null|array|\Stripe\Util\RequestOptions $opts
      *
      * @throws \Stripe\Exception\ApiErrorException if the request fails

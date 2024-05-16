@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 // File generated from our OpenAPI spec
 
@@ -12,7 +12,7 @@ class PaymentMethodService extends \Stripe\Service\AbstractService
      * href="/docs/api/payment_methods/customer_list">List a Customer’s
      * PaymentMethods</a> API instead.
      *
-     * @param null|array $params
+     * @param null|array                             $params
      * @param null|array|\Stripe\Util\RequestOptions $opts
      *
      * @throws \Stripe\Exception\ApiErrorException if the request fails
@@ -44,8 +44,8 @@ class PaymentMethodService extends \Stripe\Service\AbstractService
      * href="/docs/api/customers/update#update_customer-invoice_settings-default_payment_method"><code>invoice_settings.default_payment_method</code></a>,
      * on the Customer to the PaymentMethod’s ID.
      *
-     * @param string $id
-     * @param null|array $params
+     * @param string                                 $id
+     * @param null|array                             $params
      * @param null|array|\Stripe\Util\RequestOptions $opts
      *
      * @throws \Stripe\Exception\ApiErrorException if the request fails
@@ -68,7 +68,7 @@ class PaymentMethodService extends \Stripe\Service\AbstractService
      * href="/docs/payments/save-and-reuse">SetupIntent</a> API to collect payment
      * method details ahead of a future payment.
      *
-     * @param null|array $params
+     * @param null|array                             $params
      * @param null|array|\Stripe\Util\RequestOptions $opts
      *
      * @throws \Stripe\Exception\ApiErrorException if the request fails
@@ -84,8 +84,8 @@ class PaymentMethodService extends \Stripe\Service\AbstractService
      * Detaches a PaymentMethod object from a Customer. After a PaymentMethod is
      * detached, it can no longer be used for a payment or re-attached to a Customer.
      *
-     * @param string $id
-     * @param null|array $params
+     * @param string                                 $id
+     * @param null|array                             $params
      * @param null|array|\Stripe\Util\RequestOptions $opts
      *
      * @throws \Stripe\Exception\ApiErrorException if the request fails
@@ -103,8 +103,8 @@ class PaymentMethodService extends \Stripe\Service\AbstractService
      * href="/docs/api/payment_methods/customer">Retrieve a Customer’s
      * PaymentMethods</a>.
      *
-     * @param string $id
-     * @param null|array $params
+     * @param string                                 $id
+     * @param null|array                             $params
      * @param null|array|\Stripe\Util\RequestOptions $opts
      *
      * @throws \Stripe\Exception\ApiErrorException if the request fails
@@ -120,8 +120,8 @@ class PaymentMethodService extends \Stripe\Service\AbstractService
      * Updates a PaymentMethod object. A PaymentMethod must be attached a customer to
      * be updated.
      *
-     * @param string $id
-     * @param null|array $params
+     * @param string                                 $id
+     * @param null|array                             $params
      * @param null|array|\Stripe\Util\RequestOptions $opts
      *
      * @throws \Stripe\Exception\ApiErrorException if the request fails

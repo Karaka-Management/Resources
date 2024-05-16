@@ -89,7 +89,7 @@ class TCPDFBarcode {
 	 * @param string $color foreground color (in SVG format) for bar elements (background is transparent)
 	 * @public
 	 */
-	public function getBarcodeSVG($w=2, $h=30, $color='black') : void {
+	public function getBarcodeSVG($w = 2, $h = 30, $color = 'black') : void {
 		// send headers
 		$code = $this->getBarcodeSVGcode($w, $h, $color);
 		\header('Content-Type: application/svg+xml');
@@ -110,7 +110,7 @@ class TCPDFBarcode {
 	 * @return string SVG code
 	 * @public
 	 */
-	public function getBarcodeSVGcode($w=2, $h=30, $color='black') {
+	public function getBarcodeSVGcode($w = 2, $h = 30, $color = 'black') {
 		// replace table for special characters
 		$repstr = ["\0" => '', '&' => '&amp;', '<' => '&lt;', '>' => '&gt;'];
 		$svg    = '<'.'?'.'xml version="1.0" standalone="no"'.'?'.'>'."\n";
@@ -143,7 +143,7 @@ class TCPDFBarcode {
 	 * @return string HTML code
 	 * @public
 	 */
-	public function getBarcodeHTML($w=2, $h=30, $color='black') {
+	public function getBarcodeHTML($w = 2, $h = 30, $color = 'black') {
 		$html = '<div style="font-size:0;position:relative;width:'.($this->barcode_array['maxw'] * $w).'px;height:'.($h).'px;">'."\n";
 		// print bars
 		$x = 0;
@@ -168,7 +168,7 @@ class TCPDFBarcode {
 	 * @param array $color RGB (0-255) foreground color for bar elements (background is transparent)
 	 * @public
 	 */
-	public function getBarcodePNG($w=2, $h=30, $color=[0,0,0]) : void {
+	public function getBarcodePNG($w = 2, $h = 30, $color = [0,0,0]) : void {
 		$data = $this->getBarcodePngData($w, $h, $color);
 		// send headers
 		\header('Content-Type: image/png');
@@ -188,7 +188,7 @@ class TCPDFBarcode {
 	 * @return string|Imagick|false image or false in case of error
 	 * @public
 	 */
-	public function getBarcodePngData($w=2, $h=30, $color=[0,0,0]) {
+	public function getBarcodePngData($w = 2, $h = 30, $color = [0,0,0]) {
 		// calculate image size
 		$width  = ($this->barcode_array['maxw'] * $w);
 		$height = $h;
@@ -389,7 +389,7 @@ class TCPDFBarcode {
 	 * @return array  barcode representation
 	 * @protected
 	 */
-	protected function barcode_code39($code, $extended=false, $checksum=false) {
+	protected function barcode_code39($code, $extended = false, $checksum = false) {
 		$chr['0'] = '111331311';
 		$chr['1'] = '311311113';
 		$chr['2'] = '113311113';
@@ -736,11 +736,11 @@ class TCPDFBarcode {
 	protected function checksum_s25($code) {
 		$len = \strlen($code);
 		$sum = 0;
-		for ($i = 0; $i < $len; $i+=2) {
+		for ($i = 0; $i < $len; $i += 2) {
 			$sum += $code[$i];
 		}
 		$sum *= 3;
-		for ($i = 1; $i < $len; $i+=2) {
+		for ($i = 1; $i < $len; $i += 2) {
 			$sum += ($code[$i]);
 		}
 		$r = $sum % 10;
@@ -759,7 +759,7 @@ class TCPDFBarcode {
 	 * @return array  barcode representation
 	 * @protected
 	 */
-	protected function barcode_msi($code, $checksum=false) {
+	protected function barcode_msi($code, $checksum = false) {
 		$chr['0'] = '100100100100';
 		$chr['1'] = '100100100110';
 		$chr['2'] = '100100110100';
@@ -818,7 +818,7 @@ class TCPDFBarcode {
 	 * @return array  barcode representation
 	 * @protected
 	 */
-	protected function barcode_s25($code, $checksum=false) {
+	protected function barcode_s25($code, $checksum = false) {
 		$chr['0'] = '10101110111010';
 		$chr['1'] = '11101010101110';
 		$chr['2'] = '10111010101110';
@@ -889,7 +889,7 @@ class TCPDFBarcode {
 	 * @return array  barcode representation
 	 * @protected
 	 */
-	protected function barcode_i25($code, $checksum=false) {
+	protected function barcode_i25($code, $checksum = false) {
 		$chr['0'] = '11221';
 		$chr['1'] = '21112';
 		$chr['2'] = '12112';
@@ -953,7 +953,7 @@ class TCPDFBarcode {
 	 * @return array  barcode representation
 	 * @protected
 	 */
-	protected function barcode_c128($code, $type='') {
+	protected function barcode_c128($code, $type = '') {
 		$chr = [
 			'212222', /* 00 */
 			'222122', /* 01 */
@@ -1121,7 +1121,7 @@ class TCPDFBarcode {
 					// the length must be even
 					return false;
 				}
-				for ($i = 0; $i < $len; $i+=2) {
+				for ($i = 0; $i < $len; $i += 2) {
 					$chrnum = $code[$i].$code[$i + 1];
 					if (\preg_match('/([0-9]{2})/', $chrnum) > 0) {
 						$code_data[] = (int) $chrnum;
@@ -1237,7 +1237,7 @@ class TCPDFBarcode {
 							} elseif ($sequence[($key - 1)][0] != 'C') {
 								$code_data[] = 99;
 							}
-							for ($i = 0; $i < $seq[2]; $i+=2) {
+							for ($i = 0; $i < $seq[2]; $i += 2) {
 								$chrnum      = $seq[1][$i].$seq[1][$i + 1];
 								$code_data[] = (int) $chrnum;
 							}
@@ -1322,7 +1322,7 @@ class TCPDFBarcode {
 	 * @return array  barcode representation
 	 * @protected
 	 */
-	protected function barcode_eanupc($code, $len=13) {
+	protected function barcode_eanupc($code, $len = 13) {
 		$upce = false;
 		if ($len == 6) {
 			$len  = 12; // UPC-A
@@ -1334,14 +1334,14 @@ class TCPDFBarcode {
 		$code_len = \strlen($code);
 		// calculate check digit
 		$sum_a = 0;
-		for ($i = 1; $i < $data_len; $i+=2) {
+		for ($i = 1; $i < $data_len; $i += 2) {
 			$sum_a += $code[$i];
 		}
 		if ($len > 12) {
 			$sum_a *= 3;
 		}
 		$sum_b = 0;
-		for ($i = 0; $i < $data_len; $i+=2) {
+		for ($i = 0; $i < $data_len; $i += 2) {
 			$sum_b += ($code[$i]);
 		}
 		if ($len < 13) {
@@ -1388,76 +1388,76 @@ class TCPDFBarcode {
 		}
 		//Convert digits to bars
 		$codes = [
-			'A'=> [ // left odd parity
-				'0'=> '0001101',
-				'1'=> '0011001',
-				'2'=> '0010011',
-				'3'=> '0111101',
-				'4'=> '0100011',
-				'5'=> '0110001',
-				'6'=> '0101111',
-				'7'=> '0111011',
-				'8'=> '0110111',
-				'9'=> '0001011'],
-			'B'=> [ // left even parity
-				'0'=> '0100111',
-				'1'=> '0110011',
-				'2'=> '0011011',
-				'3'=> '0100001',
-				'4'=> '0011101',
-				'5'=> '0111001',
-				'6'=> '0000101',
-				'7'=> '0010001',
-				'8'=> '0001001',
-				'9'=> '0010111'],
-			'C'=> [ // right
-				'0'=> '1110010',
-				'1'=> '1100110',
-				'2'=> '1101100',
-				'3'=> '1000010',
-				'4'=> '1011100',
-				'5'=> '1001110',
-				'6'=> '1010000',
-				'7'=> '1000100',
-				'8'=> '1001000',
-				'9'=> '1110100'],
+			'A' => [ // left odd parity
+				'0' => '0001101',
+				'1' => '0011001',
+				'2' => '0010011',
+				'3' => '0111101',
+				'4' => '0100011',
+				'5' => '0110001',
+				'6' => '0101111',
+				'7' => '0111011',
+				'8' => '0110111',
+				'9' => '0001011'],
+			'B' => [ // left even parity
+				'0' => '0100111',
+				'1' => '0110011',
+				'2' => '0011011',
+				'3' => '0100001',
+				'4' => '0011101',
+				'5' => '0111001',
+				'6' => '0000101',
+				'7' => '0010001',
+				'8' => '0001001',
+				'9' => '0010111'],
+			'C' => [ // right
+				'0' => '1110010',
+				'1' => '1100110',
+				'2' => '1101100',
+				'3' => '1000010',
+				'4' => '1011100',
+				'5' => '1001110',
+				'6' => '1010000',
+				'7' => '1000100',
+				'8' => '1001000',
+				'9' => '1110100'],
 		];
 		$parities = [
-			'0'=> ['A','A','A','A','A','A'],
-			'1'=> ['A','A','B','A','B','B'],
-			'2'=> ['A','A','B','B','A','B'],
-			'3'=> ['A','A','B','B','B','A'],
-			'4'=> ['A','B','A','A','B','B'],
-			'5'=> ['A','B','B','A','A','B'],
-			'6'=> ['A','B','B','B','A','A'],
-			'7'=> ['A','B','A','B','A','B'],
-			'8'=> ['A','B','A','B','B','A'],
-			'9'=> ['A','B','B','A','B','A'],
+			'0' => ['A','A','A','A','A','A'],
+			'1' => ['A','A','B','A','B','B'],
+			'2' => ['A','A','B','B','A','B'],
+			'3' => ['A','A','B','B','B','A'],
+			'4' => ['A','B','A','A','B','B'],
+			'5' => ['A','B','B','A','A','B'],
+			'6' => ['A','B','B','B','A','A'],
+			'7' => ['A','B','A','B','A','B'],
+			'8' => ['A','B','A','B','B','A'],
+			'9' => ['A','B','B','A','B','A'],
 		];
 		$upce_parities    = [];
 		$upce_parities[0] = [
-			'0'=> ['B','B','B','A','A','A'],
-			'1'=> ['B','B','A','B','A','A'],
-			'2'=> ['B','B','A','A','B','A'],
-			'3'=> ['B','B','A','A','A','B'],
-			'4'=> ['B','A','B','B','A','A'],
-			'5'=> ['B','A','A','B','B','A'],
-			'6'=> ['B','A','A','A','B','B'],
-			'7'=> ['B','A','B','A','B','A'],
-			'8'=> ['B','A','B','A','A','B'],
-			'9'=> ['B','A','A','B','A','B'],
+			'0' => ['B','B','B','A','A','A'],
+			'1' => ['B','B','A','B','A','A'],
+			'2' => ['B','B','A','A','B','A'],
+			'3' => ['B','B','A','A','A','B'],
+			'4' => ['B','A','B','B','A','A'],
+			'5' => ['B','A','A','B','B','A'],
+			'6' => ['B','A','A','A','B','B'],
+			'7' => ['B','A','B','A','B','A'],
+			'8' => ['B','A','B','A','A','B'],
+			'9' => ['B','A','A','B','A','B'],
 		];
 		$upce_parities[1] = [
-			'0'=> ['A','A','A','B','B','B'],
-			'1'=> ['A','A','B','A','B','B'],
-			'2'=> ['A','A','B','B','A','B'],
-			'3'=> ['A','A','B','B','B','A'],
-			'4'=> ['A','B','A','A','B','B'],
-			'5'=> ['A','B','B','A','A','B'],
-			'6'=> ['A','B','B','B','A','A'],
-			'7'=> ['A','B','A','B','A','B'],
-			'8'=> ['A','B','A','B','B','A'],
-			'9'=> ['A','B','B','A','B','A'],
+			'0' => ['A','A','A','B','B','B'],
+			'1' => ['A','A','B','A','B','B'],
+			'2' => ['A','A','B','B','A','B'],
+			'3' => ['A','A','B','B','B','A'],
+			'4' => ['A','B','A','A','B','B'],
+			'5' => ['A','B','B','A','A','B'],
+			'6' => ['A','B','B','B','A','A'],
+			'7' => ['A','B','A','B','A','B'],
+			'8' => ['A','B','A','B','B','A'],
+			'9' => ['A','B','B','A','B','A'],
 		];
 		$k   = 0;
 		$seq = '101'; // left guard bar
@@ -1515,7 +1515,7 @@ class TCPDFBarcode {
 	 * @return array  barcode representation
 	 * @protected
 	 */
-	protected function barcode_eanext($code, $len=5) {
+	protected function barcode_eanext($code, $len = 5) {
 		//Padding
 		$code = \str_pad($code, $len, '0', \STR_PAD_LEFT);
 		// calculate check digit
@@ -1529,47 +1529,47 @@ class TCPDFBarcode {
 		}
 		//Convert digits to bars
 		$codes = [
-			'A'=> [ // left odd parity
-				'0'=> '0001101',
-				'1'=> '0011001',
-				'2'=> '0010011',
-				'3'=> '0111101',
-				'4'=> '0100011',
-				'5'=> '0110001',
-				'6'=> '0101111',
-				'7'=> '0111011',
-				'8'=> '0110111',
-				'9'=> '0001011'],
-			'B'=> [ // left even parity
-				'0'=> '0100111',
-				'1'=> '0110011',
-				'2'=> '0011011',
-				'3'=> '0100001',
-				'4'=> '0011101',
-				'5'=> '0111001',
-				'6'=> '0000101',
-				'7'=> '0010001',
-				'8'=> '0001001',
-				'9'=> '0010111'],
+			'A' => [ // left odd parity
+				'0' => '0001101',
+				'1' => '0011001',
+				'2' => '0010011',
+				'3' => '0111101',
+				'4' => '0100011',
+				'5' => '0110001',
+				'6' => '0101111',
+				'7' => '0111011',
+				'8' => '0110111',
+				'9' => '0001011'],
+			'B' => [ // left even parity
+				'0' => '0100111',
+				'1' => '0110011',
+				'2' => '0011011',
+				'3' => '0100001',
+				'4' => '0011101',
+				'5' => '0111001',
+				'6' => '0000101',
+				'7' => '0010001',
+				'8' => '0001001',
+				'9' => '0010111'],
 		];
 		$parities    = [];
 		$parities[2] = [
-			'0'=> ['A','A'],
-			'1'=> ['A','B'],
-			'2'=> ['B','A'],
-			'3'=> ['B','B'],
+			'0' => ['A','A'],
+			'1' => ['A','B'],
+			'2' => ['B','A'],
+			'3' => ['B','B'],
 		];
 		$parities[5] = [
-			'0'=> ['B','B','A','A','A'],
-			'1'=> ['B','A','B','A','A'],
-			'2'=> ['B','A','A','B','A'],
-			'3'=> ['B','A','A','A','B'],
-			'4'=> ['A','B','B','A','A'],
-			'5'=> ['A','A','B','B','A'],
-			'6'=> ['A','A','A','B','B'],
-			'7'=> ['A','B','A','B','A'],
-			'8'=> ['A','B','A','A','B'],
-			'9'=> ['A','A','B','A','B'],
+			'0' => ['B','B','A','A','A'],
+			'1' => ['B','A','B','A','A'],
+			'2' => ['B','A','A','B','A'],
+			'3' => ['B','A','A','A','B'],
+			'4' => ['A','B','B','A','A'],
+			'5' => ['A','A','B','B','A'],
+			'6' => ['A','A','A','B','B'],
+			'7' => ['A','B','A','B','A'],
+			'8' => ['A','B','A','A','B'],
+			'9' => ['A','A','B','A','B'],
 		];
 		$p   = $parities[$len][$r];
 		$seq = '1011'; // left guard bar
@@ -1590,7 +1590,7 @@ class TCPDFBarcode {
 	 * @return array  barcode representation
 	 * @protected
 	 */
-	protected function barcode_postnet($code, $planet=false) {
+	protected function barcode_postnet($code, $planet = false) {
 		// bar length
 		if ($planet) {
 			$barlen = [
@@ -1663,7 +1663,7 @@ class TCPDFBarcode {
 	 * @return array  barcode representation
 	 * @protected
 	 */
-	protected function barcode_rms4cc($code, $kix=false) {
+	protected function barcode_rms4cc($code, $kix = false) {
 		$notkix = !$kix;
 		// bar mode
 		// 1 = pos 1, length 2

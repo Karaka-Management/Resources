@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 // File generated from our OpenAPI spec
 
@@ -8,10 +8,10 @@ namespace Stripe\Service\Issuing;
  * Service factory class for API resources in the Issuing namespace.
  *
  * @property AuthorizationService $authorizations
- * @property CardholderService $cardholders
- * @property CardService $cards
- * @property DisputeService $disputes
- * @property TransactionService $transactions
+ * @property CardholderService    $cardholders
+ * @property CardService          $cards
+ * @property DisputeService       $disputes
+ * @property TransactionService   $transactions
  */
 class IssuingServiceFactory extends \Stripe\Service\AbstractServiceFactory
 {
@@ -20,10 +20,10 @@ class IssuingServiceFactory extends \Stripe\Service\AbstractServiceFactory
      */
     private static $classMap = [
         'authorizations' => AuthorizationService::class,
-        'cardholders' => CardholderService::class,
-        'cards' => CardService::class,
-        'disputes' => DisputeService::class,
-        'transactions' => TransactionService::class,
+        'cardholders'    => CardholderService::class,
+        'cards'          => CardService::class,
+        'disputes'       => DisputeService::class,
+        'transactions'   => TransactionService::class,
     ];
 
     protected function getServiceClass($name)

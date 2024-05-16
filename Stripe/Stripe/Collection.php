@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Stripe;
 
@@ -8,14 +8,14 @@ namespace Stripe;
  * @template TStripeObject of StripeObject
  * @template-implements \IteratorAggregate<TStripeObject>
  *
- * @property string $object
- * @property string $url
- * @property bool $has_more
+ * @property string          $object
+ * @property string          $url
+ * @property bool            $has_more
  * @property TStripeObject[] $data
  */
 class Collection extends StripeObject implements \Countable, \IteratorAggregate
 {
-    const OBJECT_NAME = 'list';
+    public const OBJECT_NAME = 'list';
 
     use ApiOperations\Request;
 
@@ -45,7 +45,7 @@ class Collection extends StripeObject implements \Countable, \IteratorAggregate
      *
      * @param array $filters the filters
      */
-    public function setFilters($filters)
+    public function setFilters($filters) : void
     {
         $this->filters = $filters;
     }
@@ -68,7 +68,7 @@ class Collection extends StripeObject implements \Countable, \IteratorAggregate
     }
 
     /**
-     * @param null|array $params
+     * @param null|array        $params
      * @param null|array|string $opts
      *
      * @throws Exception\ApiErrorException
@@ -81,10 +81,10 @@ class Collection extends StripeObject implements \Countable, \IteratorAggregate
         list($url, $params) = $this->extractPathAndUpdateParams($params);
 
         list($response, $opts) = $this->_request('get', $url, $params, $opts);
-        $obj = Util\Util::convertToStripeObject($response, $opts);
-        if (!($obj instanceof \Stripe\Collection)) {
+        $obj                   = Util\Util::convertToStripeObject($response, $opts);
+        if (!($obj instanceof self)) {
             throw new \Stripe\Exception\UnexpectedValueException(
-                'Expected type ' . \Stripe\Collection::class . ', got "' . \get_class($obj) . '" instead.'
+                'Expected type ' . self::class . ', got "' . \get_class($obj) . '" instead.'
             );
         }
         $obj->setFilters($params);
@@ -93,7 +93,7 @@ class Collection extends StripeObject implements \Countable, \IteratorAggregate
     }
 
     /**
-     * @param null|array $params
+     * @param null|array        $params
      * @param null|array|string $opts
      *
      * @throws Exception\ApiErrorException
@@ -111,8 +111,8 @@ class Collection extends StripeObject implements \Countable, \IteratorAggregate
     }
 
     /**
-     * @param string $id
-     * @param null|array $params
+     * @param string            $id
+     * @param null|array        $params
      * @param null|array|string $opts
      *
      * @throws Exception\ApiErrorException
@@ -124,8 +124,8 @@ class Collection extends StripeObject implements \Countable, \IteratorAggregate
         self::_validateParams($params);
         list($url, $params) = $this->extractPathAndUpdateParams($params);
 
-        $id = Util\Util::utf8($id);
-        $extn = \urlencode($id);
+        $id                    = Util\Util::utf8($id);
+        $extn                  = \urlencode($id);
         list($response, $opts) = $this->_request(
             'get',
             "{$url}/{$extn}",
@@ -147,7 +147,7 @@ class Collection extends StripeObject implements \Countable, \IteratorAggregate
 
     /**
      * @return \ArrayIterator an iterator that can be used to iterate
-     *    across objects in the current page
+     *                        across objects in the current page
      */
     #[\ReturnTypeWillChange]
     public function getIterator()
@@ -157,7 +157,7 @@ class Collection extends StripeObject implements \Countable, \IteratorAggregate
 
     /**
      * @return \ArrayIterator an iterator that can be used to iterate
-     *    backwards across objects in the current page
+     *                        backwards across objects in the current page
      */
     public function getReverseIterator()
     {
@@ -166,9 +166,9 @@ class Collection extends StripeObject implements \Countable, \IteratorAggregate
 
     /**
      * @return \Generator|TStripeObject[] A generator that can be used to
-     *    iterate across all objects across all pages. As page boundaries are
-     *    encountered, the next page will be fetched automatically for
-     *    continued iteration.
+     *                                    iterate across all objects across all pages. As page boundaries are
+     *                                    encountered, the next page will be fetched automatically for
+     *                                    continued iteration.
      */
     public function autoPagingIterator()
     {
@@ -206,7 +206,7 @@ class Collection extends StripeObject implements \Countable, \IteratorAggregate
      */
     public static function emptyCollection($opts = null)
     {
-        return Collection::constructFrom(['data' => []], $opts);
+        return self::constructFrom(['data' => []], $opts);
     }
 
     /**
@@ -225,7 +225,7 @@ class Collection extends StripeObject implements \Countable, \IteratorAggregate
      * This method will try to respect the limit of the current page. If none
      * was given, the default limit will be fetched again.
      *
-     * @param null|array $params
+     * @param null|array        $params
      * @param null|array|string $opts
      *
      * @return Collection<TStripeObject>
@@ -253,7 +253,7 @@ class Collection extends StripeObject implements \Countable, \IteratorAggregate
      * This method will try to respect the limit of the current page. If none
      * was given, the default limit will be fetched again.
      *
-     * @param null|array $params
+     * @param null|array        $params
      * @param null|array|string $opts
      *
      * @return Collection<TStripeObject>

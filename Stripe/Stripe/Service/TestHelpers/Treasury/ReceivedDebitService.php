@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 // File generated from our OpenAPI spec
 
@@ -11,7 +11,7 @@ class ReceivedDebitService extends \Stripe\Service\AbstractService
      * party. In live mode, you can’t directly create ReceivedDebits initiated by third
      * parties.
      *
-     * @param null|array $params
+     * @param null|array                             $params
      * @param null|array|\Stripe\Util\RequestOptions $opts
      *
      * @throws \Stripe\Exception\ApiErrorException if the request fails

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 // File generated from our OpenAPI spec
 
@@ -9,7 +9,7 @@ class ConfigurationService extends \Stripe\Service\AbstractService
     /**
      * Returns a list of <code>Configuration</code> objects.
      *
-     * @param null|array $params
+     * @param null|array                             $params
      * @param null|array|\Stripe\Util\RequestOptions $opts
      *
      * @throws \Stripe\Exception\ApiErrorException if the request fails
@@ -24,7 +24,7 @@ class ConfigurationService extends \Stripe\Service\AbstractService
     /**
      * Creates a new <code>Configuration</code> object.
      *
-     * @param null|array $params
+     * @param null|array                             $params
      * @param null|array|\Stripe\Util\RequestOptions $opts
      *
      * @throws \Stripe\Exception\ApiErrorException if the request fails
@@ -39,8 +39,8 @@ class ConfigurationService extends \Stripe\Service\AbstractService
     /**
      * Deletes a <code>Configuration</code> object.
      *
-     * @param string $id
-     * @param null|array $params
+     * @param string                                 $id
+     * @param null|array                             $params
      * @param null|array|\Stripe\Util\RequestOptions $opts
      *
      * @throws \Stripe\Exception\ApiErrorException if the request fails
@@ -55,8 +55,8 @@ class ConfigurationService extends \Stripe\Service\AbstractService
     /**
      * Retrieves a <code>Configuration</code> object.
      *
-     * @param string $id
-     * @param null|array $params
+     * @param string                                 $id
+     * @param null|array                             $params
      * @param null|array|\Stripe\Util\RequestOptions $opts
      *
      * @throws \Stripe\Exception\ApiErrorException if the request fails
@@ -71,8 +71,8 @@ class ConfigurationService extends \Stripe\Service\AbstractService
     /**
      * Updates a new <code>Configuration</code> object.
      *
-     * @param string $id
-     * @param null|array $params
+     * @param string                                 $id
+     * @param null|array                             $params
      * @param null|array|\Stripe\Util\RequestOptions $opts
      *
      * @throws \Stripe\Exception\ApiErrorException if the request fails

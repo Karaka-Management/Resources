@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 // File generated from our OpenAPI spec
 
@@ -9,7 +9,7 @@ class SecretService extends \Stripe\Service\AbstractService
     /**
      * List all secrets stored on the given scope.
      *
-     * @param null|array $params
+     * @param null|array                             $params
      * @param null|array|\Stripe\Util\RequestOptions $opts
      *
      * @throws \Stripe\Exception\ApiErrorException if the request fails
@@ -24,7 +24,7 @@ class SecretService extends \Stripe\Service\AbstractService
     /**
      * Create or replace a secret in the secret store.
      *
-     * @param null|array $params
+     * @param null|array                             $params
      * @param null|array|\Stripe\Util\RequestOptions $opts
      *
      * @throws \Stripe\Exception\ApiErrorException if the request fails
@@ -39,7 +39,7 @@ class SecretService extends \Stripe\Service\AbstractService
     /**
      * Deletes a secret from the secret store by name and scope.
      *
-     * @param null|array $params
+     * @param null|array                             $params
      * @param null|array|\Stripe\Util\RequestOptions $opts
      *
      * @throws \Stripe\Exception\ApiErrorException if the request fails
@@ -54,7 +54,7 @@ class SecretService extends \Stripe\Service\AbstractService
     /**
      * Finds a secret in the secret store by name and scope.
      *
-     * @param null|array $params
+     * @param null|array                             $params
      * @param null|array|\Stripe\Util\RequestOptions $opts
      *
      * @throws \Stripe\Exception\ApiErrorException if the request fails

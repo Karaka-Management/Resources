@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 // File generated from our OpenAPI spec
 
@@ -9,7 +9,7 @@ class SessionService extends \Stripe\Service\AbstractService
     /**
      * Returns a list of Checkout Sessions.
      *
-     * @param null|array $params
+     * @param null|array                             $params
      * @param null|array|\Stripe\Util\RequestOptions $opts
      *
      * @throws \Stripe\Exception\ApiErrorException if the request fails
@@ -27,8 +27,8 @@ class SessionService extends \Stripe\Service\AbstractService
      * items. There is also a URL where you can retrieve the full (paginated) list of
      * line items.
      *
-     * @param string $id
-     * @param null|array $params
+     * @param string                                 $id
+     * @param null|array                             $params
      * @param null|array|\Stripe\Util\RequestOptions $opts
      *
      * @throws \Stripe\Exception\ApiErrorException if the request fails
@@ -43,7 +43,7 @@ class SessionService extends \Stripe\Service\AbstractService
     /**
      * Creates a Session object.
      *
-     * @param null|array $params
+     * @param null|array                             $params
      * @param null|array|\Stripe\Util\RequestOptions $opts
      *
      * @throws \Stripe\Exception\ApiErrorException if the request fails
@@ -61,8 +61,8 @@ class SessionService extends \Stripe\Service\AbstractService
      * After it expires, a customer can’t complete a Session and customers loading the
      * Session see a message saying the Session is expired.
      *
-     * @param string $id
-     * @param null|array $params
+     * @param string                                 $id
+     * @param null|array                             $params
      * @param null|array|\Stripe\Util\RequestOptions $opts
      *
      * @throws \Stripe\Exception\ApiErrorException if the request fails
@@ -77,8 +77,8 @@ class SessionService extends \Stripe\Service\AbstractService
     /**
      * Retrieves a Session object.
      *
-     * @param string $id
-     * @param null|array $params
+     * @param string                                 $id
+     * @param null|array                             $params
      * @param null|array|\Stripe\Util\RequestOptions $opts
      *
      * @throws \Stripe\Exception\ApiErrorException if the request fails

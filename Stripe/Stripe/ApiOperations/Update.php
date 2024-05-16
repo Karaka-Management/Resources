@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Stripe\ApiOperations;
 
@@ -11,8 +11,8 @@ namespace Stripe\ApiOperations;
 trait Update
 {
     /**
-     * @param string $id the ID of the resource to update
-     * @param null|array $params
+     * @param string            $id     the ID of the resource to update
+     * @param null|array        $params
      * @param null|array|string $opts
      *
      * @throws \Stripe\Exception\ApiErrorException if the request fails
@@ -25,7 +25,7 @@ trait Update
         $url = static::resourceUrl($id);
 
         list($response, $opts) = static::_staticRequest('post', $url, $params, $opts);
-        $obj = \Stripe\Util\Util::convertToStripeObject($response->json, $opts);
+        $obj                   = \Stripe\Util\Util::convertToStripeObject($response->json, $opts);
         $obj->setLastResponse($response);
 
         return $obj;
@@ -46,7 +46,7 @@ trait Update
     {
         $params = $this->serializeParameters();
         if (\count($params) > 0) {
-            $url = $this->instanceUrl();
+            $url                   = $this->instanceUrl();
             list($response, $opts) = $this->_request('post', $url, $params, $opts);
             $this->refreshFrom($response, $opts);
         }

@@ -217,20 +217,20 @@ class TCPDF_COLORS {
 	 */
 	public static $spotcolor = [
 		// special registration colors
-		'none'    => [0,   0,   0,   0, 'None'],
-		'all'     => [100, 100, 100, 100, 'All'],
+		'none' => [0,   0,   0,   0, 'None'],
+		'all'  => [100, 100, 100, 100, 'All'],
 		// standard CMYK colors
 		'cyan'    => [100,   0,   0,   0, 'Cyan'],
 		'magenta' => [0, 100,   0,   0, 'Magenta'],
 		'yellow'  => [0,   0, 100,   0, 'Yellow'],
 		'key'     => [0,   0,   0, 100, 'Key'],
 		// alias
-		'white'   => [0,   0,   0,   0, 'White'],
-		'black'   => [0,   0,   0, 100, 'Black'],
+		'white' => [0,   0,   0,   0, 'White'],
+		'black' => [0,   0,   0, 100, 'Black'],
 		// standard RGB colors
-		'red'     => [0, 100, 100,   0, 'Red'],
-		'green'   => [100,   0, 100,   0, 'Green'],
-		'blue'    => [100, 100,   0,   0, 'Blue'],
+		'red'   => [0, 100, 100,   0, 'Red'],
+		'green' => [100,   0, 100,   0, 'Green'],
+		'blue'  => [100, 100,   0,   0, 'Blue'],
 		// Add here standard spot colors or dynamically define them with AddSpotColor()
 		// ...
 	]; // end of spot colors
@@ -269,7 +269,7 @@ class TCPDF_COLORS {
 	 * @return array|false RGB or CMYK color, or false in case of error
 	 * @public static
 	 */
-	public static function convertHTMLColorToDec($hcolor, &$spotc, $defcol=['R'=>128,'G'=>128,'B'=>128]) {
+	public static function convertHTMLColorToDec($hcolor, &$spotc, $defcol = ['R' => 128,'G' => 128,'B' => 128]) {
 		$color = \preg_replace('/[\s]*/', '', $hcolor); // remove extra spaces
 		$color = \strtolower($color);
 		// check for javascript color array syntax

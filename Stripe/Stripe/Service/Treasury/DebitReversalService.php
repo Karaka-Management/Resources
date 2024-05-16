@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 // File generated from our OpenAPI spec
 
@@ -9,7 +9,7 @@ class DebitReversalService extends \Stripe\Service\AbstractService
     /**
      * Returns a list of DebitReversals.
      *
-     * @param null|array $params
+     * @param null|array                             $params
      * @param null|array|\Stripe\Util\RequestOptions $opts
      *
      * @throws \Stripe\Exception\ApiErrorException if the request fails
@@ -24,7 +24,7 @@ class DebitReversalService extends \Stripe\Service\AbstractService
     /**
      * Reverses a ReceivedDebit and creates a DebitReversal object.
      *
-     * @param null|array $params
+     * @param null|array                             $params
      * @param null|array|\Stripe\Util\RequestOptions $opts
      *
      * @throws \Stripe\Exception\ApiErrorException if the request fails
@@ -39,8 +39,8 @@ class DebitReversalService extends \Stripe\Service\AbstractService
     /**
      * Retrieves a DebitReversal object.
      *
-     * @param string $id
-     * @param null|array $params
+     * @param string                                 $id
+     * @param null|array                             $params
      * @param null|array|\Stripe\Util\RequestOptions $opts
      *
      * @throws \Stripe\Exception\ApiErrorException if the request fails

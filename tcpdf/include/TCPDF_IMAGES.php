@@ -69,7 +69,7 @@ class TCPDF_IMAGES {
 	 * @since 4.8.017 (2009-11-27)
 	 * @public static
 	 */
-	public static function getImageFileType($imgfile, $iminfo=[]) {
+	public static function getImageFileType($imgfile, $iminfo = []) {
 		$type = '';
 		if (isset($iminfo['mime']) && !empty($iminfo['mime'])) {
 			$mime = \explode('/', $iminfo['mime']);

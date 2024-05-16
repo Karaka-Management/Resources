@@ -98,7 +98,7 @@ class TCPDF_PARSER {
 	 * @public
 	 * @since 1.0.000 (2011-05-24)
 	 */
-	public function __construct($data, $cfg=[]) {
+	public function __construct($data, $cfg = []) {
 		if (empty($data)) {
 			$this->Error('Empty PDF data.');
 		}
@@ -165,7 +165,7 @@ class TCPDF_PARSER {
 	 * @protected
 	 * @since 1.0.000 (2011-05-24)
 	 */
-	protected function getXrefData($offset=0, $xref=[]) {
+	protected function getXrefData($offset = 0, $xref = []) {
 		if ($offset == 0) {
 			// find last startxref
 			if (\preg_match_all('/[\r\n]startxref[\s]*[\r\n]+([0-9]+)[\s]*[\r\n]+%%EOF/i', $this->pdfdata, $matches, \PREG_SET_ORDER, $offset) == 0) {
@@ -207,7 +207,7 @@ class TCPDF_PARSER {
 	 * @protected
 	 * @since 1.0.000 (2011-06-20)
 	 */
-	protected function decodeXref($startxref, $xref=[]) {
+	protected function decodeXref($startxref, $xref = []) {
 		$startxref += 4; // 4 is the length of the word 'xref'
 		// skip initial white space chars: \x00 null (NUL), \x09 horizontal tab (HT), \x0A line feed (LF), \x0C form feed (FF), \x0D carriage return (CR), \x20 space (SP)
 		$offset = $startxref + \strspn($this->pdfdata, "\x00\x09\x0a\x0c\x0d\x20", $startxref);
@@ -279,7 +279,7 @@ class TCPDF_PARSER {
 	 * @protected
 	 * @since 1.0.003 (2013-03-16)
 	 */
-	protected function decodeXrefStream($startxref, $xref=[]) {
+	protected function decodeXrefStream($startxref, $xref = []) {
 		// try to read Cross-Reference Stream
 		$xrefobj = $this->getRawObject($startxref);
 		$xrefcrs = $this->getIndirectObject($xrefobj[1], $startxref, true);
@@ -360,7 +360,7 @@ class TCPDF_PARSER {
 				// get PNG predictor value
 				$predictor = (10 + $row[0]);
 				// for each byte on the row
-				for ($i=1; $i <= $columns; ++$i) {
+				for ($i = 1; $i <= $columns; ++$i) {
 					// new index
 					$j      = ($i - 1);
 					$row_up = $prev_row[$j];
@@ -493,7 +493,7 @@ class TCPDF_PARSER {
 	 * @protected
 	 * @since 1.0.000 (2011-06-20)
 	 */
-	protected function getRawObject($offset=0) {
+	protected function getRawObject($offset = 0) {
 		$objtype = ''; // object type to be returned
 		$objval  = ''; // object value to be returned
 		// skip initial white space chars: \x00 null (NUL), \x09 horizontal tab (HT), \x0A line feed (LF), \x0C form feed (FF), \x0D carriage return (CR), \x20 space (SP)
@@ -673,7 +673,7 @@ class TCPDF_PARSER {
 	 * @protected
 	 * @since 1.0.000 (2011-05-24)
 	 */
-	protected function getIndirectObject($obj_ref, $offset=0, $decoding=true) {
+	protected function getIndirectObject($obj_ref, $offset = 0, $decoding = true) {
 		$obj = \explode('_', $obj_ref);
 		if (($obj === false) || (\count($obj) != 2)) {
 			$this->Error('Invalid object reference: '.$obj);

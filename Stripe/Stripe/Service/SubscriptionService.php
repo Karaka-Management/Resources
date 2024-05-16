@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 // File generated from our OpenAPI spec
 
@@ -10,7 +10,7 @@ class SubscriptionService extends \Stripe\Service\AbstractService
      * By default, returns a list of subscriptions that have not been canceled. In
      * order to list canceled subscriptions, specify <code>status=canceled</code>.
      *
-     * @param null|array $params
+     * @param null|array                             $params
      * @param null|array|\Stripe\Util\RequestOptions $opts
      *
      * @throws \Stripe\Exception\ApiErrorException if the request fails
@@ -41,8 +41,8 @@ class SubscriptionService extends \Stripe\Service\AbstractService
      * for unpaid invoices before allowing the customer to cancel the subscription at
      * all.
      *
-     * @param string $id
-     * @param null|array $params
+     * @param string                                 $id
+     * @param null|array                             $params
      * @param null|array|\Stripe\Util\RequestOptions $opts
      *
      * @throws \Stripe\Exception\ApiErrorException if the request fails
@@ -69,7 +69,7 @@ class SubscriptionService extends \Stripe\Service\AbstractService
      * schedules</a> instead. Schedules provide the flexibility to model more complex
      * billing configurations that change over time.
      *
-     * @param null|array $params
+     * @param null|array                             $params
      * @param null|array|\Stripe\Util\RequestOptions $opts
      *
      * @throws \Stripe\Exception\ApiErrorException if the request fails
@@ -84,8 +84,8 @@ class SubscriptionService extends \Stripe\Service\AbstractService
     /**
      * Removes the currently applied discount on a subscription.
      *
-     * @param string $id
-     * @param null|array $params
+     * @param string                                 $id
+     * @param null|array                             $params
      * @param null|array|\Stripe\Util\RequestOptions $opts
      *
      * @throws \Stripe\Exception\ApiErrorException if the request fails
@@ -100,8 +100,8 @@ class SubscriptionService extends \Stripe\Service\AbstractService
     /**
      * Retrieves the subscription with the given ID.
      *
-     * @param string $id
-     * @param null|array $params
+     * @param string                                 $id
+     * @param null|array                             $params
      * @param null|array|\Stripe\Util\RequestOptions $opts
      *
      * @throws \Stripe\Exception\ApiErrorException if the request fails
@@ -121,7 +121,7 @@ class SubscriptionService extends \Stripe\Service\AbstractService
      * Occasionally, propagation of new or updated data can be up to an hour behind
      * during outages. Search functionality is not available to merchants in India.
      *
-     * @param null|array $params
+     * @param null|array                             $params
      * @param null|array|\Stripe\Util\RequestOptions $opts
      *
      * @throws \Stripe\Exception\ApiErrorException if the request fails
@@ -140,8 +140,8 @@ class SubscriptionService extends \Stripe\Service\AbstractService
      * proration will be calculated, use the <a href="#upcoming_invoice">upcoming
      * invoice</a> endpoint.
      *
-     * @param string $id
-     * @param null|array $params
+     * @param string                                 $id
+     * @param null|array                             $params
      * @param null|array|\Stripe\Util\RequestOptions $opts
      *
      * @throws \Stripe\Exception\ApiErrorException if the request fails

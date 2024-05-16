@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 // File generated from our OpenAPI spec
 
@@ -10,8 +10,8 @@ class CardService extends \Stripe\Service\AbstractService
      * Updates the shipping status of the specified Issuing <code>Card</code> object to
      * <code>delivered</code>.
      *
-     * @param string $id
-     * @param null|array $params
+     * @param string                                 $id
+     * @param null|array                             $params
      * @param null|array|\Stripe\Util\RequestOptions $opts
      *
      * @throws \Stripe\Exception\ApiErrorException if the request fails
@@ -27,8 +27,8 @@ class CardService extends \Stripe\Service\AbstractService
      * Updates the shipping status of the specified Issuing <code>Card</code> object to
      * <code>failure</code>.
      *
-     * @param string $id
-     * @param null|array $params
+     * @param string                                 $id
+     * @param null|array                             $params
      * @param null|array|\Stripe\Util\RequestOptions $opts
      *
      * @throws \Stripe\Exception\ApiErrorException if the request fails
@@ -44,8 +44,8 @@ class CardService extends \Stripe\Service\AbstractService
      * Updates the shipping status of the specified Issuing <code>Card</code> object to
      * <code>returned</code>.
      *
-     * @param string $id
-     * @param null|array $params
+     * @param string                                 $id
+     * @param null|array                             $params
      * @param null|array|\Stripe\Util\RequestOptions $opts
      *
      * @throws \Stripe\Exception\ApiErrorException if the request fails
@@ -61,8 +61,8 @@ class CardService extends \Stripe\Service\AbstractService
      * Updates the shipping status of the specified Issuing <code>Card</code> object to
      * <code>shipped</code>.
      *
-     * @param string $id
-     * @param null|array $params
+     * @param string                                 $id
+     * @param null|array                             $params
      * @param null|array|\Stripe\Util\RequestOptions $opts
      *
      * @throws \Stripe\Exception\ApiErrorException if the request fails

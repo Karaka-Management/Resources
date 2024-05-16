@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 // File generated from our OpenAPI spec
 
@@ -10,7 +10,7 @@ class ConfigurationService extends \Stripe\Service\AbstractService
      * Returns a list of configurations that describe the functionality of the customer
      * portal.
      *
-     * @param null|array $params
+     * @param null|array                             $params
      * @param null|array|\Stripe\Util\RequestOptions $opts
      *
      * @throws \Stripe\Exception\ApiErrorException if the request fails
@@ -26,7 +26,7 @@ class ConfigurationService extends \Stripe\Service\AbstractService
      * Creates a configuration that describes the functionality and behavior of a
      * PortalSession.
      *
-     * @param null|array $params
+     * @param null|array                             $params
      * @param null|array|\Stripe\Util\RequestOptions $opts
      *
      * @throws \Stripe\Exception\ApiErrorException if the request fails
@@ -42,8 +42,8 @@ class ConfigurationService extends \Stripe\Service\AbstractService
      * Retrieves a configuration that describes the functionality of the customer
      * portal.
      *
-     * @param string $id
-     * @param null|array $params
+     * @param string                                 $id
+     * @param null|array                             $params
      * @param null|array|\Stripe\Util\RequestOptions $opts
      *
      * @throws \Stripe\Exception\ApiErrorException if the request fails
@@ -58,8 +58,8 @@ class ConfigurationService extends \Stripe\Service\AbstractService
     /**
      * Updates a configuration that describes the functionality of the customer portal.
      *
-     * @param string $id
-     * @param null|array $params
+     * @param string                                 $id
+     * @param null|array                             $params
      * @param null|array|\Stripe\Util\RequestOptions $opts
      *
      * @throws \Stripe\Exception\ApiErrorException if the request fails

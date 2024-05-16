@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 // File generated from our OpenAPI spec
 
@@ -9,7 +9,7 @@ class ReceivedCreditService extends \Stripe\Service\AbstractService
     /**
      * Returns a list of ReceivedCredits.
      *
-     * @param null|array $params
+     * @param null|array                             $params
      * @param null|array|\Stripe\Util\RequestOptions $opts
      *
      * @throws \Stripe\Exception\ApiErrorException if the request fails
@@ -25,8 +25,8 @@ class ReceivedCreditService extends \Stripe\Service\AbstractService
      * Retrieves the details of an existing ReceivedCredit by passing the unique
      * ReceivedCredit ID from the ReceivedCredit list.
      *
-     * @param string $id
-     * @param null|array $params
+     * @param string                                 $id
+     * @param null|array                             $params
      * @param null|array|\Stripe\Util\RequestOptions $opts
      *
      * @throws \Stripe\Exception\ApiErrorException if the request fails

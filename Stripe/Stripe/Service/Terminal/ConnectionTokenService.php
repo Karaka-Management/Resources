@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 // File generated from our OpenAPI spec
 
@@ -11,7 +11,7 @@ class ConnectionTokenService extends \Stripe\Service\AbstractService
      * connection token from Stripe, proxied through your server. On your backend, add
      * an endpoint that creates and returns a connection token.
      *
-     * @param null|array $params
+     * @param null|array                             $params
      * @param null|array|\Stripe\Util\RequestOptions $opts
      *
      * @throws \Stripe\Exception\ApiErrorException if the request fails

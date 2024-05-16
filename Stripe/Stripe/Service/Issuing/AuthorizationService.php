@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 // File generated from our OpenAPI spec
 
@@ -11,7 +11,7 @@ class AuthorizationService extends \Stripe\Service\AbstractService
      * sorted in descending order by creation date, with the most recently created
      * object appearing first.
      *
-     * @param null|array $params
+     * @param null|array                             $params
      * @param null|array|\Stripe\Util\RequestOptions $opts
      *
      * @throws \Stripe\Exception\ApiErrorException if the request fails
@@ -31,8 +31,8 @@ class AuthorizationService extends \Stripe\Service\AbstractService
      * approve an authorization (preferred). More details can be found <a
      * href="https://site-admin.stripe.com/docs/issuing/controls/real-time-authorizations#authorization-handling">here</a>.
      *
-     * @param string $id
-     * @param null|array $params
+     * @param string                                 $id
+     * @param null|array                             $params
      * @param null|array|\Stripe\Util\RequestOptions $opts
      *
      * @throws \Stripe\Exception\ApiErrorException if the request fails
@@ -52,8 +52,8 @@ class AuthorizationService extends \Stripe\Service\AbstractService
      * decline an authorization (preferred). More details can be found <a
      * href="https://site-admin.stripe.com/docs/issuing/controls/real-time-authorizations#authorization-handling">here</a>.
      *
-     * @param string $id
-     * @param null|array $params
+     * @param string                                 $id
+     * @param null|array                             $params
      * @param null|array|\Stripe\Util\RequestOptions $opts
      *
      * @throws \Stripe\Exception\ApiErrorException if the request fails
@@ -68,8 +68,8 @@ class AuthorizationService extends \Stripe\Service\AbstractService
     /**
      * Retrieves an Issuing <code>Authorization</code> object.
      *
-     * @param string $id
-     * @param null|array $params
+     * @param string                                 $id
+     * @param null|array                             $params
      * @param null|array|\Stripe\Util\RequestOptions $opts
      *
      * @throws \Stripe\Exception\ApiErrorException if the request fails
@@ -86,8 +86,8 @@ class AuthorizationService extends \Stripe\Service\AbstractService
      * values of the parameters passed. Any parameters not provided will be left
      * unchanged.
      *
-     * @param string $id
-     * @param null|array $params
+     * @param string                                 $id
+     * @param null|array                             $params
      * @param null|array|\Stripe\Util\RequestOptions $opts
      *
      * @throws \Stripe\Exception\ApiErrorException if the request fails

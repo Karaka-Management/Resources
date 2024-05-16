@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Stripe\Service;
 
@@ -25,7 +25,7 @@ abstract class AbstractServiceFactory
      */
     public function __construct($client)
     {
-        $this->client = $client;
+        $this->client   = $client;
         $this->services = [];
     }
 
@@ -44,7 +44,7 @@ abstract class AbstractServiceFactory
     public function __get($name)
     {
         $serviceClass = $this->getServiceClass($name);
-        if (null !== $serviceClass) {
+        if ($serviceClass !== null) {
             if (!\array_key_exists($name, $this->services)) {
                 $this->services[$name] = new $serviceClass($this->client);
             }

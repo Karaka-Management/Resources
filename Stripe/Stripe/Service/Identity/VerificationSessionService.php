@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 // File generated from our OpenAPI spec
 
@@ -9,7 +9,7 @@ class VerificationSessionService extends \Stripe\Service\AbstractService
     /**
      * Returns a list of VerificationSessions.
      *
-     * @param null|array $params
+     * @param null|array                             $params
      * @param null|array|\Stripe\Util\RequestOptions $opts
      *
      * @throws \Stripe\Exception\ApiErrorException if the request fails
@@ -29,8 +29,8 @@ class VerificationSessionService extends \Stripe\Service\AbstractService
      * Once canceled, future submission attempts are disabled. This cannot be undone.
      * <a href="/docs/identity/verification-sessions#cancel">Learn more</a>.
      *
-     * @param string $id
-     * @param null|array $params
+     * @param string                                 $id
+     * @param null|array                             $params
      * @param null|array|\Stripe\Util\RequestOptions $opts
      *
      * @throws \Stripe\Exception\ApiErrorException if the request fails
@@ -55,7 +55,7 @@ class VerificationSessionService extends \Stripe\Service\AbstractService
      * Related guide: <a href="/docs/identity/verify-identity-documents">Verify your
      * users’ identity documents</a>.
      *
-     * @param null|array $params
+     * @param null|array                             $params
      * @param null|array|\Stripe\Util\RequestOptions $opts
      *
      * @throws \Stripe\Exception\ApiErrorException if the request fails
@@ -92,8 +92,8 @@ class VerificationSessionService extends \Stripe\Service\AbstractService
      *
      * <a href="/docs/identity/verification-sessions#redact">Learn more</a>.
      *
-     * @param string $id
-     * @param null|array $params
+     * @param string                                 $id
+     * @param null|array                             $params
      * @param null|array|\Stripe\Util\RequestOptions $opts
      *
      * @throws \Stripe\Exception\ApiErrorException if the request fails
@@ -112,8 +112,8 @@ class VerificationSessionService extends \Stripe\Service\AbstractService
      * to retrieve a valid <code>client_secret</code> or <code>url</code> to allow
      * re-submission.
      *
-     * @param string $id
-     * @param null|array $params
+     * @param string                                 $id
+     * @param null|array                             $params
      * @param null|array|\Stripe\Util\RequestOptions $opts
      *
      * @throws \Stripe\Exception\ApiErrorException if the request fails
@@ -131,8 +131,8 @@ class VerificationSessionService extends \Stripe\Service\AbstractService
      * When the session status is <code>requires_input</code>, you can use this method
      * to update the verification check and options.
      *
-     * @param string $id
-     * @param null|array $params
+     * @param string                                 $id
+     * @param null|array                             $params
      * @param null|array|\Stripe\Util\RequestOptions $opts
      *
      * @throws \Stripe\Exception\ApiErrorException if the request fails

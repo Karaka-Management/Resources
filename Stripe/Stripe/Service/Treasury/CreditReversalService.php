@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 // File generated from our OpenAPI spec
 
@@ -9,7 +9,7 @@ class CreditReversalService extends \Stripe\Service\AbstractService
     /**
      * Returns a list of CreditReversals.
      *
-     * @param null|array $params
+     * @param null|array                             $params
      * @param null|array|\Stripe\Util\RequestOptions $opts
      *
      * @throws \Stripe\Exception\ApiErrorException if the request fails
@@ -24,7 +24,7 @@ class CreditReversalService extends \Stripe\Service\AbstractService
     /**
      * Reverses a ReceivedCredit and creates a CreditReversal object.
      *
-     * @param null|array $params
+     * @param null|array                             $params
      * @param null|array|\Stripe\Util\RequestOptions $opts
      *
      * @throws \Stripe\Exception\ApiErrorException if the request fails
@@ -41,8 +41,8 @@ class CreditReversalService extends \Stripe\Service\AbstractService
      * CreditReversal ID from either the CreditReversal creation request or
      * CreditReversal list.
      *
-     * @param string $id
-     * @param null|array $params
+     * @param string                                 $id
+     * @param null|array                             $params
      * @param null|array|\Stripe\Util\RequestOptions $opts
      *
      * @throws \Stripe\Exception\ApiErrorException if the request fails

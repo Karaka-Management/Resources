@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 // File generated from our OpenAPI spec
 
@@ -9,8 +9,8 @@ class SourceService extends \Stripe\Service\AbstractService
     /**
      * List source transactions for a given source.
      *
-     * @param string $id
-     * @param null|array $params
+     * @param string                                 $id
+     * @param null|array                             $params
      * @param null|array|\Stripe\Util\RequestOptions $opts
      *
      * @throws \Stripe\Exception\ApiErrorException if the request fails
@@ -25,7 +25,7 @@ class SourceService extends \Stripe\Service\AbstractService
     /**
      * Creates a new source object.
      *
-     * @param null|array $params
+     * @param null|array                             $params
      * @param null|array|\Stripe\Util\RequestOptions $opts
      *
      * @throws \Stripe\Exception\ApiErrorException if the request fails
@@ -40,9 +40,9 @@ class SourceService extends \Stripe\Service\AbstractService
     /**
      * Delete a specified source for a given customer.
      *
-     * @param string $parentId
-     * @param string $id
-     * @param null|array $params
+     * @param string                                 $parentId
+     * @param string                                 $id
+     * @param null|array                             $params
      * @param null|array|\Stripe\Util\RequestOptions $opts
      *
      * @throws \Stripe\Exception\ApiErrorException if the request fails
@@ -59,8 +59,8 @@ class SourceService extends \Stripe\Service\AbstractService
      * creation request and Stripe will return the corresponding up-to-date source
      * object information.
      *
-     * @param string $id
-     * @param null|array $params
+     * @param string                                 $id
+     * @param null|array                             $params
      * @param null|array|\Stripe\Util\RequestOptions $opts
      *
      * @throws \Stripe\Exception\ApiErrorException if the request fails
@@ -81,8 +81,8 @@ class SourceService extends \Stripe\Service\AbstractService
      * payment methods. Please refer to our <a href="/docs/sources">payment method
      * guides</a> for more detail.
      *
-     * @param string $id
-     * @param null|array $params
+     * @param string                                 $id
+     * @param null|array                             $params
      * @param null|array|\Stripe\Util\RequestOptions $opts
      *
      * @throws \Stripe\Exception\ApiErrorException if the request fails
@@ -97,8 +97,8 @@ class SourceService extends \Stripe\Service\AbstractService
     /**
      * Verify a given source.
      *
-     * @param string $id
-     * @param null|array $params
+     * @param string                                 $id
+     * @param null|array                             $params
      * @param null|array|\Stripe\Util\RequestOptions $opts
      *
      * @throws \Stripe\Exception\ApiErrorException if the request fails

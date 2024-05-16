@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Stripe\HttpClient;
 
@@ -63,12 +63,12 @@ class CurlClient implements ClientInterface, StreamingClientInterface
      * Note that request() will silently ignore a non-callable, non-array $defaultOptions, and will
      * throw an exception if $defaultOptions returns a non-array value.
      *
-     * @param null|array|callable $defaultOptions
+     * @param null|array|callable               $defaultOptions
      * @param null|\Stripe\Util\RandomGenerator $randomGenerator
      */
     public function __construct($defaultOptions = null, $randomGenerator = null)
     {
-        $this->defaultOptions = $defaultOptions;
+        $this->defaultOptions  = $defaultOptions;
         $this->randomGenerator = $randomGenerator ?: new Util\RandomGenerator();
         $this->initUserAgentInfo();
 
@@ -80,12 +80,12 @@ class CurlClient implements ClientInterface, StreamingClientInterface
         $this->closeCurlHandle();
     }
 
-    public function initUserAgentInfo()
+    public function initUserAgentInfo() : void
     {
-        $curlVersion = \curl_version();
+        $curlVersion         = \curl_version();
         $this->userAgentInfo = [
             'httplib' => 'curl ' . $curlVersion['version'],
-            'ssllib' => $curlVersion['ssl_version'],
+            'ssllib'  => $curlVersion['ssl_version'],
         ];
     }
 
@@ -110,7 +110,7 @@ class CurlClient implements ClientInterface, StreamingClientInterface
     /**
      * @param bool $enable
      */
-    public function setEnablePersistentConnections($enable)
+    public function setEnablePersistentConnections($enable) : void
     {
         $this->enablePersistentConnections = $enable;
     }
@@ -126,7 +126,7 @@ class CurlClient implements ClientInterface, StreamingClientInterface
     /**
      * @param bool $enable
      */
-    public function setEnableHttp2($enable)
+    public function setEnableHttp2($enable) : void
     {
         $this->enableHttp2 = $enable;
     }
@@ -154,17 +154,19 @@ class CurlClient implements ClientInterface, StreamingClientInterface
      *
      * @param null|callable $requestStatusCallback
      */
-    public function setRequestStatusCallback($requestStatusCallback)
+    public function setRequestStatusCallback($requestStatusCallback) : void
     {
         $this->requestStatusCallback = $requestStatusCallback;
     }
 
     // USER DEFINED TIMEOUTS
 
-    const DEFAULT_TIMEOUT = 80;
-    const DEFAULT_CONNECT_TIMEOUT = 30;
+    public const DEFAULT_TIMEOUT = 80;
+
+    public const DEFAULT_CONNECT_TIMEOUT = 30;
 
     private $timeout = self::DEFAULT_TIMEOUT;
+
     private $connectTimeout = self::DEFAULT_CONNECT_TIMEOUT;
 
     public function setTimeout($seconds)
@@ -209,7 +211,7 @@ class CurlClient implements ClientInterface, StreamingClientInterface
 
         $params = Util\Util::objectsToIds($params);
 
-        if ('get' === $method) {
+        if ($method === 'get') {
             if ($hasFile) {
                 throw new Exception\UnexpectedValueException(
                     'Issuing a GET request with a file parameter'
@@ -218,16 +220,16 @@ class CurlClient implements ClientInterface, StreamingClientInterface
             $opts[\CURLOPT_HTTPGET] = 1;
             if (\count($params) > 0) {
                 $encoded = Util\Util::encodeParameters($params);
-                $absUrl = "{$absUrl}?{$encoded}";
+                $absUrl  = "{$absUrl}?{$encoded}";
             }
-        } elseif ('post' === $method) {
-            $opts[\CURLOPT_POST] = 1;
+        } elseif ($method === 'post') {
+            $opts[\CURLOPT_POST]       = 1;
             $opts[\CURLOPT_POSTFIELDS] = $hasFile ? $params : Util\Util::encodeParameters($params);
-        } elseif ('delete' === $method) {
+        } elseif ($method === 'delete') {
             $opts[\CURLOPT_CUSTOMREQUEST] = 'DELETE';
             if (\count($params) > 0) {
                 $encoded = Util\Util::encodeParameters($params);
-                $absUrl = "{$absUrl}?{$encoded}";
+                $absUrl  = "{$absUrl}?{$encoded}";
             }
         } else {
             throw new Exception\UnexpectedValueException("Unrecognized method {$method}");
@@ -235,7 +237,7 @@ class CurlClient implements ClientInterface, StreamingClientInterface
 
         // It is only safe to retry network failures on POST requests if we
         // add an Idempotency-Key header
-        if (('post' === $method) && (Stripe::$maxNetworkRetries > 0)) {
+        if (($method === 'post') && (Stripe::$maxNetworkRetries > 0)) {
             if (!$this->hasHeader($headers, 'Idempotency-Key')) {
                 $headers[] = 'Idempotency-Key: ' . $this->randomGenerator->uuid();
             }
@@ -255,13 +257,13 @@ class CurlClient implements ClientInterface, StreamingClientInterface
         // sending an empty `Expect:` header.
         $headers[] = 'Expect: ';
 
-        $absUrl = Util\Util::utf8($absUrl);
-        $opts[\CURLOPT_URL] = $absUrl;
+        $absUrl                        = Util\Util::utf8($absUrl);
+        $opts[\CURLOPT_URL]            = $absUrl;
         $opts[\CURLOPT_RETURNTRANSFER] = true;
         $opts[\CURLOPT_CONNECTTIMEOUT] = $this->connectTimeout;
-        $opts[\CURLOPT_TIMEOUT] = $this->timeout;
-        $opts[\CURLOPT_HTTPHEADER] = $headers;
-        $opts[\CURLOPT_CAINFO] = Stripe::getCABundlePath();
+        $opts[\CURLOPT_TIMEOUT]        = $this->timeout;
+        $opts[\CURLOPT_HTTPHEADER]     = $headers;
+        $opts[\CURLOPT_CAINFO]         = Stripe::getCABundlePath();
         if (!Stripe::getVerifySslCerts()) {
             $opts[\CURLOPT_SSL_VERIFYPEER] = false;
         }
@@ -296,7 +298,7 @@ class CurlClient implements ClientInterface, StreamingClientInterface
     {
         list($opts, $absUrl) = $this->constructRequest($method, $absUrl, $headers, $params, $hasFile);
 
-        $opts[\CURLOPT_RETURNTRANSFER] = false;
+        $opts[\CURLOPT_RETURNTRANSFER]  = false;
         list($rbody, $rcode, $rheaders) = $this->executeStreamingRequestWithRetries($opts, $absUrl, $readBodyChunk);
 
         return [$rbody, $rcode, $rheaders];
@@ -315,21 +317,21 @@ class CurlClient implements ClientInterface, StreamingClientInterface
      * headers it receives, return a "writeCallback" that describes what to do
      * with the incoming HTTP response body.
      *
-     * @param array $opts
+     * @param array    $opts
      * @param callable $determineWriteCallback
      *
      * @return array
      */
     private function useHeadersToDetermineWriteCallback($opts, $determineWriteCallback)
     {
-        $rheaders = new Util\CaseInsensitiveArray();
+        $rheaders       = new Util\CaseInsensitiveArray();
         $headerCallback = function ($curl, $header_line) use (&$rheaders) {
             return self::parseLineIntoHeaderArray($header_line, $rheaders);
         };
 
-        $writeCallback = null;
+        $writeCallback        = null;
         $writeCallbackWrapper = function ($curl, $data) use (&$writeCallback, &$rheaders, &$determineWriteCallback) {
-            if (null === $writeCallback) {
+            if ($writeCallback === null) {
                 $writeCallback = \call_user_func_array($determineWriteCallback, [$rheaders]);
             }
 
@@ -341,10 +343,10 @@ class CurlClient implements ClientInterface, StreamingClientInterface
 
     private static function parseLineIntoHeaderArray($line, &$headers)
     {
-        if (false === \strpos($line, ':')) {
+        if (\strpos($line, ':') === false) {
             return \strlen($line);
         }
-        list($key, $value) = \explode(':', \trim($line), 2);
+        list($key, $value)    = \explode(':', \trim($line), 2);
         $headers[\trim($key)] = \trim($value);
 
         return \strlen($line);
@@ -358,8 +360,8 @@ class CurlClient implements ClientInterface, StreamingClientInterface
      *   2. Does not retry if a network error occurs while streaming the
      *      body of a successful response.
      *
-     * @param array $opts cURL options
-     * @param string $absUrl
+     * @param array    $opts          cURL options
+     * @param string   $absUrl
      * @param callable $readBodyChunk
      *
      * @return array
@@ -384,7 +386,7 @@ class CurlClient implements ClientInterface, StreamingClientInterface
         /** @var null|array */
         $lastRHeaders = null;
 
-        $errno = null;
+        $errno   = null;
         $message = null;
 
         $determineWriteCallback = function ($rheaders) use (
@@ -397,7 +399,7 @@ class CurlClient implements ClientInterface, StreamingClientInterface
             &$errno
         ) {
             $lastRHeaders = $rheaders;
-            $errno = \curl_errno($this->curlHandle);
+            $errno        = \curl_errno($this->curlHandle);
 
             $rcode = \curl_getinfo($this->curlHandle, \CURLINFO_HTTP_CODE);
 
@@ -436,16 +438,16 @@ class CurlClient implements ClientInterface, StreamingClientInterface
 
         while (true) {
             list($headerCallback, $writeCallback) = $this->useHeadersToDetermineWriteCallback($opts, $determineWriteCallback);
-            $opts[\CURLOPT_HEADERFUNCTION] = $headerCallback;
-            $opts[\CURLOPT_WRITEFUNCTION] = $writeCallback;
+            $opts[\CURLOPT_HEADERFUNCTION]        = $headerCallback;
+            $opts[\CURLOPT_WRITEFUNCTION]         = $writeCallback;
 
             $shouldRetry = false;
-            $rbody = null;
+            $rbody       = null;
             $this->resetCurlHandle();
             \curl_setopt_array($this->curlHandle, $opts);
             $result = \curl_exec($this->curlHandle);
-            $errno = \curl_errno($this->curlHandle);
-            if (0 !== $errno) {
+            $errno  = \curl_errno($this->curlHandle);
+            if ($errno !== 0) {
                 $message = \curl_error($this->curlHandle);
             }
             if (!$this->getEnablePersistentConnections()) {
@@ -468,7 +470,7 @@ class CurlClient implements ClientInterface, StreamingClientInterface
             }
         }
 
-        if (0 !== $errno) {
+        if ($errno !== 0) {
             $this->handleCurlError($absUrl, $errno, $message, $numRetries);
         }
 
@@ -476,7 +478,7 @@ class CurlClient implements ClientInterface, StreamingClientInterface
     }
 
     /**
-     * @param array $opts cURL options
+     * @param array  $opts   cURL options
      * @param string $absUrl
      */
     public function executeRequestWithRetries($opts, $absUrl)
@@ -484,12 +486,12 @@ class CurlClient implements ClientInterface, StreamingClientInterface
         $numRetries = 0;
 
         while (true) {
-            $rcode = 0;
-            $errno = 0;
+            $rcode   = 0;
+            $errno   = 0;
             $message = null;
 
             // Create a callback to capture HTTP headers for the response
-            $rheaders = new Util\CaseInsensitiveArray();
+            $rheaders       = new Util\CaseInsensitiveArray();
             $headerCallback = function ($curl, $header_line) use (&$rheaders) {
                 return CurlClient::parseLineIntoHeaderArray($header_line, $rheaders);
             };
@@ -499,8 +501,8 @@ class CurlClient implements ClientInterface, StreamingClientInterface
             \curl_setopt_array($this->curlHandle, $opts);
             $rbody = \curl_exec($this->curlHandle);
 
-            if (false === $rbody) {
-                $errno = \curl_errno($this->curlHandle);
+            if ($rbody === false) {
+                $errno   = \curl_errno($this->curlHandle);
                 $message = \curl_error($this->curlHandle);
             } else {
                 $rcode = \curl_getinfo($this->curlHandle, \CURLINFO_HTTP_CODE);
@@ -527,7 +529,7 @@ class CurlClient implements ClientInterface, StreamingClientInterface
             }
         }
 
-        if (false === $rbody) {
+        if ($rbody === false) {
             $this->handleCurlError($absUrl, $errno, $message, $numRetries);
         }
 
@@ -536,13 +538,13 @@ class CurlClient implements ClientInterface, StreamingClientInterface
 
     /**
      * @param string $url
-     * @param int $errno
+     * @param int    $errno
      * @param string $message
-     * @param int $numRetries
+     * @param int    $numRetries
      *
      * @throws Exception\ApiConnectionException
      */
-    private function handleCurlError($url, $errno, $message, $numRetries)
+    private function handleCurlError($url, $errno, $message, $numRetries) : void
     {
         switch ($errno) {
             case \CURLE_COULDNT_CONNECT:
@@ -554,7 +556,6 @@ class CurlClient implements ClientInterface, StreamingClientInterface
                  . 'https://twitter.com/stripestatus, or';
 
                 break;
-
             case \CURLE_SSL_CACERT:
             case \CURLE_SSL_PEER_CERTIFICATE:
                 $msg = "Could not verify Stripe's SSL certificate.  Please make sure "
@@ -563,7 +564,6 @@ class CurlClient implements ClientInterface, StreamingClientInterface
                  . 'If this problem persists,';
 
                 break;
-
             default:
                 $msg = 'Unexpected error communicating with Stripe.  '
                  . 'If this problem persists,';
@@ -584,10 +584,10 @@ class CurlClient implements ClientInterface, StreamingClientInterface
      * socket errors that may represent an intermittent problem and some special
      * HTTP statuses.
      *
-     * @param int $errno
-     * @param int $rcode
+     * @param int                                     $errno
+     * @param int                                     $rcode
      * @param array|\Stripe\Util\CaseInsensitiveArray $rheaders
-     * @param int $numRetries
+     * @param int                                     $numRetries
      *
      * @return bool
      */
@@ -598,30 +598,30 @@ class CurlClient implements ClientInterface, StreamingClientInterface
         }
 
         // Retry on timeout-related problems (either on open or read).
-        if (\CURLE_OPERATION_TIMEOUTED === $errno) {
+        if ($errno === \CURLE_OPERATION_TIMEOUTED) {
             return true;
         }
 
         // Destination refused the connection, the connection was reset, or a
         // variety of other connection failures. This could occur from a single
         // saturated server, so retry in case it's intermittent.
-        if (\CURLE_COULDNT_CONNECT === $errno) {
+        if ($errno === \CURLE_COULDNT_CONNECT) {
             return true;
         }
 
         // The API may ask us not to retry (eg; if doing so would be a no-op)
         // or advise us to retry (eg; in cases of lock timeouts); we defer to that.
         if (isset($rheaders['stripe-should-retry'])) {
-            if ('false' === $rheaders['stripe-should-retry']) {
+            if ($rheaders['stripe-should-retry'] === 'false') {
                 return false;
             }
-            if ('true' === $rheaders['stripe-should-retry']) {
+            if ($rheaders['stripe-should-retry'] === 'true') {
                 return true;
             }
         }
 
         // 409 Conflict
-        if (409 === $rcode) {
+        if ($rcode === 409) {
             return true;
         }
 
@@ -640,7 +640,7 @@ class CurlClient implements ClientInterface, StreamingClientInterface
     /**
      * Provides the number of seconds to wait before retrying a request.
      *
-     * @param int $numRetries
+     * @param int                                     $numRetries
      * @param array|\Stripe\Util\CaseInsensitiveArray $rheaders
      *
      * @return int
@@ -674,7 +674,7 @@ class CurlClient implements ClientInterface, StreamingClientInterface
     /**
      * Initializes the curl handle. If already initialized, the handle is closed first.
      */
-    private function initCurlHandle()
+    private function initCurlHandle() : void
     {
         $this->closeCurlHandle();
         $this->curlHandle = \curl_init();
@@ -683,9 +683,9 @@ class CurlClient implements ClientInterface, StreamingClientInterface
     /**
      * Closes the curl handle if initialized. Do nothing if already closed.
      */
-    private function closeCurlHandle()
+    private function closeCurlHandle() : void
     {
-        if (null !== $this->curlHandle) {
+        if ($this->curlHandle !== null) {
             \curl_close($this->curlHandle);
             $this->curlHandle = null;
         }
@@ -695,9 +695,9 @@ class CurlClient implements ClientInterface, StreamingClientInterface
      * Resets the curl handle. If the handle is not already initialized, or if persistent
      * connections are disabled, the handle is reinitialized instead.
      */
-    private function resetCurlHandle()
+    private function resetCurlHandle() : void
     {
-        if (null !== $this->curlHandle && $this->getEnablePersistentConnections()) {
+        if ($this->curlHandle !== null && $this->getEnablePersistentConnections()) {
             \curl_reset($this->curlHandle);
         } else {
             $this->initCurlHandle();
@@ -722,14 +722,14 @@ class CurlClient implements ClientInterface, StreamingClientInterface
      * Checks if a list of headers contains a specific header name.
      *
      * @param string[] $headers
-     * @param string $name
+     * @param string   $name
      *
      * @return bool
      */
     private function hasHeader($headers, $name)
     {
         foreach ($headers as $header) {
-            if (0 === \strncasecmp($header, "{$name}: ", \strlen($name) + 2)) {
+            if (\strncasecmp($header, "{$name}: ", \strlen($name) + 2) === 0) {
                 return true;
             }
         }

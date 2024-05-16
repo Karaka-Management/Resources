@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 // File generated from our OpenAPI spec
 
@@ -11,7 +11,7 @@ class SessionService extends \Stripe\Service\AbstractService
      * <code>Session</code>. The session’s <code>client_secret</code> can be used to
      * launch the flow using Stripe.js.
      *
-     * @param null|array $params
+     * @param null|array                             $params
      * @param null|array|\Stripe\Util\RequestOptions $opts
      *
      * @throws \Stripe\Exception\ApiErrorException if the request fails
@@ -26,8 +26,8 @@ class SessionService extends \Stripe\Service\AbstractService
     /**
      * Retrieves the details of a Financial Connections <code>Session</code>.
      *
-     * @param string $id
-     * @param null|array $params
+     * @param string                                 $id
+     * @param null|array                             $params
      * @param null|array|\Stripe\Util\RequestOptions $opts
      *
      * @throws \Stripe\Exception\ApiErrorException if the request fails

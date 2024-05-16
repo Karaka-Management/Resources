@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 // File generated from our OpenAPI spec
 
@@ -14,7 +14,7 @@ class BalanceTransactionService extends \Stripe\Service\AbstractService
      * Note that this endpoint was previously called “Balance history” and used the
      * path <code>/v1/balance/history</code>.
      *
-     * @param null|array $params
+     * @param null|array                             $params
      * @param null|array|\Stripe\Util\RequestOptions $opts
      *
      * @throws \Stripe\Exception\ApiErrorException if the request fails
@@ -32,8 +32,8 @@ class BalanceTransactionService extends \Stripe\Service\AbstractService
      * Note that this endpoint previously used the path
      * <code>/v1/balance/history/:id</code>.
      *
-     * @param string $id
-     * @param null|array $params
+     * @param string                                 $id
+     * @param null|array                             $params
      * @param null|array|\Stripe\Util\RequestOptions $opts
      *
      * @throws \Stripe\Exception\ApiErrorException if the request fails

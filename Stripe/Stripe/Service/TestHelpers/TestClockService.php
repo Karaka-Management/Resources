@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 // File generated from our OpenAPI spec
 
@@ -10,8 +10,8 @@ class TestClockService extends \Stripe\Service\AbstractService
      * Starts advancing a test clock to a specified time in the future. Advancement is
      * done when status changes to <code>Ready</code>.
      *
-     * @param string $id
-     * @param null|array $params
+     * @param string                                 $id
+     * @param null|array                             $params
      * @param null|array|\Stripe\Util\RequestOptions $opts
      *
      * @throws \Stripe\Exception\ApiErrorException if the request fails
@@ -26,7 +26,7 @@ class TestClockService extends \Stripe\Service\AbstractService
     /**
      * Returns a list of your test clocks.
      *
-     * @param null|array $params
+     * @param null|array                             $params
      * @param null|array|\Stripe\Util\RequestOptions $opts
      *
      * @throws \Stripe\Exception\ApiErrorException if the request fails
@@ -41,7 +41,7 @@ class TestClockService extends \Stripe\Service\AbstractService
     /**
      * Creates a new test clock that can be attached to new customers and quotes.
      *
-     * @param null|array $params
+     * @param null|array                             $params
      * @param null|array|\Stripe\Util\RequestOptions $opts
      *
      * @throws \Stripe\Exception\ApiErrorException if the request fails
@@ -56,8 +56,8 @@ class TestClockService extends \Stripe\Service\AbstractService
     /**
      * Deletes a test clock.
      *
-     * @param string $id
-     * @param null|array $params
+     * @param string                                 $id
+     * @param null|array                             $params
      * @param null|array|\Stripe\Util\RequestOptions $opts
      *
      * @throws \Stripe\Exception\ApiErrorException if the request fails
@@ -72,8 +72,8 @@ class TestClockService extends \Stripe\Service\AbstractService
     /**
      * Retrieves a test clock.
      *
-     * @param string $id
-     * @param null|array $params
+     * @param string                                 $id
+     * @param null|array                             $params
      * @param null|array|\Stripe\Util\RequestOptions $opts
      *
      * @throws \Stripe\Exception\ApiErrorException if the request fails

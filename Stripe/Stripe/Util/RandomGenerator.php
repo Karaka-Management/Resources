@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Stripe\Util;
 
@@ -27,7 +27,7 @@ class RandomGenerator
      */
     public function uuid()
     {
-        $arr = \array_values(\unpack('N1a/n4b/N1c', \openssl_random_pseudo_bytes(16)));
+        $arr    = \array_values(\unpack('N1a/n4b/N1c', \openssl_random_pseudo_bytes(16)));
         $arr[2] = ($arr[2] & 0x0FFF) | 0x4000;
         $arr[3] = ($arr[3] & 0x3FFF) | 0x8000;
 

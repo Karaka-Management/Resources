@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 // File generated from our OpenAPI spec
 
@@ -9,7 +9,7 @@ class OutboundTransferService extends \Stripe\Service\AbstractService
     /**
      * Returns a list of OutboundTransfers sent from the specified FinancialAccount.
      *
-     * @param null|array $params
+     * @param null|array                             $params
      * @param null|array|\Stripe\Util\RequestOptions $opts
      *
      * @throws \Stripe\Exception\ApiErrorException if the request fails
@@ -24,8 +24,8 @@ class OutboundTransferService extends \Stripe\Service\AbstractService
     /**
      * An OutboundTransfer can be canceled if the funds have not yet been paid out.
      *
-     * @param string $id
-     * @param null|array $params
+     * @param string                                 $id
+     * @param null|array                             $params
      * @param null|array|\Stripe\Util\RequestOptions $opts
      *
      * @throws \Stripe\Exception\ApiErrorException if the request fails
@@ -40,7 +40,7 @@ class OutboundTransferService extends \Stripe\Service\AbstractService
     /**
      * Creates an OutboundTransfer.
      *
-     * @param null|array $params
+     * @param null|array                             $params
      * @param null|array|\Stripe\Util\RequestOptions $opts
      *
      * @throws \Stripe\Exception\ApiErrorException if the request fails
@@ -57,8 +57,8 @@ class OutboundTransferService extends \Stripe\Service\AbstractService
      * OutboundTransfer ID from either the OutboundTransfer creation request or
      * OutboundTransfer list.
      *
-     * @param string $id
-     * @param null|array $params
+     * @param string                                 $id
+     * @param null|array                             $params
      * @param null|array|\Stripe\Util\RequestOptions $opts
      *
      * @throws \Stripe\Exception\ApiErrorException if the request fails

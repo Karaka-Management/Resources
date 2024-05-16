@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Stripe\Service;
 
@@ -24,7 +24,7 @@ abstract class AbstractService
      */
     public function __construct($client)
     {
-        $this->client = $client;
+        $this->client          = $client;
         $this->streamingClient = $client;
     }
 
@@ -58,11 +58,11 @@ abstract class AbstractService
      */
     private static function formatParams($params)
     {
-        if (null === $params) {
+        if ($params === null) {
             return null;
         }
-        \array_walk_recursive($params, function (&$value, $key) {
-            if (null === $value) {
+        \array_walk_recursive($params, function (&$value, $key) : void {
+            if ($value === null) {
                 $value = '';
             }
         });
@@ -93,7 +93,7 @@ abstract class AbstractService
     protected function buildPath($basePath, ...$ids)
     {
         foreach ($ids as $id) {
-            if (null === $id || '' === \trim($id)) {
+            if ($id === null || \trim($id) === '') {
                 $msg = 'The resource ID cannot be null or whitespace.';
 
                 throw new \Stripe\Exception\InvalidArgumentException($msg);

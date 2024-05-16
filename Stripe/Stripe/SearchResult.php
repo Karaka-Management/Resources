@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Stripe;
 
@@ -18,16 +18,16 @@ namespace Stripe;
  * @template TStripeObject of StripeObject
  * @template-implements \IteratorAggregate<TStripeObject>
  *
- * @property string $object
- * @property string $url
- * @property string $next_page
- * @property int $total_count
- * @property bool $has_more
+ * @property string          $object
+ * @property string          $url
+ * @property string          $next_page
+ * @property int             $total_count
+ * @property bool            $has_more
  * @property TStripeObject[] $data
  */
 class SearchResult extends StripeObject implements \Countable, \IteratorAggregate
 {
-    const OBJECT_NAME = 'search_result';
+    public const OBJECT_NAME = 'search_result';
 
     use ApiOperations\Request;
 
@@ -57,7 +57,7 @@ class SearchResult extends StripeObject implements \Countable, \IteratorAggregat
      *
      * @param array $filters the filters
      */
-    public function setFilters($filters)
+    public function setFilters($filters) : void
     {
         $this->filters = $filters;
     }
@@ -80,7 +80,7 @@ class SearchResult extends StripeObject implements \Countable, \IteratorAggregat
     }
 
     /**
-     * @param null|array $params
+     * @param null|array        $params
      * @param null|array|string $opts
      *
      * @throws Exception\ApiErrorException
@@ -93,10 +93,10 @@ class SearchResult extends StripeObject implements \Countable, \IteratorAggregat
         list($url, $params) = $this->extractPathAndUpdateParams($params);
 
         list($response, $opts) = $this->_request('get', $url, $params, $opts);
-        $obj = Util\Util::convertToStripeObject($response, $opts);
-        if (!($obj instanceof \Stripe\SearchResult)) {
+        $obj                   = Util\Util::convertToStripeObject($response, $opts);
+        if (!($obj instanceof self)) {
             throw new \Stripe\Exception\UnexpectedValueException(
-                'Expected type ' . \Stripe\SearchResult::class . ', got "' . \get_class($obj) . '" instead.'
+                'Expected type ' . self::class . ', got "' . \get_class($obj) . '" instead.'
             );
         }
         $obj->setFilters($params);
@@ -115,7 +115,7 @@ class SearchResult extends StripeObject implements \Countable, \IteratorAggregat
 
     /**
      * @return \ArrayIterator an iterator that can be used to iterate
-     *    across objects in the current page
+     *                        across objects in the current page
      */
     #[\ReturnTypeWillChange]
     public function getIterator()
@@ -125,9 +125,9 @@ class SearchResult extends StripeObject implements \Countable, \IteratorAggregat
 
     /**
      * @return \Generator|TStripeObject[] A generator that can be used to
-     *    iterate across all objects across all pages. As page boundaries are
-     *    encountered, the next page will be fetched automatically for
-     *    continued iteration.
+     *                                    iterate across all objects across all pages. As page boundaries are
+     *                                    encountered, the next page will be fetched automatically for
+     *                                    continued iteration.
      */
     public function autoPagingIterator()
     {
@@ -157,7 +157,7 @@ class SearchResult extends StripeObject implements \Countable, \IteratorAggregat
      */
     public static function emptySearchResult($opts = null)
     {
-        return SearchResult::constructFrom(['data' => []], $opts);
+        return self::constructFrom(['data' => []], $opts);
     }
 
     /**
@@ -176,7 +176,7 @@ class SearchResult extends StripeObject implements \Countable, \IteratorAggregat
      * This method will try to respect the limit of the current page. If none
      * was given, the default limit will be fetched again.
      *
-     * @param null|array $params
+     * @param null|array        $params
      * @param null|array|string $opts
      *
      * @return SearchResult<TStripeObject>

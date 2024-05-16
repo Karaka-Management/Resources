@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Stripe\Util;
 
@@ -7,6 +7,7 @@ use Stripe\StripeObject;
 abstract class Util
 {
     private static $isMbstringAvailable = null;
+
     private static $isHashEqualsAvailable = null;
 
     /**
@@ -23,7 +24,7 @@ abstract class Util
         if (!\is_array($array)) {
             return false;
         }
-        if ([] === $array) {
+        if ($array === []) {
             return true;
         }
         if (\array_keys($array) !== \range(0, \count($array) - 1)) {
@@ -69,11 +70,11 @@ abstract class Util
      * @param mixed|string $value a string to UTF8-encode
      *
      * @return mixed|string the UTF8-encoded string, or the object passed in if
-     *    it wasn't a string
+     *                      it wasn't a string
      */
     public static function utf8($value)
     {
-        if (null === self::$isMbstringAvailable) {
+        if (self::$isMbstringAvailable === null) {
             self::$isMbstringAvailable = \function_exists('mb_detect_encoding');
 
             if (!self::$isMbstringAvailable) {
@@ -84,7 +85,7 @@ abstract class Util
             }
         }
 
-        if (\is_string($value) && self::$isMbstringAvailable && 'UTF-8' !== \mb_detect_encoding($value, 'UTF-8', true)) {
+        if (\is_string($value) && self::$isMbstringAvailable && \mb_detect_encoding($value, 'UTF-8', true) !== 'UTF-8') {
             return \utf8_encode($value);
         }
 
@@ -102,7 +103,7 @@ abstract class Util
      */
     public static function secureCompare($a, $b)
     {
-        if (null === self::$isHashEqualsAvailable) {
+        if (self::$isHashEqualsAvailable === null) {
             self::$isHashEqualsAvailable = \function_exists('hash_equals');
         }
 
@@ -118,7 +119,7 @@ abstract class Util
             $result |= \ord($a[$i]) ^ \ord($b[$i]);
         }
 
-        return 0 === $result;
+        return $result === 0;
     }
 
     /**
@@ -146,7 +147,7 @@ abstract class Util
         if (\is_array($h)) {
             $results = [];
             foreach ($h as $k => $v) {
-                if (null === $v) {
+                if ($v === null) {
                     continue;
                 }
                 $results[$k] = static::objectsToIds($v);
@@ -166,17 +167,17 @@ abstract class Util
     public static function encodeParameters($params)
     {
         $flattenedParams = self::flattenParams($params);
-        $pieces = [];
+        $pieces          = [];
         foreach ($flattenedParams as $param) {
             list($k, $v) = $param;
-            $pieces[] = self::urlEncode($k) . '=' . self::urlEncode($v);
+            $pieces[]    = self::urlEncode($k) . '=' . self::urlEncode($v);
         }
 
         return \implode('&', $pieces);
     }
 
     /**
-     * @param array $params
+     * @param array       $params
      * @param null|string $parentKey
      *
      * @return array
@@ -201,7 +202,7 @@ abstract class Util
     }
 
     /**
-     * @param array $value
+     * @param array  $value
      * @param string $calculatedKey
      *
      * @return array
@@ -244,7 +245,7 @@ abstract class Util
     {
         if (\is_array($id)) {
             $params = $id;
-            $id = $params['id'];
+            $id     = $params['id'];
             unset($params['id']);
         } else {
             $params = [];

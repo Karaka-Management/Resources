@@ -1,22 +1,22 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Stripe;
 
 abstract class WebhookSignature
 {
-    const EXPECTED_SCHEME = 'v1';
+    public const EXPECTED_SCHEME = 'v1';
 
     /**
      * Verifies the signature header sent by Stripe. Throws an
      * Exception\SignatureVerificationException exception if the verification fails for
      * any reason.
      *
-     * @param string $payload the payload sent by Stripe
-     * @param string $header the contents of the signature header sent by
-     *  Stripe
-     * @param string $secret secret used to generate the signature
-     * @param int $tolerance maximum difference allowed between the header's
-     *  timestamp and the current time
+     * @param string $payload   the payload sent by Stripe
+     * @param string $header    the contents of the signature header sent by
+     *                          Stripe
+     * @param string $secret    secret used to generate the signature
+     * @param int    $tolerance maximum difference allowed between the header's
+     *                          timestamp and the current time
      *
      * @throws Exception\SignatureVerificationException if the verification fails
      *
@@ -25,9 +25,9 @@ abstract class WebhookSignature
     public static function verifyHeader($payload, $header, $secret, $tolerance = null)
     {
         // Extract timestamp and signatures from header
-        $timestamp = self::getTimestamp($header);
+        $timestamp  = self::getTimestamp($header);
         $signatures = self::getSignatures($header, self::EXPECTED_SCHEME);
-        if (-1 === $timestamp) {
+        if ($timestamp === -1) {
             throw Exception\SignatureVerificationException::factory(
                 'Unable to extract timestamp and signatures from header',
                 $payload,
@@ -44,9 +44,9 @@ abstract class WebhookSignature
 
         // Check if expected signature is found in list of signatures from
         // header
-        $signedPayload = "{$timestamp}.{$payload}";
+        $signedPayload     = "{$timestamp}.{$payload}";
         $expectedSignature = self::computeSignature($signedPayload, $secret);
-        $signatureFound = false;
+        $signatureFound    = false;
         foreach ($signatures as $signature) {
             if (Util\Util::secureCompare($expectedSignature, $signature)) {
                 $signatureFound = true;
@@ -80,7 +80,7 @@ abstract class WebhookSignature
      * @param string $header the signature header
      *
      * @return int the timestamp contained in the header, or -1 if no valid
-     *  timestamp is found
+     *             timestamp is found
      */
     private static function getTimestamp($header)
     {
@@ -88,7 +88,7 @@ abstract class WebhookSignature
 
         foreach ($items as $item) {
             $itemParts = \explode('=', $item, 2);
-            if ('t' === $itemParts[0]) {
+            if ($itemParts[0] === 't') {
                 if (!\is_numeric($itemParts[1])) {
                     return -1;
                 }
@@ -111,7 +111,7 @@ abstract class WebhookSignature
     private static function getSignatures($header, $scheme)
     {
         $signatures = [];
-        $items = \explode(',', $header);
+        $items      = \explode(',', $header);
 
         foreach ($items as $item) {
             $itemParts = \explode('=', $item, 2);
@@ -129,7 +129,7 @@ abstract class WebhookSignature
      * The current scheme used by Stripe ("v1") is HMAC/SHA-256.
      *
      * @param string $payload the payload to sign
-     * @param string $secret the secret used to generate the signature
+     * @param string $secret  the secret used to generate the signature
      *
      * @return string the signature as a string
      */

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 // File generated from our OpenAPI spec
 
@@ -10,7 +10,7 @@ class InvoiceItemService extends \Stripe\Service\AbstractService
      * Returns a list of your invoice items. Invoice items are returned sorted by
      * creation date, with the most recently created invoice items appearing first.
      *
-     * @param null|array $params
+     * @param null|array                             $params
      * @param null|array|\Stripe\Util\RequestOptions $opts
      *
      * @throws \Stripe\Exception\ApiErrorException if the request fails
@@ -27,7 +27,7 @@ class InvoiceItemService extends \Stripe\Service\AbstractService
      * no invoice is specified, the item will be on the next invoice created for the
      * customer specified.
      *
-     * @param null|array $params
+     * @param null|array                             $params
      * @param null|array|\Stripe\Util\RequestOptions $opts
      *
      * @throws \Stripe\Exception\ApiErrorException if the request fails
@@ -44,8 +44,8 @@ class InvoiceItemService extends \Stripe\Service\AbstractService
      * only possible when they’re not attached to invoices, or if it’s attached to a
      * draft invoice.
      *
-     * @param string $id
-     * @param null|array $params
+     * @param string                                 $id
+     * @param null|array                             $params
      * @param null|array|\Stripe\Util\RequestOptions $opts
      *
      * @throws \Stripe\Exception\ApiErrorException if the request fails
@@ -60,8 +60,8 @@ class InvoiceItemService extends \Stripe\Service\AbstractService
     /**
      * Retrieves the invoice item with the given ID.
      *
-     * @param string $id
-     * @param null|array $params
+     * @param string                                 $id
+     * @param null|array                             $params
      * @param null|array|\Stripe\Util\RequestOptions $opts
      *
      * @throws \Stripe\Exception\ApiErrorException if the request fails
@@ -78,8 +78,8 @@ class InvoiceItemService extends \Stripe\Service\AbstractService
      * Updating an invoice item is only possible before the invoice it’s attached to is
      * closed.
      *
-     * @param string $id
-     * @param null|array $params
+     * @param string                                 $id
+     * @param null|array                             $params
      * @param null|array|\Stripe\Util\RequestOptions $opts
      *
      * @throws \Stripe\Exception\ApiErrorException if the request fails

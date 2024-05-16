@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Stripe\Exception\OAuth;
 
@@ -10,7 +10,7 @@ abstract class OAuthErrorException extends \Stripe\Exception\ApiErrorException
 {
     protected function constructErrorObject()
     {
-        if (null === $this->jsonBody) {
+        if ($this->jsonBody === null) {
             return null;
         }
 

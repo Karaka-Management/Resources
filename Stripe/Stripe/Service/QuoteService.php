@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 // File generated from our OpenAPI spec
 
@@ -9,8 +9,8 @@ class QuoteService extends \Stripe\Service\AbstractService
     /**
      * Accepts the specified quote.
      *
-     * @param string $id
-     * @param null|array $params
+     * @param string                                 $id
+     * @param null|array                             $params
      * @param null|array|\Stripe\Util\RequestOptions $opts
      *
      * @throws \Stripe\Exception\ApiErrorException if the request fails
@@ -25,7 +25,7 @@ class QuoteService extends \Stripe\Service\AbstractService
     /**
      * Returns a list of your quotes.
      *
-     * @param null|array $params
+     * @param null|array                             $params
      * @param null|array|\Stripe\Util\RequestOptions $opts
      *
      * @throws \Stripe\Exception\ApiErrorException if the request fails
@@ -43,8 +43,8 @@ class QuoteService extends \Stripe\Service\AbstractService
      * property containing the first handful of those items. There is also a URL where
      * you can retrieve the full (paginated) list of upfront line items.
      *
-     * @param string $id
-     * @param null|array $params
+     * @param string                                 $id
+     * @param null|array                             $params
      * @param null|array|\Stripe\Util\RequestOptions $opts
      *
      * @throws \Stripe\Exception\ApiErrorException if the request fails
@@ -61,8 +61,8 @@ class QuoteService extends \Stripe\Service\AbstractService
      * property containing the first handful of those items. There is also a URL where
      * you can retrieve the full (paginated) list of line items.
      *
-     * @param string $id
-     * @param null|array $params
+     * @param string                                 $id
+     * @param null|array                             $params
      * @param null|array|\Stripe\Util\RequestOptions $opts
      *
      * @throws \Stripe\Exception\ApiErrorException if the request fails
@@ -77,8 +77,8 @@ class QuoteService extends \Stripe\Service\AbstractService
     /**
      * Cancels the quote.
      *
-     * @param string $id
-     * @param null|array $params
+     * @param string                                 $id
+     * @param null|array                             $params
      * @param null|array|\Stripe\Util\RequestOptions $opts
      *
      * @throws \Stripe\Exception\ApiErrorException if the request fails
@@ -96,7 +96,7 @@ class QuoteService extends \Stripe\Service\AbstractService
      * <code>expires_at</code> can be set in the dashboard via the <a
      * href="https://dashboard.stripe.com/settings/billing/quote">quote template</a>.
      *
-     * @param null|array $params
+     * @param null|array                             $params
      * @param null|array|\Stripe\Util\RequestOptions $opts
      *
      * @throws \Stripe\Exception\ApiErrorException if the request fails
@@ -111,8 +111,8 @@ class QuoteService extends \Stripe\Service\AbstractService
     /**
      * Finalizes the quote.
      *
-     * @param string $id
-     * @param null|array $params
+     * @param string                                 $id
+     * @param null|array                             $params
      * @param null|array|\Stripe\Util\RequestOptions $opts
      *
      * @throws \Stripe\Exception\ApiErrorException if the request fails
@@ -127,8 +127,8 @@ class QuoteService extends \Stripe\Service\AbstractService
     /**
      * Retrieves the quote with the given ID.
      *
-     * @param string $id
-     * @param null|array $params
+     * @param string                                 $id
+     * @param null|array                             $params
      * @param null|array|\Stripe\Util\RequestOptions $opts
      *
      * @throws \Stripe\Exception\ApiErrorException if the request fails
@@ -143,8 +143,8 @@ class QuoteService extends \Stripe\Service\AbstractService
     /**
      * A quote models prices and services for a customer.
      *
-     * @param string $id
-     * @param null|array $params
+     * @param string                                 $id
+     * @param null|array                             $params
      * @param null|array|\Stripe\Util\RequestOptions $opts
      *
      * @throws \Stripe\Exception\ApiErrorException if the request fails
@@ -159,14 +159,14 @@ class QuoteService extends \Stripe\Service\AbstractService
     /**
      * Download the PDF for a finalized quote.
      *
-     * @param string $id
-     * @param callable $readBodyChunkCallable
-     * @param null|array $params
+     * @param string                                 $id
+     * @param callable                               $readBodyChunkCallable
+     * @param null|array                             $params
      * @param null|array|\Stripe\Util\RequestOptions $opts
      *
      * @throws \Stripe\Exception\ApiErrorException if the request fails
      */
-    public function pdf($id, $readBodyChunkCallable, $params = null, $opts = null)
+    public function pdf($id, $readBodyChunkCallable, $params = null, $opts = null) : void
     {
         $opts = \Stripe\Util\RequestOptions::parse($opts);
         if (!isset($opts->apiBase)) {

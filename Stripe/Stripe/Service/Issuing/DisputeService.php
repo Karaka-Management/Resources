@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 // File generated from our OpenAPI spec
 
@@ -11,7 +11,7 @@ class DisputeService extends \Stripe\Service\AbstractService
      * in descending order by creation date, with the most recently created object
      * appearing first.
      *
-     * @param null|array $params
+     * @param null|array                             $params
      * @param null|array|\Stripe\Util\RequestOptions $opts
      *
      * @throws \Stripe\Exception\ApiErrorException if the request fails
@@ -30,7 +30,7 @@ class DisputeService extends \Stripe\Service\AbstractService
      * href="/docs/issuing/purchases/disputes#dispute-reasons-and-evidence">Dispute
      * reasons and evidence</a> for more details about evidence requirements.
      *
-     * @param null|array $params
+     * @param null|array                             $params
      * @param null|array|\Stripe\Util\RequestOptions $opts
      *
      * @throws \Stripe\Exception\ApiErrorException if the request fails
@@ -45,8 +45,8 @@ class DisputeService extends \Stripe\Service\AbstractService
     /**
      * Retrieves an Issuing <code>Dispute</code> object.
      *
-     * @param string $id
-     * @param null|array $params
+     * @param string                                 $id
+     * @param null|array                             $params
      * @param null|array|\Stripe\Util\RequestOptions $opts
      *
      * @throws \Stripe\Exception\ApiErrorException if the request fails
@@ -65,8 +65,8 @@ class DisputeService extends \Stripe\Service\AbstractService
      * href="/docs/issuing/purchases/disputes#dispute-reasons-and-evidence">Dispute
      * reasons and evidence</a>.
      *
-     * @param string $id
-     * @param null|array $params
+     * @param string                                 $id
+     * @param null|array                             $params
      * @param null|array|\Stripe\Util\RequestOptions $opts
      *
      * @throws \Stripe\Exception\ApiErrorException if the request fails
@@ -84,8 +84,8 @@ class DisputeService extends \Stripe\Service\AbstractService
      * Properties on the <code>evidence</code> object can be unset by passing in an
      * empty string.
      *
-     * @param string $id
-     * @param null|array $params
+     * @param string                                 $id
+     * @param null|array                             $params
      * @param null|array|\Stripe\Util\RequestOptions $opts
      *
      * @throws \Stripe\Exception\ApiErrorException if the request fails

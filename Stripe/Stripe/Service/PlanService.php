@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 // File generated from our OpenAPI spec
 
@@ -9,7 +9,7 @@ class PlanService extends \Stripe\Service\AbstractService
     /**
      * Returns a list of your plans.
      *
-     * @param null|array $params
+     * @param null|array                             $params
      * @param null|array|\Stripe\Util\RequestOptions $opts
      *
      * @throws \Stripe\Exception\ApiErrorException if the request fails
@@ -26,7 +26,7 @@ class PlanService extends \Stripe\Service\AbstractService
      * API</a>. It replaces the Plans API and is backwards compatible to simplify your
      * migration.
      *
-     * @param null|array $params
+     * @param null|array                             $params
      * @param null|array|\Stripe\Util\RequestOptions $opts
      *
      * @throws \Stripe\Exception\ApiErrorException if the request fails
@@ -42,8 +42,8 @@ class PlanService extends \Stripe\Service\AbstractService
      * Deleting plans means new subscribers can’t be added. Existing subscribers aren’t
      * affected.
      *
-     * @param string $id
-     * @param null|array $params
+     * @param string                                 $id
+     * @param null|array                             $params
      * @param null|array|\Stripe\Util\RequestOptions $opts
      *
      * @throws \Stripe\Exception\ApiErrorException if the request fails
@@ -58,8 +58,8 @@ class PlanService extends \Stripe\Service\AbstractService
     /**
      * Retrieves the plan with the given ID.
      *
-     * @param string $id
-     * @param null|array $params
+     * @param string                                 $id
+     * @param null|array                             $params
      * @param null|array|\Stripe\Util\RequestOptions $opts
      *
      * @throws \Stripe\Exception\ApiErrorException if the request fails
@@ -76,8 +76,8 @@ class PlanService extends \Stripe\Service\AbstractService
      * parameters not provided are left unchanged. By design, you cannot change a
      * plan’s ID, amount, currency, or billing cycle.
      *
-     * @param string $id
-     * @param null|array $params
+     * @param string                                 $id
+     * @param null|array                             $params
      * @param null|array|\Stripe\Util\RequestOptions $opts
      *
      * @throws \Stripe\Exception\ApiErrorException if the request fails

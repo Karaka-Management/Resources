@@ -526,7 +526,7 @@ class PDF417 {
 	 * @param array  $macro       information for macro block
 	 * @public
 	 */
-	public function __construct($code, $ecl=-1, $aspectratio=2, $macro=[]) {
+	public function __construct($code, $ecl = -1, $aspectratio = 2, $macro = []) {
 		$barcode_array = [];
 		if (($code === null) || ($code == '\0') || ($code == '')) {
 			return false;
@@ -867,7 +867,7 @@ class PDF417 {
 	 * @return array  of codewords
 	 * @protected
 	 */
-	protected function getCompaction($mode, $code, $addmode=true) {
+	protected function getCompaction($mode, $code, $addmode = true) {
 		$cw = []; // array of codewords to return
 		switch($mode) {
 			case 900: { // Text Compaction mode latch
@@ -896,7 +896,7 @@ class PDF417 {
 									}
 								} else {
 									// latch
-									$txtarr	= \array_merge($txtarr, $this->textlatch[''.$submode.$s]);
+									$txtarr = \array_merge($txtarr, $this->textlatch[''.$submode.$s]);
 									// set new submode
 									$submode = $s;
 								}

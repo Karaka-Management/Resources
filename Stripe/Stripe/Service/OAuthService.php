@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Stripe\Service;
 
@@ -7,16 +7,16 @@ class OAuthService extends \Stripe\Service\AbstractService
     /**
      * Sends a request to Stripe's Connect API.
      *
-     * @param string $method the HTTP method
-     * @param string $path the path of the request
-     * @param array $params the parameters of the request
-     * @param array|\Stripe\Util\RequestOptions $opts the special modifiers of the request
+     * @param string                            $method the HTTP method
+     * @param string                            $path   the path of the request
+     * @param array                             $params the parameters of the request
+     * @param array|\Stripe\Util\RequestOptions $opts   the special modifiers of the request
      *
      * @return \Stripe\StripeObject the object returned by Stripe's Connect API
      */
     protected function requestConnect($method, $path, $params, $opts)
     {
-        $opts = $this->_parseOpts($opts);
+        $opts          = $this->_parseOpts($opts);
         $opts->apiBase = $this->_getBase($opts);
 
         return $this->request($method, $path, $params, $opts);
@@ -59,7 +59,7 @@ class OAuthService extends \Stripe\Service\AbstractService
      */
     public function token($params = null, $opts = null)
     {
-        $params = $params ?: [];
+        $params                  = $params ?: [];
         $params['client_secret'] = $this->_getClientSecret($params);
 
         return $this->requestConnect('post', '/oauth/token', $params, $opts);
@@ -77,7 +77,7 @@ class OAuthService extends \Stripe\Service\AbstractService
      */
     public function deauthorize($params = null, $opts = null)
     {
-        $params = $params ?: [];
+        $params              = $params ?: [];
         $params['client_id'] = $this->_getClientId($params);
 
         return $this->requestConnect('post', '/oauth/deauthorize', $params, $opts);
@@ -87,10 +87,10 @@ class OAuthService extends \Stripe\Service\AbstractService
     {
         $clientId = ($params && \array_key_exists('client_id', $params)) ? $params['client_id'] : null;
 
-        if (null === $clientId) {
+        if ($clientId === null) {
             $clientId = $this->client->getClientId();
         }
-        if (null === $clientId) {
+        if ($clientId === null) {
             $msg = 'No client_id provided. (HINT: set your client_id using '
               . '`new \Stripe\StripeClient([clientId => <CLIENT-ID>
                 ])`)".  You can find your client_ids '

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 // File generated from our OpenAPI spec
 
@@ -9,7 +9,7 @@ class LocationService extends \Stripe\Service\AbstractService
     /**
      * Returns a list of <code>Location</code> objects.
      *
-     * @param null|array $params
+     * @param null|array                             $params
      * @param null|array|\Stripe\Util\RequestOptions $opts
      *
      * @throws \Stripe\Exception\ApiErrorException if the request fails
@@ -26,7 +26,7 @@ class LocationService extends \Stripe\Service\AbstractService
      * address fields are required in each country, see the <a
      * href="/docs/terminal/fleet/locations">Manage locations</a> guide.
      *
-     * @param null|array $params
+     * @param null|array                             $params
      * @param null|array|\Stripe\Util\RequestOptions $opts
      *
      * @throws \Stripe\Exception\ApiErrorException if the request fails
@@ -41,8 +41,8 @@ class LocationService extends \Stripe\Service\AbstractService
     /**
      * Deletes a <code>Location</code> object.
      *
-     * @param string $id
-     * @param null|array $params
+     * @param string                                 $id
+     * @param null|array                             $params
      * @param null|array|\Stripe\Util\RequestOptions $opts
      *
      * @throws \Stripe\Exception\ApiErrorException if the request fails
@@ -57,8 +57,8 @@ class LocationService extends \Stripe\Service\AbstractService
     /**
      * Retrieves a <code>Location</code> object.
      *
-     * @param string $id
-     * @param null|array $params
+     * @param string                                 $id
+     * @param null|array                             $params
      * @param null|array|\Stripe\Util\RequestOptions $opts
      *
      * @throws \Stripe\Exception\ApiErrorException if the request fails
@@ -74,8 +74,8 @@ class LocationService extends \Stripe\Service\AbstractService
      * Updates a <code>Location</code> object by setting the values of the parameters
      * passed. Any parameters not provided will be left unchanged.
      *
-     * @param string $id
-     * @param null|array $params
+     * @param string                                 $id
+     * @param null|array                             $params
      * @param null|array|\Stripe\Util\RequestOptions $opts
      *
      * @throws \Stripe\Exception\ApiErrorException if the request fails

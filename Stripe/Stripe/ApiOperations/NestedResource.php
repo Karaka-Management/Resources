@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Stripe\ApiOperations;
 
@@ -10,9 +10,9 @@ namespace Stripe\ApiOperations;
 trait NestedResource
 {
     /**
-     * @param string $method
-     * @param string $url
-     * @param null|array $params
+     * @param string            $method
+     * @param string            $url
+     * @param null|array        $params
      * @param null|array|string $options
      *
      * @return \Stripe\StripeObject
@@ -22,15 +22,15 @@ trait NestedResource
         self::_validateParams($params);
 
         list($response, $opts) = static::_staticRequest($method, $url, $params, $options);
-        $obj = \Stripe\Util\Util::convertToStripeObject($response->json, $opts);
+        $obj                   = \Stripe\Util\Util::convertToStripeObject($response->json, $opts);
         $obj->setLastResponse($response);
 
         return $obj;
     }
 
     /**
-     * @param string $id
-     * @param string $nestedPath
+     * @param string      $id
+     * @param string      $nestedPath
      * @param null|string $nestedId
      *
      * @return string
@@ -38,7 +38,7 @@ trait NestedResource
     protected static function _nestedResourceUrl($id, $nestedPath, $nestedId = null)
     {
         $url = static::resourceUrl($id) . $nestedPath;
-        if (null !== $nestedId) {
+        if ($nestedId !== null) {
             $url .= "/{$nestedId}";
         }
 
@@ -46,9 +46,9 @@ trait NestedResource
     }
 
     /**
-     * @param string $id
-     * @param string $nestedPath
-     * @param null|array $params
+     * @param string            $id
+     * @param string            $nestedPath
+     * @param null|array        $params
      * @param null|array|string $options
      *
      * @throws \Stripe\Exception\ApiErrorException if the request fails
@@ -63,10 +63,10 @@ trait NestedResource
     }
 
     /**
-     * @param string $id
-     * @param string $nestedPath
-     * @param null|string $nestedId
-     * @param null|array $params
+     * @param string            $id
+     * @param string            $nestedPath
+     * @param null|string       $nestedId
+     * @param null|array        $params
      * @param null|array|string $options
      *
      * @throws \Stripe\Exception\ApiErrorException if the request fails
@@ -81,10 +81,10 @@ trait NestedResource
     }
 
     /**
-     * @param string $id
-     * @param string $nestedPath
-     * @param null|string $nestedId
-     * @param null|array $params
+     * @param string            $id
+     * @param string            $nestedPath
+     * @param null|string       $nestedId
+     * @param null|array        $params
      * @param null|array|string $options
      *
      * @throws \Stripe\Exception\ApiErrorException if the request fails
@@ -99,10 +99,10 @@ trait NestedResource
     }
 
     /**
-     * @param string $id
-     * @param string $nestedPath
-     * @param null|string $nestedId
-     * @param null|array $params
+     * @param string            $id
+     * @param string            $nestedPath
+     * @param null|string       $nestedId
+     * @param null|array        $params
      * @param null|array|string $options
      *
      * @throws \Stripe\Exception\ApiErrorException if the request fails
@@ -117,9 +117,9 @@ trait NestedResource
     }
 
     /**
-     * @param string $id
-     * @param string $nestedPath
-     * @param null|array $params
+     * @param string            $id
+     * @param string            $nestedPath
+     * @param null|array        $params
      * @param null|array|string $options
      *
      * @throws \Stripe\Exception\ApiErrorException if the request fails

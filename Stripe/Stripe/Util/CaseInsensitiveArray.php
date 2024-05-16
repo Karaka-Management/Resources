@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Stripe\Util;
 
@@ -43,10 +43,10 @@ class CaseInsensitiveArray implements \ArrayAccess, \Countable, \IteratorAggrega
      * @return void
      */
     #[\ReturnTypeWillChange]
-    public function offsetSet($offset, $value)
+    public function offsetSet($offset, $value) : void
     {
         $offset = static::maybeLowercase($offset);
-        if (null === $offset) {
+        if ($offset === null) {
             $this->container[] = $value;
         } else {
             $this->container[$offset] = $value;
@@ -68,7 +68,7 @@ class CaseInsensitiveArray implements \ArrayAccess, \Countable, \IteratorAggrega
      * @return void
      */
     #[\ReturnTypeWillChange]
-    public function offsetUnset($offset)
+    public function offsetUnset($offset) : void
     {
         $offset = static::maybeLowercase($offset);
         unset($this->container[$offset]);

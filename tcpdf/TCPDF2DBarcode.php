@@ -83,7 +83,7 @@ class TCPDF2DBarcode {
 	 * @param string $color foreground color (in SVG format) for bar elements (background is transparent)
 	 * @public
 	 */
-	public function getBarcodeSVG($w=3, $h=3, $color='black') : void {
+	public function getBarcodeSVG($w = 3, $h = 3, $color = 'black') : void {
 		// send headers
 		$code = $this->getBarcodeSVGcode($w, $h, $color);
 		\header('Content-Type: application/svg+xml');
@@ -104,7 +104,7 @@ class TCPDF2DBarcode {
 	 * @return string SVG code
 	 * @public
 	 */
-	public function getBarcodeSVGcode($w=3, $h=3, $color='black') {
+	public function getBarcodeSVGcode($w = 3, $h = 3, $color = 'black') {
 		// replace table for special characters
 		$repstr = ["\0" => '', '&' => '&amp;', '<' => '&lt;', '>' => '&gt;'];
 		$svg    = '<'.'?'.'xml version="1.0" standalone="no"'.'?'.'>'."\n";
@@ -140,7 +140,7 @@ class TCPDF2DBarcode {
 	 * @return string HTML code
 	 * @public
 	 */
-	public function getBarcodeHTML($w=10, $h=10, $color='black') {
+	public function getBarcodeHTML($w = 10, $h = 10, $color = 'black') {
 		$html = '<div style="font-size:0;position:relative;width:'.($w * $this->barcode_array['num_cols']).'px;height:'.($h * $this->barcode_array['num_rows']).'px;">'."\n";
 		// print barcode elements
 		$y = 0;
@@ -168,7 +168,7 @@ class TCPDF2DBarcode {
 	 * @param array $color RGB (0-255) foreground color for bar elements (background is transparent)
 	 * @public
 	 */
-	public function getBarcodePNG($w=3, $h=3, $color=[0,0,0]) : void {
+	public function getBarcodePNG($w = 3, $h = 3, $color = [0,0,0]) : void {
 		$data = $this->getBarcodePngData($w, $h, $color);
 		// send headers
 		\header('Content-Type: image/png');
@@ -188,7 +188,7 @@ class TCPDF2DBarcode {
 	 * @return string|Imagick|false image or false in case of error
 	 * @public
 	 */
-	public function getBarcodePngData($w=3, $h=3, $color=[0,0,0]) {
+	public function getBarcodePngData($w = 3, $h = 3, $color = [0,0,0]) {
 		// calculate image size
 		$width  = ($this->barcode_array['num_cols'] * $w);
 		$height = ($this->barcode_array['num_rows'] * $h);

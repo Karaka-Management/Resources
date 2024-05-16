@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 // File generated from our OpenAPI spec
 
@@ -9,7 +9,7 @@ class AccountService extends \Stripe\Service\AbstractService
     /**
      * Returns a list of Financial Connections <code>Account</code> objects.
      *
-     * @param null|array $params
+     * @param null|array                             $params
      * @param null|array|\Stripe\Util\RequestOptions $opts
      *
      * @throws \Stripe\Exception\ApiErrorException if the request fails
@@ -24,8 +24,8 @@ class AccountService extends \Stripe\Service\AbstractService
     /**
      * Lists all owners for a given <code>Account</code>.
      *
-     * @param string $id
-     * @param null|array $params
+     * @param string                                 $id
+     * @param null|array                             $params
      * @param null|array|\Stripe\Util\RequestOptions $opts
      *
      * @throws \Stripe\Exception\ApiErrorException if the request fails
@@ -42,8 +42,8 @@ class AccountService extends \Stripe\Service\AbstractService
      * no longer be able to access data associated with the account (e.g. balances,
      * transactions).
      *
-     * @param string $id
-     * @param null|array $params
+     * @param string                                 $id
+     * @param null|array                             $params
      * @param null|array|\Stripe\Util\RequestOptions $opts
      *
      * @throws \Stripe\Exception\ApiErrorException if the request fails
@@ -58,8 +58,8 @@ class AccountService extends \Stripe\Service\AbstractService
     /**
      * Refreshes the data associated with a Financial Connections <code>Account</code>.
      *
-     * @param string $id
-     * @param null|array $params
+     * @param string                                 $id
+     * @param null|array                             $params
      * @param null|array|\Stripe\Util\RequestOptions $opts
      *
      * @throws \Stripe\Exception\ApiErrorException if the request fails
@@ -74,8 +74,8 @@ class AccountService extends \Stripe\Service\AbstractService
     /**
      * Retrieves the details of an Financial Connections <code>Account</code>.
      *
-     * @param string $id
-     * @param null|array $params
+     * @param string                                 $id
+     * @param null|array                             $params
      * @param null|array|\Stripe\Util\RequestOptions $opts
      *
      * @throws \Stripe\Exception\ApiErrorException if the request fails

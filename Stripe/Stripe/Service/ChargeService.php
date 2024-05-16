@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 // File generated from our OpenAPI spec
 
@@ -10,7 +10,7 @@ class ChargeService extends \Stripe\Service\AbstractService
      * Returns a list of charges you’ve previously created. The charges are returned in
      * sorted order, with the most recent charges appearing first.
      *
-     * @param null|array $params
+     * @param null|array                             $params
      * @param null|array|\Stripe\Util\RequestOptions $opts
      *
      * @throws \Stripe\Exception\ApiErrorException if the request fails
@@ -32,8 +32,8 @@ class ChargeService extends \Stripe\Service\AbstractService
      * by that point in time, they will be marked as refunded and will no longer be
      * capturable.
      *
-     * @param string $id
-     * @param null|array $params
+     * @param string                                 $id
+     * @param null|array                             $params
      * @param null|array|\Stripe\Util\RequestOptions $opts
      *
      * @throws \Stripe\Exception\ApiErrorException if the request fails
@@ -52,7 +52,7 @@ class ChargeService extends \Stripe\Service\AbstractService
      * will occur as if in live mode. (Stripe assumes that the charge would have
      * completed successfully).
      *
-     * @param null|array $params
+     * @param null|array                             $params
      * @param null|array|\Stripe\Util\RequestOptions $opts
      *
      * @throws \Stripe\Exception\ApiErrorException if the request fails
@@ -70,8 +70,8 @@ class ChargeService extends \Stripe\Service\AbstractService
      * return the corresponding charge information. The same information is returned
      * when creating or refunding the charge.
      *
-     * @param string $id
-     * @param null|array $params
+     * @param string                                 $id
+     * @param null|array                             $params
      * @param null|array|\Stripe\Util\RequestOptions $opts
      *
      * @throws \Stripe\Exception\ApiErrorException if the request fails
@@ -91,7 +91,7 @@ class ChargeService extends \Stripe\Service\AbstractService
      * Occasionally, propagation of new or updated data can be up to an hour behind
      * during outages. Search functionality is not available to merchants in India.
      *
-     * @param null|array $params
+     * @param null|array                             $params
      * @param null|array|\Stripe\Util\RequestOptions $opts
      *
      * @throws \Stripe\Exception\ApiErrorException if the request fails
@@ -107,8 +107,8 @@ class ChargeService extends \Stripe\Service\AbstractService
      * Updates the specified charge by setting the values of the parameters passed. Any
      * parameters not provided will be left unchanged.
      *
-     * @param string $id
-     * @param null|array $params
+     * @param string                                 $id
+     * @param null|array                             $params
      * @param null|array|\Stripe\Util\RequestOptions $opts
      *
      * @throws \Stripe\Exception\ApiErrorException if the request fails

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 // File generated from our OpenAPI spec
 
@@ -8,7 +8,7 @@ namespace Stripe\Service\BillingPortal;
  * Service factory class for API resources in the BillingPortal namespace.
  *
  * @property ConfigurationService $configurations
- * @property SessionService $sessions
+ * @property SessionService       $sessions
  */
 class BillingPortalServiceFactory extends \Stripe\Service\AbstractServiceFactory
 {
@@ -17,7 +17,7 @@ class BillingPortalServiceFactory extends \Stripe\Service\AbstractServiceFactory
      */
     private static $classMap = [
         'configurations' => ConfigurationService::class,
-        'sessions' => SessionService::class,
+        'sessions'       => SessionService::class,
     ];
 
     protected function getServiceClass($name)

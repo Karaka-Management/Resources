@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 // File generated from our OpenAPI spec
 
@@ -16,49 +16,49 @@ namespace Stripe;
  * <a href="https://stripe.com/docs/payments/more-payment-scenarios">More Payment
  * Scenarios</a>.
  *
- * @property string $id Unique identifier for the object.
- * @property string $object String representing the object's type. Objects of the same type share the same value.
- * @property \Stripe\StripeObject $acss_debit
- * @property \Stripe\StripeObject $affirm
- * @property \Stripe\StripeObject $afterpay_clearpay
- * @property \Stripe\StripeObject $alipay
- * @property \Stripe\StripeObject $au_becs_debit
- * @property \Stripe\StripeObject $bacs_debit
- * @property \Stripe\StripeObject $bancontact
- * @property \Stripe\StripeObject $billing_details
- * @property \Stripe\StripeObject $blik
- * @property \Stripe\StripeObject $boleto
- * @property \Stripe\StripeObject $card
- * @property \Stripe\StripeObject $card_present
- * @property int $created Time at which the object was created. Measured in seconds since the Unix epoch.
- * @property null|string|\Stripe\Customer $customer The ID of the Customer to which this PaymentMethod is saved. This will not be set when the PaymentMethod has not been saved to a Customer.
- * @property \Stripe\StripeObject $customer_balance
- * @property \Stripe\StripeObject $eps
- * @property \Stripe\StripeObject $fpx
- * @property \Stripe\StripeObject $giropay
- * @property \Stripe\StripeObject $grabpay
- * @property \Stripe\StripeObject $ideal
- * @property \Stripe\StripeObject $interac_present
- * @property \Stripe\StripeObject $klarna
- * @property \Stripe\StripeObject $konbini
- * @property \Stripe\StripeObject $link
- * @property bool $livemode Has the value <code>true</code> if the object exists in live mode or the value <code>false</code> if the object exists in test mode.
- * @property null|\Stripe\StripeObject $metadata Set of <a href="https://stripe.com/docs/api/metadata">key-value pairs</a> that you can attach to an object. This can be useful for storing additional information about the object in a structured format.
- * @property \Stripe\StripeObject $oxxo
- * @property \Stripe\StripeObject $p24
- * @property \Stripe\StripeObject $paynow
- * @property \Stripe\StripeObject $pix
- * @property \Stripe\StripeObject $promptpay
- * @property \Stripe\StripeObject $radar_options Options to configure Radar. See <a href="https://stripe.com/docs/radar/radar-session">Radar Session</a> for more information.
- * @property \Stripe\StripeObject $sepa_debit
- * @property \Stripe\StripeObject $sofort
- * @property string $type The type of the PaymentMethod. An additional hash is included on the PaymentMethod with a name matching this value. It contains additional information specific to the PaymentMethod type.
- * @property \Stripe\StripeObject $us_bank_account
- * @property \Stripe\StripeObject $wechat_pay
+ * @property string                       $id                Unique identifier for the object.
+ * @property string                       $object            String representing the object's type. Objects of the same type share the same value.
+ * @property \Stripe\StripeObject         $acss_debit
+ * @property \Stripe\StripeObject         $affirm
+ * @property \Stripe\StripeObject         $afterpay_clearpay
+ * @property \Stripe\StripeObject         $alipay
+ * @property \Stripe\StripeObject         $au_becs_debit
+ * @property \Stripe\StripeObject         $bacs_debit
+ * @property \Stripe\StripeObject         $bancontact
+ * @property \Stripe\StripeObject         $billing_details
+ * @property \Stripe\StripeObject         $blik
+ * @property \Stripe\StripeObject         $boleto
+ * @property \Stripe\StripeObject         $card
+ * @property \Stripe\StripeObject         $card_present
+ * @property int                          $created           Time at which the object was created. Measured in seconds since the Unix epoch.
+ * @property null|string|\Stripe\Customer $customer          The ID of the Customer to which this PaymentMethod is saved. This will not be set when the PaymentMethod has not been saved to a Customer.
+ * @property \Stripe\StripeObject         $customer_balance
+ * @property \Stripe\StripeObject         $eps
+ * @property \Stripe\StripeObject         $fpx
+ * @property \Stripe\StripeObject         $giropay
+ * @property \Stripe\StripeObject         $grabpay
+ * @property \Stripe\StripeObject         $ideal
+ * @property \Stripe\StripeObject         $interac_present
+ * @property \Stripe\StripeObject         $klarna
+ * @property \Stripe\StripeObject         $konbini
+ * @property \Stripe\StripeObject         $link
+ * @property bool                         $livemode          Has the value <code>true</code> if the object exists in live mode or the value <code>false</code> if the object exists in test mode.
+ * @property null|\Stripe\StripeObject    $metadata          Set of <a href="https://stripe.com/docs/api/metadata">key-value pairs</a> that you can attach to an object. This can be useful for storing additional information about the object in a structured format.
+ * @property \Stripe\StripeObject         $oxxo
+ * @property \Stripe\StripeObject         $p24
+ * @property \Stripe\StripeObject         $paynow
+ * @property \Stripe\StripeObject         $pix
+ * @property \Stripe\StripeObject         $promptpay
+ * @property \Stripe\StripeObject         $radar_options     Options to configure Radar. See <a href="https://stripe.com/docs/radar/radar-session">Radar Session</a> for more information.
+ * @property \Stripe\StripeObject         $sepa_debit
+ * @property \Stripe\StripeObject         $sofort
+ * @property string                       $type              The type of the PaymentMethod. An additional hash is included on the PaymentMethod with a name matching this value. It contains additional information specific to the PaymentMethod type.
+ * @property \Stripe\StripeObject         $us_bank_account
+ * @property \Stripe\StripeObject         $wechat_pay
  */
 class PaymentMethod extends ApiResource
 {
-    const OBJECT_NAME = 'payment_method';
+    public const OBJECT_NAME = 'payment_method';
 
     use ApiOperations\All;
     use ApiOperations\Create;
@@ -66,7 +66,7 @@ class PaymentMethod extends ApiResource
     use ApiOperations\Update;
 
     /**
-     * @param null|array $params
+     * @param null|array        $params
      * @param null|array|string $opts
      *
      * @throws \Stripe\Exception\ApiErrorException if the request fails
@@ -75,7 +75,7 @@ class PaymentMethod extends ApiResource
      */
     public function attach($params = null, $opts = null)
     {
-        $url = $this->instanceUrl() . '/attach';
+        $url                   = $this->instanceUrl() . '/attach';
         list($response, $opts) = $this->_request('post', $url, $params, $opts);
         $this->refreshFrom($response, $opts);
 
@@ -83,7 +83,7 @@ class PaymentMethod extends ApiResource
     }
 
     /**
-     * @param null|array $params
+     * @param null|array        $params
      * @param null|array|string $opts
      *
      * @throws \Stripe\Exception\ApiErrorException if the request fails
@@ -92,7 +92,7 @@ class PaymentMethod extends ApiResource
      */
     public function detach($params = null, $opts = null)
     {
-        $url = $this->instanceUrl() . '/detach';
+        $url                   = $this->instanceUrl() . '/detach';
         list($response, $opts) = $this->_request('post', $url, $params, $opts);
         $this->refreshFrom($response, $opts);
 

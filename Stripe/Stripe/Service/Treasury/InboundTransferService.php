@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 // File generated from our OpenAPI spec
 
@@ -9,7 +9,7 @@ class InboundTransferService extends \Stripe\Service\AbstractService
     /**
      * Returns a list of InboundTransfers sent from the specified FinancialAccount.
      *
-     * @param null|array $params
+     * @param null|array                             $params
      * @param null|array|\Stripe\Util\RequestOptions $opts
      *
      * @throws \Stripe\Exception\ApiErrorException if the request fails
@@ -24,8 +24,8 @@ class InboundTransferService extends \Stripe\Service\AbstractService
     /**
      * Cancels an InboundTransfer.
      *
-     * @param string $id
-     * @param null|array $params
+     * @param string                                 $id
+     * @param null|array                             $params
      * @param null|array|\Stripe\Util\RequestOptions $opts
      *
      * @throws \Stripe\Exception\ApiErrorException if the request fails
@@ -40,7 +40,7 @@ class InboundTransferService extends \Stripe\Service\AbstractService
     /**
      * Creates an InboundTransfer.
      *
-     * @param null|array $params
+     * @param null|array                             $params
      * @param null|array|\Stripe\Util\RequestOptions $opts
      *
      * @throws \Stripe\Exception\ApiErrorException if the request fails
@@ -55,8 +55,8 @@ class InboundTransferService extends \Stripe\Service\AbstractService
     /**
      * Retrieves the details of an existing InboundTransfer.
      *
-     * @param string $id
-     * @param null|array $params
+     * @param string                                 $id
+     * @param null|array                             $params
      * @param null|array|\Stripe\Util\RequestOptions $opts
      *
      * @throws \Stripe\Exception\ApiErrorException if the request fails
